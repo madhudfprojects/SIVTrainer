@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "928200773707",
+    "firebase_url": "https://skill-in-village.firebaseio.com",
+    "project_id": "skill-in-village",
+    "storage_bucket": "skill-in-village.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928200773707:android:006234e1b9b3b70c8f3dce",
+        "android_client_info": {
+          "package_name": "com.det.skillinvillage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928200773707-imv14keu2nut2hm9ek27qslqbfncnb14.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.det.skillinvillage",
+            "certificate_hash": "0b5885bdb6b59b50408a276024daa2fdcaa164cc"
+          }
+        },
+        {
+          "client_id": "928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsH1fW5kBiw9WOHHLvqfgpHDClD7NJrZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

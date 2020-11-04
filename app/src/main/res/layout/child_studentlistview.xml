@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:id="@+id/mainstuName_ll"
+            android:visibility="gone">
+
+
+            <TextView
+                android:id="@+id/studentName_new_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp" />
+
+
+            <ImageButton
+                android:id="@+id/details_show_IB"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+        </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:id="@+id/studentlist_LL">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Namelabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Student Name"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                />
+
+            <TextView
+                android:id="@+id/studentName_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/mobilelabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Mobile No."
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                />
+
+            <TextView
+                android:id="@+id/mobileno_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/studentstatus_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize=".1dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:id="@+id/application_LL"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/applicationnolabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Application No."
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                android:visibility="gone"
+                />
+
+
+            <TextView
+                android:id="@+id/applicationNumber_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/Institutionlabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Institution"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                />
+
+
+            <TextView
+                android:id="@+id/Institution_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                />
+
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/Levellabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Level"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                />
+
+            <TextView
+                android:id="@+id/level_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                />
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="start"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/balancefeelabel_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="start"
+                android:text="Balance Fee"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                android:textSize="13dp"
+                />
+
+            <TextView
+                android:id="@+id/balancefee_TV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/dark_black_red"
+                android:textSize="13dp"
+                />
+
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/stu_id_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/edit_BT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit"
+                android:textColor="#FFF"
+                android:background="@drawable/layout_background"
+                android:layout_gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                
+                android:textStyle="bold"/>
+            <Button
+                android:id="@+id/pay_BT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay"
+                android:layout_marginLeft="8dp"
+                android:textColor="#FFF"
+                android:background="@drawable/layout_background"
+                android:layout_gravity="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:id="@+id/noRecords_LL">
+        <TextView
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center_horizontal"
+            android:text="Currently No  Records"
+            android:textColor="@color/colorAccent"
+            android:textSize="20dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

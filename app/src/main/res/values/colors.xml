@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <!-- <color name="colorPrimary">#E07F7F</color>
+    <color name="colorPrimaryDark">#C85858</color>
+    <color name="colorAccent">#E6D5D5</color>-->
+    <color name="colorPrimary">#E07F7F</color>
+    <color name="colorPrimaryDark">#E08D8D</color>
+    <color name="colorAccent">#EEADAD</color>
+
+    <color name="blackColor">#000000</color>
+    <color name="blue">#276ca4</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="colorWhite">#ffffff</color>
+
+    <!-- Use with black text -->
+
+
+    <color name="dark_black_red">#190f0d</color>
+
+    <color name="red">#E95F5C</color>
+    <color name="yellow">#FDD835</color>
+    <color name="green">#7CB342</color>
+</resources>

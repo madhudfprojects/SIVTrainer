@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/ll1"
+    android:gravity="center_horizontal"
+    android:layout_gravity="center_horizontal">
+
+    <!--<EditText-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="add"-->
+        <!--android:id="@+id/edit1"/d7c7c7
+
+              android:textColorHint="#565252">-->
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="Search Box"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#000"
+        
+        android:background="#ffffff"
+        />
+
+    <LinearLayout
+        android:id="@+id/spinnerlayout_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_margin="2dp">
+
+        <TableRow
+            android:id="@+id/tableR1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:paddingLeft="5dp"
+                android:text="Sandbox"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="90dp"
+                android:paddingLeft="5dp"
+                android:text="Academic"
+                android:textColor="#5C5757"
+                
+                android:textStyle="bold"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableR2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <Spinner
+                android:id="@+id/sandboxlist_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+
+            <Spinner
+                android:id="@+id/academiclist_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+        </TableRow>
+
+
+        <TableRow
+            android:id="@+id/tableT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:paddingLeft="5dp"
+                android:text="Cluster"
+                android:textColor="#5C5757"
+                
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="98dp"
+                android:paddingLeft="8dp"
+                android:text="Institute"
+                android:textColor="#5C5757"
+                
+                android:textStyle="bold"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/clustertable_new"
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <Spinner
+                android:id="@+id/cluster_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+
+
+            <Spinner
+                android:id="@+id/institutelist_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table_institute_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:paddingLeft="5dp"
+                android:text="Level"
+                android:textColor="#5C5757"
+                
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="90dp"
+                android:paddingLeft="8dp"
+                android:text="Application Status"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+                />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/table_institute_level_new"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp">
+
+            <Spinner
+                android:id="@+id/levellist_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+
+
+            <Spinner
+                android:id="@+id/Applstatus_new_SP"
+                android:layout_width="143dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background" />
+        </TableRow>
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:text="Search"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:background="@drawable/layout_background"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            
+            android:layout_margin="5dp"
+            android:id="@+id/submit_alertdialog_BT"/>
+    </LinearLayout>
+
+
+</LinearLayout>

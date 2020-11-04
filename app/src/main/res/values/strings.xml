@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Skill in Village</string>
+
+
+    <string name="Rs">\u20B9</string>
+
+    <!--    <string name="web_client_id">577330010629-hhmd63821qp1aab3n44gkcrl4bjdq0qn.apps.googleusercontent.com</string>-->
+    <!--    <string name="web_client_id">928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com</string>-->
+    <string name="web_client_id">928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com</string>
+
+    <!--    "client_id": "928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com",-->
+    <string name="tab_text_1">Download Document</string>
+    <string name="tab_text_2">View Document</string>
+
+    <string name="text_versioncode">Version 2.0</string>
+    <string name="btn_login">Login</string>
+    <!--<string name="title_activity_onlineview__navigation">Onlineview_Navigation</string>-->
+    <string name="title_activity_onlineview__navigation">FeedBack From</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">FeedBack Forms Menu</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+</resources>
