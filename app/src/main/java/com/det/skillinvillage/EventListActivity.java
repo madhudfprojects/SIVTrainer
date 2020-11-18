@@ -45,9 +45,7 @@ import java.util.List;
 import java.util.Vector;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.key_schedulerid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_schedulerid;
 
 
 public class EventListActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
@@ -98,8 +96,8 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
 
 //        SharedPreferences myprefs_scheduleId = this.getSharedPreferences("scheduleId", Context.MODE_PRIVATE);
 //        str_scheduleId = myprefs_scheduleId.getString("scheduleId", "nothing");
-		sharedpref_schedulerid_Obj=getSharedPreferences(sharedpreferenc_schedulerid, Context.MODE_PRIVATE);
-		str_scheduleId = sharedpref_schedulerid_Obj.getString(key_schedulerid, "").trim();
+//		sharedpref_schedulerid_Obj=getSharedPreferences(sharedpreferenc_schedulerid, Context.MODE_PRIVATE);
+//		str_scheduleId = sharedpref_schedulerid_Obj.getString(key_schedulerid, "").trim();
 
 
         cal_month = (GregorianCalendar) GregorianCalendar.getInstance();

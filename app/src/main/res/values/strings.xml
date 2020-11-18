@@ -22,4 +22,6 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
 
+    <string name="alert"><font fgcolor='#FFFF3B30'>Alert!</font></string> <!--red-->
+
 </resources>

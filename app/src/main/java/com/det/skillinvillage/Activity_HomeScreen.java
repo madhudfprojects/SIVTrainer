@@ -1,6 +1,8 @@
 package com.det.skillinvillage;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +28,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.det.skillinvillage.adapter.CalendarAdapter;
+import com.det.skillinvillage.model.Class_getdemo_Response;
+import com.det.skillinvillage.model.Class_getdemo_resplist;
+import com.det.skillinvillage.model.Class_gethelp_Response;
+import com.det.skillinvillage.model.Class_gethelp_resplist;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 import com.det.skillinvillage.util.UserInfo;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,6 +41,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -46,6 +55,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
@@ -315,7 +328,7 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                             @Override
                             public void onClick(View view) {
 
-                                Intent i = new Intent(Activity_HomeScreen.this, Activity_UserManual_DownloadPDF.class);
+                                Intent i = new Intent(Activity_HomeScreen.this, ContactUs_Activity.class);
                                 startActivity(i);
                                 overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
 
@@ -428,6 +441,8 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         }else{
             Log.e("extranull", String.valueOf(extras));
         }
+
+        gethelp();
     }
 
 //    @Override
@@ -1090,4 +1105,253 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         db_LearningOption_delete.close();
     }
 
+
+
+
+
+    public void gethelp()
+    {
+        internetDectector = new ConnectionDetector(getApplicationContext());
+        isInternetPresent = internetDectector.isConnectingToInternet();
+
+        if(isInternetPresent)
+        {
+             gethelp_api();
+        }
+    }
+
+    private void gethelp_api()
+    {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Fetching Helpdetails....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Call<Class_gethelp_Response> call = userService.GetHelp("12");
+
+
+        call.enqueue(new Callback<Class_gethelp_Response>() {
+            @Override
+            public void onResponse(Call<Class_gethelp_Response> call, Response<Class_gethelp_Response> response) {
+
+                // Toast.makeText(MainActivity.this, ""+response.toString(), Toast.LENGTH_SHORT).show();
+
+                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+
+                if(response.isSuccessful())
+                {
+                    DBCreate_Helpdetails();
+                    Class_gethelp_Response gethelp_response_obj = response.body();
+                    Log.e("response.body", response.body().getLst().toString());
+
+
+                    if (gethelp_response_obj.getStatus().equals(true))
+                    {
+
+                        List<Class_gethelp_resplist> helplist = response.body().getLst();
+                        Log.e("length", String.valueOf(helplist.size()));
+                        int int_helpcount=helplist.size();
+
+                        for(int i=0;i<int_helpcount;i++)
+                        {
+                            Log.e("title",helplist.get(i).getTitle().toString());
+
+                            String str_title=helplist.get(i).getTitle().toString();
+                            String str_content=helplist.get(i).getContent().toString();
+                            DBCreate_HelpDetails_insert_2sqliteDB(str_title,str_content);
+                        }
+
+
+                        // Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+                        progressDoalog.dismiss();
+
+                        getdemo();
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+
+
+    public void DBCreate_HelpDetails_insert_2sqliteDB(String title,String content)
+    {
+        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
+
+        ContentValues cv = new ContentValues();
+        cv.put("TitleDB", title);
+        cv.put("ContentDB", content);
+        db2.insert("HelpDetails_table", null, cv);
+        db2.close();
+
+        Log.e("insert","DBCreate_HelpDetails_insert_2sqliteDB");
+
+    }
+
+
+    public void DBCreate_Helpdetails() {
+
+        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
+        Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
+        int x = cursor.getCount();
+        if (x > 0) {
+            db2.delete("HelpDetails_table", null, null);
+        }
+        db2.close();
+    }
+
+
+
+
+    public void Data_from_HelpDetails_table()
+    {
+        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
+        Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
+        int x = cursor.getCount();
+
+        Log.e("helpcount", String.valueOf(x));
+
+    }
+
+    public void getdemo()
+    {
+        internetDectector = new ConnectionDetector(getApplicationContext());
+        isInternetPresent = internetDectector.isConnectingToInternet();
+
+        if(isInternetPresent)
+        {
+            getdemo_api();
+        }
+    }
+
+    private void getdemo_api()
+    {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Fetching Demodetails....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Call<Class_getdemo_Response> call = userService.GetDemo("12");
+
+
+        call.enqueue(new Callback<Class_getdemo_Response>() {
+            @Override
+            public void onResponse(Call<Class_getdemo_Response> call, Response<Class_getdemo_Response> response) {
+                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+
+                if(response.isSuccessful())
+                {
+                    DBCreate_Demodetails();
+                    Class_getdemo_Response getdemo_response_obj = response.body();
+                    Log.e("response.body", response.body().getLst().toString());
+
+
+                    if (getdemo_response_obj.getStatus().equals(true))
+                    {
+
+                        List<Class_getdemo_resplist> demolist = response.body().getLst();
+                        Log.e("length", String.valueOf(demolist.size()));
+                        int int_helpcount=demolist.size();
+
+                        for(int i=0;i<int_helpcount;i++)
+                        {
+                            Log.e("language",demolist.get(i).getLanguage_Name().toString());
+
+                            String str_languagename=demolist.get(i).getLanguage_Name().toString();
+                            String str_languagelink=demolist.get(i).getLanguage_Link().toString();
+                            DBCreate_DemoDetails_insert_2sqliteDB(str_languagename,str_languagelink);
+                        }
+
+                        //Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+                        progressDoalog.dismiss();
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+
+
+    public void DBCreate_Demodetails() {
+
+        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
+        Cursor cursor = db2.rawQuery("SELECT * FROM DemoDetails_table", null);
+        int x = cursor.getCount();
+        if (x > 0) {
+            db2.delete("DemoDetails_table", null, null);
+        }
+        db2.close();
+    }
+
+
+
+
+    public void DBCreate_DemoDetails_insert_2sqliteDB(String str_languagename,String str_languagelink)
+    {
+        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
+
+        ContentValues cv = new ContentValues();
+        cv.put("LanguageDB", str_languagename);
+        cv.put("LinkDB", str_languagelink);
+        db2.insert("DemoDetails_table", null, cv);
+        db2.close();
+
+        Log.e("insert","DBCreate_DemoDetails_insert_2sqliteDB");
+
+    }
 }

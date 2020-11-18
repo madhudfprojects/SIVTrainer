@@ -195,7 +195,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         downloadUrl = new URL(doc_path);
       } catch (MalformedURLException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
       HttpURLConnection c = null;//Open Url Connection
@@ -203,21 +203,21 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         c = (HttpURLConnection) downloadUrl.openConnection();
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         /// Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
       try {
         c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
       } catch (ProtocolException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
       try {
         c.connect();//connect the URL Connection
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
 
@@ -230,7 +230,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         }
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+       //   Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
       }
 
 
@@ -263,7 +263,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
           outputFile.createNewFile();
         } catch (IOException e) {
           e.printStackTrace();
-            Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+           // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
         }
         Log.e(TAG, "File Created");
@@ -274,7 +274,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         fos = new FileOutputStream(outputFile);
       } catch (FileNotFoundException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
 
@@ -283,7 +283,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         is = c.getInputStream();
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+          //Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
 
@@ -295,7 +295,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         }
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+         // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
 
@@ -306,7 +306,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
         is.close();
       } catch (IOException e) {
         e.printStackTrace();
-          Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+        //  Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
       }
        /* }

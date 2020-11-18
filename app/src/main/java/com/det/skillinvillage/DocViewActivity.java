@@ -78,7 +78,7 @@ public class DocViewActivity extends AppCompatActivity {//implements Connectivit
         TabLayout.Tab selectedTab = tabLayout.getTabAt(0);
         View view = selectedTab.getCustomView();
         TextView selectedText = view.findViewById(R.id.txt_downloadtabtitle);
-        selectedText.setTextColor(Color.parseColor("#000000"));
+        selectedText.setTextColor(Color.parseColor("#FFFFFF"));
 
 
         //tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
@@ -93,7 +93,7 @@ public class DocViewActivity extends AppCompatActivity {//implements Connectivit
             public void onTabSelected(TabLayout.Tab tab) {
                 View view = tab.getCustomView();
                 TextView selectedText = view.findViewById(R.id.txt_downloadtabtitle);
-                selectedText.setTextColor(Color.parseColor("#000000"));
+                selectedText.setTextColor(Color.parseColor("#FFFFFF"));
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -101,14 +101,14 @@ public class DocViewActivity extends AppCompatActivity {//implements Connectivit
             public void onTabUnselected(TabLayout.Tab tab) {
                 View view = tab.getCustomView();
                 TextView selectedText = view.findViewById(R.id.txt_downloadtabtitle);
-                selectedText.setTextColor(Color.parseColor("#000000"));
+                selectedText.setTextColor(Color.parseColor("#FFFFFF"));
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 View view = tab.getCustomView();
                 TextView selectedText = view.findViewById(R.id.txt_downloadtabtitle);
-                selectedText.setTextColor(Color.parseColor("#000000"));
+                selectedText.setTextColor(Color.parseColor("#FFFFFF"));
             }
         });
 

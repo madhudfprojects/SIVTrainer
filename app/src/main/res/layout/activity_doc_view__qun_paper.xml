@@ -40,7 +40,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:tabSelectedTextColor="@color/blackColor"
-        app:tabTextColor="@color/blackColor"
+        app:tabTextColor="@color/white"
         android:theme="@style/AppTheme.AppBarOverlay"
         />
 

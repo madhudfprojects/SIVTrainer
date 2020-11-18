@@ -7,46 +7,122 @@
 <!--    android:layout_width="match_parent"-->
 <!--    android:layout_height="match_parent"-->
 <!--    tools:context="com.det.siv.Activity_Dashboard">-->
-
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
     android:fillViewport="true"
-    android:orientation="vertical">
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-        <Spinner
-            android:id="@+id/loadSandbox_SP"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/spinnerarrow2"
-            android:paddingLeft="5dp"
-            android:popupBackground="@drawable/layout_background"
-            android:textColor="#5C5757"
-            android:visibility="visible" />
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@color/colorWhite">
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_dashboard"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        card_view:cardBackgroundColor="@color/colorAccent"
+        card_view:cardCornerRadius="6dp"
+        card_view:cardElevation="6dp"
+        card_view:contentPadding="7dp"
+        android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="193dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/dashboard_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Dashboard"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:fontFamily="serif"/>
+
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/dashboard_downarrow_IV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/ic_arrow_drop_down_white_24dp"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/dashboard_uparrow_IV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_drop_up_white_24dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+    <LinearLayout
+        android:id="@+id/dashboard_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <Spinner
+            android:id="@+id/loadSandbox_SP"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:background="@drawable/dropdownarrow"
+            android:popupBackground="@drawable/layout_background"
+            android:textColor="#5C5757"
+            android:visibility="visible"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+
+        <LinearLayout
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
+            android:visibility="visible"
+            android:background="@drawable/shadow_new"
             android:id="@+id/scorecardlayout1_LL">
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background">
 
@@ -74,12 +150,12 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/blackColor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Villages"
                         android:textColor="@color/blackColor"
@@ -90,8 +166,8 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background1">
 
@@ -121,12 +197,12 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/blackColor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Schools"
                         android:textColor="@color/blackColor"
@@ -138,8 +214,8 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background2">
 
@@ -168,12 +244,12 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/blackColor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="25dp"
                         android:gravity="center"
                         android:text="Students"
                         android:textColor="@color/blackColor"
@@ -184,19 +260,19 @@
 
             </FrameLayout>
         </LinearLayout>
-
-
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="horizontal"
-            android:id="@+id/scorecardlayout2_LL">
+            android:background="@drawable/shadow_new"
+            android:id="@+id/scorecardlayout2_LL"
+            android:visibility="visible">
 
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background3">
 
@@ -230,7 +306,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Boy"
                         android:textColor="@color/blackColor"
@@ -242,8 +318,8 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background4">
 
@@ -273,16 +349,16 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/blackColor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Girl"
                         android:textColor="@color/blackColor"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
 
                 </LinearLayout>
@@ -290,8 +366,8 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/dashboard_background5">
 
@@ -319,16 +395,16 @@
                         android:gravity="center"
                         android:text=""
                         android:textColor="@color/blackColor"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:text="Dropouts"
                         android:textColor="@color/blackColor"
-                        android:textSize="14sp" />
+                        android:textSize="15sp" />
 
 
                 </LinearLayout>
@@ -336,7 +412,6 @@
             </FrameLayout>
 
 
-        </LinearLayout>
 
 
         <LinearLayout
@@ -387,40 +462,105 @@
             </FrameLayout>
 
         </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_Feessummary"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            card_view:cardBackgroundColor="@color/colorAccent"
+            card_view:cardCornerRadius="6dp"
+            card_view:cardElevation="6dp"
+            card_view:contentPadding="7dp"
+            android:layout_marginTop="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="193dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
 
-        <TextView
-            android:id="@+id/feesummarheading_TV"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="Fees Summary"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/blackColor" />
+                    <TextView
+                        android:id="@+id/feesummarheading_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Fees Summary"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"/>
 
 
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/feessummary_IV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_arrow_drop_down_white_24dp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/feessummary_uparrow_IV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_drop_up_white_24dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/feessummary_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center">
+<!--        <TextView-->
+<!--            android:id="@+id/feesummarheading_TV"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:gravity="center_horizontal"-->
+<!--            android:padding="10dp"-->
+<!--            android:text="Fees Summary"-->
+<!--            android:textAppearance="?android:attr/textAppearanceMedium"-->
+<!--            android:textColor="@color/blackColor" />-->
         <Spinner
             android:id="@+id/loadcenters_SP"
-            android:layout_width="150dp"
+            android:layout_width="300dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/spinnerarrow2"
-            android:paddingLeft="5dp"
+            android:background="@drawable/dropdownarrow"
             android:popupBackground="@drawable/layout_background"
             android:textColor="#5C5757"
-            android:visibility="visible" />
-
-
-
+            android:visibility="visible"
+            android:layout_marginTop="10dp"/>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:layout_gravity="center">
 
             <!--        <com.github.mikephil.charting.charts.PieChart-->
             <!--            android:id="@+id/piechart"-->
@@ -431,17 +571,89 @@
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barchart"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_height="250dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:layout_gravity="center"/>
 
 
         </FrameLayout>
+    </LinearLayout>
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardview_Maps"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            card_view:cardBackgroundColor="@color/colorAccent"
+            card_view:cardCornerRadius="6dp"
+            card_view:cardElevation="6dp"
+            card_view:contentPadding="7dp"
+            android:layout_marginTop="50dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="193dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/viewmaps_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="View Maps"
+                        android:textColor="#FFFFFF"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"/>
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/viewmaps_downarrow_IV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_arrow_drop_down_white_24dp"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:id="@+id/viewmaps_uparrow_IV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_drop_up_white_24dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+
+        </android.support.v7.widget.CardView>
+    <LinearLayout
+        android:id="@+id/viewmaps_LL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorWhite"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:gravity="center">
         <TextView
             android:id="@+id/viewmaps_TV"
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
@@ -452,19 +664,8 @@
             android:visibility="visible"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/mapbackground"/>
+            android:background="@drawable/shadow_new"/>
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="Location of SIV centers  "
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/blackColor"
-            android:visibility="gone" />
 
 <!--        <fragment-->
 <!--            android:id="@+id/map"-->
@@ -473,5 +674,6 @@
 <!--            android:layout_height="800dp"-->
 <!--            android:layout_marginTop="10dp"-->
 <!--            android:visibility="gone"/>-->
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>

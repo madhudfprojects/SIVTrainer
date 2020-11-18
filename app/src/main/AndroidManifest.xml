@@ -32,12 +32,17 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/launch_icone"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activity_AddNewStudentDetails"></activity>
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
+        <activity
+            android:name=".ContactUs_Activity"
+            android:theme="@style/AppTheme_NoActionBar"/>
+        <activity android:name=".Activity_AddNewStudentDetails" />
         <activity
             android:name=".Onlineview_Navigation"
             android:label="@string/title_activity_onlineview__navigation"
-            android:theme="@style/AppTheme_NoActionBar"></activity>
+            android:theme="@style/AppTheme_NoActionBar" />
         <!--
                 tools:replace="android:appComponentFactory"
         android:appComponentFactory="android"

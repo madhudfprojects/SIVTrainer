@@ -157,6 +157,7 @@ public class Remarks extends AppCompatActivity {
         sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
         str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
 
+        Log.e("str_loginuserID",str_loginuserID);
 //		SharedPreferences myprefs_scheduleId = this.getSharedPreferences("scheduleId", Context.MODE_PRIVATE);
 //		str_scheduleId = myprefs_scheduleId.getString("scheduleId", "nothing");
 

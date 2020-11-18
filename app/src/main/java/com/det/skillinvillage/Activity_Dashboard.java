@@ -17,11 +17,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.det.skillinvillage.model.Class_Get_User_DocumentResponse;
+import com.det.skillinvillage.model.Class_ListVersion;
+import com.det.skillinvillage.model.Class_UserPaymentList;
+import com.det.skillinvillage.model.Class_dashboardList;
+import com.det.skillinvillage.model.Class_getUserDashboardResponse;
+import com.det.skillinvillage.model.Class_getUserPaymentResponse;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 import com.github.mikephil.charting.charts.BarChart;
 
 import com.github.mikephil.charting.components.Legend;
@@ -38,8 +49,15 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
@@ -87,6 +105,14 @@ public class Activity_Dashboard extends AppCompatActivity {
     String selected_sandID="",selected_sandname="";
     LinearLayout scorecardlayout1_LL,scorecardlayout2_LL;
     TextView feesummarheading_TV;
+    Interface_userservice userService1;
+
+
+
+    //Added on Nov 9th 2020
+    LinearLayout dashboard_LL,feessummary_LL,viewmaps_LL;
+    ImageView dashboard_downarrow_IV,dashboard_uparrow_IV,feessummary_IV,feessummary_uparrow_IV,viewmaps_downarrow_IV,viewmaps_uparrow_IV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +121,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         getSupportActionBar().setTitle("Dashboard");
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
+        userService1 = Class_ApiUtils.getUserService();
         sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
         str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
         dropoutscount_TV = findViewById(R.id.dropoutscount_TV);
@@ -113,6 +140,133 @@ public class Activity_Dashboard extends AppCompatActivity {
         scorecardlayout2_LL= findViewById(R.id.scorecardlayout2_LL);
         feesummarheading_TV= findViewById(R.id.feesummarheading_TV);
 
+
+        //Added by shivaleela on 9th NOv 2020
+        dashboard_LL=(LinearLayout)findViewById(R.id.dashboard_LL);
+        feessummary_LL=(LinearLayout)findViewById(R.id.feessummary_LL);
+        viewmaps_LL=(LinearLayout)findViewById(R.id.viewmaps_LL);
+        dashboard_downarrow_IV=(ImageView)findViewById(R.id.dashboard_downarrow_IV);
+        dashboard_uparrow_IV=(ImageView)findViewById(R.id.dashboard_uparrow_IV);
+        feessummary_IV=(ImageView)findViewById(R.id.feessummary_IV);
+        feessummary_uparrow_IV=(ImageView)findViewById(R.id.feessummary_uparrow_IV);
+        viewmaps_downarrow_IV=(ImageView)findViewById(R.id.viewmaps_downarrow_IV);
+        viewmaps_uparrow_IV=(ImageView)findViewById(R.id.viewmaps_uparrow_IV);
+
+        dashboard_downarrow_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.VISIBLE);
+                feessummary_LL.setVisibility(View.GONE);
+                viewmaps_LL.setVisibility(View.GONE);
+
+                dashboard_uparrow_IV.setVisibility(View.VISIBLE);
+                dashboard_downarrow_IV.setVisibility(View.GONE);
+
+                feessummary_uparrow_IV.setVisibility(View.GONE);
+                feessummary_IV.setVisibility(View.VISIBLE);
+
+
+                viewmaps_uparrow_IV.setVisibility(View.GONE);
+                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+
+        dashboard_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.GONE);
+                feessummary_LL.setVisibility(View.GONE);
+                viewmaps_LL.setVisibility(View.GONE);
+
+                dashboard_uparrow_IV.setVisibility(View.GONE);
+                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+        feessummary_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.GONE);
+                feessummary_LL.setVisibility(View.VISIBLE);
+                viewmaps_LL.setVisibility(View.GONE);
+
+                feessummary_uparrow_IV.setVisibility(View.VISIBLE);
+                feessummary_IV.setVisibility(View.GONE);
+
+                dashboard_uparrow_IV.setVisibility(View.GONE);
+                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+
+                viewmaps_uparrow_IV.setVisibility(View.GONE);
+                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+
+
+
+
+            }
+        });
+
+
+        feessummary_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.GONE);
+                feessummary_LL.setVisibility(View.VISIBLE);
+                viewmaps_LL.setVisibility(View.GONE);
+
+                feessummary_uparrow_IV.setVisibility(View.GONE);
+                feessummary_IV.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+
+
+
+        viewmaps_downarrow_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.GONE);
+                feessummary_LL.setVisibility(View.GONE);
+                viewmaps_LL.setVisibility(View.VISIBLE);
+
+                viewmaps_uparrow_IV.setVisibility(View.VISIBLE);
+                viewmaps_downarrow_IV.setVisibility(View.GONE);
+
+                feessummary_uparrow_IV.setVisibility(View.GONE);
+                feessummary_IV.setVisibility(View.VISIBLE);
+
+                dashboard_uparrow_IV.setVisibility(View.GONE);
+                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+
+
+
+            }
+        });
+
+
+        viewmaps_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard_LL.setVisibility(View.GONE);
+                feessummary_LL.setVisibility(View.GONE);
+                viewmaps_LL.setVisibility(View.GONE);
+
+
+                viewmaps_uparrow_IV.setVisibility(View.GONE);
+                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
+
+//=====================================================================
         loadcenters_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -173,8 +327,9 @@ public class Activity_Dashboard extends AppCompatActivity {
         deleteSandBoxDrodownTable_B4insertion();
         deleteSandBoxTable_B4insertion();
         if (isInternetPresent) {
-            GetDashboardInfoTask task = new GetDashboardInfoTask(Activity_Dashboard.this);
-            task.execute();
+            getdashboardinfo_new();
+//            GetDashboardInfoTask task = new GetDashboardInfoTask(Activity_Dashboard.this);
+//            task.execute();
         } else {
             loadSandbox_SP.setVisibility(View.GONE);
             scorecardlayout1_LL.setVisibility(View.GONE);
@@ -185,165 +340,330 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     }
 
-    private class GetDashboardInfoTask extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
-        Context context;
+//    private class GetDashboardInfoTask extends AsyncTask<String, Void, Void> {
+//        ProgressDialog dialog;
+//        Context context;
+//
+//        protected void onPreExecute() {
+//
+//            dialog.setMessage("Please wait..");
+//            dialog.setCanceledOnTouchOutside(false);
+//            dialog.show();
+//
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... values) {
+//
+//        }
+//
+//
+//        @Override
+//        protected Void doInBackground(String... params) {
+//            Log.i("list", "doInBackground");
+//
+//            getdashboardinfo();  // call of details
+//            return null;
+//        }
+//
+//        public GetDashboardInfoTask(Context context1) {
+//            context = context1;
+//            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void result) {
+//
+//            if ((dialog != null) && dialog.isShowing()) {
+//                dialog.dismiss();
+//
+//            }
+//
+//
+//            if (str_dashboard_status.equals("Error")) {
+//
+//                Toast.makeText(getApplicationContext(), "No Result", Toast.LENGTH_SHORT).show();
+//
+//            } else {
+//                uploadSandboxDropdownfromDB_list();
+//                uploadSandboxfromDB_list();
+//            }
+//            Log.e("tag", "Reached the onPostExecute");
+//
+//        }//end of onPostExecute
+//    }// end Async task
+//
+//    private void getdashboardinfo() {
+//        Vector<SoapObject> result1 = null;
+//
+//        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
+//        String METHOD_NAME = "LoadDashboard";
+//        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadDashboard";
+//
+//        try {
+//            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
+//            request.addProperty("User_ID", str_loginuserID);
+//            Log.i("value at request", request.toString());
+//            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+//            envelope.dotNet = true;
+//            //Set output SOAP object
+//            envelope.setOutputSoapObject(request);
+//            //Create HTTP call object
+//            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+//
+//            try {
+//
+//                androidHttpTransport.call(SOAPACTION, envelope);
+//
+//                SoapObject response = (SoapObject) envelope.getResponse();
+//                SoapObject obj2 = (SoapObject) response.getProperty(0);
+//                Log.i("value at response", response.toString());
+//                arrayObjclass_Scorecards_CenterSelection=new Class_Scorecards_CenterSelection[response.getPropertyCount()];
+//                arrayObjclass_dashboard_sandBoxes=new Class_Dashboard_SandBox[response.getPropertyCount()];
+//
+//                for (int i = 0; i < response.getPropertyCount(); i++) {
+//                    SoapObject list = (SoapObject) response.getProperty(i);
+//                    SoapPrimitive soap_no_of_students, soap_no_of_villages, soap_no_of_schools, soap_no_of_male, soap_no_of_female, soap_no_of_dropouts;
+//
+//                    str_dashboard_status = list.getProperty("Dashboard_Status").toString();
+//                    if (str_dashboard_status.equals("Error")) {
+//                        Log.e("str_dashboard_status", str_dashboard_status);
+//
+//                    } else {
+//                        soap_no_of_students = (SoapPrimitive) obj2.getProperty("Count_Student");
+//                        soap_no_of_villages = (SoapPrimitive) obj2.getProperty("Count_Village");
+//                        soap_no_of_schools = (SoapPrimitive) obj2.getProperty("Count_Institute");
+//                        soap_no_of_male = (SoapPrimitive) obj2.getProperty("Count_Male");
+//                        soap_no_of_female = (SoapPrimitive) obj2.getProperty("Count_Female");
+//                        soap_no_of_dropouts = (SoapPrimitive) obj2.getProperty("Count_Dropout");
+//
+//                        response_soapobj_sandbox_id = (SoapPrimitive) obj2.getProperty("Sandbox_ID");
+//                        response_soapobj_sandbox_name= (SoapPrimitive) obj2.getProperty("Sandbox_Name");
+//
+//                        Class_Scorecards_CenterSelection innerObj_class_Scorecards_CenterSelection = new Class_Scorecards_CenterSelection();
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxID(response_soapobj_sandbox_id.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxName(response_soapobj_sandbox_name.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_villages(soap_no_of_villages.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_schools(soap_no_of_schools.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_students(soap_no_of_students.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_male(soap_no_of_male.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_female(soap_no_of_female.toString());
+//                        innerObj_class_Scorecards_CenterSelection.setScorecards_dropouts(soap_no_of_dropouts.toString());
+//
+//                        Class_Dashboard_SandBox class_dashboard_sandBox = new Class_Dashboard_SandBox();
+//                        class_dashboard_sandBox.setDashboard_sand_id(response_soapobj_sandbox_id.toString());
+//                        class_dashboard_sandBox.setDashboard_sand_name(response_soapobj_sandbox_name.toString());
+//
+//                        str_no_of_villages = list.getProperty("Count_Village").toString();
+//                        str_no_of_students = list.getProperty("Count_Student").toString();
+//                        str_no_of_schools = list.getProperty("Count_Institute").toString();
+//                        str_no_of_male = list.getProperty("Count_Male").toString();
+//                        str_no_of_female = list.getProperty("Count_Female").toString();
+//                        str_no_of_dropouts = list.getProperty("Count_Dropout").toString();
+//
+//                        str_dashboard_sandid = list.getProperty("Sandbox_ID").toString();
+//                        str_dashboard_sandname = list.getProperty("Sandbox_Name").toString();
+//                        arrayObjclass_Scorecards_CenterSelection[i]=innerObj_class_Scorecards_CenterSelection;
+//                        arrayObjclass_dashboard_sandBoxes[i]=class_dashboard_sandBox;
+//
+//                        Log.e("soap_no_of_students", String.valueOf(soap_no_of_students));
+//
+//                        runOnUiThread(new Runnable() {
+//
+//                            @Override
+//                            public void run() {
+//
+//                                // Stuff that updates the UI
+//
+//                                setvalues();
+//                            }
+//                        });
+//
+//                        DBCreate_dash_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname);
+//                        DBCreate_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname,str_no_of_villages,str_no_of_schools,str_no_of_students,str_no_of_male,str_no_of_female,str_no_of_dropouts);
+//                    }
+//
+//
+//                }// End of for loop
+////                uploadSandboxDropdownfromDB_list();
+////                uploadSandboxfromDB_list();
+//            } catch (Throwable t) {
+//
+//                Log.e("request fail", "> " + t.getMessage());
+//            }
+//        } catch (Throwable t) {
+//            Log.e("UnRegister  Error", "> " + t.getMessage());
+//
+//        }
+//
+//
+//    }//end of getlist()
 
-        protected void onPreExecute() {
 
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
+    public void getdashboardinfo_new() {
 
-        }
+        Call<Class_getUserDashboardResponse> call = userService1.getdashboardDetails(str_loginuserID);
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_Dashboard.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
+        call.enqueue(new Callback<Class_getUserDashboardResponse>() {
+            @Override
+            public void onResponse(Call<Class_getUserDashboardResponse> call, Response<Class_getUserDashboardResponse> response) {
+                Log.e("Entered resp", "getdashboardDetails");
 
-        }
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    Class_getUserDashboardResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+                        List<Class_dashboardList> monthContents_list = response.body().getListVersion();
 
+                        Class_dashboardList []  arrayObj_Class_monthcontents = new Class_dashboardList[monthContents_list.size()];
+                        arrayObjclass_Scorecards_CenterSelection=new Class_Scorecards_CenterSelection[monthContents_list.size()];
+                        arrayObjclass_dashboard_sandBoxes=new Class_Dashboard_SandBox[monthContents_list.size()];
 
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getdashboardinfo();  // call of details
-            return null;
-        }
-
-        public GetDashboardInfoTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
 
 
-            if (str_dashboard_status.equals("Error")) {
+                            Log.e("getdashboard", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getdashboard", class_loginresponse.getMessage());
+//                            {
+//                                "Dashboard_ID": 0,
+//                                    "Sandbox_ID": "0",
+//                                    "Sandbox_Name": "ALL",
+//                                    "Count_Institute": "59",
+//                                    "Count_Village": "53",
+//                                    "Count_Applicant": "3822",
+//                                    "Count_Admission": "3822",
+//                                    "Count_Male": "0",
+//                                    "Count_Female": "0",
+//                                    "Count_Dropout": "525",
+//                                    "Count_Student": "3804",
+//                                    "Dashboard_Status": "Active"
+//                            }
+                            Class_dashboardList innerObj_Class_SandboxList = new Class_dashboardList();
+                            innerObj_Class_SandboxList.setDashboardID(class_loginresponse.getListVersion().get(i).getDashboardID());
+                            innerObj_Class_SandboxList.setSandboxID(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            innerObj_Class_SandboxList.setSandboxName(class_loginresponse.getListVersion().get(i).getSandboxName());
+                            innerObj_Class_SandboxList.setCountInstitute(class_loginresponse.getListVersion().get(i).getCountInstitute());
+                            innerObj_Class_SandboxList.setCountVillage(class_loginresponse.getListVersion().get(i).getCountVillage());
+                            innerObj_Class_SandboxList.setCountApplicant(class_loginresponse.getListVersion().get(i).getCountApplicant());
+                            innerObj_Class_SandboxList.setCountAdmission(class_loginresponse.getListVersion().get(i).getCountAdmission());
+                            innerObj_Class_SandboxList.setCountMale(class_loginresponse.getListVersion().get(i).getCountMale());
+                            innerObj_Class_SandboxList.setCountFemale(class_loginresponse.getListVersion().get(i).getCountFemale());
+                            innerObj_Class_SandboxList.setCountDropout(class_loginresponse.getListVersion().get(i).getCountDropout());
+                            innerObj_Class_SandboxList.setCountStudent(class_loginresponse.getListVersion().get(i).getCountStudent());
+                            innerObj_Class_SandboxList.setDashboardStatus(class_loginresponse.getListVersion().get(i).getDashboardStatus());
+                            arrayObj_Class_monthcontents[i]=innerObj_Class_SandboxList;
 
-                Toast.makeText(getApplicationContext(), "No Result", Toast.LENGTH_SHORT).show();
 
-            } else {
-                uploadSandboxDropdownfromDB_list();
-                uploadSandboxfromDB_list();
-            }
-            Log.e("tag", "Reached the onPostExecute");
 
-        }//end of onPostExecute
-    }// end Async task
+                            //////////////////////////////////////////////////////
+                            Class_Scorecards_CenterSelection innerObj_class_Scorecards_CenterSelection = new Class_Scorecards_CenterSelection();
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxID(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxName(class_loginresponse.getListVersion().get(i).getSandboxName());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_villages(class_loginresponse.getListVersion().get(i).getCountVillage());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_schools(class_loginresponse.getListVersion().get(i).getCountInstitute());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_students(class_loginresponse.getListVersion().get(i).getCountStudent());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_male(class_loginresponse.getListVersion().get(i).getCountMale());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_female(class_loginresponse.getListVersion().get(i).getCountFemale());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_dropouts(class_loginresponse.getListVersion().get(i).getCountDropout());
 
-    private void getdashboardinfo() {
-        Vector<SoapObject> result1 = null;
+                            Class_Dashboard_SandBox class_dashboard_sandBox = new Class_Dashboard_SandBox();
+                            class_dashboard_sandBox.setDashboard_sand_id(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            class_dashboard_sandBox.setDashboard_sand_name(class_loginresponse.getListVersion().get(i).getSandboxName());
 
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadDashboard";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadDashboard";
+                            str_no_of_villages = class_loginresponse.getListVersion().get(i).getCountVillage();
+                            str_no_of_students = class_loginresponse.getListVersion().get(i).getCountStudent();
+                            str_no_of_schools = class_loginresponse.getListVersion().get(i).getCountInstitute();
+                            str_no_of_male = class_loginresponse.getListVersion().get(i).getCountMale();
+                            str_no_of_female = class_loginresponse.getListVersion().get(i).getCountFemale();
+                            str_no_of_dropouts = class_loginresponse.getListVersion().get(i).getCountDropout();
+                            Log.e("str_no_of_villages",str_no_of_villages);
 
-        try {
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", str_loginuserID);
-            Log.i("value at request", request.toString());
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+                            str_dashboard_sandid = class_loginresponse.getListVersion().get(i).getSandboxID();
+                            str_dashboard_sandname = class_loginresponse.getListVersion().get(i).getSandboxName();
+                            arrayObjclass_Scorecards_CenterSelection[i]=innerObj_class_Scorecards_CenterSelection;
+                            arrayObjclass_dashboard_sandBoxes[i]=class_dashboard_sandBox;
 
-            try {
+                            ///////////////////////////////////////////////////////
+                            runOnUiThread(new Runnable() {
 
-                androidHttpTransport.call(SOAPACTION, envelope);
+                                @Override
+                                public void run() {
 
-                SoapObject response = (SoapObject) envelope.getResponse();
-                SoapObject obj2 = (SoapObject) response.getProperty(0);
-                Log.i("value at response", response.toString());
-                arrayObjclass_Scorecards_CenterSelection=new Class_Scorecards_CenterSelection[response.getPropertyCount()];
-                arrayObjclass_dashboard_sandBoxes=new Class_Dashboard_SandBox[response.getPropertyCount()];
+                                    // Stuff that updates the UI
 
-                for (int i = 0; i < response.getPropertyCount(); i++) {
-                    SoapObject list = (SoapObject) response.getProperty(i);
-                    SoapPrimitive soap_no_of_students, soap_no_of_villages, soap_no_of_schools, soap_no_of_male, soap_no_of_female, soap_no_of_dropouts;
+                                    setvalues();
+                                }
+                            });
 
-                    str_dashboard_status = list.getProperty("Dashboard_Status").toString();
-                    if (str_dashboard_status.equals("Error")) {
-                        Log.e("str_dashboard_status", str_dashboard_status);
+                            Log.e("str_dashboard_sandid",str_dashboard_sandid);
+                            Log.e("str_dashboard_sandname",str_dashboard_sandname);
+
+                            DBCreate_dash_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname);
+                            DBCreate_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname,str_no_of_villages,str_no_of_schools,str_no_of_students,str_no_of_male,str_no_of_female,str_no_of_dropouts);
+                        }//for loop end
+                        uploadSandboxDropdownfromDB_list();
+                        uploadSandboxfromDB_list();
+//                        RecyclerView.Adapter adapter1 = new Emp_monthcontents_RecyclerViewAdapter(Array_ClassListVersion);
+//
+//                        recyclerview.setAdapter(adapter1);
+
 
                     } else {
+                        progressDoalog.dismiss();
+//                        str_getmonthsummary_errormsg = class_loginresponse.getMessage();
+//                        alerts_dialog_getmonthsummaryError();
 
+                        // Toast.makeText(getContext(), class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
 
-                        soap_no_of_students = (SoapPrimitive) obj2.getProperty("Count_Student");
-                        soap_no_of_villages = (SoapPrimitive) obj2.getProperty("Count_Village");
-                        soap_no_of_schools = (SoapPrimitive) obj2.getProperty("Count_Institute");
-                        soap_no_of_male = (SoapPrimitive) obj2.getProperty("Count_Male");
-                        soap_no_of_female = (SoapPrimitive) obj2.getProperty("Count_Female");
-                        soap_no_of_dropouts = (SoapPrimitive) obj2.getProperty("Count_Dropout");
+                    // … or just log the issue like we’re doing :)
+//                    Log.e("error message", error.getMsg());
+//                    str_getmonthsummary_errormsg = error.getMsg();
+//                    alerts_dialog_getexlistviewError();
 
-                        response_soapobj_sandbox_id = (SoapPrimitive) obj2.getProperty("Sandbox_ID");
-                        response_soapobj_sandbox_name= (SoapPrimitive) obj2.getProperty("Sandbox_Name");
+                    //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
 
-                        Class_Scorecards_CenterSelection innerObj_class_Scorecards_CenterSelection = new Class_Scorecards_CenterSelection();
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxID(response_soapobj_sandbox_id.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxName(response_soapobj_sandbox_name.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_villages(soap_no_of_villages.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_schools(soap_no_of_schools.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_students(soap_no_of_students.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_male(soap_no_of_male.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_female(soap_no_of_female.toString());
-                        innerObj_class_Scorecards_CenterSelection.setScorecards_dropouts(soap_no_of_dropouts.toString());
+                    if (error.getMsg() != null) {
 
-                        Class_Dashboard_SandBox class_dashboard_sandBox = new Class_Dashboard_SandBox();
-                        class_dashboard_sandBox.setDashboard_sand_id(response_soapobj_sandbox_id.toString());
-                        class_dashboard_sandBox.setDashboard_sand_name(response_soapobj_sandbox_name.toString());
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
 
-                        str_no_of_villages = list.getProperty("Count_Village").toString();
-                        str_no_of_students = list.getProperty("Count_Student").toString();
-                        str_no_of_schools = list.getProperty("Count_Institute").toString();
-                        str_no_of_male = list.getProperty("Count_Male").toString();
-                        str_no_of_female = list.getProperty("Count_Female").toString();
-                        str_no_of_dropouts = list.getProperty("Count_Dropout").toString();
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_Dashboard.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
 
-                        str_dashboard_sandid = list.getProperty("Sandbox_ID").toString();
-                        str_dashboard_sandname = list.getProperty("Sandbox_Name").toString();
-                        arrayObjclass_Scorecards_CenterSelection[i]=innerObj_class_Scorecards_CenterSelection;
-                        arrayObjclass_dashboard_sandBoxes[i]=class_dashboard_sandBox;
-
-                        Log.e("soap_no_of_students", String.valueOf(soap_no_of_students));
-
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-                                // Stuff that updates the UI
-
-                                setvalues();
-                            }
-                        });
-
-                        DBCreate_dash_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname);
-                        DBCreate_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname,str_no_of_villages,str_no_of_schools,str_no_of_students,str_no_of_male,str_no_of_female,str_no_of_dropouts);
                     }
 
-
-                }// End of for loop
-
-            } catch (Throwable t) {
-
-                Log.e("request fail", "> " + t.getMessage());
+                }
             }
-        } catch (Throwable t) {
-            Log.e("UnRegister  Error", "> " + t.getMessage());
 
-        }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
 
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
 
-    }//end of getlist()
+    }
+
 
     public void setvalues() {
 
@@ -380,8 +700,9 @@ public class Activity_Dashboard extends AppCompatActivity {
         if (isInternetPresent) {
             deleteCenterTable_B4insertion();
             deleteFeesSummaryTable_B4insertion();
-            GetBarChartInfoTask task = new GetBarChartInfoTask(Activity_Dashboard.this);
-            task.execute();
+//            GetBarChartInfoTask task = new GetBarChartInfoTask(Activity_Dashboard.this);
+//            task.execute();
+            getbarchartinfo_new();
         } else {
             feesummarheading_TV.setVisibility(View.GONE);
             loadcenters_SP.setVisibility(View.GONE);
@@ -564,6 +885,8 @@ public class Activity_Dashboard extends AppCompatActivity {
                     DBCreate_FeesSummaryDatadetails_insert_2SQLiteDB(str_dashboard_instid, str_dashboard_instname, str_dashboard_receivable, str_dashboard_received, str_dashboard_balance, selected_instituteID);
                 }//end for loop
 
+
+
             } catch (Throwable t) {
 
                 Log.e("getCollege fail", "> " + t.getMessage());
@@ -577,6 +900,152 @@ public class Activity_Dashboard extends AppCompatActivity {
     }//End of uploaddetails
 
 
+    public void getbarchartinfo_new() {
+
+        Call<Class_getUserPaymentResponse> call = userService1.getuserpaymentstatus(str_loginuserID);
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_Dashboard.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<Class_getUserPaymentResponse>() {
+            @Override
+            public void onResponse(Call<Class_getUserPaymentResponse> call, Response<Class_getUserPaymentResponse> response) {
+                Log.e("Entered resp", "getUserPaymentResponse");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    Class_getUserPaymentResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+                        List<Class_UserPaymentList> monthContents_list = response.body().getuserPaymentList();
+
+                        Class_UserPaymentList []  arrayObj_Class_monthcontents = new Class_UserPaymentList[monthContents_list.size()];
+                        arrayObj_Class_BarchartData = new Class_PiechartData[monthContents_list.size()];
+                        arrayObjclass_dashboard_institute = new Class_Dashboard_Institute[monthContents_list.size()];
+                        arrayObjclass_dashboard_feessummary = new Class_Dashboard_FeesSummary[monthContents_list.size()];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("getUserPayment", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getUserPayment", class_loginresponse.getMessage());
+
+                            Class_PiechartData innerObj_Class_barchart = new Class_PiechartData();
+                            innerObj_Class_barchart.setInstitute_name(class_loginresponse.getuserPaymentList().get(i).getInstituteName());
+                            innerObj_Class_barchart.setStudent_count(class_loginresponse.getuserPaymentList().get(i).getStudentCount());
+                            innerObj_Class_barchart.setReceivable(class_loginresponse.getuserPaymentList().get(i).getReceivable());
+                            innerObj_Class_barchart.setReceived(class_loginresponse.getuserPaymentList().get(i).getReceived());
+                            innerObj_Class_barchart.setBalance(class_loginresponse.getuserPaymentList().get(i).getBalance());
+
+
+                            Class_Dashboard_Institute innerObj_Class_dashboard_inst = new Class_Dashboard_Institute();
+                            innerObj_Class_dashboard_inst.setDashboard_inst_id(String.valueOf(class_loginresponse.getuserPaymentList().get(i).getInstituteID()));
+                            innerObj_Class_dashboard_inst.setDashboard_inst_name(class_loginresponse.getuserPaymentList().get(i).getInstituteName());
+
+
+                            Class_Dashboard_FeesSummary innerObj_class_Dashboard_FeesSummary = new Class_Dashboard_FeesSummary();
+                            innerObj_class_Dashboard_FeesSummary.setInstitute_ID(String.valueOf(class_loginresponse.getuserPaymentList().get(i).getInstituteID()));
+                            innerObj_class_Dashboard_FeesSummary.setInstitute_Name(class_loginresponse.getuserPaymentList().get(i).getInstituteName());
+                            innerObj_class_Dashboard_FeesSummary.setReceivable(class_loginresponse.getuserPaymentList().get(i).getReceivable());
+                            innerObj_class_Dashboard_FeesSummary.setReceived(class_loginresponse.getuserPaymentList().get(i).getReceived());
+                            innerObj_class_Dashboard_FeesSummary.setBalance(class_loginresponse.getuserPaymentList().get(i).getBalance());
+
+
+                            arrayObjclass_dashboard_institute[i] = innerObj_Class_dashboard_inst;
+                            arrayObj_Class_BarchartData[i] = innerObj_Class_barchart;
+                            arrayObjclass_dashboard_feessummary[i] = innerObj_class_Dashboard_FeesSummary;
+
+                            Log.e("class", arrayObj_Class_BarchartData[i].getInstitute_name());
+                            int int_val_no_of_students = Integer.parseInt(arrayObj_Class_BarchartData[i].getStudent_count());
+                            Float students_float = Float.valueOf(int_val_no_of_students).floatValue();
+
+
+                            int_val_receivable = Integer.parseInt(arrayObj_Class_BarchartData[i].getReceivable());
+                            float_val_receivable = Float.valueOf(int_val_receivable).floatValue();
+
+
+                            int_val_received = Integer.parseInt(arrayObj_Class_BarchartData[i].getReceived());
+                            float_val_received = Float.valueOf(int_val_received).floatValue();
+
+                            int_val_balance = Integer.parseInt(arrayObj_Class_BarchartData[i].getBalance());
+                            float_val_balance = Float.valueOf(int_val_balance).floatValue();
+
+                            str_dashboard_instid = String.valueOf(class_loginresponse.getuserPaymentList().get(i).getInstituteID());
+                            str_dashboard_instname = class_loginresponse.getuserPaymentList().get(i).getInstituteName();
+                            str_dashboard_receivable = class_loginresponse.getuserPaymentList().get(i).getReceivable();
+                            str_dashboard_received = class_loginresponse.getuserPaymentList().get(i).getReceived();
+                            str_dashboard_balance = class_loginresponse.getuserPaymentList().get(i).getBalance();
+
+
+
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    newbarchart();
+                                }
+                            });
+
+                            DBCreate_Instdetails_insert_2SQLiteDB(str_dashboard_instid, str_dashboard_instname);
+                            DBCreate_FeesSummaryDatadetails_insert_2SQLiteDB(str_dashboard_instid, str_dashboard_instname, str_dashboard_receivable, str_dashboard_received, str_dashboard_balance, selected_instituteID);
+
+
+
+                        }//for loop end
+
+                        uploadCentersfromDB_list();
+                        uploadFeesSummaryfromDB_list();
+
+
+                    } else {
+                        progressDoalog.dismiss();
+//                        str_getmonthsummary_errormsg = class_loginresponse.getMessage();
+//                        alerts_dialog_getmonthsummaryError();
+
+                        // Toast.makeText(getContext(), class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+//                    Log.e("error message", error.getMsg());
+//                    str_getmonthsummary_errormsg = error.getMsg();
+//                    alerts_dialog_getexlistviewError();
+
+                    //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_Dashboard.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
 
 
     public void DBCreate_FeesSummaryDatadetails_insert_2SQLiteDB(String str_instID, String str_instname, String str_receivable, String str_received, String str_balance, String str_selected_instid) {
@@ -621,8 +1090,8 @@ public class Activity_Dashboard extends AppCompatActivity {
         String SQLiteQuery = "INSERT INTO DropSandBoxList(SandBox_ID,SandBox_Name)" +
                 " VALUES ('" + str_sandboxID + "','" + str_sandboxname +"');";
         db_sandbox.execSQL(SQLiteQuery);
-        Log.e("str_sandboxID DB", str_sandboxID);
-        Log.e("str_sandboxname DB", str_sandboxname);
+        Log.e("inset DB", str_sandboxID);
+        Log.e("insert DB", str_sandboxname);
         db_sandbox.close();
     }
 
@@ -655,7 +1124,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         db_centers.close();
         if (x > 0) {
 
-            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_dashboard_sandBoxes2);
+            ArrayAdapter<Class_Dashboard_SandBox> dataAdapter = new ArrayAdapter<Class_Dashboard_SandBox>(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_dashboard_sandBoxes2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             loadSandbox_SP.setAdapter(dataAdapter);
         }
@@ -688,7 +1157,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         db_centers.close();
         if (x > 0) {
 
-            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_dashboard_institute2);
+            ArrayAdapter<Class_Dashboard_Institute> dataAdapter = new ArrayAdapter<Class_Dashboard_Institute>(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_dashboard_institute2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             loadcenters_SP.setAdapter(dataAdapter);
         }
@@ -1038,210 +1507,4 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     /////////////////webservice/////////////////////////////////////
 
-    public void getVillagelat_long() {
-
-        if (isInternetPresent) {
-            GetVillageLocationTask task = new GetVillageLocationTask(Activity_Dashboard.this);
-            task.execute();
-        } else {
-            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-//    class GetVillageLocationTask extends AsyncTask<String, Void, Void> implements OnMapReadyCallback {
-        //  ProgressDialog dialog;
-class GetVillageLocationTask extends AsyncTask<String, Void, Void>{
-
-        Context context;
-
-        protected void onPreExecute() {
-
-//            dialog.setMessage("Please wait..");
-//            dialog.setCanceledOnTouchOutside(false);
-//            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getvillagelocationinfo();
-
-            // call of details
-            return null;
-        }
-
-        public GetVillageLocationTask(Context context1) {
-            context = context1;
-            // dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-//            if ((dialog != null) && dialog.isShowing()) {
-//                dialog.dismiss();
-//
-//            }
-
-
-            if (str_latlong_status.equals("success")) {
-
-//                mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                        .findFragmentById(R.id.map);
-//                mapFragment.getMapAsync(this);
-//                mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                    @Override
-//                    public void onMapReady(GoogleMap googleMap) {
-//                        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-//
-//                        int i=0;
-//
-//                        Log.e("latlongcount", String.valueOf(latlongcount));
-//                        for(i=0;i<latlongcount;i++){
-//                            Log.e("lat abc", arrayObj_class_GoogleLocations[i].getLatitude());
-//
-//                            Double lat=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLatitude());
-//                            Double longi=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLongitude());
-//                            Log.e("lat oncreate", String.valueOf(lat));
-//                            Log.e("longi oncreate", String.valueOf(longi));
-//
-//                            googleMap.addMarker(new MarkerOptions()
-//                                    .position(new LatLng(lat, longi))
-//                                    .title(arrayObj_class_GoogleLocations[i].getVillagename())
-//                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-//
-//
-//                        }
-//                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(15.539836, 75.056725), 8));
-//
-//                    }
-//                });
-//
-//            } else {
-//
-//            }
-                Log.e("tag", "Reached the onPostExecute");
-
-            }//end of onPostExecute
-
-//        @Override
-//        public void onMapReady(GoogleMap googleMap) {
-//            int i=0;
-//
-//
-//            for(i=0;i<latlongcount;i++){
-//                Double lat=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLatitude());
-//                Double longi=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLongitude());
-//                Log.e("lat", String.valueOf(lat));
-//                Log.e("longi", String.valueOf(longi));
-//
-//                googleMap.addMarker(new MarkerOptions()
-//                        .position(new LatLng(lat, longi))
-//                        .title(arrayObj_class_GoogleLocations[i].getVillagename()));
-//
-//
-//            }
-//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(15.539836, 75.056725), 8));
-//
-//        }
-        }// end Async task
-
-        private void getvillagelocationinfo() {
-            Vector<SoapObject> result1 = null;
-
-            String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-            String METHOD_NAME = "GetVillageLocations";
-            String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/GetVillageLocations";
-
-            try {
-                SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-                // request.addProperty("User_ID", str_loginuserID);
-                //  Log.i("value at request", request.toString());
-                SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-                envelope.dotNet = true;
-                //Set output SOAP object
-                envelope.setOutputSoapObject(request);
-                //Create HTTP call object
-                HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-                try {
-
-                    androidHttpTransport.call(SOAPACTION, envelope);
-
-                    SoapObject response = (SoapObject) envelope.getResponse();
-                    //SoapObject obj2 = (SoapObject) response.getProperty(0);
-                    Log.i("value at response", response.toString());
-                    latlongcount = response.getPropertyCount();
-                    //  arrayObj_class_GoogleLocations=null;
-                    arrayObj_class_GoogleLocations = new Class_GoogleLocations[response.getPropertyCount()];
-
-                    for (int i = 0; i < response.getPropertyCount(); i++) {
-                        SoapObject list = (SoapObject) response.getProperty(i);
-                        SoapPrimitive soap_latitude, soap_longitude, soap_villagename;
-                        str_latlong_status = list.getProperty("status").toString();
-                        if (str_latlong_status.equals("Error")) {
-                            Log.e("str_latlong_status", str_latlong_status);
-
-                        } else {
-
-                            soap_latitude = (SoapPrimitive) list.getProperty("Lattitude");
-                            soap_longitude = (SoapPrimitive) list.getProperty("Logitude");
-                            soap_villagename = (SoapPrimitive) list.getProperty("village_name");
-
-
-                            Class_GoogleLocations innerObj_Class_academic = new Class_GoogleLocations();
-                            innerObj_Class_academic.setLatitude(soap_latitude.toString());
-                            innerObj_Class_academic.setLongitude(soap_longitude.toString());
-                            innerObj_Class_academic.setVillagename(soap_villagename.toString());
-
-                            arrayObj_class_GoogleLocations[i] = innerObj_Class_academic;
-
-                            str_latitude = list.getProperty("Lattitude").toString();
-                            str_longitude = list.getProperty("Logitude").toString();
-
-                            Log.e("soap_latitude", String.valueOf(soap_latitude));
-
-                            runOnUiThread(new Runnable() {
-
-                                @Override
-                                public void run() {
-
-                                    // Stuff that updates the UI
-
-                                    //  setvalues();
-                                }
-                            });
-
-
-                        }
-
-
-                    }// End of for loop
-
-                } catch (Throwable t) {
-
-                    Log.e("request fail", "> " + t.getMessage());
-                }
-            } catch (Throwable t) {
-                Log.e("UnRegister  Error", "> " + t.getMessage());
-
-            }
-
-
-        }//end of getlist()
-
-
-        ////////////////webservice////////////////////////////////////////
-
-    }
 }

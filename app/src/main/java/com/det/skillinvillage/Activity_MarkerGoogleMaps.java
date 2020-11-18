@@ -14,6 +14,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.det.skillinvillage.model.Class_UserPaymentList;
+import com.det.skillinvillage.model.Class_VillageLatLongList;
+import com.det.skillinvillage.model.Class_getUserPaymentResponse;
+import com.det.skillinvillage.model.Class_getVillageLatLong;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,7 +38,12 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
@@ -48,14 +61,15 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
     SharedPreferences sharedpref_loginuserid_Obj;
     Class_GoogleLocations[] arrayObj_class_GoogleLocations;
     int latlongcount=0;
-
+    Interface_userservice userService1;
+    int latlong_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__marker_google_maps);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Locations of SIV Centers");
-
+        userService1 = Class_ApiUtils.getUserService();
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
         sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
@@ -104,8 +118,9 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
     public void getVillagelat_long() {
 
         if (isInternetPresent) {
-            GetVillageLocationTask task = new GetVillageLocationTask(Activity_MarkerGoogleMaps.this);
-            task.execute();
+            getvillagelocationinfo_new();
+//            GetVillageLocationTask task = new GetVillageLocationTask(Activity_MarkerGoogleMaps.this);
+//            task.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
@@ -305,6 +320,129 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
 
 
     ////////////////webservice////////////////////////////////////////
+    public void getvillagelocationinfo_new() {
+
+        Call<Class_getVillageLatLong> call = userService1.getVillageLatLong(str_loginuserID);
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_MarkerGoogleMaps.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<Class_getVillageLatLong>() {
+            @Override
+            public void onResponse(Call<Class_getVillageLatLong> call, Response<Class_getVillageLatLong> response) {
+                Log.e("Entered resp", "getVillageLatLong");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    Class_getVillageLatLong class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+                        List<Class_VillageLatLongList> monthContents_list = response.body().getListVersion();
+                         latlong_count=monthContents_list.size();
+                        Class_VillageLatLongList []  arrayObj_Class_monthcontents = new Class_VillageLatLongList[monthContents_list.size()];
+                        arrayObj_class_GoogleLocations = new Class_GoogleLocations[arrayObj_Class_monthcontents.length];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("getUserPayment", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getUserPayment", class_loginresponse.getMessage());
+
+                            Class_GoogleLocations innerObj_Class_academic = new Class_GoogleLocations();
+                            innerObj_Class_academic.setLatitude(class_loginresponse.getListVersion().get(i).getLattitude());
+                            innerObj_Class_academic.setLongitude(class_loginresponse.getListVersion().get(i).getLogitude());
+                            innerObj_Class_academic.setVillagename(class_loginresponse.getListVersion().get(i).getVillageName());
+
+                            arrayObj_class_GoogleLocations[i] = innerObj_Class_academic;
+
+                            str_latitude =class_loginresponse.getListVersion().get(i).getLattitude();
+                            str_longitude= class_loginresponse.getListVersion().get(i).getLogitude();
+
+                            Log.e("soap_latitude", str_latitude);
+
+                        }//for loop end
+
+                        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                                .findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(Activity_MarkerGoogleMaps.this);
+                        mapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(GoogleMap googleMap) {
+                                googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+                                int i=0;
+
+                                Log.e("latlongcount", String.valueOf(latlong_count));
+                                for(i=0;i<latlong_count;i++){
+                                    Log.e("lat abc", arrayObj_class_GoogleLocations[i].getLatitude());
+
+                                    Double lat=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLatitude());
+                                    Double longi=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLongitude());
+                                    Log.e("lat oncreate", String.valueOf(lat));
+                                    Log.e("longi oncreate", String.valueOf(longi));
+
+                                    googleMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(lat, longi))
+                                            .title(arrayObj_class_GoogleLocations[i].getVillagename())
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+                                }
+                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(15.539836, 75.056725), 4));
+
+                            }
+                        });
+
+
+                    } else {
+                        progressDoalog.dismiss();
+//                        str_getmonthsummary_errormsg = class_loginresponse.getMessage();
+//                        alerts_dialog_getmonthsummaryError();
+
+                        // Toast.makeText(getContext(), class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+//                    Log.e("error message", error.getMsg());
+//                    str_getmonthsummary_errormsg = error.getMsg();
+//                    alerts_dialog_getexlistviewError();
+
+                    //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_MarkerGoogleMaps.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
 
 
     @Override

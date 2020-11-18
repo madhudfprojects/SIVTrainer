@@ -29,12 +29,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.det.skillinvillage.model.Class_AssementList;
+import com.det.skillinvillage.model.Class_dashboardList;
+import com.det.skillinvillage.model.Class_getUserDashboardResponse;
+import com.det.skillinvillage.model.Class_getassessmentlistResponse;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
@@ -71,12 +85,15 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
     Class_ViewAssessmentListview[] arrayobjclass_ViewAssessmentListview,arrayobjclass_ViewAssessmentListview2;
 
 
+    Interface_userservice userService1;
+    Class_AssementList []  arrayObj_Class_monthcontents;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__assessment);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Assessment List");
+        userService1 = Class_ApiUtils.getUserService();
 
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
@@ -102,8 +119,10 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             deleteInstiTable_B4insertion();
             deleteLevelTable_B4insertion();
             deleteStatusTable_B4insertion();
-            AsyncCall_GetAssessmentList task = new AsyncCall_GetAssessmentList(Activity_AssessmentList.this);
-            task.execute();
+//            AsyncCall_GetAssessmentList task = new AsyncCall_GetAssessmentList(Activity_AssessmentList.this);
+//            task.execute();
+
+            getassessmentlist();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
@@ -176,8 +195,10 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             deleteInstiTable_B4insertion();
             deleteLevelTable_B4insertion();
             deleteStatusTable_B4insertion();
-            AsyncCall_GetAssessmentList task = new AsyncCall_GetAssessmentList(Activity_AssessmentList.this);
-            task.execute();
+//            AsyncCall_GetAssessmentList task = new AsyncCall_GetAssessmentList(Activity_AssessmentList.this);
+//            task.execute();
+
+            getassessmentlist();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
@@ -391,7 +412,201 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
 
     }
+//=======================Added by shivaleela on Nov 9th 2020
 
+    public void getassessmentlist() {
+
+        Call<Class_getassessmentlistResponse> call = userService1.GetAssesmentList("12");
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_AssessmentList.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<Class_getassessmentlistResponse>() {
+            @Override
+            public void onResponse(Call<Class_getassessmentlistResponse> call, Response<Class_getassessmentlistResponse> response) {
+                Log.e("Entered resp", "getassessmentlist");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    Class_getassessmentlistResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+                        List<Class_AssementList> monthContents_list = response.body().getLst();
+
+                          arrayObj_Class_monthcontents = new Class_AssementList[monthContents_list.size()];
+
+                        arrayobjClass_Assessment_institute = new Class_Assessment_Institute[arrayObj_Class_monthcontents.length];
+                        arrayobjClass_Assessment_level = new Class_Assessment_Level[arrayObj_Class_monthcontents.length];
+                        arrayobjClass_Assessment_status = new Class_Assessment_Status[arrayObj_Class_monthcontents.length];
+                        arrayobjclass_ViewAssessmentListview=new Class_ViewAssessmentListview[arrayObj_Class_monthcontents.length];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("getassessmentlist", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getassessmentlist", class_loginresponse.getMessage());
+                            str_Assesment_ID = String.valueOf(class_loginresponse.getLst().get(i).getAssesmentID());
+                            str_Assesment_Name = class_loginresponse.getLst().get(i).getAssesmentName();
+                            str_Assesment_Date = class_loginresponse.getLst().get(i).getAssesmentDate();
+                            str_Assesment_Status = class_loginresponse.getLst().get(i).getAssesmentStatus();
+                            str_Lavel_Name = class_loginresponse.getLst().get(i).getLavelName();
+                            str_Institute_Name = class_loginresponse.getLst().get(i).getInstituteName();
+                            str_Institute_ID = String.valueOf(class_loginresponse.getLst().get(i).getInstituteID());
+                            str_level_ID = String.valueOf(class_loginresponse.getLst().get(i).getLevelID());
+                            str_presentcount = class_loginresponse.getLst().get(i).getPresentCount();
+                            str_totalcount = class_loginresponse.getLst().get(i).getTotalCount();
+                            str_maxmarks = class_loginresponse.getLst().get(i).getMaxMarks();
+                            str_save = class_loginresponse.getLst().get(i).getSave();
+
+                            Class_Assessments_List userInfo = new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save);
+                            assessment_array_List.add(userInfo);
+                        }
+
+                        final String[] items = new String[arrayObj_Class_monthcontents.length];
+                        userInfosarr = new Class_Assessments_List[arrayObj_Class_monthcontents.length];
+                        Class_Assessments_List obj = new Class_Assessments_List();
+
+                        Class_Assessments_List.assesmentlistview_info_arr.clear();
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            str_Assesment_ID = assessment_array_List.get(i).getAssessmentID();
+                            str_Assesment_Name = assessment_array_List.get(i).getAssessmentName();
+                            str_Assesment_Date = assessment_array_List.get(i).getAssessmentDate();
+                            str_Assesment_Status = assessment_array_List.get(i).getAssessmentStatus();
+                            str_Lavel_Name = assessment_array_List.get(i).getAssessment_levelName();
+                            str_Institute_Name = assessment_array_List.get(i).getAssessment_instituteName();
+                            str_Institute_ID = assessment_array_List.get(i).getAssessment_instituteID();
+                            str_level_ID = assessment_array_List.get(i).getAssessment_levelID();
+                            str_presentcount = assessment_array_List.get(i).getAssessment_presentstudentcount();
+                            str_totalcount = assessment_array_List.get(i).getAssessment_totalstudentcount();
+                            str_maxmarks = assessment_array_List.get(i).getAssessment_maxmarks();
+                            str_save=assessment_array_List.get(i).getAssessment_save();
+
+                            Class_Assessment_Institute innerObj_Class_institute = new Class_Assessment_Institute();
+                            innerObj_Class_institute.setInstitute_id(str_Institute_ID);
+                            innerObj_Class_institute.setinstitute_assessment_name(str_Institute_Name);
+
+
+                            Class_Assessment_Level innerObj_Class_level = new Class_Assessment_Level();
+                            innerObj_Class_level.setInst_assessmentid(str_Institute_ID);
+                            innerObj_Class_level.setLevel_assessmentid(str_level_ID);
+                            innerObj_Class_level.setLevel_assessmentname(str_Lavel_Name);
+
+
+                            Class_Assessment_Status innerObj_Class_status = new Class_Assessment_Status();
+                            innerObj_Class_status.setAssessment_instituteID(str_Institute_ID);
+                            innerObj_Class_status.setAssessment_levelID(str_level_ID);
+                            innerObj_Class_status.setStatus(str_Assesment_Status);
+
+                            Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview=new Class_ViewAssessmentListview();
+                            innerObjClass_ViewAssessmentListview.setAssessment_instituteID(str_Institute_ID);
+                            innerObjClass_ViewAssessmentListview.setAssessment_instituteName(str_Institute_Name);
+                            innerObjClass_ViewAssessmentListview.setAssessment_levelID(str_level_ID);
+                            innerObjClass_ViewAssessmentListview.setAssessment_levelName(str_Lavel_Name);
+                            innerObjClass_ViewAssessmentListview.setAssessment_presentstudentcount(str_presentcount);
+                            innerObjClass_ViewAssessmentListview.setAssessment_totalstudentcount(str_totalcount);
+                            innerObjClass_ViewAssessmentListview.setAssessment_maxmarks(str_maxmarks);
+                            innerObjClass_ViewAssessmentListview.setAssessmentDate(str_Assesment_Date);
+                            innerObjClass_ViewAssessmentListview.setAssessmentID(str_Assesment_ID);
+                            innerObjClass_ViewAssessmentListview.setAssessmentName(str_Assesment_Name);
+                            innerObjClass_ViewAssessmentListview.setAssessmentStatus(str_Assesment_Status);
+                            innerObjClass_ViewAssessmentListview.setAssessment_save(str_save);
+
+
+                            obj.setAssessmentID(str_Assesment_ID);
+                            obj.setAssessmentName(str_Assesment_Name);
+                            obj.setAssessmentDate(str_Assesment_Date);
+                            obj.setAssessmentStatus(str_Assesment_Status);
+                            obj.setAssessment_levelName(str_Lavel_Name);
+                            obj.setAssessment_instituteID(str_Institute_ID);
+                            obj.setAssessment_instituteName(str_Institute_Name);
+                            obj.setAssessment_levelID(str_level_ID);
+                            obj.setAssessment_presentstudentcount(str_presentcount);
+                            obj.setAssessment_totalstudentcount(str_totalcount);
+                            obj.setAssessment_maxmarks(str_maxmarks);
+                            obj.setAssessment_save(str_save);
+
+
+                            userInfosarr[i] = obj;
+                            arrayobjClass_Assessment_institute[i] = innerObj_Class_institute;
+                            arrayobjClass_Assessment_level[i] = innerObj_Class_level;
+                            arrayobjClass_Assessment_status[i]=innerObj_Class_status;
+                            arrayobjclass_ViewAssessmentListview[i]=innerObjClass_ViewAssessmentListview;
+
+
+
+                            Log.i("Tag", "items aa=" + assessment_array_List.get(i).getAssessment_levelName());
+                            Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
+                            // adapter.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
+
+
+                            DBCreate_INstdetails_insert_2SQLiteDB(str_Institute_ID, str_Institute_Name);
+                            DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Lavel_Name);
+                            DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status);
+                            DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status,str_Assesment_ID,str_Assesment_Name,str_Assesment_Date,str_presentcount,str_totalcount,str_maxmarks,str_Lavel_Name,str_Institute_Name,str_save);
+                        }
+
+                        Log.i("Tag", "items=" + items.length);
+
+
+                        uploadfromDB_INstlist();
+                        uploadfromDB_levellist();
+                        uploadfromDB_statuslist();
+                        Uploadfrom_ViewList_spinner();
+
+
+                    } else {
+                        progressDoalog.dismiss();
+//                        str_getmonthsummary_errormsg = class_loginresponse.getMessage();
+//                        alerts_dialog_getmonthsummaryError();
+
+                        // Toast.makeText(getContext(), class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+//                    Log.e("error message", error.getMsg());
+//                    str_getmonthsummary_errormsg = error.getMsg();
+//                    alerts_dialog_getexlistviewError();
+
+                    //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_AssessmentList.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
+
+
+
+    //================================================================
 
 
     public void DBCreate_INstdetails_insert_2SQLiteDB(String str_insID, String str_insname) {

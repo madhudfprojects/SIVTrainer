@@ -14,6 +14,9 @@ public class Class_SaveSharedPreference {
 
     static final String PREF_MENU_link = "menu_link";
 
+
+    static final String PREF_USER_MAILID= "user_mailID";
+
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
@@ -73,4 +76,16 @@ public class Class_SaveSharedPreference {
         return getSharedPreferences(ctx).getString(PREF_MENU_link, "");
     }
 
+
+    public static void setUserMailID(Context ctx, String usermailid)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_USER_MAILID, usermailid);
+        editor.commit();
+    }
+
+    public static String getUsermailID(Context ctx)
+    {
+        return getSharedPreferences(ctx).getString(PREF_USER_MAILID, "");
+    }
 }
