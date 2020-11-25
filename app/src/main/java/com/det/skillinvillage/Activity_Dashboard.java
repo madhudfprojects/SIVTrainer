@@ -215,12 +215,11 @@ public class Activity_Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dashboard_LL.setVisibility(View.GONE);
-                feessummary_LL.setVisibility(View.VISIBLE);
                 viewmaps_LL.setVisibility(View.GONE);
 
                 feessummary_uparrow_IV.setVisibility(View.GONE);
                 feessummary_IV.setVisibility(View.VISIBLE);
-
+                feessummary_LL.setVisibility(View.GONE);
 
             }
         });

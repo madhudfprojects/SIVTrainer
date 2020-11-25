@@ -68,6 +68,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
     ImageButton notupload_ib;
     String str_logout_count_Status="",str_loginuserID="";
     SharedPreferences sharedpref_loginuserid_Obj;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -206,7 +207,11 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //                startActivity(i);
 //                finish();
 
-                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_Student_List.class);
+//                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_Student_List.class);
+//                    startActivity(i);
+//                    finish();
+
+                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_ViewStudentList_new.class);
                     startActivity(i);
                     finish();
                 }else{

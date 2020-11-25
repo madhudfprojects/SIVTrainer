@@ -5,6 +5,7 @@ import com.det.skillinvillage.model.Class_PostUpdateStudentAssessmentRequest;
 import com.det.skillinvillage.model.Class_PostUpdateStudentAssessmentResponse;
 import com.det.skillinvillage.model.Class_Post_UpdateStudentAssessmentSubmitRequest;
 import com.det.skillinvillage.model.Class_Post_UpdateStudentAssessmentSubmitResponse;
+import com.det.skillinvillage.model.Class_devicedetails;
 import com.det.skillinvillage.model.Class_getUserDashboardResponse;
 import com.det.skillinvillage.model.Class_getUserPaymentResponse;
 import com.det.skillinvillage.model.Class_getVillageLatLong;
@@ -12,7 +13,10 @@ import com.det.skillinvillage.model.Class_getassessmentlistResponse;
 import com.det.skillinvillage.model.Class_getdemo_Response;
 import com.det.skillinvillage.model.Class_gethelp_Response;
 import com.det.skillinvillage.model.Class_getuserlist;
+import com.det.skillinvillage.model.GetAppVersion;
+import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.NormalLogin_Response;
+import com.det.skillinvillage.model.Student;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -93,6 +97,22 @@ public interface Interface_userservice {
     Call<Class_Post_UpdateStudentAssessmentSubmitResponse>PostUpdateStudentAssessmentSubmit(@Body Class_Post_UpdateStudentAssessmentSubmitRequest request);
 
 
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_ActionDeviceDetails")
+    Call<Class_devicedetails>Post_ActionDeviceDetails(@Body Class_devicedetails request);
+
+    @GET("Authentication/Get_App_Version")
+    Call<GetAppVersion> getAppVersion();
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_User_Location")
+    Call<Location_Data> getLocationData(@Query("User_ID") String User_ID);
+
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_User_Data")
+    Call<Student> getStudentData(@Query("User_ID") String User_ID);
 
 }
 
