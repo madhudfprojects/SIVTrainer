@@ -58,6 +58,7 @@ import com.det.skillinvillage.model.AddStudentDetailsResponse;
 import com.det.skillinvillage.model.Class_Response_AddStudentDetailsList;
 import com.det.skillinvillage.model.Cluster;
 import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.District;
 import com.det.skillinvillage.model.Education;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.Institute;
@@ -65,8 +66,11 @@ import com.det.skillinvillage.model.LearningMode;
 import com.det.skillinvillage.model.Level;
 import com.det.skillinvillage.model.Sandbox;
 import com.det.skillinvillage.model.School;
+import com.det.skillinvillage.model.State;
 import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.StudentList;
+import com.det.skillinvillage.model.Taluka;
+import com.det.skillinvillage.model.Village;
 import com.det.skillinvillage.model.Year;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
@@ -241,6 +245,19 @@ public class Activity_Register_New extends AppCompatActivity {
     Education[] arrayObj_Class_educationDetails2;
     Education obj_Class_education;
 
+    Spinner state_new_SP,district_new_SP,taluk_new_SP,village_new_SP;
+    EditText Studentaddress_ET;
+
+    State Obj_Class_stateDetails;
+    String sp_strstate_ID="",selected_stateName="",sp_strdistrict_ID="",sp_strdistrict_state_ID="",selected_district="",sp_strTaluk_ID="",selected_taluk="",sp_strVillage_ID="",selected_village="";
+    State[] arrayObj_Class_stateDetails2;
+    District Obj_Class_DistrictDetails;
+    District[] arrayObj_Class_DistrictListDetails2;
+    Taluka Obj_Class_TalukDetails;
+    Taluka[] arrayObj_Class_TalukListDetails2;
+    Village Obj_Class_VillageListDetails;
+    Village[] arrayObj_Class_VillageListDetails2;
+    int statepos = 0, districtpos = 0, talukpos = 0, grampanchayatpos = 0, villagepos = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -285,6 +302,13 @@ public class Activity_Register_New extends AppCompatActivity {
         cluster_sp = findViewById(R.id.cluster_SP);
         institute_sp = findViewById(R.id.institutelist_SP);
         level_sp = findViewById(R.id.levellist_SP);
+
+        state_new_SP=findViewById(R.id.state_new_SP);
+        district_new_SP=findViewById(R.id.district_new_SP);
+        taluk_new_SP=findViewById(R.id.taluk_new_SP);
+        village_new_SP=findViewById(R.id.village_new_SP);
+        Studentaddress_ET=(EditText)findViewById(R.id.Studentaddress_ET);
+
 //        gender_sp = (Spinner) findViewById(R.id.gender_SP);
         gender_radiogroup = findViewById(R.id.gender_radiogroup_new);
         rb_male = findViewById(R.id.male_RB_new);
@@ -733,6 +757,141 @@ public class Activity_Register_New extends AppCompatActivity {
 
             }
         });
+        state_new_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                Obj_Class_stateDetails = (State) state_new_SP.getSelectedItem();
+                sp_strstate_ID = Obj_Class_stateDetails.getStateID().toString();
+                selected_stateName = state_new_SP.getSelectedItem().toString();
+                int sel_statesp_new = state_new_SP.getSelectedItemPosition();
+
+                Update_districtid_spinner(sp_strstate_ID);
+               /* if(sel_statesp_new!=sel_statesp)
+                {
+                    sel_statesp=sel_statesp_new;
+                    ViewFarmerList_arraylist.clear();
+                    farmerListViewAdapter.notifyDataSetChanged();
+                    districtlist_SP.setSelection(0);
+                    taluklist_SP.setSelection(0);
+                    villagelist_SP.setSelection(0);
+                    grampanchayatlist_SP.setSelection(0);
+                }*/
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        district_new_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Obj_Class_DistrictDetails = (District) district_new_SP.getSelectedItem();
+                sp_strdistrict_ID = Obj_Class_DistrictDetails.getDistrictID();
+                sp_strdistrict_state_ID = Obj_Class_DistrictDetails.getStateID();
+                selected_district = district_new_SP.getSelectedItem().toString();
+                int sel_districtsp_new = district_new_SP.getSelectedItemPosition();
+                // Log.e("selected_district", " : " + selected_district);
+//                Log.i("sp_strdistrict_state_ID", " : " + sp_strdistrict_state_ID);
+                Log.e("sp_strdistrict_ID", " : " + sp_strdistrict_ID);
+                // Log.i("sp_strstate_ID", " : " + sp_strstate_ID);
+
+
+                // Update_TalukId_spinner("5623");
+
+                Update_TalukId_spinner(sp_strdistrict_ID);
+                // Update_GramPanchayatID_spinner(sp_strdistrict_ID);
+
+                /*if(sel_districtsp_new!=sel_districtsp) {
+                    sel_districtsp=sel_districtsp_new;
+                    ViewFarmerList_arraylist.clear();
+                    farmerListViewAdapter.notifyDataSetChanged();
+                    taluklist_SP.setSelection(0);
+                    villagelist_SP.setSelection(0);
+                    grampanchayatlist_SP.setSelection(0);
+                }*/
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        taluk_new_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Obj_Class_TalukDetails = (Taluka) taluk_new_SP.getSelectedItem();
+                sp_strTaluk_ID = Obj_Class_TalukDetails.getTalukaID();
+                selected_taluk = taluk_new_SP.getSelectedItem().toString();
+                int sel_taluksp_new = taluk_new_SP.getSelectedItemPosition();
+
+                // Update_VillageId_spinner("5433");//5516,sp_strTaluk_ID
+//                Log.i("selected_taluk", " : " + selected_taluk);
+//
+//                Log.e("sp_stryear_ID..", sp_stryear_ID);
+//                Log.e("sp_strstate_ID..", sp_strstate_ID);
+//                Log.e("sp_strdistrict_ID..", sp_strdistrict_ID);
+                //Log.e("sp_strTaluk_ID..", sp_strTaluk_ID);
+
+                // Update_VillageId_spinner(sp_strTaluk_ID);
+               // Update_GramPanchayatID_spinner(sp_strTaluk_ID);
+                Update_VillageId_spinner(sp_strTaluk_ID);
+
+               /* if(sel_taluksp_new!=sel_taluksp) {
+                    sel_taluksp=sel_taluksp_new;
+                    ViewFarmerList_arraylist.clear();
+                    farmerListViewAdapter.notifyDataSetChanged();
+
+                    villagelist_SP.setSelection(0);
+                    grampanchayatlist_SP.setSelection(0);
+                }*/
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        village_new_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Obj_Class_VillageListDetails = (Village) village_new_SP.getSelectedItem();
+                sp_strVillage_ID = Obj_Class_VillageListDetails.getVillageID();
+                selected_village = village_new_SP.getSelectedItem().toString();
+
+                int sel_villagesp_new = village_new_SP.getSelectedItemPosition();
+
+                /*if(sel_villagesp_new!=sel_villagesp) {
+                    sel_villagesp=sel_villagesp_new;
+                    ViewFarmerList_arraylist.clear();
+                    farmerListViewAdapter.notifyDataSetChanged();
+
+                    // grampanchayatlist_SP.setSelection(0);
+                }
+*/
+
+                Log.e("yearselected", village_new_SP.getSelectedItem().toString());
+
+
+                //  Update_ids_farmerlist_listview(sp_stryear_ID, sp_strstate_ID, sp_strdistrict_ID, sp_strTaluk_ID, sp_strVillage_ID, sp_strgrampanchayat_ID);
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
 //        uploadfromDB_SandBoxlist();
@@ -757,6 +916,10 @@ public class Activity_Register_New extends AppCompatActivity {
         uploadfromDB_Levellist();
         uploadfromDB_LearningOptionlist();
         uploadfromDB_Educationlist();
+        uploadfromDB_Statelist();
+        uploadfromDB_Districtlist();
+        uploadfromDB_Taluklist();
+        uploadfromDB_Villagelist();
 
 
     }//oncreate
@@ -1092,6 +1255,178 @@ public class Activity_Register_New extends AppCompatActivity {
 
 
     }
+    public void uploadfromDB_Statelist() {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StateListRest(StateID VARCHAR,StateName VARCHAR,state_yearid VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM StateListRest", null);
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_stateDetails2 = new State[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                State innerObj_Class_SandboxList = new State();
+                innerObj_Class_SandboxList.setStateID(cursor1.getString(cursor1.getColumnIndex("StateID")));
+                innerObj_Class_SandboxList.setStateName(cursor1.getString(cursor1.getColumnIndex("StateName")));
+              //  innerObj_Class_SandboxList.(cursor1.getString(cursor1.getColumnIndex("state_yearid")));
+
+
+                arrayObj_Class_stateDetails2[i] = innerObj_Class_SandboxList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db1.close();
+        if (x > 0) {
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_stateDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            state_new_SP.setAdapter(dataAdapter);
+            state_new_SP.setSelection(statepos);
+            /*if(x>sel_statesp) {
+                statelist_SP.setSelection(sel_statesp);
+            }*/
+        }
+
+    }
+    public void uploadfromDB_Districtlist() {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS DistrictListRest(DistrictID VARCHAR,DistrictName VARCHAR,Distr_yearid VARCHAR,Distr_Stateid VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM DistrictListRest", null);
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_DistrictListDetails2 = new District[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                District innerObj_Class_SandboxList = new District();
+                innerObj_Class_SandboxList.setDistrictID(cursor1.getString(cursor1.getColumnIndex("DistrictID")));
+                innerObj_Class_SandboxList.setDistrictName(cursor1.getString(cursor1.getColumnIndex("DistrictName")));
+                //innerObj_Class_SandboxList.setYear_id(cursor1.getString(cursor1.getColumnIndex("Distr_yearid")));
+                innerObj_Class_SandboxList.setStateID(cursor1.getString(cursor1.getColumnIndex("Distr_Stateid")));
+
+
+                arrayObj_Class_DistrictListDetails2[i] = innerObj_Class_SandboxList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db1.close();
+        if (x > 0) {
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_DistrictListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            district_new_SP.setAdapter(dataAdapter);
+            district_new_SP.setSelection(districtpos);
+            /*if(x>sel_districtsp) {
+                districtlist_SP.setSelection(sel_districtsp);
+            }*/
+        }
+
+    }
+    public void uploadfromDB_Taluklist() {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS TalukListRest(TalukID VARCHAR,TalukName VARCHAR,Taluk_districtid VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM TalukListRest", null);
+
+        // Cursor cursor2 = db1.rawQuery("select T.taluka_id,V.village_id,V.village_name from master_state S, master_district D, master_taluka T, master_village V, master_panchayat P where S.state_id=D.state_id AND D.district_id=T.district_id AND T.taluka_id=V.taluk_id AND T.district_id=P.district_id AND (S.state_id in (1,12,25))",null);
+        //  Cursor cursor1 = db1.rawQuery("select T.TalukID,T.TalukName,T.Taluk_districtid from DistrictList D, TalukList T where D.DistrictID=T.Taluk_districtid",null);
+
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_TalukListDetails2 = new Taluka[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Taluka innerObj_Class_SandboxList = new Taluka();
+                innerObj_Class_SandboxList.setTalukaID(cursor1.getString(cursor1.getColumnIndex("TalukID")));
+                if (cursor1.getString(cursor1.getColumnIndex("TalukName")).isEmpty()) {
+                    innerObj_Class_SandboxList.setTalukaName("Empty In DB");
+                } else {
+                    innerObj_Class_SandboxList.setTalukaName(cursor1.getString(cursor1.getColumnIndex("TalukName")));
+                }
+                //innerObj_Class_SandboxList.setTaluk_name(cursor1.getString(cursor1.getColumnIndex("TalukName")));
+                innerObj_Class_SandboxList.setDistrictID(cursor1.getString(cursor1.getColumnIndex("Taluk_districtid")));
+
+
+                arrayObj_Class_TalukListDetails2[i] = innerObj_Class_SandboxList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db1.close();
+        if (x > 0) {
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_TalukListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            taluk_new_SP.setAdapter(dataAdapter);
+            taluk_new_SP.setSelection(talukpos);
+            /*if(x>sel_taluksp) {
+                taluklist_SP.setSelection(sel_taluksp);
+            }*/
+        }
+
+    }
+    public void uploadfromDB_Villagelist() {
+
+        SQLiteDatabase db_village = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        //db_village.execSQL("CREATE TABLE IF NOT EXISTS VillageList(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        db_village.execSQL("CREATE TABLE IF NOT EXISTS VillageListRest(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        Cursor cursor1 = db_village.rawQuery("SELECT DISTINCT * FROM VillageListRest", null);
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_VillageListDetails2 = new Village[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Village innerObj_Class_villageList = new Village();
+                innerObj_Class_villageList.setVillageID(cursor1.getString(cursor1.getColumnIndex("VillageID")));
+                innerObj_Class_villageList.setVillageName(cursor1.getString(cursor1.getColumnIndex("Village")));
+                innerObj_Class_villageList.setTalukaID(cursor1.getString(cursor1.getColumnIndex("TalukID")));
+               // innerObj_Class_villageList.setPanchayatID(cursor1.getString(cursor1.getColumnIndex("PanchayatID")));
+
+                arrayObj_Class_VillageListDetails2[i] = innerObj_Class_villageList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db_village.close();
+        if (x > 0) {
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_VillageListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            village_new_SP.setAdapter(dataAdapter);
+            village_new_SP.setSelection(villagepos);
+            /*if(x>sel_villagesp) {
+                villagelist_SP.setSelection(sel_villagesp);
+            }*/
+        }
+
+
+    }
 
     public void Update_sandboxid_toyearspinner(String str_sandboxid) {
 
@@ -1308,8 +1643,168 @@ public class Activity_Register_New extends AppCompatActivity {
 
 
 
+    public void Update_districtid_spinner(String str_stateid) {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS DistrictListRest(DistrictID VARCHAR,DistrictName VARCHAR,Distr_yearid VARCHAR,Distr_Stateid VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM DistrictListRest WHERE Distr_Stateid='" + str_stateid + "'", null);
+        //Cursor cursor1 = db1.rawQuery("select * from DistrictList D, TalukList T where D.DistrictID=T.Taluk_districtid AND D.Distr_Stateid='" + str_stateid + "'",null);
+
+        int x = cursor1.getCount();
+        Log.d("cursor Dcount", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_DistrictListDetails2 = new District[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                District innerObj_Class_AcademicList = new District();
+                innerObj_Class_AcademicList.setDistrictID(cursor1.getString(cursor1.getColumnIndex("DistrictID")));
+                innerObj_Class_AcademicList.setDistrictName(cursor1.getString(cursor1.getColumnIndex("DistrictName")));
+                //innerObj_Class_AcademicList.setYear_id(cursor1.getString(cursor1.getColumnIndex("Distr_yearid")));
+                innerObj_Class_AcademicList.setStateID(cursor1.getString(cursor1.getColumnIndex("Distr_Stateid")));
 
 
+                arrayObj_Class_DistrictListDetails2[i] = innerObj_Class_AcademicList;
+                i++;
+            } while (cursor1.moveToNext());
+        }//if ends
+
+
+        db1.close();
+        if (x > 0) {
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_DistrictListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            district_new_SP.setAdapter(dataAdapter);
+            district_new_SP.setSelection(districtpos);
+            /*if(x>sel_districtsp) {
+                districtlist_SP.setSelection(sel_districtsp);
+            }*/
+        }
+
+    }
+
+    public void Update_TalukId_spinner(String str_distid) {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS TalukListRest(TalukID VARCHAR,TalukName VARCHAR,Taluk_districtid VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM TalukListRest WHERE Taluk_districtid='" + str_distid + "'", null);
+        int x = cursor1.getCount();
+        Log.d("cursor Tcount", Integer.toString(x));
+
+        int i = 0;
+
+        arrayObj_Class_TalukListDetails2 = new Taluka[x];
+
+
+        if (x > 0) {
+            if (cursor1.moveToFirst()) {
+
+                do {
+                    Taluka innerObj_Class_talukList = new Taluka();
+                    innerObj_Class_talukList.setTalukaID(cursor1.getString(cursor1.getColumnIndex("TalukID")));
+                    innerObj_Class_talukList.setTalukaName(cursor1.getString(cursor1.getColumnIndex("TalukName")));
+                    innerObj_Class_talukList.setDistrictID(cursor1.getString(cursor1.getColumnIndex("Taluk_districtid")));
+
+
+                    arrayObj_Class_TalukListDetails2[i] = innerObj_Class_talukList;
+                    //Log.e("taluk_name",cursor1.getString(cursor1.getColumnIndex("TalukName")));
+                    i++;
+                } while (cursor1.moveToNext());
+            }//if ends
+
+        }
+        db1.close();
+
+
+        if (x > 0) {
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_TalukListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            taluk_new_SP.setAdapter(dataAdapter);
+            taluk_new_SP.setSelection(talukpos);
+            /*if(x>sel_taluksp) {
+                taluklist_SP.setSelection(sel_taluksp);
+            }*/
+        }
+
+        /*if(x==0)
+        {
+            arrayObj_Class_TalukListDetails2 = new Class_TalukListDetails[1];
+            Class_TalukListDetails innerObj_Class_talukList = new Class_TalukListDetails();
+            innerObj_Class_talukList.setTaluk_id("2000");
+            innerObj_Class_talukList.setTaluk_name("No Records");
+            innerObj_Class_talukList.setDistrict_id("2000");
+
+
+            arrayObj_Class_TalukListDetails2[0] = innerObj_Class_talukList;
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_TalukListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            taluklist_farmers_sp.setAdapter(dataAdapter);
+            taluklist_farmers_sp.setSelection(talukpos);
+        }*/
+
+    }
+
+    public void Update_VillageId_spinner(String str_talukid) {
+
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        //db1.execSQL("CREATE TABLE IF NOT EXISTS VillageList(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS VillageListRest(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        //Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VillageList WHERE TalukID='" + str_talukid + "'", null);
+        Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VillageListRest WHERE TalukID='" + str_talukid + "'", null);
+        int x = cursor1.getCount();
+        Log.d("cursor Vcount", Integer.toString(x));
+
+        int i = 0;
+        arrayObj_Class_VillageListDetails2 = new Village[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Village innerObj_Class_villageList = new Village();
+                innerObj_Class_villageList.setVillageID(cursor1.getString(cursor1.getColumnIndex("VillageID")));
+                innerObj_Class_villageList.setVillageName(cursor1.getString(cursor1.getColumnIndex("Village")));
+                innerObj_Class_villageList.setTalukaID(cursor1.getString(cursor1.getColumnIndex("TalukID")));
+               // innerObj_Class_villageList.setPanchayatID(cursor1.getString(cursor1.getColumnIndex("PanchayatID")));
+
+                arrayObj_Class_VillageListDetails2[i] = innerObj_Class_villageList;
+                // Log.e("village_name", cursor1.getString(cursor1.getColumnIndex("TalukName")));
+                i++;
+            } while (cursor1.moveToNext());
+        }//if ends
+
+
+        db1.close();
+        if (x > 0) {
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_VillageListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            village_new_SP.setAdapter(dataAdapter);
+            village_new_SP.setSelection(villagepos);
+            /*if(x>sel_villagesp) {
+                villagelist_SP.setSelection(sel_villagesp);
+            }*/
+
+        }
+
+
+        /*if(x==0)
+        {
+            arrayObj_Class_VillageListDetails2 = new Class_VillageListDetails[1];
+            Class_VillageListDetails innerObj_Class_villageList = new Class_VillageListDetails();
+            innerObj_Class_villageList.setVillage_id("2000");
+            innerObj_Class_villageList.setVillage_name("No Records");
+            innerObj_Class_villageList.setTaluk_id("2000");
+
+
+            arrayObj_Class_VillageListDetails2[0] = innerObj_Class_villageList;
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_VillageListDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            villagelist_farmers_sp.setAdapter(dataAdapter);
+           // villagelist_farmers_sp.setSelection(villagepos);
+
+        }*/
+
+    }
 
 
 
@@ -1319,7 +1814,7 @@ public class Activity_Register_New extends AppCompatActivity {
 
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
 
         String str_stumarks4 = "", str_stumarks5 = "", str_stumarks6 = "", str_stumarks7 = "", str_stumarks8 = "";
 //        selected_sandboxID_int = Integer.parseInt(sp_strsand_ID);
@@ -1452,13 +1947,13 @@ public class Activity_Register_New extends AppCompatActivity {
         try {
 
         String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID,AcademicName,AdmissionFee," +
-                "ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus, Base64image, Stud_TempId,UpadateOff_Online,Learning_Mode)" +
+                "ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus, Base64image, Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
                 " VALUES ('" + sp_straca_ID + "','" + selected_academicname + "','" + admissionfee_et.getText().toString() + "','" + "" + "','" + "0" + "','"+ yyyyMMdd_birthdate + "','" + sp_strClust_ID + "'," +
                 "'" + selected_clusterName + "','" + createddate + "','" + selected_edu + "','" + fathername_et.getText().toString() + "','" + gender + "','" + selected_instituteName + "'," +
                 "'" + sp_strInst_ID + "','" + sp_strLev_ID + "','" + selected_levelName + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "'," +
                 "'" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','"  + mobileno_et.getText().toString() + "','" + mothername_et.getText().toString() + "','" + admissionfee_et.getText().toString() + "','" +receipt_no_et.getText().toString() + "','" + sp_strsand_ID + "','" + selected_sandboxName + "'," +
                 "'" + sp_strschool_ID + "','" + selected_schoolName + "','" + aadar_et.getText().toString() + "','" + str_TemporaryID + "'," +
-                "'" + studentname_et.getText().toString() + "','" + str_img + "','" + selected_studentstatus + "','" + str_img + "','" + str_TemporaryID + "','" + "offline" + "','" + selected_learnOption + "');";
+                "'" + studentname_et.getText().toString() + "','" + str_img + "','" + selected_studentstatus + "','" + str_img + "','" + str_TemporaryID + "','" + "offline" + "','" + selected_learnOption + "','" + sp_strstate_ID + "','" + selected_stateName + "','" + sp_strdistrict_ID + "','" + selected_district +  "','" + sp_strTaluk_ID + "','" + selected_taluk + "','" + sp_strVillage_ID + "','" + selected_village + "','" + Studentaddress_ET.getText().toString() +"');";
 
         Log.e("gender.",gender);
 
@@ -1493,7 +1988,7 @@ public class Activity_Register_New extends AppCompatActivity {
     public void fetch_DB_farmerprofile_offline_data(String str_tempid)
     {
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
 //        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "edittemp%" + "'", null);
         Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId='"+ str_tempid  + "'", null);
 
@@ -1545,6 +2040,18 @@ public class Activity_Register_New extends AppCompatActivity {
                     innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
                     innerObj_Class_SandboxList.setLearningMode(cursor1.getString(cursor1.getColumnIndex("Learning_Mode")));
 
+                    innerObj_Class_SandboxList.setState_ID(cursor1.getString(cursor1.getColumnIndex("stateid")));
+                    innerObj_Class_SandboxList.setState_Name(cursor1.getString(cursor1.getColumnIndex("statename")));
+                    innerObj_Class_SandboxList.setDistrict_ID(cursor1.getString(cursor1.getColumnIndex("districtid")));
+                    innerObj_Class_SandboxList.setDistrict_Name(cursor1.getString(cursor1.getColumnIndex("districtname")));
+                    innerObj_Class_SandboxList.setTaluk_ID(cursor1.getString(cursor1.getColumnIndex("talukid")));
+                    innerObj_Class_SandboxList.setTaluk_Name(cursor1.getString(cursor1.getColumnIndex("talukname")));
+                    innerObj_Class_SandboxList.setVillage_ID(cursor1.getString(cursor1.getColumnIndex("villageid")));
+                    innerObj_Class_SandboxList.setVillage_Name(cursor1.getString(cursor1.getColumnIndex("villagename")));
+                    innerObj_Class_SandboxList.setAddress(cursor1.getString(cursor1.getColumnIndex("student_address")));
+
+
+
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("Gender---",cursor1.getString(cursor1.getColumnIndex("Gender")));
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
@@ -1595,6 +2102,16 @@ public class Activity_Register_New extends AppCompatActivity {
         request.setMobile(class_farmerprofileoffline_array_obj[j].getMobile());
         request.setGender(class_farmerprofileoffline_array_obj[j].getGender());
         request.setEducation(class_farmerprofileoffline_array_obj[j].getEducation());
+
+        request.setState_ID(class_farmerprofileoffline_array_obj[j].getState_ID());
+        request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
+        request.setDistrict_ID(class_farmerprofileoffline_array_obj[j].getDistrict_ID());
+        request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
+        request.setTaluk_ID(class_farmerprofileoffline_array_obj[j].getTaluk_ID());
+        request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
+        request.setVillage_ID(class_farmerprofileoffline_array_obj[j].getVillage_ID());
+        request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
+        request.setAddress(class_farmerprofileoffline_array_obj[j].getAddress());
 
         if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){
             request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks4());
@@ -1667,7 +2184,7 @@ public class Activity_Register_New extends AppCompatActivity {
 
                         SQLiteDatabase db1 = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
-                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
 
                         //String str_updatetabewithnewtempid="newtemp"+""+str_response_tempId;
 

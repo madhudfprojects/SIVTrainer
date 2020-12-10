@@ -1064,6 +1064,135 @@
             </FrameLayout>
 
         </LinearLayout>
+
+        <TableRow
+            android:id="@+id/tableR_state_label"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="State"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="90dp"
+                android:paddingLeft="5dp"
+                android:text="District"
+                android:textColor="#5C5757"
+                android:textStyle="bold"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableR2_state"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/state_new_SP"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background"
+                android:textColor="#5C5757"
+                />
+
+
+            <Spinner
+                android:id="@+id/district_new_SP"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background"
+                android:textColor="#5C5757"
+                />
+        </TableRow>
+        <TableRow
+            android:id="@+id/tableR_taluk_label"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:text="Taluk"
+                android:textColor="#5C5757"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="90dp"
+                android:paddingLeft="5dp"
+                android:text="Village"
+                android:textColor="#5C5757"
+                android:textStyle="bold"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableR2_spineraddress"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:gravity="center">
+
+            <Spinner
+                android:id="@+id/taluk_new_SP"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background"
+                android:textColor="#5C5757"
+                />
+
+
+            <Spinner
+                android:id="@+id/village_new_SP"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/spinnerarrow2"
+                android:paddingLeft="5dp"
+                android:popupBackground="@drawable/layout_background"
+                android:textColor="#5C5757"
+                />
+        </TableRow>
+
+        <EditText
+            android:id="@+id/Studentaddress_ET"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shadow_new"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+            android:inputType="text"
+            android:paddingLeft="5dp"
+            android:textColor="#5C5757"
+            android:hint="Student Address"
+            android:layout_marginTop="20dp"/>
+
         <Button
             android:id="@+id/submit_edit_BTN"
             android:layout_width="100dp"

@@ -78,6 +78,115 @@ public class AddStudentDetailsRequest {
     @Expose
     private String Temp_ID;
 
+    @SerializedName("State_ID")
+    @Expose
+    private String State_ID;
+
+    @SerializedName("State_Name")
+    @Expose
+    private String State_Name;
+
+    @SerializedName("District_ID")
+    @Expose
+    private String District_ID;
+
+    @SerializedName("District_Name")
+    @Expose
+    private String District_Name;
+
+    @SerializedName("Taluk_ID")
+    @Expose
+    private String Taluk_ID;
+
+    @SerializedName("Taluk_Name")
+    @Expose
+    private String Taluk_Name;
+
+    @SerializedName("Village_ID")
+    @Expose
+    private String Village_ID;
+
+    @SerializedName("Village_Name")
+    @Expose
+    private String Village_Name;
+
+    @SerializedName("address")
+    @Expose
+    private String address;
+
+
+    public String getState_ID() {
+        return State_ID;
+    }
+
+    public void setState_ID(String state_ID) {
+        State_ID = state_ID;
+    }
+
+    public String getState_Name() {
+        return State_Name;
+    }
+
+    public void setState_Name(String state_Name) {
+        State_Name = state_Name;
+    }
+
+    public String getDistrict_ID() {
+        return District_ID;
+    }
+
+    public void setDistrict_ID(String district_ID) {
+        District_ID = district_ID;
+    }
+
+    public String getDistrict_Name() {
+        return District_Name;
+    }
+
+    public void setDistrict_Name(String district_Name) {
+        District_Name = district_Name;
+    }
+
+    public String getTaluk_ID() {
+        return Taluk_ID;
+    }
+
+    public void setTaluk_ID(String taluk_ID) {
+        Taluk_ID = taluk_ID;
+    }
+
+    public String getTaluk_Name() {
+        return Taluk_Name;
+    }
+
+    public void setTaluk_Name(String taluk_Name) {
+        Taluk_Name = taluk_Name;
+    }
+
+    public String getVillage_ID() {
+        return Village_ID;
+    }
+
+    public void setVillage_ID(String village_ID) {
+        Village_ID = village_ID;
+    }
+
+    public String getVillage_Name() {
+        return Village_Name;
+    }
+
+    public void setVillage_Name(String village_Name) {
+        Village_Name = village_Name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getTemp_ID() {
         return Temp_ID;
     }
