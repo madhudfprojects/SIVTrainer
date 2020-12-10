@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/feessubmitlist_LL"
+    android:orientation="vertical"
+    android:background="#EBE6E6"
+    android:layout_margin="10dp">
+
+
+    <LinearLayout
+        android:id="@+id/fees_summary_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/layout_background"
+        android:layout_margin="6dp"
+        android:padding="5dp"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="1dp">
+
+            <TextView
+                android:id="@+id/no_of_students_paid_fees_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="1dp">
+
+            <TextView
+                android:id="@+id/feespayment_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="1dp">
+
+            <TextView
+                android:id="@+id/amt_received_by_accountant_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="1dp">
+
+            <TextView
+                android:id="@+id/balance_not_submitted_to_accountant_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/feessubmit_LISTVIEW"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/layout_background"
+        android:dividerHeight="5px"
+        android:fillViewport="true"
+        android:layout_marginTop="10dp"
+        android:visibility="visible">
+    </ListView>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/layout_background"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/studentName_header_TV"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.4"
+            android:text="Student Name"
+            android:textColor="#FFF"
+            android:gravity="center"
+            android:textStyle="bold"
+            
+            android:textAppearance="?android:attr/textAppearance"/>
+        <TextView
+            android:id="@+id/applicationNumber_header_TV"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.29"
+            android:text="Application No.   "
+            android:textColor="#FFF"
+            android:gravity="center"
+            android:textStyle="bold"
+            
+            android:textAppearance="?android:attr/textAppearance"/>
+
+        <TextView
+            android:id="@+id/paymentamount_header_TV"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="0.25"
+            android:text="Amount"
+            android:textColor="#FFF"
+            android:visibility="visible"
+            android:gravity="center"
+            android:textStyle="bold"
+            
+            android:textAppearance="?android:attr/textAppearance"/>
+
+    </TableRow>
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        
+        android:stretchColumns="*"
+        android:visibility="gone"
+        android:background="@drawable/shadow_new">
+    </TableLayout>
+
+</LinearLayout>

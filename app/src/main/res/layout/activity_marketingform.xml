@@ -1,0 +1,477 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:gravity="center">
+
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp">
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/LinearLayout02"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:weightSum="2"-->
+<!--            android:gravity="center">-->
+
+
+
+            <ImageButton
+                android:id="@+id/student_registrationform_IB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/register"
+                android:visibility="gone"/>
+
+
+            <ImageButton
+                android:id="@+id/applicationdetails_IB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/application_details" />
+
+
+
+</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp">
+
+            <ImageButton
+                android:id="@+id/feessubmit_IB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/pendingfees_submit"
+                android:layout_weight="1"/>
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+                <ImageButton
+                    android:background="@android:color/transparent"
+                    android:id="@+id/notupload_IB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/not_uploaded_revised" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="10dp">
+                <TextView
+                    android:id="@+id/Notuploadedcount_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    />
+
+
+                <TextView
+                    android:id="@+id/Notuploadedcount_addnew_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    />
+
+                </LinearLayout>
+            </FrameLayout>
+
+
+
+
+            <!--                android:src="@mipmap/refer_friend"
+            -->
+            <ImageButton
+                android:id="@+id/student_referfriend_IB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/college_addmission_history_IB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:background="@android:color/transparent"
+                android:src="@mipmap/schoolhistory1" />
+
+
+        </LinearLayout>
+
+
+
+</LinearLayout>
+
+    <!--Commented code and changed the below code by shivaleela on sept 9th 2019-->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+<!---->
+
+
+
+
+
+
+
+
+
+
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/scrollView1"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:orientation="vertical"-->
+<!--    android:layout_gravity="center">-->
+<!--    &lt;!&ndash; <include layout="@layout/common_titlebar" />&ndash;&gt;-->
+
+
+<!--    &lt;!&ndash;<ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="40dp">&ndash;&gt;-->
+
+
+<!--    &lt;!&ndash; <include-->
+<!--         android:id="@+id/toolbar_n_actionbar"-->
+<!--         layout="@layout/common_titlebar" />&ndash;&gt;-->
+
+<!--&lt;!&ndash;        <android.support.v4.view.ViewPager&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/viewPager"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            />&ndash;&gt;-->
+
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_gravity="center_horizontal">-->
+<!--        &lt;!&ndash;<include-->
+<!--            android:id="@+id/toolbar_n_actionbar"-->
+<!--            layout="@layout/common_titlebar" />&ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/LinearLayout02"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:weightSum="2"-->
+<!--            android:gravity="center">-->
+
+
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/student_registrationform_IB"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@mipmap/register" />-->
+
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/applicationdetails_IB"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@mipmap/application_details" />-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/student_referfriend_IB"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@mipmap/refer_friend"-->
+<!--                android:visibility="gone"/>-->
+
+<!--        </LinearLayout>-->
+
+<!--        &lt;!&ndash; <LinearLayout-->
+<!--           android:id="@+id/LinearLayout03"-->
+<!--           android:layout_height="wrap_content"-->
+<!--           android:layout_width="fill_parent"-->
+<!--           android:layout_alignParentBottom="true"-->
+<!--           android:orientation="horizontal">-->
+
+<!--            <TextView-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:layout_weight="1"-->
+<!--                   android:layout_marginLeft="35dp"-->
+<!--                   android:textColor="#276ca4"-->
+<!--                   android:text="Register"-->
+<!--                    />-->
+
+<!--            <TextView-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:layout_weight="1"-->
+<!--                   android:layout_marginLeft="55dp"-->
+<!--                   android:textColor="#276ca4"-->
+<!--                   android:teActivity_Referefer a friend"-->
+<!--                    />-->
+
+<!--            </LinearLayout> &ndash;&gt;-->
+
+<!--        &lt;!&ndash; <LinearLayout-->
+<!--            android:layout_height="45dp"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:layout_alignParentBottom="true">-->
+
+<!--              <ImageView-->
+<!--                android:id="@+id/imageView1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="35dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:src="@drawable/regialu11kb" />-->
+
+<!--              </LinearLayout>-->
+
+<!--             &ndash;&gt;-->
+
+<!--        &lt;!&ndash; <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="Registered Student Login #"-->
+<!--                    android:textColor="#ff6d00"-->
+<!--                    android:textStyle="bold"-->
+<!--                     />-->
+<!--         &ndash;&gt;-->
+<!--        &lt;!&ndash; android:layout_marginTop="20dp" &ndash;&gt;-->
+<!--        &lt;!&ndash; <EditText-->
+<!--                        android:id="@+id/uname_et1"-->
+<!--                        android:layout_width="250dp"-->
+<!--                        android:layout_height="40dp"-->
+
+<!--                         android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginLeft="30dp"-->
+<!--                        android:paddingLeft="1dp"-->
+
+
+<!--                       android:drawableLeft="@drawable/user7kb"-->
+
+<!--                        android:singleLine="true"/>-->
+
+
+<!--          android:layout_marginTop="30dp"-->
+<!--        <EditText-->
+<!--                        android:id="@+id/log_et2"-->
+<!--                        android:layout_width="250dp"-->
+<!--                        android:layout_height="40dp"-->
+
+
+
+<!--                        android:layout_marginLeft="30dp"-->
+
+<!--                       android:drawableLeft="@drawable/password7kb"-->
+<!--                        android:paddingLeft="1dp"-->
+<!--                        android:singleLine="true"-->
+<!--                        android:inputType="textPassword"/>-->
+
+<!--        android:layout_marginTop="5dp"-->
+
+<!--         <Button-->
+<!--                       android:id="@+id/sign_bt1"-->
+<!--                         android:layout_width="150dp"-->
+<!--                         android:layout_height="35dp"-->
+<!--                         android:layout_gravity="center_horizontal"-->
+<!--                        android:layout_marginTop="20dp"-->
+<!--                         android:layout_marginLeft="2dp"-->
+<!--                         android:text="Sign in"-->
+<!--                          android:background="#276ca4"-->
+<!--                         android:textColor="#ffffff"-->
+<!--                         android:onClick="submit_signin"/>-->
+<!--         &ndash;&gt;-->
+<!--        &lt;!&ndash; android:layout_marginTop="16dp" &ndash;&gt;-->
+
+
+<!--        &lt;!&ndash; <TextView-->
+<!--            android:id="@+id/tv_result"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:text=""-->
+<!--            android:textSize="20dp" /> &ndash;&gt;-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:weightSum="2"-->
+<!--            android:gravity="center">-->
+
+<!--&lt;!&ndash;            <ImageButton&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/applicationdetails_IB"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:background="@android:color/transparent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@mipmap/application_details" />&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;            <ImageButton&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/notupload_IB"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:background="@android:color/transparent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@mipmap/not_uploaded" />&ndash;&gt;-->
+
+<!--        </LinearLayout>-->
+
+<!--&lt;!&ndash;        <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;            android:id="@+id/Notuploadedcount_TV"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:gravity="end"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_gravity="end"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:text=""&ndash;&gt;-->
+<!--&lt;!&ndash;            android:textSize="16sp"&ndash;&gt;-->
+<!--&lt;!&ndash;            android:layout_marginRight="20dp"/>&ndash;&gt;-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:weightSum="2"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_alignParentBottom="true">-->
+
+<!--&lt;!&ndash;            <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:orientation="vertical">&ndash;&gt;-->
+
+<!--&lt;!&ndash;            <ImageButton&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/notupload_IB"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_weight="1"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_marginTop="30dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:background="@android:color/transparent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:src="@mipmap/not_uploaded" />&ndash;&gt;-->
+
+
+<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/Notuploadedcount_TV"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:gravity="start"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_gravity="start"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:text=""&ndash;&gt;-->
+<!--&lt;!&ndash;                android:textSize="16sp" />&ndash;&gt;-->
+
+
+
+
+<!--&lt;!&ndash;            </LinearLayout>&ndash;&gt;-->
+
+
+<!--            <FrameLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content">-->
+<!--                &lt;!&ndash;<LinearLayout&ndash;&gt;-->
+<!--                &lt;!&ndash;android:id="@+id/innerUploadImage_LL"&ndash;&gt;-->
+<!--                &lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                &lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                &lt;!&ndash;android:layout_marginTop="10dp"&ndash;&gt;-->
+<!--                &lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+<!--                &lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
+
+
+<!--                <ImageButton-->
+<!--                    android:background="@android:color/transparent"-->
+<!--                    android:id="@+id/notupload_IB"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:src="@mipmap/not_uploaded" />-->
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/Notuploadedcount_TV"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text=""-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:layout_marginRight="30dp"/>-->
+<!--                &lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+<!--            </FrameLayout>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/feessubmit_IB"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@mipmap/fees_submit"-->
+<!--                android:layout_weight="1"/>-->
+<!--&lt;!&ndash;                android:layout_weight="1"-->
+<!--&ndash;&gt;-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/college_addmission_history_IB"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:visibility="gone"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@mipmap/schoolhistory1" />-->
+
+<!--        </LinearLayout>-->
+
+
+<!--    </LinearLayout>-->
+<!--    &lt;!&ndash;</ScrollView>&ndash;&gt;-->
+
+<!--</LinearLayout>-->

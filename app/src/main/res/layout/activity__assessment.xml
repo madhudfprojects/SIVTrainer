@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".Activity_AssessmentList">
+
+
+    <TableRow
+        android:id="@+id/tableR1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/institute_label_assessment_TV"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textColor="#5C5757"
+            android:text="Institute"
+            android:layout_gravity="center"/>
+
+
+        <TextView
+            android:id="@+id/level_labelassessment_SP"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textColor="#5C5757"
+            android:text="    Level"
+            android:layout_gravity="center"/>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableR2"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_margin="5dp">
+
+        <Spinner
+            android:id="@+id/institute_assessment_SP"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/spinnerarrow2"
+            android:paddingLeft="5dp"
+            android:popupBackground="@drawable/layout_background"
+            android:textColor="#5C5757"
+            />
+
+
+        <Spinner
+            android:id="@+id/level_assessment_SP"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/spinnerarrow2"
+            android:paddingLeft="5dp"
+            android:popupBackground="@drawable/layout_background"
+            android:textColor="#5C5757"
+            />
+    </TableRow>
+
+    <TextView
+        android:id="@+id/Status_labelassessment_TV"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:textColor="#5C5757"
+        android:text="Status"
+        android:layout_gravity="center_horizontal"/>
+    <Spinner
+        android:id="@+id/Status_assessment_SP"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:background="@drawable/spinnerarrow2"
+        android:popupBackground="@drawable/layout_background"
+        android:textColor="#5C5757"
+        android:layout_gravity="center_horizontal"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container_assessment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ListView
+            android:id="@+id/lv_assessmentlist"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>
