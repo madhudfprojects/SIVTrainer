@@ -465,7 +465,11 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                 myprefs_spinner.putInt(Key_sel_institutesp, sel_institute);
                 myprefs_spinner.putInt(Key_sel_levelsp, sel_levelsp);
                 myprefs_spinner.putInt(Key_sel_applnstatus, sel_applnstatus);
-                myprefs_spinner.putInt(key_studentid, Integer.parseInt(item.getStudentID()));
+                try {
+                    myprefs_spinner.putInt(key_studentid, Integer.parseInt(item.getStudentID()));
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
                 myprefs_spinner.apply();
                 startActivity(intent);
 

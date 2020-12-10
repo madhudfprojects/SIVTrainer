@@ -369,6 +369,8 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                     innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
                     innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    innerObj_Class_SandboxList.setLearningMode(cursor1.getString(cursor1.getColumnIndex("Learning_Mode")));
+
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
@@ -449,6 +451,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setFileName(class_farmerprofileoffline_array_obj[j].getStudentPhoto());
 //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
+        request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
 
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
@@ -519,6 +522,8 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //
 //                    db_viewfarmerlist.update("ViewFarmerListRest", cv_farmelistupdate, "DispFarmerTable_Farmer_Code = ?", new String[]{str_response_tempId});
 //                    db_viewfarmerlist.close();
+                        Toast.makeText(getApplicationContext(), "Edition Updated Successfully", Toast.LENGTH_SHORT).show();
+
                         progressDoalog.dismiss();
 
 //                    if(int_newfarmercount>0){int_newfarmercount++;}
@@ -610,6 +615,8 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                     innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
                     innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    innerObj_Class_SandboxList.setLearningMode(cursor1.getString(cursor1.getColumnIndex("Learning_Mode")));
+
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
@@ -690,6 +697,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setFileName(class_farmerprofileoffline_array_obj[j].getStudentPhoto());
 //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
+        request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
 
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
@@ -758,6 +766,8 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //
 //                    db_viewfarmerlist.update("ViewFarmerListRest", cv_farmelistupdate, "DispFarmerTable_Farmer_Code = ?", new String[]{str_response_tempId});
 //                    db_viewfarmerlist.close();
+                        Toast.makeText(getApplicationContext(), "Submitted Successfully", Toast.LENGTH_SHORT).show();
+
                         progressDoalog.dismiss();
 
 //                    if(int_newfarmercount>0){int_newfarmercount++;}

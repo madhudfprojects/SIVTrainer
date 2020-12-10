@@ -228,7 +228,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
     LearningMode obj_Class_LearningOption;
     Education[] arrayObj_Class_educationDetails2;
     Education obj_Class_education;
-
+    String str_fetched_learningmode="",str_fetched_edu="";
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -440,61 +440,59 @@ public class Activity_EditRegistration extends AppCompatActivity {
             }
         });//end of radiogroup
 
-        ArrayAdapter dataAdapter_edu = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, educationArray);
-        dataAdapter_edu.setDropDownViewResource(R.layout.spinnercenterstyle);
-        education__edit_Sp.setAdapter(dataAdapter_edu);
+//        ArrayAdapter dataAdapter_edu = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, educationArray);
+//        dataAdapter_edu.setDropDownViewResource(R.layout.spinnercenterstyle);
+//        education__edit_Sp.setAdapter(dataAdapter_edu);
 
-        education__edit_Sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected_edu = education__edit_Sp.getSelectedItem().toString();
-                Log.i("selected_edu", " : " + selected_edu);
-                if (selected_edu.equals(educationArray[0]) || (selected_edu.equals(educationArray[1]))) {
-                    marks_edit_et.setVisibility(View.GONE);
-                    markslabel_edit_tv.setVisibility(View.GONE);
-                } else {
-
-                    marks_edit_et.setVisibility(View.VISIBLE);
-                    markslabel_edit_tv.setVisibility(View.VISIBLE);
-                    if (selected_edu.equals(educationArray[2])) {
-                       // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-                        //markslabel_edit_tv.setText(educationArray[1] + " Marks");
-                        markslabel_edit_tv.setText(educationArray[1] + " Marks/Grade");
-
-                    }
-                    if (selected_edu.equals(educationArray[3])) {
-                       // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-                        //markslabel_edit_tv.setText(educationArray[2] + " Marks");
-                        markslabel_edit_tv.setText(educationArray[2] + " Marks/Grade");
-
-                    }
-                    if (selected_edu.equals(educationArray[4])) {
-                       // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText(educationArray[3] + " Marks/Grade");
-
-                       // markslabel_edit_tv.setText(educationArray[3] + " Marks");
-                    }
-                    if (selected_edu.equals(educationArray[5])) {
-                        marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText(educationArray[1] + " Marks/Grade");
-
-                      //  markslabel_edit_tv.setText(educationArray[4] + " Marks");
-                    }
-                    if (selected_edu.equals(educationArray[6])) {
-                      //  marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText(educationArray[4] + " Marks/Grade");
-
-                      //  markslabel_edit_tv.setText(educationArray[5] + " Marks");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        education__edit_Sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//              //  selected_edu = education__edit_Sp.getSelectedItem().toString();
+//
+//                obj_Class_education = (Education) education__edit_Sp.getSelectedItem();
+//                selected_edu= obj_Class_education.getEducation_Name();
+//                sp_strEdu_ID = obj_Class_education.getEducation_ID();
+//
+//                // selected_edu = edu_sp.getSelectedItem().toString();
+//                Log.i("selected_edu", " : " + selected_edu);
+//                if (selected_edu.equals("Select") || (selected_edu.equals("4th Standard"))) {
+//                    marks_edit_et.setVisibility(View.GONE);
+//                    markslabel_edit_tv.setVisibility(View.GONE);
+//                } else {
+//
+//                    marks_edit_et.setVisibility(View.VISIBLE);
+//                    markslabel_edit_tv.setVisibility(View.VISIBLE);
+//
+//                    if (selected_edu.equals("5th Standard")) {
+//                        // marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+//                        markslabel_edit_tv.setText("5th Standard" + " Marks/Grade");
+//                    }
+//                    if (selected_edu.equals("6th Standard")) {
+//                        //marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+//                        markslabel_edit_tv.setText("6th Standard" + " Marks/Grade");
+//                    }
+//                    if (selected_edu.equals("7th Standard")) {
+//                        //marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+//                        markslabel_edit_tv.setText("7th Standard" + " Marks/Grade");
+//                    }
+//                    if (selected_edu.equals("8th Standard")) {
+//                        // marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+//                        markslabel_edit_tv.setText("8th Standard" + " Marks/Grade");
+//                    }
+//                    if (selected_edu.equals("9th Standard")) {
+//                        //  marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
+//                        markslabel_tv.setText("9th Standard" + " Marks/Grade");
+//                    }
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
         ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
         dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
         studentstatus_edit_SP.setAdapter(dataAdapter_status);
@@ -591,23 +589,23 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
                     if (selected_edu.equals("5th Standard")) {
                         // marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText("5th Standard" + " Marks/Grade");
+                        markslabel_edit_tv.setText("4th Standard" + " Marks/Grade");
                     }
                     if (selected_edu.equals("6th Standard")) {
                         //marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText("6th Standard" + " Marks/Grade");
+                        markslabel_edit_tv.setText("5th Standard" + " Marks/Grade");
                     }
                     if (selected_edu.equals("7th Standard")) {
                         //marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText("7th Standard" + " Marks/Grade");
+                        markslabel_edit_tv.setText("6th Standard" + " Marks/Grade");
                     }
                     if (selected_edu.equals("8th Standard")) {
                         // marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText("8th Standard" + " Marks/Grade");
+                        markslabel_edit_tv.setText("7th Standard" + " Marks/Grade");
                     }
                     if (selected_edu.equals("9th Standard")) {
                         //  marks_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", "100")});
-                        markslabel_edit_tv.setText("9th Standard" + " Marks/Grade");
+                        markslabel_edit_tv.setText("8th Standard" + " Marks/Grade");
                     }
                 }
 
@@ -743,6 +741,8 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_learningmodeDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             learnoption_Sp.setAdapter(dataAdapter);
+            learnoption_Sp.setSelection(getIndex(learnoption_Sp, str_fetched_learningmode));
+
 //            if (x > sel_levelsp) {
 //                level_sp.setSelection(sel_levelsp);
 //            }
@@ -750,6 +750,23 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
 
     }
+
+    public int getIndex(Spinner spinner, String myString) {
+        int index = 0;
+        String item = null;
+        for (int i = 0; i < spinner.getCount(); i++) {
+            //   Log.e("entered getIndex", "entered getIndex");
+
+            item = spinner.getItemAtPosition(i).toString();
+            if (item.equals(myString)) {
+                index = i;
+                //  Log.e("entered myString", "entered myString");
+
+            }
+        }
+        return index;
+    }
+
     public void uploadfromDB_Educationlist() {
 
         SQLiteDatabase db_village = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -781,6 +798,8 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_educationDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             education__edit_Sp.setAdapter(dataAdapter);
+            education__edit_Sp.setSelection(getIndex(education__edit_Sp, str_fetched_edu));
+
 //            if (x > sel_levelsp) {
 //                level_sp.setSelection(sel_levelsp);
 //            }
@@ -849,8 +868,11 @@ public class Activity_EditRegistration extends AppCompatActivity {
                     innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
                     innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    innerObj_Class_SandboxList.setLearningMode(cursor1.getString(cursor1.getColumnIndex("Learning_Mode")));
+                    str_fetched_learningmode=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
+                    str_fetched_edu=cursor1.getString(cursor1.getColumnIndex("Education"));
 
-                    Log.e("StudentPic.fetching",cursor1.getString(cursor1.getColumnIndex("StudentPhoto")));
+                    Log.e("Gender.fetching",cursor1.getString(cursor1.getColumnIndex("Gender")));
                     class_farmponddetails_offline_obj = innerObj_Class_SandboxList;
                     i++;
                 } while (cursor1.moveToNext());
@@ -874,7 +896,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
     }// end of Data_from_PondDetails_DB
 
     public void DisplayData_Data_from_PondDetails_DB() {
-        if(!class_farmponddetails_offline_obj.getGender().equals("")) {
+      //  if(!class_farmponddetails_offline_obj.getGender().equals("")) {
             if (class_farmponddetails_offline_obj.getGender().equals("Boy")) {
                 male_edit_RB.setChecked(true);
                 female_edit_RB.setChecked(false);
@@ -883,7 +905,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
                 female_edit_RB.setChecked(true);
 
             }
-        }
+      //  }
 
         sandbox_edit_tv.setText(class_farmponddetails_offline_obj.getSandboxName());
         academic_edit_tv.setText(class_farmponddetails_offline_obj.getAcademicName());
@@ -947,19 +969,19 @@ public class Activity_EditRegistration extends AppCompatActivity {
         paymentmode_edit_tv.setText("Cash");
         Log.e("getedu",class_farmponddetails_offline_obj.getEducation());
 
-        if(class_farmponddetails_offline_obj.getEducation().equals("4th Std")){
+        if(class_farmponddetails_offline_obj.getEducation().equals("4th Standard")){
             education__edit_Sp.setSelection(1);
         }
-        if(class_farmponddetails_offline_obj.getEducation().equals("5th Std")){
+        if(class_farmponddetails_offline_obj.getEducation().equals("5th Standard")){
             education__edit_Sp.setSelection(2);
         }
-        if(class_farmponddetails_offline_obj.getEducation().equals("6th Std")){
+        if(class_farmponddetails_offline_obj.getEducation().equals("6th Standard")){
             education__edit_Sp.setSelection(3);
         }
-        if(class_farmponddetails_offline_obj.getEducation().equals("7th Std")){
+        if(class_farmponddetails_offline_obj.getEducation().equals("7th Standard")){
             education__edit_Sp.setSelection(4);
         }
-        if(class_farmponddetails_offline_obj.getEducation().equals("8th Std")){
+        if(class_farmponddetails_offline_obj.getEducation().equals("8th Standard")){
             education__edit_Sp.setSelection(5);
         }
 
@@ -993,19 +1015,19 @@ public class Activity_EditRegistration extends AppCompatActivity {
         if(class_farmponddetails_offline_obj.getStudentStatus().equals("Admission")) {
             isAdmission=true;
             Log.e("getedu",class_farmponddetails_offline_obj.getEducation());
-            if (class_farmponddetails_offline_obj.getEducation().equals("4th Std")) {
+            if (class_farmponddetails_offline_obj.getEducation().equals("4th Standard")) {
                 education__edit_Sp.setSelection(1);
             }
-            if (class_farmponddetails_offline_obj.getEducation().equals("5th Std")) {
+            if (class_farmponddetails_offline_obj.getEducation().equals("5th Standard")) {
                 education__edit_Sp.setSelection(2);
             }
-            if (class_farmponddetails_offline_obj.getEducation().equals("6th Std")) {
+            if (class_farmponddetails_offline_obj.getEducation().equals("6th Standard")) {
                 education__edit_Sp.setSelection(3);
             }
-            if (class_farmponddetails_offline_obj.getEducation().equals("7th Std")) {
+            if (class_farmponddetails_offline_obj.getEducation().equals("7th Standard")) {
                 education__edit_Sp.setSelection(4);
             }
-            if (class_farmponddetails_offline_obj.getEducation().equals("8th Std")) {
+            if (class_farmponddetails_offline_obj.getEducation().equals("8th Standard")) {
                 education__edit_Sp.setSelection(5);
             }
             if((!class_farmponddetails_offline_obj.getMarks4().equals("0")) && (!class_farmponddetails_offline_obj.getMarks4().equals(""))) {
@@ -1181,22 +1203,22 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
         String  str_stustatus=class_farmponddetails_offline_obj.getStudentStatus();
 //        String  str_stumarks4=class_farmponddetails_offline_obj.getMarks4();
-        if (selected_edu.equals("4th Std")) {
+        if (selected_edu.equals("4th Standard")) {
            // education__edit_Sp.setSelection(1);
         }
-        if (selected_edu.equals("5th Std")) {
+        if (selected_edu.equals("5th Standard")) {
               str_stumarks4=marks_edit_et.getText().toString();
         }
-        if (selected_edu.equals("6th Std")) {
+        if (selected_edu.equals("6th Standard")) {
               str_stumarks5=marks_edit_et.getText().toString();
         }
-        if (selected_edu.equals("7th Std")) {
+        if (selected_edu.equals("7th Standard")) {
               str_stumarks6=marks_edit_et.getText().toString();
         }
-        if (selected_edu.equals("8th Std")) {
+        if (selected_edu.equals("8th Standard")) {
               str_stumarks7=marks_edit_et.getText().toString();
         }
-        if (selected_edu.equals("9th Std")) {
+        if (selected_edu.equals("9th Standard")) {
               str_stumarks8=marks_edit_et.getText().toString();
         }
 
@@ -1229,7 +1251,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             //Log.e("updateLongitude", str_stumothername);
             cv.put("Mobile", str_mobno);//pond_startdate
             cv.put("StudentAadhar", stu_aadharno);
-            cv.put("BirthDate", str_dob);
+            cv.put("BirthDate", str_edit_birthdate);
             cv.put("Gender", str_gen_new);//pond_enddate
             cv.put("Education", str_edu);
             cv.put("StudentStatus", str_stustatus);
@@ -1251,6 +1273,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             cv.put("StudentID",str_stuID);//str_TemporaryID addonly wen new student is added
             cv.put("CreatedDate",createddate);
             cv.put("UpadateOff_Online", "offlineedit");
+            cv.put("Learning_Mode",selected_learnOption);//str_TemporaryID addonly wen new student is added
 
 
             db1.update("StudentDetailsRest", cv, "StudentID = ?", new String[]{String.valueOf(str_stuID)});
@@ -1337,6 +1360,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
                     innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
                     innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    innerObj_Class_SandboxList.setLearningMode(cursor1.getString(cursor1.getColumnIndex("Learning_Mode")));
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
@@ -1415,7 +1439,8 @@ public class Activity_EditRegistration extends AppCompatActivity {
     //    request.setLearningMode(class_farmerprofileoffline_array_obj[j].g());
        request.setTemp_ID(class_farmerprofileoffline_array_obj[j].getTempID());
         request.setFileName(class_farmerprofileoffline_array_obj[j].getStudentPhoto());
-//        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
+        request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
+        //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
 
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
@@ -1487,7 +1512,13 @@ public class Activity_EditRegistration extends AppCompatActivity {
 //
 //                    db_viewfarmerlist.update("ViewFarmerListRest", cv_farmelistupdate, "DispFarmerTable_Farmer_Code = ?", new String[]{str_response_tempId});
 //                    db_viewfarmerlist.close();
-                    progressDoalog.dismiss();
+
+                        Toast.makeText(getApplicationContext(), "Edition Updated Successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_EditRegistration.this, Activity_ViewStudentList_new.class);
+                        startActivity(intent);
+                        finish();
+
+                        progressDoalog.dismiss();
 
 //                    if(int_newfarmercount>0){int_newfarmercount++;}
 //                    else{ int_newfarmercount++; }
@@ -2784,50 +2815,189 @@ public static class DatePickerFragmentPaymentDate extends DialogFragment
         }
 
     }
-    public boolean Validation() {
-        Boolean bname = true,bcontactno=true,breceiptno=true;
-        if (studentName_edit_et.getText().toString().length() == 0) {
-            studentName_edit_et.setError("Enter Student Name");
+//    public boolean Validation() {
+//        Boolean bname = true,bcontactno=true,breceiptno=true;
+//        if (studentName_edit_et.getText().toString().length() == 0) {
+//            studentName_edit_et.setError("Enter Student Name");
+//
+//            Toast.makeText(getApplicationContext(), "Please Enter Student Name", Toast.LENGTH_SHORT).show();
+//            bname = false;
+//
+//        }
+//
+//        if (mobileno_edit_et.getText().toString().length() == 0 || mobileno_edit_et.getText().toString().length() < 10 || mobileno_edit_et.getText().toString().length() > 10) {
+//            mobileno_edit_et.setError("Enter Contact Number");
+//            Toast.makeText(getApplicationContext(), "Please Enter Correct Contact Number", Toast.LENGTH_SHORT).show();
+//            bcontactno = false;
+//
+//        }
+//
+//
+////        if (bname && bcontactno) {
+////            return true;
+////        } else {
+////            return false;
+////        }
+//
+//        if(isAdmission) {
+//
+//            if (receipt_no_edit_et.getText().toString().length() == 0) {
+//                receipt_no_edit_et.setError("Enter Receipt No.");
+//                Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_SHORT).show();
+//                breceiptno = false;
+//
+//            }
+//
+//
+//        }
+//
+//        if(!isAdmission) {
+//            return bname && bcontactno && breceiptno;
+//        }else{
+//            return bname && bcontactno;
+//        }
+//
+//
+//    }
+public boolean Validation() {
 
-            Toast.makeText(getApplicationContext(), "Please Enter Student Name", Toast.LENGTH_SHORT).show();
-            bname = false;
+
+    Boolean bname = true, bedu = true, bbirthdate = true, bcellnumber = true, bphoto = true;
+    Boolean brecno = true, bmothername = true, baadar = true, baadar_length = true, bpaymentdate = true, bfee = true, bmarks = true;
+
+
+    boolean flags = true;
+    //For Student Name
+
+    if ((studentName_edit_et.getText().toString().length() == 0) || (studentName_edit_et.getText().toString().length() <= 2)) {
+        studentName_edit_et.setError("InValid  Name");
+        // flags=false;
+        Toast.makeText(getApplicationContext(), "Please Enter Valid Name", Toast.LENGTH_LONG).show();
+        bname = false;
+
+    }
+//        if (!studentname_et.getText().toString().matches(String.valueOf(name_pattern))) {
+//            studentname_et.setError("InValid  Name");
+//            bname = false;
+//
+//        }
+
+
+//        if (aadar_et.getText().toString().length() == 0) {
+//            aadar_et.setError("Empty is not allowed");
+//            // flags=false;
+//            baadar = false;
+//            Toast.makeText(getApplicationContext(), "Please Enter Aadhar Number", Toast.LENGTH_LONG).show();
+//
+//
+//        }
+//
+//        if(aadar_et.getText().toString().length()<12){
+//            aadar_et.setError("Invalid Aadhar No.");
+//            baadar_length = false;
+//            Toast.makeText(getApplicationContext(), "Please Enter Valid Aadhar Number", Toast.LENGTH_LONG).show();
+//
+//        }
+
+    if (mobileno_edit_et.getText().toString().length() == 0 || mobileno_edit_et.getText().toString().length() < 10) {
+        mobileno_edit_et.setError("InValid Mobile Number");
+        Toast.makeText(getApplicationContext(), "Please Enter correct Mobile Number", Toast.LENGTH_LONG).show();
+
+        // flags=false;
+        bcellnumber = false;
+
+    }
+
+   // if (str_edit_birthdate.length() == 0) {
+        if(dateofbirth_edit_tv.getText().toString().equals("Select Birth Date")){
+        //  birthdate_TV.setError("Empty is not allowed");
+        bbirthdate = false;
+        Toast.makeText(getApplicationContext(), "Please select birth date", Toast.LENGTH_LONG).show();
+
+    }
+
+
+//        if (fathername_et.getText().toString().length() == 0 || fathername_et.getText().toString().length() < 1) {
+//            fathername_et.setError("Father Name must be Minimum 1 character");
+//            //  flags=false;
+//            bfathername = false;
+//        }
+//        if (mothername_et.getText().toString().length() == 0 || mothername_et.getText().toString().length() < 1) {
+//            mothername_et.setError("Mother Name must be Minimum 1 character");
+//            //  flags=false;
+//            bmothername = false;
+//        }
+
+//        if (marks_et.getVisibility() == View.VISIBLE) {
+//            if (marks_et.getText().toString().length() == 0) {
+//                marks_et.setError("Empty is not allowed");
+//                bmarks = false;
+//                Toast.makeText(getApplicationContext(), "Please Enter Marks", Toast.LENGTH_LONG).show();
+//
+//            }
+//        }
+
+    if (selected_edu.equals("Select")) {
+        bedu = false;
+        Toast.makeText(getApplicationContext(), "Please Select Education", Toast.LENGTH_LONG).show();
+
+    }
+
+    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
+        if (str_paymentDate.length() == 0) {
+            //paymentdate_tv.setError("Empty is not allowed");
+            bpaymentdate = false;
+            Toast.makeText(getApplicationContext(), "Please select payment date", Toast.LENGTH_LONG).show();
 
         }
 
-        if (mobileno_edit_et.getText().toString().length() == 0 || mobileno_edit_et.getText().toString().length() < 10 || mobileno_edit_et.getText().toString().length() > 10) {
-            mobileno_edit_et.setError("Enter Contact Number");
-            Toast.makeText(getApplicationContext(), "Please Enter Correct Contact Number", Toast.LENGTH_SHORT).show();
-            bcontactno = false;
+        if (admissionfees_edit_et.getText().toString().length() == 0) {
+            bfee = false;
+            Toast.makeText(getApplicationContext(), "Please Enter Admission fees", Toast.LENGTH_LONG).show();
 
         }
+//            if (admissionfee_et.getText().toString()>selected_admissionfee) {
+//                bfee = false;
+//                Toast.makeText(getApplicationContext(), "Please Enter Valid Admission fees", Toast.LENGTH_LONG).show();
+//
+//            }
 
+        if (receipt_no_edit_et.getText().toString().length() == 0) {
+            brecno = false;
+            Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_LONG).show();
 
-//        if (bname && bcontactno) {
+        }
+    }
+
+//        if (str_img.length() == 0) {
+//            bphoto = false;
+//            Toast.makeText(getApplicationContext(), "Please upload photo", Toast.LENGTH_LONG).show();
+//
+//        }
+
+//        if (bname && bcellnumber && bfathername && bpaymentdate && bedu && bmothername && bbirthdate && baadar && baadar_length && bphoto && bfee && bmarks) {
 //            return true;
 //        } else {
 //            return false;
 //        }
 
-        if(isAdmission) {
+    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
+        return bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee && brecno;
 
-            if (receipt_no_edit_et.getText().toString().length() == 0) {
-                receipt_no_edit_et.setError("Enter Receipt No.");
-                Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_SHORT).show();
-                breceiptno = false;
-
-            }
-
-
-        }
-
-        if(!isAdmission) {
-            return bname && bcontactno && breceiptno;
-        }else{
-            return bname && bcontactno;
-        }
-
+    } else {
+        return bname && bcellnumber && bedu && bbirthdate && bfee;
 
     }
+
+//        if (bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+
+
+}
+
     private int getIndex_remarks(Spinner spinner, String myString) {
         for (int i = 0; i < spinner.getCount(); i++) {
 
