@@ -7,6 +7,8 @@
     <!--    <string name="web_client_id">577330010629-hhmd63821qp1aab3n44gkcrl4bjdq0qn.apps.googleusercontent.com</string>-->
     <!--    <string name="web_client_id">928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com</string>-->
     <string name="web_client_id">928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com</string>
+    <string name="txtFileDocumentUploadImg">DocumentUploadedIMG_</string>
+    <string name="txtFileExtension">.png</string>
 
     <!--    "client_id": "928200773707-gof4m60ghjivrcgvuf72mlf1tkftl0ab.apps.googleusercontent.com",-->
     <string name="tab_text_1">Download Document</string>

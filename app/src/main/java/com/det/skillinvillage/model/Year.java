@@ -1,7 +1,5 @@
 package com.det.skillinvillage.model;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,6 +10,9 @@ public class Year {
     @SerializedName("Academic_Name")
     @Expose
     private String academicName;
+    @SerializedName("Sandbox_ID")
+    @Expose
+    private String sandbox_ID;
 
     public String getAcademicID() {
         return academicID;
@@ -28,10 +29,18 @@ public class Year {
     public void setAcademicName(String academicName) {
         this.academicName = academicName;
     }
-    @NonNull
+
+    public String getSandbox_ID() {
+        return sandbox_ID;
+    }
+
+    public void setSandbox_ID(String sandbox_ID) {
+        this.sandbox_ID = sandbox_ID;
+    }
+
+
     @Override
     public String toString() {
         return academicName;
     }
-
 }

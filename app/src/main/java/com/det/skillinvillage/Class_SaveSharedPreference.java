@@ -16,6 +16,7 @@ public class Class_SaveSharedPreference {
 
 
     static final String PREF_USER_MAILID= "user_mailID";
+    static final String PREF_Flag_For_CustomGallery= "customgallery_flag";
 
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -88,4 +89,15 @@ public class Class_SaveSharedPreference {
     {
         return getSharedPreferences(ctx).getString(PREF_USER_MAILID, "");
     }
+
+    public static void setPREF_Flag_For_CustomGallery(Context ctx, String userName) {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_Flag_For_CustomGallery, userName);
+        editor.apply();
+    }
+
+    public static String getPREF_Flag_For_CustomGallery(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_Flag_For_CustomGallery, " ");
+    }
+
 }

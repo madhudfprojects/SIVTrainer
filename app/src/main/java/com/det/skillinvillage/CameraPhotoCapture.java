@@ -1,8 +1,10 @@
 package com.det.skillinvillage;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +19,10 @@ import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -41,21 +45,31 @@ import com.example.capture.R;
 import com.example.capture.CameraPhotoCapture.LoadImagesFromSDCard;*/
 
 public class CameraPhotoCapture extends Activity {
+    String[] projection = new String[]{
+            MediaStore.Images.ImageColumns._ID,
+            MediaStore.Images.ImageColumns.DATA,
+            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.ImageColumns.DATE_TAKEN,
+            MediaStore.Images.ImageColumns.MIME_TYPE,
+            MediaStore.Images.ImageColumns.DISPLAY_NAME,
+    };
+
 
     final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1;
-     
-     
+
+
     Uri imageUri                      = null;
     //static TextView imageDetails      = null;
+    @SuppressLint("StaticFieldLeak")
     public  static ImageView showImg  = null;
     CameraPhotoCapture CameraActivity ;
     Button clearimage_bt,uploadimage_bt,cancelimage_bt;
-     
+
     public static String imagepathfordeletion="";
     public static String imagepathforupload="";
-    
+
     public static String compressedfilepaths="";
-    
+
     SharedPreferences pref;
 	  Editor editor;
 	  public static final String  DigitalsignfilePREF= "digitalsignpreffile";
@@ -66,7 +80,7 @@ public class CameraPhotoCapture extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-         
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_photo_capture);
         CameraActivity = this;
@@ -79,18 +93,18 @@ public class CameraPhotoCapture extends Activity {
         str_cameraflag = sharedpref_camera_Obj.getString(key_flagcamera, "").trim();
 
         //imageDetails = (TextView) findViewById(R.id.imageDetails);
-         
+
         showImg = findViewById(R.id.showImg);
-         
+
         final Button photo = findViewById(R.id.photo);
-        
+
         clearimage_bt = findViewById(R.id.clearall_BT);
         uploadimage_bt = findViewById(R.id.upload_BT);
         cancelimage_bt= findViewById(R.id.cancel_BT);
-         
+
         clearimage_bt.setEnabled(false);
         uploadimage_bt.setEnabled(false);
-        
+
         clearimage_bt.setVisibility(View.GONE);
         uploadimage_bt.setVisibility(View.GONE);
 
@@ -101,11 +115,11 @@ public class CameraPhotoCapture extends Activity {
       //SharedPreferences
         pref = getApplicationContext().getSharedPreferences(DigitalsignfilePREF, MODE_PRIVATE);
  		 editor = pref.edit();
- 		 
+
  		editor.putString(DigitalsignpathKEY, "");
 		 editor.commit();
-		 
-        
+
+
 //        photo.setOnClickListener(new OnClickListener() {
 //            public void onClick(View v) {
 //
@@ -206,41 +220,41 @@ public class CameraPhotoCapture extends Activity {
      protected void onActivityResult( int requestCode, int resultCode, Intent data)
         {
             if ( requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-                 
+
                 if ( resultCode == RESULT_OK) {
-                 
+
                    /*********** Load Captured Image And Data Start ****************/
-                     
+
                     String imageId = convertImageUriToFile( imageUri,CameraActivity);
-                     
- 
+
+
                    //  Create and excecute AsyncTask to load capture image
- 
+
                     new LoadImagesFromSDCard().execute(""+imageId);
-                     
+
                   /*********** Load Captured Image And Data End ****************/
-                     
-                
+
+
                 } else if ( resultCode == RESULT_CANCELED) {
-                     
+
                     Toast.makeText(this, " Picture was not taken ", Toast.LENGTH_SHORT).show();
                 } else {
-                     
+
                     Toast.makeText(this, " Picture was not taken ", Toast.LENGTH_SHORT).show();
                 }
             }
         }
-      
-      
+
+
      /************ Convert Image Uri path to physical path **************/
-      
+
      public static String convertImageUriToFile ( Uri imageUri, Activity activity )  {
-      
+
             Cursor cursor = null;
             int imageID = 0;
-             
+
             try {
-             
+
                 /*********** Which columns values want to get *******/
                 String [] proj={
                                  MediaStore.Images.Media.DATA,
@@ -248,7 +262,7 @@ public class CameraPhotoCapture extends Activity {
                                  MediaStore.Images.Thumbnails._ID,
                                  MediaStore.Images.ImageColumns.ORIENTATION
                                };
-                 
+
 //                cursor = activity.managedQuery(
 //
 //                                imageUri,         //  Get data for specific image URI
@@ -277,147 +291,198 @@ public class CameraPhotoCapture extends Activity {
 
 
                 //  Get Query Data
-                 
+
                 int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
                 int columnIndexThumb = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID);
                 int file_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                 
+
                 //int orientation_ColumnIndex = cursor.
                 //    getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
-                 
+
                 int size = cursor.getCount();
-                 
+
                 /*******  If size is 0, there are no images on the SD Card. *****/
-                 
+
                 if (size == 0) {
- 
- 
+
+
                     //imageDetails.setText("No Image");
                 }
                 else
                 {
-                
+
                     int thumbID = 0;
                     if (cursor.moveToFirst()) {
-                         
+
                         /**************** Captured image details ************/
-                         
+
                         /*****  Used to show image on view in LoadImagesFromSDCard class ******/
                         imageID     = cursor.getInt(columnIndex);
-                         
+
                         thumbID     = cursor.getInt(columnIndexThumb);
-                         
+
                         String Path = cursor.getString(file_ColumnIndex);
-                        
-                        
+
+
                         imagepathfordeletion = Path;
                         imagepathforupload= Path;
 
                         Log.v("log_tag","imagepathforupload"+imagepathforupload);
                         //String orientation =  cursor.getString(orientation_ColumnIndex);
-                         
+
                         String CapturedImageDetails = " CapturedImageDetails : \n\n"
                                                           +" ImageID :"+imageID+"\n"
                                                           +" ThumbID :"+thumbID+"\n"
                                                           +" Path :"+Path+"\n";
-                         
+
                         // Show Captured Image detail on activity
                         //imageDetails.setText( CapturedImageDetails );
-                         
+
                     }
-                }    
+                }
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
-             
+
             // Return Captured Image ImageID ( By this ImageID Image will load from sdcard )
-             
+
             return ""+imageID;
         }
-      
-      
+
+
          /**
          * Async task for loading the images from the SD card.
          *
          * @author Android Example
          *
          */
-          
+
         // Class with extends AsyncTask class
-         
+
      public class LoadImagesFromSDCard  extends AsyncTask<String, Void, Void> {
-             
-            private ProgressDialog Dialog = new ProgressDialog(CameraPhotoCapture.this);
-             
+
+            //private final ProgressDialog Dialog = new ProgressDialog(CameraPhotoCapture.this);
+
             Bitmap mBitmap;
-             
+
             protected void onPreExecute() {
                 /****** NOTE: You can call UI Element here. *****/
-                 
+
                 // Progress Dialog
-                Dialog.setMessage(" Loading the image..");
-                Dialog.show();
+//                Dialog.setMessage(" Loading the image..");
+//                Dialog.show();
             }
- 
- 
+
+
             // Call after onPreExecute method
             protected Void doInBackground(String... urls) {
-                 
+              //  Uri uri = null;
                 Bitmap bitmap = null;
                 Bitmap newBitmap = null;
-                Uri uri = null;       
-                     
-                     
-                    try {
-                         
-                        /**  Uri.withAppendedPath Method Description
-                        * Parameters
-                        *    baseUri  Uri to append path segment to
-                        *    pathSegment  encoded path segment to append
-                        * Returns
-                        *    a new Uri based on baseUri with the given segment appended to the path
-                        */
-                         
-                        uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + urls[0]);
-                         Log.i("log_tag","URI"+uri);
-                        /**************  Decode an input stream into a bitmap. *********/
-                        bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-                         
-                        compressImage(imagepathfordeletion); // imagepathfordeletion is original path of image
+
+                @SuppressLint("Recycle")
+                final Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                if (cursor != null && cursor.moveToFirst()) {
+                    //final ImageView imageView = (ImageView) findViewById(R.id.pictureView);
+
+
+                    if (Build.VERSION.SDK_INT >= 29) {
+                        // You can replace '0' by 'cursor.getColumnIndex(MediaStore.Images.ImageColumns._ID)'
+                        // Note that now, you read the column '_ID' and not the column 'DATA'
+                        Uri imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cursor.getInt(0));
+
+                        // now that you have the media URI, you can decode it to a bitmap
+                        try (ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(imageUri, "r")) {
+                            if (pfd != null) {
+                                bitmap = BitmapFactory.decodeFileDescriptor(pfd.getFileDescriptor());
+                                compressImage(imagepathfordeletion); // imagepathfordeletion is original path of image
                         									 // calling the compressImage method
                         if (bitmap != null) {
-                             
+
                             /********* Creates a new bitmap, scaled from an existing bitmap. ***********/
- 
+
                             newBitmap = Bitmap.createScaledBitmap(bitmap, 170, 170, true);
-                             
+
                             bitmap.recycle();
-                             
+
                             if (newBitmap != null) {
-                                 
+
                                 mBitmap = newBitmap;
                             }
                         }
-                    } catch (IOException e) {
-                        // Error fetching image, try to recover
-                         
-                        /********* Cancel execution of this task. **********/
-                        cancel(true);
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            cancel(true);
+
+                        }
+                    } else {
+                        // Repeat the code you already are using
                     }
-                 
+                }
+
+
+                //////////////////////////////////////////////////////////////
+
+//                Bitmap bitmap = null;
+//                Bitmap newBitmap = null;
+//                Uri uri = null;
+//
+//
+//                    try {
+//
+//                        /**  Uri.withAppendedPath Method Description
+//                        * Parameters
+//                        *    baseUri  Uri to append path segment to
+//                        *    pathSegment  encoded path segment to append
+//                        * Returns
+//                        *    a new Uri based on baseUri with the given segment appended to the path
+//                        */
+//
+//
+//
+//
+//                        uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + urls[0]);
+//                         Log.i("log_tag","URI"+uri);
+//                        /**************  Decode an input stream into a bitmap. *********/
+//                        bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+//
+//                        compressImage(imagepathfordeletion); // imagepathfordeletion is original path of image
+//                        									 // calling the compressImage method
+//                        if (bitmap != null) {
+//
+//                            /********* Creates a new bitmap, scaled from an existing bitmap. ***********/
+//
+//                            newBitmap = Bitmap.createScaledBitmap(bitmap, 170, 170, true);
+//
+//                            bitmap.recycle();
+//
+//                            if (newBitmap != null) {
+//
+//                                mBitmap = newBitmap;
+//                            }
+//                        }
+//                    } catch (IOException e) {
+//                        // Error fetching image, try to recover
+//
+//                        /********* Cancel execution of this task. **********/
+//                        cancel(true);
+//                    }
+//
                 return null;
             }
-             
-             
+
+
             protected void onPostExecute(Void unused) {
-                 
+
                 // NOTE: You can call UI Element here.
-                 
+
                 // Close progress dialog
-                  Dialog.dismiss();
-                 
+                //  Dialog.dismiss();
+
                 if(mBitmap != null)
                 {
                   // Set Image to ImageView
@@ -427,16 +492,19 @@ public class CameraPhotoCapture extends Activity {
 //                   photo_iv.setImageBitmap(mBitmap);
 
                     if(str_cameraflag.equals("1")){
-                        showImg.setImageBitmap(scaledBitmap);
-                        photo_edit_iv.setImageBitmap(scaledBitmap);
+                     //   if(!scaledBitmap.equals("")){
+                            showImg.setImageBitmap(scaledBitmap);
+                            photo_edit_iv.setImageBitmap(scaledBitmap);
 //                        SharedPreferences myprefs_flag_camera = CameraPhotoCapture.this.getSharedPreferences("cameraflag", MODE_PRIVATE);
 //                        myprefs_flag_camera.edit().putString("flag_camera", "0").apply();
 //
 
-                        SharedPreferences.Editor  myprefs_camera= sharedpref_camera_Obj.edit();
-                        myprefs_camera.putString(key_flagcamera, "0");
-                        myprefs_camera.apply();
+                            SharedPreferences.Editor  myprefs_camera= sharedpref_camera_Obj.edit();
+                            myprefs_camera.putString(key_flagcamera, "0");
+                            myprefs_camera.apply();
 
+
+                       // }
 
                     }else{
                         showImg.setImageBitmap(scaledBitmap);
@@ -444,42 +512,42 @@ public class CameraPhotoCapture extends Activity {
 
                     }
                 }
-                 
+
             }
-             
+
         }
-	
-	
-	
+
+
+
      public void clearimage(View view)
      {
 
     	    ContentResolver contentResolver = getContentResolver();
     	    contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
     	                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{imagepathfordeletion  });
-    	   
+
     	    imagepathforupload="";
     	    compressedfilepaths="";
 //    	 Intent i = new Intent(getApplicationContext(), CameraPhotoCapture.class);
 //     	startActivity(i);
      	finish();
      }
-	
-	
+
+
      public void uploadimage(View view)
      {
-    	 
+
     	// editor.putString(DigitalsignpathKEY, imagepathforupload.toString());
     	 //editor.putString(DigitalsignpathKEY, compressedfilepaths.toString());
 		// editor.commit();
     	 /*Intent i = new Intent(getApplicationContext(), RegistA.class);
       	startActivity(i);*/
-		 
+
 		 /*Bundle b = new Bundle();
          b.putString("status", "done");
          Intent intent = new Intent();
          intent.putExtras(b);
-         setResult(RESULT_OK,intent);   
+         setResult(RESULT_OK,intent);
          */
 
 		 //Commented and added by shivaleela on aug 9th 2019
@@ -490,10 +558,10 @@ public class CameraPhotoCapture extends Activity {
 
          //*---------------------------------------------
       	finish();
-    	 
+
      }
-	
-	
+
+
      public void cancelimage(View view)
      {
          //Commented and added by shivaleela on aug 9th 2019
@@ -521,20 +589,21 @@ public class CameraPhotoCapture extends Activity {
              finish();
          }
      }
-	
-	
+
+
      public void onBackPressed()
 	 {
 	     Toast.makeText(this, "Click on cancel to exit from application!", Toast.LENGTH_SHORT).show();
      }
-	
-	
-     
-     
+
+
+
+
      //compression of image
-     
+
      private String getRealPathFromURI(String contentURI) {
          Uri contentUri = Uri.parse(contentURI);
+         @SuppressLint("Recycle")
          Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
          if (cursor == null) {
              return contentUri.getPath();
@@ -544,7 +613,7 @@ public class CameraPhotoCapture extends Activity {
              return cursor.getString(index);
          }
      }
-     
+
      public String getFilename() {
          File file = new File(Environment.getExternalStorageDirectory().getPath(), "DetSkillsSign/Images");
          if (!file.exists()) {
@@ -555,7 +624,7 @@ public class CameraPhotoCapture extends Activity {
          return uriSting;
 
      }
-     
+
      public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
          final int height = options.outHeight;
          final int width = options.outWidth;
@@ -574,10 +643,12 @@ public class CameraPhotoCapture extends Activity {
 
          return inSampleSize;
      }
-     
+
      public String compressImage(String imageUri) {
 
+
          String filePath = getRealPathFromURI(imageUri);
+         Log.e("filePath", filePath);
 //         Bitmap scaledBitmap = null;
 
          BitmapFactory.Options options = new BitmapFactory.Options();
@@ -585,6 +656,8 @@ public class CameraPhotoCapture extends Activity {
 //       by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
 //       you try the use the bitmap here, you will get null.
          options.inJustDecodeBounds = true;
+       //  Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.appicon, options);
+
          Bitmap bmp = BitmapFactory.decodeFile(filePath, options);
 
          int actualHeight = options.outHeight;
@@ -594,118 +667,127 @@ public class CameraPhotoCapture extends Activity {
 
          /*float maxHeight = 816.0f;
          float maxWidth = 612.0f;*/
-         
-         
+
+
          float maxHeight = 216.0f;
          float maxWidth = 212.0f;
-         float imgRatio = actualWidth / actualHeight;
-         float maxRatio = maxWidth / maxHeight;
+         Log.e("actualWidth", String.valueOf(actualWidth));
+         Log.e("actualHeight", String.valueOf(actualHeight));
+         if((actualWidth==0) || (actualHeight==0)){
+             Log.e("actualWidth=0", "actualWidth=0");
+         }else {
+             Log.e("actualWidth=0", "else");
+             float imgRatio = actualWidth / actualHeight;
+             float maxRatio = maxWidth / maxHeight;
+
 
 //       width and height values are set maintaining the aspect ratio of the image
 
-         if (actualHeight > maxHeight || actualWidth > maxWidth) {
-             if (imgRatio < maxRatio) {
-                 imgRatio = maxHeight / actualHeight;
-                 actualWidth = (int) (imgRatio * actualWidth);
-                 actualHeight = (int) maxHeight;
-             } else if (imgRatio > maxRatio) {
-                 imgRatio = maxWidth / actualWidth;
-                 actualHeight = (int) (imgRatio * actualHeight);
-                 actualWidth = (int) maxWidth;
-             } else {
-                 actualHeight = (int) maxHeight;
-                 actualWidth = (int) maxWidth;
+             if (actualHeight > maxHeight || actualWidth > maxWidth) {
+                 if (imgRatio < maxRatio) {
+                     imgRatio = maxHeight / actualHeight;
+                     actualWidth = (int) (imgRatio * actualWidth);
+                     actualHeight = (int) maxHeight;
+                 } else if (imgRatio > maxRatio) {
+                     imgRatio = maxWidth / actualWidth;
+                     actualHeight = (int) (imgRatio * actualHeight);
+                     actualWidth = (int) maxWidth;
+                 } else {
+                     actualHeight = (int) maxHeight;
+                     actualWidth = (int) maxWidth;
 
+                 }
              }
-         }
+
 
 //       setting inSampleSize value allows to load a scaled down version of the original image
 
-         options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
+             options.inSampleSize = calculateInSampleSize(options, actualWidth, actualHeight);
 
 //       inJustDecodeBounds set to false to load the actual bitmap
-         options.inJustDecodeBounds = false;
+             options.inJustDecodeBounds = false;
 
 //       this options allow android to claim the bitmap memory if it runs low on memory
-         options.inPurgeable = true;
-         options.inInputShareable = true;
-         options.inTempStorage = new byte[16 * 1024];
+             options.inPurgeable = true;
+             options.inInputShareable = true;
+             options.inTempStorage = new byte[16 * 1024];
 
-         try {
+             try {
 //           load the bitmap from its path
-             bmp = BitmapFactory.decodeFile(filePath, options);
-         } catch (OutOfMemoryError exception) {
-             exception.printStackTrace();
+                 bmp = BitmapFactory.decodeFile(filePath, options);
+             } catch (OutOfMemoryError exception) {
+                 exception.printStackTrace();
 
-         }
-         try {
-             scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
-         } catch (OutOfMemoryError exception) {
-             exception.printStackTrace();
-         }
+             }
+             try {
+                 scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
+             } catch (OutOfMemoryError exception) {
+                 exception.printStackTrace();
+             }
 
-         float ratioX = actualWidth / (float) options.outWidth;
-         float ratioY = actualHeight / (float) options.outHeight;
-         float middleX = actualWidth / 2.0f;
-         float middleY = actualHeight / 2.0f;
+             float ratioX = actualWidth / (float) options.outWidth;
+             float ratioY = actualHeight / (float) options.outHeight;
+             float middleX = actualWidth / 2.0f;
+             float middleY = actualHeight / 2.0f;
 
-         Matrix scaleMatrix = new Matrix();
-         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+             Matrix scaleMatrix = new Matrix();
+             scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
 
-         Canvas canvas = new Canvas(scaledBitmap);
-         canvas.setMatrix(scaleMatrix);
-         canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+             Canvas canvas = new Canvas(scaledBitmap);
+             canvas.setMatrix(scaleMatrix);
+             canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
 
 //       check the rotation of the image and display it properly
-         ExifInterface exif;
-         try {
-             exif = new ExifInterface(filePath);
+             ExifInterface exif;
+             try {
+                 exif = new ExifInterface(filePath);
 
-             int orientation = exif.getAttributeInt(
-                     ExifInterface.TAG_ORIENTATION, 0);
-             Log.d("EXIF", "Exif: " + orientation);
-             Matrix matrix = new Matrix();
-             if (orientation == 6) {
-                 matrix.postRotate(90);
+                 int orientation = exif.getAttributeInt(
+                         ExifInterface.TAG_ORIENTATION, 0);
                  Log.d("EXIF", "Exif: " + orientation);
-             } else if (orientation == 3) {
-                 matrix.postRotate(180);
-                 Log.d("EXIF", "Exif: " + orientation);
-             } else if (orientation == 8) {
-                 matrix.postRotate(270);
-                 Log.d("EXIF", "Exif: " + orientation);
+                 Matrix matrix = new Matrix();
+                 if (orientation == 6) {
+                     matrix.postRotate(90);
+                     Log.d("EXIF", "Exif: " + orientation);
+                 } else if (orientation == 3) {
+                     matrix.postRotate(180);
+                     Log.d("EXIF", "Exif: " + orientation);
+                 } else if (orientation == 8) {
+                     matrix.postRotate(270);
+                     Log.d("EXIF", "Exif: " + orientation);
+                 }
+                 scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
+                         scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
+                         true);
+             } catch (IOException e) {
+                 e.printStackTrace();
              }
-             scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
-                     scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,
-                     true);
-         } catch (IOException e) {
-             e.printStackTrace();
-         }
 
-         FileOutputStream out = null;
-         String filename = getFilename();
-        		 compressedfilepaths=filename;
+             FileOutputStream out = null;
+             String filename = getFilename();
+             compressedfilepaths = filename;
 
-         try {
-             out = new FileOutputStream(filename);
+             try {
+                 out = new FileOutputStream(filename);
 
 //           write the compressed bitmap at the destination specified by filename.
-             //scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
+                 //scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
 
-             scaledBitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
-             	
-         } catch (FileNotFoundException e) {
-             e.printStackTrace();
+                 scaledBitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
+
+             } catch (FileNotFoundException e) {
+                 e.printStackTrace();
+             }
+             return filename;
          }
 
-         return filename;
-
+         return null;
      }
-     
-     
-     
-	
-	
+
+
+
+
+
 }// end of class
 
 

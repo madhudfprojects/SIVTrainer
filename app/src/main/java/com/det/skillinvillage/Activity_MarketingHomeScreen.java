@@ -2,6 +2,7 @@ package com.det.skillinvillage;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,14 +23,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.det.skillinvillage.model.AddStudentDetailsRequest;
+import com.det.skillinvillage.model.AddStudentDetailsResponse;
+import com.det.skillinvillage.model.Class_Response_AddStudentDetailsList;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.StudentList;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+import com.google.gson.Gson;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.List;
 import java.util.Vector;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.det.skillinvillage.Activity_ViewStudentList_new.key_studentid;
+import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_selectedspinner;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 
@@ -50,51 +68,56 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
     Class_GPSTracker gps_object;
 
-    ImageView student_registrationform_ib,student_referfriend_ib,applicationdetails_ib,feessubmit_ib,college_addmission_history_IB;
+    ImageView student_registrationform_ib, student_referfriend_ib, applicationdetails_ib, feessubmit_ib, college_addmission_history_IB;
 
     Class_InternetDectector internetDectector;
     Boolean isInternetPresent = false;
 
-    int int_insidecursorcount,int_cousorcount;
-    String str_fetch_image, str_fetch_studentname, str_fetch_gender, str_fetch_birthdate, str_fetch_education, str_fetch_marks, str_fetch_mobileno, str_fetch_fathername, str_fetch_mothername, str_fetch_aadharno, str_fetch_studentstatus, str_fetch_admissionfee, str_fetch_createddate, str_fetch_createdby,str_fetch_receiptno,str_fetch_learnOption;
+    int int_insidecursorcount, int_cousorcount;
+    String str_fetch_image, str_fetch_studentname, str_fetch_gender, str_fetch_birthdate, str_fetch_education, str_fetch_marks, str_fetch_mobileno, str_fetch_fathername, str_fetch_mothername, str_fetch_aadharno, str_fetch_studentstatus, str_fetch_admissionfee, str_fetch_createddate, str_fetch_createdby, str_fetch_receiptno, str_fetch_learnOption;
     int int_fetch_sandboxid, int_fetch_academicid, int_fetch_clusterid, int_fetch_instituteid, int_fetch_schoolid, int_fetch_levelid;
     Boolean RegisterResponse_marketingscreen;
 
-    TextView Notuploadedcount_tv;
+    TextView Notuploadedcount_tv,Notuploadedcount_addnew_TV;
     int OfflineStudentTable_count;
     Cursor cursor;
     SQLiteDatabase db;
     int i = 0;
     ImageButton notupload_ib;
-    String str_logout_count_Status="",str_loginuserID="";
+    String str_logout_count_Status = "", str_loginuserID = "";
     SharedPreferences sharedpref_loginuserid_Obj;
+    SharedPreferences sharedpref_stuid_Obj;
+    int str_stuID = 0;
+    StudentList[] class_farmerprofileoffline_array_obj;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marketingform);
 
 
-       // toolbar = (Toolbar) findViewById(R.id.toolbar_n_actionbar);
+        // toolbar = (Toolbar) findViewById(R.id.toolbar_n_actionbar);
 
-        sharedpref_validMailID_Obj=getSharedPreferences(sharedpreferenc_mailbook, Context.MODE_PRIVATE);
+        sharedpref_validMailID_Obj = getSharedPreferences(sharedpreferenc_mailbook, Context.MODE_PRIVATE);
 
         sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
         str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
 
 
+//        sharedpref_stuid_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
+//        str_stuID = sharedpref_stuid_Obj.getInt(key_studentid, 0);
+//        Log.e("str_stuID.1oncreate..", String.valueOf(str_stuID));
 
 
-
-        student_registrationform_ib= findViewById(R.id.student_registrationform_IB);
+        student_registrationform_ib = findViewById(R.id.student_registrationform_IB);
         student_referfriend_ib = findViewById(R.id.student_referfriend_IB);
-        applicationdetails_ib= findViewById(R.id.applicationdetails_IB);
-        feessubmit_ib= findViewById(R.id.feessubmit_IB);
-        college_addmission_history_IB= findViewById(R.id.college_addmission_history_IB);
+        applicationdetails_ib = findViewById(R.id.applicationdetails_IB);
+        feessubmit_ib = findViewById(R.id.feessubmit_IB);
+        college_addmission_history_IB = findViewById(R.id.college_addmission_history_IB);
 
-        Notuploadedcount_tv= findViewById(R.id.Notuploadedcount_TV);
-        notupload_ib= findViewById(R.id.notupload_IB);
+        Notuploadedcount_tv = findViewById(R.id.Notuploadedcount_TV);
+        Notuploadedcount_addnew_TV=(TextView)findViewById(R.id.Notuploadedcount_addnew_TV);
+        notupload_ib = findViewById(R.id.notupload_IB);
         // Set upon the actionbar
 //        setSupportActionBar(toolbar);
         // Now use actionbar methods to show navigation icon and title
@@ -107,7 +130,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
         @SuppressLint("ResourceType")
         Animation animation_stuRegistration = AnimationUtils.loadAnimation(this, R.anim.translate);
-       // animation1.setDuration(2100);
+        // animation1.setDuration(2100);
         animation_stuRegistration.setDuration(1100);
         student_registrationform_ib.setAnimation(animation_stuRegistration);
         student_registrationform_ib.animate();
@@ -115,7 +138,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
 
         @SuppressLint("ResourceType")
-        Animation animation_applDetails= AnimationUtils.loadAnimation(this, R.anim.translate);
+        Animation animation_applDetails = AnimationUtils.loadAnimation(this, R.anim.translate);
         //animation2.setDuration(2100);
         animation_applDetails.setDuration(1100);
         applicationdetails_ib.setAnimation(animation_applDetails);
@@ -145,21 +168,20 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
         student_registrationform_ib.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
-               // if(gps_object.canGetLocation()) {
-                    //Commented and added by shivaleela on june 27th 2019
+                // if(gps_object.canGetLocation()) {
+                //Commented and added by shivaleela on june 27th 2019
 
 //                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register.class);
 //                    startActivity(i);
 //                    finish();
 
-                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register_New.class);
-                    startActivity(i);
-                    finish();
+                Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register_New.class);
+                startActivity(i);
+                finish();
 
-              //  }
+                //  }
 //                else
 //                {gps_object.showSettingsAlert();}
 
@@ -168,66 +190,60 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
         student_referfriend_ib.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
-                if(gps_object.canGetLocation()) {
+                if (gps_object.canGetLocation()) {
                     Toast.makeText(getApplicationContext(), "Currently Disabled", Toast.LENGTH_LONG).show();
 
 
 //                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Refer.class);
 //                    startActivity(i);
 //                    finish();
+                } else {
+                    gps_object.showSettingsAlert();
                 }
-                else
-                {gps_object.showSettingsAlert();}
 
             }
         });
-
-
-
-
-
 
 
         applicationdetails_ib.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
+                Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_ViewStudentList_new.class);
+                startActivity(i);
+                finish();
 
 
-                internetDectector = new Class_InternetDectector(getApplicationContext());
-                isInternetPresent = internetDectector.isConnectingToInternet();
-
-                if (isInternetPresent)
-                {
-
-//                Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_ApplicationDetails.class);
-//                startActivity(i);
-//                finish();
-
-//                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_Student_List.class);
+//                internetDectector = new Class_InternetDectector(getApplicationContext());
+//                isInternetPresent = internetDectector.isConnectingToInternet();
+//
+//                if (isInternetPresent)
+//                {
+//
+////                Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_ApplicationDetails.class);
+////                startActivity(i);
+////                finish();
+//
+////                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_Student_List.class);
+////                    startActivity(i);
+////                    finish();
+//
+//                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_ViewStudentList_new.class);
 //                    startActivity(i);
 //                    finish();
-
-                    Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_ViewStudentList_new.class);
-                    startActivity(i);
-                    finish();
-                }else{
-                    Toast.makeText(getApplicationContext(), "Connect to Internet", Toast.LENGTH_LONG).show();
-                }
-
+//                }else{
+//                    Toast.makeText(getApplicationContext(), "Connect to Internet", Toast.LENGTH_LONG).show();
+//                }
+//
 
             }
         });
 
 
-
         feessubmit_ib.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
                 internetDectector = new Class_InternetDectector(getApplicationContext());
                 isInternetPresent = internetDectector.isConnectingToInternet();
@@ -243,7 +259,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //                    Toast.makeText(getApplicationContext(), "Connect to Internet", Toast.LENGTH_LONG).show();
 //                }
 
-                Intent i = new Intent(Activity_MarketingHomeScreen.this,Activity_FeesSubmit_New.class);
+                Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_FeesSubmit_New.class);
                 startActivity(i);
                 finish();
 
@@ -254,15 +270,528 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         isInternetPresent = internetDectector.isConnectingToInternet();
 
         if (isInternetPresent) {
-            getOfflineRecord();
-        }else{
-            getOfflineDBcount();
+            fetch_DB_farmerprofile_offline_data_edit();
+            fetch_DB_farmerprofile_offline_data_add();
+            // getOfflineRecord();
+        } else {
+            fetch_DB_farmerprofile_offline_data_new_edit();
+            fetch_DB_farmerprofile_offline_data_new_add();
+
+            //getOfflineDBcount();
+        }
+       // deleteStudentdetailsRestTable_B4insertion();
+    }// end of Oncreate()
+
+
+    public void fetch_DB_farmerprofile_offline_data_new_add() {
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+       // Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'" + "newtemp%" + "'", null);
+           Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offline"  + "'", null);
+        int x = cursor1.getCount();
+        Log.e("marketing_studaddd", String.valueOf(x));
+        int i = 0;
+        class_farmerprofileoffline_array_obj = new StudentList[x];
+        if (x > 0) {
+            Notuploadedcount_addnew_TV.setText("Not uploaded: " + x);
+        }
+        db1.close();
+    }
+
+    public void fetch_DB_farmerprofile_offline_data_new_edit() {
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+     //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'" + "edittemp%" + "'", null);
+        //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='"+ stuid  + "'", null);
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offlineedit"  + "'", null);
+        int x = cursor1.getCount();
+        Log.e("marketing_edit", String.valueOf(x));
+        int i = 0;
+        class_farmerprofileoffline_array_obj = new StudentList[x];
+        if (x > 0) {
+            Notuploadedcount_tv.setText("Not Uploaded: " + x);
+        }
+        db1.close();
+    }
+////////////////////////
+    public void fetch_DB_farmerprofile_offline_data_edit()
+    {
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+      //  Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "edittemp%" + "'", null);
+        //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='"+ stuid  + "'", null);
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offlineedit"  + "'", null);
+
+        int x = cursor1.getCount();
+        Log.e("marketing_studentcount", String.valueOf(x));
+
+        int i = 0;
+        class_farmerprofileoffline_array_obj = new StudentList[x];
+        if (x > 0) {
+
+            if (cursor1.moveToFirst()) {
+
+                do {
+
+                    StudentList innerObj_Class_SandboxList = new StudentList();
+                    innerObj_Class_SandboxList.setAcademicID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("AcademicID"))));
+                    innerObj_Class_SandboxList.setAcademicName(cursor1.getString(cursor1.getColumnIndex("AcademicName")));
+                    innerObj_Class_SandboxList.setAdmissionFee(cursor1.getString(cursor1.getColumnIndex("AdmissionFee")));
+                    innerObj_Class_SandboxList.setApplicationNo(cursor1.getString(cursor1.getColumnIndex("ApplicationNo")));
+                    innerObj_Class_SandboxList.setBalanceFee(cursor1.getString(cursor1.getColumnIndex("BalanceFee")));
+                    innerObj_Class_SandboxList.setBirthDate(cursor1.getString(cursor1.getColumnIndex("BirthDate")));
+                    innerObj_Class_SandboxList.setClusterID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("ClusterID"))));//DispFarmerTable_Farmer_Code VARCHAR
+                    innerObj_Class_SandboxList.setClusterName(cursor1.getString(cursor1.getColumnIndex("ClusterName")));//DispFarmerTable_Farmer_Code VARCHAR
+                    innerObj_Class_SandboxList.setCreatedDate(cursor1.getString(cursor1.getColumnIndex("CreatedDate")));
+                    innerObj_Class_SandboxList.setEducation(cursor1.getString(cursor1.getColumnIndex("Education")));
+                    innerObj_Class_SandboxList.setFatherName(cursor1.getString(cursor1.getColumnIndex("FatherName")));
+                    innerObj_Class_SandboxList.setGender(cursor1.getString(cursor1.getColumnIndex("Gender")));
+                    innerObj_Class_SandboxList.setInstituteName(cursor1.getString(cursor1.getColumnIndex("InstituteName")));
+                    innerObj_Class_SandboxList.setInstituteID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("InstituteID"))));
+                    innerObj_Class_SandboxList.setLevelID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("LevelID"))));
+                    innerObj_Class_SandboxList.setLevelName(cursor1.getString(cursor1.getColumnIndex("LevelName")));
+                    innerObj_Class_SandboxList.setMarks4(cursor1.getString(cursor1.getColumnIndex("Marks4")));
+                    innerObj_Class_SandboxList.setMarks5(cursor1.getString(cursor1.getColumnIndex("Marks5")));
+                    innerObj_Class_SandboxList.setMarks6(cursor1.getString(cursor1.getColumnIndex("Marks6")));
+                    innerObj_Class_SandboxList.setMarks7(cursor1.getString(cursor1.getColumnIndex("Marks7")));
+                    innerObj_Class_SandboxList.setMarks8(cursor1.getString(cursor1.getColumnIndex("Marks8")));
+                    innerObj_Class_SandboxList.setMobile(cursor1.getString(cursor1.getColumnIndex("Mobile")));
+                    innerObj_Class_SandboxList.setMotherName(cursor1.getString(cursor1.getColumnIndex("MotherName")));
+                    innerObj_Class_SandboxList.setPaidFee(cursor1.getString(cursor1.getColumnIndex("PaidFee")));
+                    innerObj_Class_SandboxList.setReceiptNo(cursor1.getString(cursor1.getColumnIndex("ReceiptNo")));
+                    innerObj_Class_SandboxList.setSandboxID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("SandboxID"))));
+                    innerObj_Class_SandboxList.setSandboxName(cursor1.getString(cursor1.getColumnIndex("SandboxName")));
+                    innerObj_Class_SandboxList.setSchoolID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("SchoolID"))));
+                    innerObj_Class_SandboxList.setSchoolName(cursor1.getString(cursor1.getColumnIndex("SchoolName")));
+                    innerObj_Class_SandboxList.setStudentAadhar(cursor1.getString(cursor1.getColumnIndex("StudentAadhar")));
+                    innerObj_Class_SandboxList.setStudentPhoto(cursor1.getString(cursor1.getColumnIndex("StudentPhoto")));
+                    innerObj_Class_SandboxList.setStudentStatus(cursor1.getString(cursor1.getColumnIndex("StudentStatus")));
+                    innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
+                    innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                    innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
+                    Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
+                    Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                    i++;
+                } while (cursor1.moveToNext());
+            }//if ends
+
         }
 
 
+        db1.close();
 
-    }// end of Oncreate()
+        Log.e("length", String.valueOf(class_farmerprofileoffline_array_obj.length));
 
+        //int_newfarmercount=0;
+        for (int j = 0; j < class_farmerprofileoffline_array_obj.length; j++) {
+            AddFarmerDetails(j);
+        }
+//        if (x == 0) {
+//            fetch_DB_newfarmpond_offline_data();
+//        }
+
+    }
+    public void AddFarmerDetails(int j) {
+        Interface_userservice userService1;
+        userService1 = Class_ApiUtils.getUserService();
+        String StudentID= String.valueOf(class_farmerprofileoffline_array_obj[j].getStudentID());
+        Log.e("cLASS","StudentID..ABC "+class_farmerprofileoffline_array_obj[j].getStudentID());
+
+        Log.e("tag","StudentID=="+StudentID);
+        if(StudentID.startsWith("edittemp")){
+            Log.e("tag","StudentID temp=="+StudentID);
+            StudentID="0";
+        }
+
+        AddStudentDetailsRequest request = new AddStudentDetailsRequest();
+        request.setAcademicID(String.valueOf(class_farmerprofileoffline_array_obj[j].getAcademicID()));
+        request.setSandboxID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSandboxID()));
+        request.setClusterID(String.valueOf(class_farmerprofileoffline_array_obj[j].getClusterID()));
+        request.setInstituteID(String.valueOf(class_farmerprofileoffline_array_obj[j].getInstituteID()));
+        request.setLevelID(String.valueOf(class_farmerprofileoffline_array_obj[j].getLevelID()));
+        request.setStudentName(class_farmerprofileoffline_array_obj[j].getStudentName());
+        request.setFatherName(class_farmerprofileoffline_array_obj[j].getFatherName());
+        request.setMotherName(class_farmerprofileoffline_array_obj[j].getMotherName());
+        request.setBirthDate(class_farmerprofileoffline_array_obj[j].getBirthDate());
+        // request.setBirthDate("2005-01-22");
+        request.setStudentAadhar(class_farmerprofileoffline_array_obj[j].getStudentAadhar());
+        request.setMobile(class_farmerprofileoffline_array_obj[j].getMobile());
+        request.setGender(class_farmerprofileoffline_array_obj[j].getGender());
+        request.setEducation(class_farmerprofileoffline_array_obj[j].getEducation());
+
+        if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks4());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks5().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks5());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks6().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks6());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks7().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks7());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks8().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks8());
+
+        }
+        request.setAdmissionFee(class_farmerprofileoffline_array_obj[j].getAdmissionFee());
+        request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
+        request.setStudentID(class_farmerprofileoffline_array_obj[j].getStudentID());
+        request.setSchoolID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSchoolID()));
+        request.setCreatedBy(String.valueOf(str_stuID));
+        request.setCreatedDate(class_farmerprofileoffline_array_obj[j].getCreatedDate());
+        //   request.setCreatedDate("2020-12-05");
+        request.setReceiptManual(class_farmerprofileoffline_array_obj[j].getReceiptNo());
+        //    request.setLearningMode(class_farmerprofileoffline_array_obj[j].g());
+        request.setTemp_ID(class_farmerprofileoffline_array_obj[j].getTempID());
+        request.setFileName(class_farmerprofileoffline_array_obj[j].getStudentPhoto());
+//        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
+//        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
+
+        Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
+
+        Log.e("TAG", "Request 33: " + new Gson().toJson(request));
+        Log.e("TAG", "Request: " + request.toString());
+
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_MarketingHomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setCancelable(false);
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<AddStudentDetailsResponse>() {
+            @Override
+            public void onResponse(Call<AddStudentDetailsResponse> call, Response<AddStudentDetailsResponse> response) {
+                // System.out.println("response" + response.body().toString());
+                //    Log.e("tag", "response =" + response.body().toString());
+
+
+                if (response.isSuccessful()) {
+                    List<Class_Response_AddStudentDetailsList> addFarmerResList = response.body().getLst();
+                    for (int i = 0; i < addFarmerResList.size(); i++) {
+
+
+                        Log.e("tag", "addstudentresponse ID=" + addFarmerResList.get(i).getStudentID());
+
+
+                        String str_response_student_id = String.valueOf(addFarmerResList.get(i).getStudentID());
+                        String str_response_tempId = String.valueOf(addFarmerResList.get(i).getTemp_ID());
+//                    Log.e("tag", "getMobileTempID=" + addFarmerResList.getMobileTempID());
+//                    Log.e("tag", "getFarmerCode=" + addFarmerResList.getFarmerCode());
+//                    Log.e("tag", "getFarmerID=" + addFarmerResList.getFarmerID());
+
+                        SQLiteDatabase db1 = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+
+                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+
+
+                        ContentValues cv = new ContentValues();
+                        cv.put("StudentID", str_response_student_id);
+                        cv.put("Stud_TempId", str_response_tempId);
+                        cv.put("UpadateOff_Online", "onlineedit");
+
+                        //   cv.put("UploadedStatusFarmerprofile", 10);
+
+                        db1.update("StudentDetailsRest", cv, "Stud_TempId = ?", new String[]{str_response_tempId});
+                        db1.close();
+
+                        //       SQLiteDatabase db_viewfarmerlist = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+
+
+//                    db_viewfarmerlist.execSQL("CREATE TABLE IF NOT EXISTS ViewFarmerListRest(MTempId INTEGER PRIMARY KEY,DispFarmerTable_YearID VARCHAR,DispFarmerTable_StateID VARCHAR," +
+//                            "DispFarmerTable_DistrictID VARCHAR,DispFarmerTable_TalukID VARCHAR,DispFarmerTable_VillageID VARCHAR," +
+//                            "DispFarmerTable_GrampanchayatID VARCHAR,DispFarmerTable_FarmerID VARCHAR,DispFarmerTable_Farmer_Code VARCHAR," +
+//                            "DispFarmerTable_FarmerName VARCHAR,FarmerMName_DB VARCHAR,FarmerLName_DB VARCHAR,Farmerage_DB VARCHAR," +
+//                            "Farmercellno_DB VARCHAR,FIncome_DB VARCHAR,Ffamilymember_DB VARCHAR,FIDprooftype_DB VARCHAR,FIDProofNo_DB VARCHAR,UploadedStatusFarmerprofile_DB VARCHAR," +
+//                            "FarmerImageB64str_DB VARCHAR,DispFarmerTable_FarmerImage VARCHAR," +
+//                            "LocalFarmerImg BLOB,Farmpondcount VARCHAR,Submitted_Date VARCHAR,Created_By VARCHAR,Created_Date VARCHAR,Created_User VARCHAR,Response VARCHAR,Response_Action VARCHAR,Farmer_Gender VARCHAR);");
+//
+//
+//                    ContentValues cv_farmelistupdate = new ContentValues();
+//                    cv_farmelistupdate.put("DispFarmerTable_Farmer_Code", str_response_farmercode);
+//                    cv_farmelistupdate.put("DispFarmerTable_FarmerID", str_response_farmer_id);
+//
+//
+//                    db_viewfarmerlist.update("ViewFarmerListRest", cv_farmelistupdate, "DispFarmerTable_Farmer_Code = ?", new String[]{str_response_tempId});
+//                    db_viewfarmerlist.close();
+                        progressDoalog.dismiss();
+
+//                    if(int_newfarmercount>0){int_newfarmercount++;}
+//                    else{ int_newfarmercount++; }
+
+//                    if(int_newfarmercount==class_farmerprofileoffline_array_obj.length)
+//                    {
+//                        fetch_DB_newfarmpond_offline_data();
+//                    }
+                    }
+
+                } else {
+                    progressDoalog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.d("error message", error.getMsg());
+
+                    Toast.makeText(Activity_MarketingHomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                Toast.makeText(Activity_MarketingHomeScreen.this, "WS:Error:"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+    }
+
+//////////////////////////////////////
+
+    public void fetch_DB_farmerprofile_offline_data_add()
+    {
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+      //  Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "newtemp%" + "'", null);
+           Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offline"  + "'", null);
+
+        int x = cursor1.getCount();
+        Log.e("marketing_studentcount", String.valueOf(x));
+
+        int i = 0;
+        class_farmerprofileoffline_array_obj = new StudentList[x];
+        if (x > 0) {
+
+            if (cursor1.moveToFirst()) {
+
+                do {
+
+                    StudentList innerObj_Class_SandboxList = new StudentList();
+                    innerObj_Class_SandboxList.setAcademicID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("AcademicID"))));
+                    innerObj_Class_SandboxList.setAcademicName(cursor1.getString(cursor1.getColumnIndex("AcademicName")));
+                    innerObj_Class_SandboxList.setAdmissionFee(cursor1.getString(cursor1.getColumnIndex("AdmissionFee")));
+                    innerObj_Class_SandboxList.setApplicationNo(cursor1.getString(cursor1.getColumnIndex("ApplicationNo")));
+                    innerObj_Class_SandboxList.setBalanceFee(cursor1.getString(cursor1.getColumnIndex("BalanceFee")));
+                    innerObj_Class_SandboxList.setBirthDate(cursor1.getString(cursor1.getColumnIndex("BirthDate")));
+                    innerObj_Class_SandboxList.setClusterID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("ClusterID"))));//DispFarmerTable_Farmer_Code VARCHAR
+                    innerObj_Class_SandboxList.setClusterName(cursor1.getString(cursor1.getColumnIndex("ClusterName")));//DispFarmerTable_Farmer_Code VARCHAR
+                    innerObj_Class_SandboxList.setCreatedDate(cursor1.getString(cursor1.getColumnIndex("CreatedDate")));
+                    innerObj_Class_SandboxList.setEducation(cursor1.getString(cursor1.getColumnIndex("Education")));
+                    innerObj_Class_SandboxList.setFatherName(cursor1.getString(cursor1.getColumnIndex("FatherName")));
+                    innerObj_Class_SandboxList.setGender(cursor1.getString(cursor1.getColumnIndex("Gender")));
+                    innerObj_Class_SandboxList.setInstituteName(cursor1.getString(cursor1.getColumnIndex("InstituteName")));
+                    innerObj_Class_SandboxList.setInstituteID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("InstituteID"))));
+                    innerObj_Class_SandboxList.setLevelID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("LevelID"))));
+                    innerObj_Class_SandboxList.setLevelName(cursor1.getString(cursor1.getColumnIndex("LevelName")));
+                    innerObj_Class_SandboxList.setMarks4(cursor1.getString(cursor1.getColumnIndex("Marks4")));
+                    innerObj_Class_SandboxList.setMarks5(cursor1.getString(cursor1.getColumnIndex("Marks5")));
+                    innerObj_Class_SandboxList.setMarks6(cursor1.getString(cursor1.getColumnIndex("Marks6")));
+                    innerObj_Class_SandboxList.setMarks7(cursor1.getString(cursor1.getColumnIndex("Marks7")));
+                    innerObj_Class_SandboxList.setMarks8(cursor1.getString(cursor1.getColumnIndex("Marks8")));
+                    innerObj_Class_SandboxList.setMobile(cursor1.getString(cursor1.getColumnIndex("Mobile")));
+                    innerObj_Class_SandboxList.setMotherName(cursor1.getString(cursor1.getColumnIndex("MotherName")));
+                    innerObj_Class_SandboxList.setPaidFee(cursor1.getString(cursor1.getColumnIndex("PaidFee")));
+                    innerObj_Class_SandboxList.setReceiptNo(cursor1.getString(cursor1.getColumnIndex("ReceiptNo")));
+                    innerObj_Class_SandboxList.setSandboxID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("SandboxID"))));
+                    innerObj_Class_SandboxList.setSandboxName(cursor1.getString(cursor1.getColumnIndex("SandboxName")));
+                    innerObj_Class_SandboxList.setSchoolID(Integer.valueOf(cursor1.getString(cursor1.getColumnIndex("SchoolID"))));
+                    innerObj_Class_SandboxList.setSchoolName(cursor1.getString(cursor1.getColumnIndex("SchoolName")));
+                    innerObj_Class_SandboxList.setStudentAadhar(cursor1.getString(cursor1.getColumnIndex("StudentAadhar")));
+                    innerObj_Class_SandboxList.setStudentPhoto(cursor1.getString(cursor1.getColumnIndex("StudentPhoto")));
+                    innerObj_Class_SandboxList.setStudentStatus(cursor1.getString(cursor1.getColumnIndex("StudentStatus")));
+                    innerObj_Class_SandboxList.setStudentName(cursor1.getString(cursor1.getColumnIndex("StudentName")));
+                    innerObj_Class_SandboxList.setStudentID(cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                    innerObj_Class_SandboxList.setTempID(cursor1.getString(cursor1.getColumnIndex("Stud_TempId")));
+                    class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
+                    Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
+                    Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                    i++;
+                } while (cursor1.moveToNext());
+            }//if ends
+
+        }
+
+
+        db1.close();
+
+        Log.e("length", String.valueOf(class_farmerprofileoffline_array_obj.length));
+
+        //int_newfarmercount=0;
+        for (int j = 0; j < class_farmerprofileoffline_array_obj.length; j++) {
+            AddFarmerDetails_new(j);
+        }
+//        if (x == 0) {
+//            fetch_DB_newfarmpond_offline_data();
+//        }
+
+    }
+    public void AddFarmerDetails_new(int j) {
+        Interface_userservice userService1;
+        userService1 = Class_ApiUtils.getUserService();
+        String StudentID= String.valueOf(class_farmerprofileoffline_array_obj[j].getStudentID());
+        Log.e("cLASS","StudentID..ABC "+class_farmerprofileoffline_array_obj[j].getStudentID());
+
+        Log.e("tag","StudentID=="+StudentID);
+        if(StudentID.startsWith("temp")){
+            Log.e("tag","StudentID temp=="+StudentID);
+            StudentID="0";
+        }
+
+        AddStudentDetailsRequest request = new AddStudentDetailsRequest();
+        request.setAcademicID(String.valueOf(class_farmerprofileoffline_array_obj[j].getAcademicID()));
+        request.setSandboxID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSandboxID()));
+        request.setClusterID(String.valueOf(class_farmerprofileoffline_array_obj[j].getClusterID()));
+        request.setInstituteID(String.valueOf(class_farmerprofileoffline_array_obj[j].getInstituteID()));
+        request.setLevelID(String.valueOf(class_farmerprofileoffline_array_obj[j].getLevelID()));
+        request.setStudentName(class_farmerprofileoffline_array_obj[j].getStudentName());
+        request.setFatherName(class_farmerprofileoffline_array_obj[j].getFatherName());
+        request.setMotherName(class_farmerprofileoffline_array_obj[j].getMotherName());
+        request.setBirthDate(class_farmerprofileoffline_array_obj[j].getBirthDate());
+        // request.setBirthDate("2005-01-22");
+        request.setStudentAadhar(class_farmerprofileoffline_array_obj[j].getStudentAadhar());
+        request.setMobile(class_farmerprofileoffline_array_obj[j].getMobile());
+        request.setGender(class_farmerprofileoffline_array_obj[j].getGender());
+        request.setEducation(class_farmerprofileoffline_array_obj[j].getEducation());
+
+        if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks4());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks5().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks5());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks6().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks6());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks7().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks7());
+
+        }else if(!class_farmerprofileoffline_array_obj[j].getMarks8().equals("")){
+            request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks8());
+
+        }
+        request.setAdmissionFee(class_farmerprofileoffline_array_obj[j].getAdmissionFee());
+        request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
+        request.setStudentID(class_farmerprofileoffline_array_obj[j].getStudentID());
+        request.setSchoolID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSchoolID()));
+        request.setCreatedBy(String.valueOf(str_stuID));
+        request.setCreatedDate(class_farmerprofileoffline_array_obj[j].getCreatedDate());
+        //   request.setCreatedDate("2020-12-05");
+        request.setReceiptManual(class_farmerprofileoffline_array_obj[j].getReceiptNo());
+        //    request.setLearningMode(class_farmerprofileoffline_array_obj[j].g());
+        request.setTemp_ID(class_farmerprofileoffline_array_obj[j].getTempID());
+        request.setFileName(class_farmerprofileoffline_array_obj[j].getStudentPhoto());
+//        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
+//        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
+
+        Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
+
+        Log.e("TAG", "Request 33: " + new Gson().toJson(request));
+        Log.e("TAG", "Request: " + request.toString());
+
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_MarketingHomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setCancelable(false);
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<AddStudentDetailsResponse>() {
+            @Override
+            public void onResponse(Call<AddStudentDetailsResponse> call, Response<AddStudentDetailsResponse> response) {
+                // System.out.println("response" + response.body().toString());
+                //    Log.e("tag", "response =" + response.body().toString());
+
+
+                if (response.isSuccessful()) {
+                    List<Class_Response_AddStudentDetailsList> addFarmerResList = response.body().getLst();
+                    for (int i = 0; i < addFarmerResList.size(); i++) {
+
+
+                        Log.e("tag", "addstudentresponse ID=" + addFarmerResList.get(i).getStudentID());
+
+
+                        String str_response_student_id = String.valueOf(addFarmerResList.get(i).getStudentID());
+                        String str_response_tempId = String.valueOf(addFarmerResList.get(i).getTemp_ID());
+//                    Log.e("tag", "getMobileTempID=" + addFarmerResList.getMobileTempID());
+//                    Log.e("tag", "getFarmerCode=" + addFarmerResList.getFarmerCode());
+//                    Log.e("tag", "getFarmerID=" + addFarmerResList.getFarmerID());
+
+                        SQLiteDatabase db1 = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+
+                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+
+
+                        ContentValues cv = new ContentValues();
+                        cv.put("StudentID", str_response_student_id);
+                        cv.put("Stud_TempId", str_response_tempId);
+                        cv.put("UpadateOff_Online", "online");
+
+                        db1.update("StudentDetailsRest", cv, "Stud_TempId = ?", new String[]{str_response_tempId});
+                        db1.close();
+
+                        //       SQLiteDatabase db_viewfarmerlist = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+
+
+//                    db_viewfarmerlist.execSQL("CREATE TABLE IF NOT EXISTS ViewFarmerListRest(MTempId INTEGER PRIMARY KEY,DispFarmerTable_YearID VARCHAR,DispFarmerTable_StateID VARCHAR," +
+//                            "DispFarmerTable_DistrictID VARCHAR,DispFarmerTable_TalukID VARCHAR,DispFarmerTable_VillageID VARCHAR," +
+//                            "DispFarmerTable_GrampanchayatID VARCHAR,DispFarmerTable_FarmerID VARCHAR,DispFarmerTable_Farmer_Code VARCHAR," +
+//                            "DispFarmerTable_FarmerName VARCHAR,FarmerMName_DB VARCHAR,FarmerLName_DB VARCHAR,Farmerage_DB VARCHAR," +
+//                            "Farmercellno_DB VARCHAR,FIncome_DB VARCHAR,Ffamilymember_DB VARCHAR,FIDprooftype_DB VARCHAR,FIDProofNo_DB VARCHAR,UploadedStatusFarmerprofile_DB VARCHAR," +
+//                            "FarmerImageB64str_DB VARCHAR,DispFarmerTable_FarmerImage VARCHAR," +
+//                            "LocalFarmerImg BLOB,Farmpondcount VARCHAR,Submitted_Date VARCHAR,Created_By VARCHAR,Created_Date VARCHAR,Created_User VARCHAR,Response VARCHAR,Response_Action VARCHAR,Farmer_Gender VARCHAR);");
+//
+//
+//                    ContentValues cv_farmelistupdate = new ContentValues();
+//                    cv_farmelistupdate.put("DispFarmerTable_Farmer_Code", str_response_farmercode);
+//                    cv_farmelistupdate.put("DispFarmerTable_FarmerID", str_response_farmer_id);
+//
+//
+//                    db_viewfarmerlist.update("ViewFarmerListRest", cv_farmelistupdate, "DispFarmerTable_Farmer_Code = ?", new String[]{str_response_tempId});
+//                    db_viewfarmerlist.close();
+                        progressDoalog.dismiss();
+
+//                    if(int_newfarmercount>0){int_newfarmercount++;}
+//                    else{ int_newfarmercount++; }
+
+//                    if(int_newfarmercount==class_farmerprofileoffline_array_obj.length)
+//                    {
+//                        fetch_DB_newfarmpond_offline_data();
+//                    }
+                    }
+
+                } else {
+                    progressDoalog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.d("error message", error.getMsg());
+
+                    Toast.makeText(Activity_MarketingHomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                Toast.makeText(Activity_MarketingHomeScreen.this, "WS:Error:"+t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+    }
 
 
 
@@ -356,6 +885,25 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void deleteStudentdetailsRestTable_B4insertion() {
+
+        SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR,AcademicName VARCHAR,AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
+                "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+        @SuppressLint("Recycle")
+        Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_studentDetails.delete("StudentDetailsRest", null, null);
+
+            Log.e("StudentDetailsRest","deleted table successfully");
+        }
+        db_studentDetails.close();
+        Log.e("deleted", "deleteStudentdetailsRestTable_B4insertion");
+
     }
 
 

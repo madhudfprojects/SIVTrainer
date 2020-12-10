@@ -1,5 +1,6 @@
 package com.det.skillinvillage.model;
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +8,7 @@ public class StudentList {
 
     @SerializedName("Student_ID")
     @Expose
-    private Integer studentID;
+    private String studentID;
     @SerializedName("Application_No")
     @Expose
     private String applicationNo;
@@ -107,87 +108,64 @@ public class StudentList {
     @SerializedName("Receipt_No")
     @Expose
     private String receiptNo;
+    @SerializedName("Temp_ID")
+    @Expose
+    private String tempID;
+    @SerializedName("Learning_Mode")
+    @Expose
+    private String learningMode;
 
-    public StudentList(){}
 
-    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, byte[] marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus,String studentName) {
+    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName,String stu_id) {
+
         this.academicID = Integer.valueOf(academicID);
-        this.academicName = academicName;
-        this.clusterID = Integer.valueOf(clusterID);
-        this.clusterName = clusterName;
-        this.instituteID = Integer.valueOf(instituteID);
-        this.instituteName = instituteName;
-        this.schoolID = schoolID;
-        this.schoolName = schoolName;
-        this.levelID = Integer.valueOf(levelID);
-        this.levelName = levelName;
-        this.studentName = studentName;
-        this.mobile = mobile;
-        this.studentStatus = studentStatus;
-        this.admissionFee = admissionFee;
-        this.paidFee = paidFee;
-        this.balanceFee = balanceFee;
-        this.studentPhoto = studentPhoto;
-        this.createdDate = createdDate;
-        this.birthDate = birthDate;
-        this.gender = gender;
-        this.education = education;
-        this.marks4 = marks4;
-        this.marks5 = marks5;
-        this.marks6 = marks6;
-        this.marks7 = marks7;
-        this.marks8 = marks8;
-        this.fatherName = fatherName;
-        this.motherName = motherName;
-        this.studentAadhar = studentAadhar;
-        this.receiptNo = receiptNo;
+        this.academicName=academicName;
+        this.admissionFee=admissionFee;
+        this.applicationNo=applicationNo;
+        this.balanceFee=balanceFee;
+        this.birthDate=birthDate;
+        this.clusterID= Integer.valueOf(clusterID);
+        this.clusterName=clusterName;
+        this.createdDate=createdDate;
+        this.education=education;
+        this.fatherName=fatherName;
+        this.gender=gender;
+        this.instituteName=instituteName;
+        this.instituteID= Integer.valueOf(instituteID);
+        this.levelID= Integer.valueOf(levelID);
+        this.levelName=levelName;
+        this.marks4=marks4;
+        this.marks5=marks5;
+        this.marks6=marks6;
+        this.marks7=marks7;
+        this.marks8=marks8;
+        this.motherName=motherName;
+
+        this.paidFee=paidFee;
+        this.receiptNo=receiptNo;
+        this.sandboxID=sandboxID;
+        this.sandboxName=sandboxName;
+        this.schoolID=schoolID;
+        this.schoolName=schoolName;
+        this.studentAadhar=studentAadhar;
+        this.studentPhoto=studentPhoto;
+        this.studentStatus=studentStatus;
         this.studentName=studentName;
+        this.studentID= stu_id;
+
+
+    }
+
+    public StudentList() {
 
     }
 
 
-    public Integer getStudentID() {
+    public String getStudentID() {
         return studentID;
     }
 
-    public StudentList(Integer studentID, String applicationNo, Integer sandboxID, String sandboxName, Integer academicID, String academicName, Integer clusterID, String clusterName, Integer instituteID, String instituteName, Integer schoolID, String schoolName, Integer levelID, String levelName, String studentName, String mobile, String studentStatus, String admissionFee, String paidFee, String balanceFee, String studentPhoto, String createdDate, String birthDate, String gender, String education, String marks4, String marks5, String marks6, String marks7, String marks8, String fatherName, String motherName, String studentAadhar, String receiptNo) {
-        this.studentID = studentID;
-        this.applicationNo = applicationNo;
-        this.sandboxID = sandboxID;
-        this.sandboxName = sandboxName;
-        this.academicID = academicID;
-        this.academicName = academicName;
-        this.clusterID = clusterID;
-        this.clusterName = clusterName;
-        this.instituteID = instituteID;
-        this.instituteName = instituteName;
-        this.schoolID = schoolID;
-        this.schoolName = schoolName;
-        this.levelID = levelID;
-        this.levelName = levelName;
-        this.studentName = studentName;
-        this.mobile = mobile;
-        this.studentStatus = studentStatus;
-        this.admissionFee = admissionFee;
-        this.paidFee = paidFee;
-        this.balanceFee = balanceFee;
-        this.studentPhoto = studentPhoto;
-        this.createdDate = createdDate;
-        this.birthDate = birthDate;
-        this.gender = gender;
-        this.education = education;
-        this.marks4 = marks4;
-        this.marks5 = marks5;
-        this.marks6 = marks6;
-        this.marks7 = marks7;
-        this.marks8 = marks8;
-        this.fatherName = fatherName;
-        this.motherName = motherName;
-        this.studentAadhar = studentAadhar;
-        this.receiptNo = receiptNo;
-    }
-
-    public void setStudentID(Integer studentID) {
+    public void setStudentID(String studentID) {
         this.studentID = studentID;
     }
 
@@ -455,4 +433,19 @@ public class StudentList {
         this.receiptNo = receiptNo;
     }
 
+    public String getTempID() {
+        return tempID;
+    }
+
+    public void setTempID(String tempID) {
+        this.tempID = tempID;
+    }
+
+    public String getLearningMode() {
+        return learningMode;
+    }
+
+    public void setLearningMode(String learningMode) {
+        this.learningMode = learningMode;
+    }
 }

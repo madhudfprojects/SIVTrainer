@@ -25,6 +25,21 @@ public class Count {
     @SerializedName("Sync_ID")
     @Expose
     private String syncID;
+    @SerializedName("Sandbox_Count")
+    @Expose
+    private String sandboxCount;
+    @SerializedName("Cluster_Count")
+    @Expose
+    private String clusterCount;
+    @SerializedName("Institute_Count")
+    @Expose
+    private String instituteCount;
+    @SerializedName("School_Count")
+    @Expose
+    private String schoolCount;
+    @SerializedName("Level_Count")
+    @Expose
+    private String levelCount;
 
     public String getStateCount() {
         return stateCount;
@@ -80,6 +95,46 @@ public class Count {
 
     public void setSyncID(String syncID) {
         this.syncID = syncID;
+    }
+
+    public String getSandboxCount() {
+        return sandboxCount;
+    }
+
+    public void setSandboxCount(String sandboxCount) {
+        this.sandboxCount = sandboxCount;
+    }
+
+    public String getClusterCount() {
+        return clusterCount;
+    }
+
+    public void setClusterCount(String clusterCount) {
+        this.clusterCount = clusterCount;
+    }
+
+    public String getInstituteCount() {
+        return instituteCount;
+    }
+
+    public void setInstituteCount(String instituteCount) {
+        this.instituteCount = instituteCount;
+    }
+
+    public String getSchoolCount() {
+        return schoolCount;
+    }
+
+    public void setSchoolCount(String schoolCount) {
+        this.schoolCount = schoolCount;
+    }
+
+    public String getLevelCount() {
+        return levelCount;
+    }
+
+    public void setLevelCount(String levelCount) {
+        this.levelCount = levelCount;
     }
 
 }

@@ -55,8 +55,6 @@ import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 
 public class Remarks extends AppCompatActivity {
-
-
     EditText mDesc;
     int j = 0, k = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
     int i1 = 0;

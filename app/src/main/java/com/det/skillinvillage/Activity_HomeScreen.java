@@ -19,30 +19,30 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.Glide;
 import com.det.skillinvillage.adapter.CalendarAdapter;
+import com.det.skillinvillage.model.AutoSyncVersion;
+import com.det.skillinvillage.model.AutoSyncVersionList;
 import com.det.skillinvillage.model.Class_devicedetails;
 import com.det.skillinvillage.model.Class_getdemo_Response;
 import com.det.skillinvillage.model.Class_getdemo_resplist;
@@ -54,23 +54,19 @@ import com.det.skillinvillage.model.GetAppVersion;
 import com.det.skillinvillage.model.GetAppVersionList;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.Location_DataList;
+import com.det.skillinvillage.model.StudCountList;
 import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.StudentList;
+import com.det.skillinvillage.model.UserList;
+import com.det.skillinvillage.model.ValidateSyncRequest;
+import com.det.skillinvillage.model.ValidateSyncResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
-import com.det.skillinvillage.util.UserInfo;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
@@ -79,12 +75,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,67 +95,88 @@ import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
 import static com.det.skillinvillage.NormalLogin.key_flag;
 import static com.det.skillinvillage.NormalLogin.sharedpreferenc_flag;
 
-public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class Activity_HomeScreen extends AppCompatActivity {
 
-    public CalendarAdapter cal_adapter1;
-    public GregorianCalendar cal_month, cal_month_copy;
-    ConnectionDetector internetDectector;
+    Interface_userservice userService1;
+    Class_InternetDectector internetDectector, internetDectector2, internetDectector3;
     Boolean isInternetPresent = false;
-
-    TextView dislay_UserName_tv;
-    ImageView displ_Userimg_iv;
-    private GoogleApiClient googleApiClient;
-    private GoogleSignInOptions gso;
-    String str_Googlelogin_Username, str_Googlelogin_UserImg, str_loginuserID="";
-    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
-    ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
-    UserInfo[] userInfosarr;
-    String str_flag,str_logout_count_Status="";
-
-
-
-    SharedPreferences sharedpref_username_Obj;
-    SharedPreferences sharedpref_userimage_Obj;
-    SharedPreferences sharedpref_loginuserid_Obj;
-    SharedPreferences sharedpref_flag_Obj;
-
-    SharedPreferences sharedpref_feedback;
-    public static final String MyPREFERENCES_Feedback = "MyPrefsFeedback" ;
-    public static final String FeedBack = "feedBack";
-    String str_feedback="";
-
-    ImageView dashboard_iv,stu_reg_iv,scheduler_iv,usermanual_iv,docview_iv,mark_attendance_iv,assessment_iv,onlineview_iv;
-
-
+    String str_employee_id;
+    private String versioncode;
 
     TelephonyManager tm1 = null;
     String myVersion, deviceBRAND, deviceHARDWARE, devicePRODUCT, deviceUSER, deviceModelName, deviceId, tmDevice, tmSerial, androidId, simOperatorName, sdkver, mobileNumber;
     int sdkVersion, Measuredwidth = 0, Measuredheight = 0, update_flage = 0;
     String regId = "dfagriXZ", str_userid;
 
-    private String versioncode;
-    Interface_userservice userService1;
+
+    public static final String sharedpreferencebook_usercredential = "sharedpreferencebook_usercredential";
+    public static final String KeyValue_employeeid = "KeyValue_employeeid";
+    public static final String Key_syncId = "Sync_ID";
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
+
+    public static final String MyPREFERENCE_SyncId = "MyPref_SyncId";
+    public static final String SyncId = "SyncId";
+    SharedPreferences shared_syncId;
+
+    int sel_yearsp = 0, sel_statesp = 0, sel_districtsp = 0, sel_taluksp = 0, sel_villagesp = 0, sel_grampanchayatsp = 0;
+
+    public static final String sharedpreferenc_selectedspinner = "sharedpreferenc_selectedspinner";
+//    public static final String Key_sel_yearsp = "sel_yearsp";
+//    public static final String Key_sel_statesp = "sel_statesp";
+//    public static final String Key_sel_districtsp = "sel_districtsp";
+//    public static final String Key_sel_taluksp = "sel_taluksp";
+//    public static final String Key_sel_villagesp = "sel_villagesp";
+//    public static final String Key_sel_grampanchayatsp = "sel_grampanchayatsp";
+    SharedPreferences sharedpref_spinner_Obj;
+
     Location_DataList[] location_dataLists;
     Location_DataList class_location_dataList = new Location_DataList();
+
+    UserList[] userLists;
+    UserList class_userDatalist = new UserList();
+
     StudentList[] StudentLists;
     StudentList class_StudentList = new StudentList();
 
+    StudCountList[] studCountLists;
+    StudCountList class_studCountLists = new StudCountList();
+    String StateCount = "0", DistrictCount = "0", TalukaCount = "0", VillageCount = "0", YearCount = "0", Sync_ID = "", ClusterCount = "0", LevelCount = "0", SchoolCount = "0", InstituteCount = "0", SandboxCount = "0", Student_Count = "0";
+    String VersionStatus = "false";
 
-    public static final String MyPREFERENCE_SyncId = "MyPref_SyncId" ;
-    public static final String SyncId = "SyncId";
-    SharedPreferences shared_syncId;
-    SharedPreferences sharedpref_spinner_Obj;
+    LinearLayout help_ll;
+    String str_VersionStatus, str_loginuserID = "", str_flag = "", str_Googlelogin_Username = "", str_Googlelogin_UserImg = "";
 
-    public static final String sharedpreferenc_selectedspinner = "sharedpreferenc_selectedspinner";
-    public static final String Key_syncId = "Sync_ID";
 
+    SharedPreferences sharedpref_loginuserid_Obj;
+
+    ImageView dashboard_iv, stu_reg_iv, scheduler_iv, usermanual_iv, docview_iv, mark_attendance_iv, assessment_iv, onlineview_iv;
+    public CalendarAdapter cal_adapter1;
+    public GregorianCalendar cal_month, cal_month_copy;
+
+    TextView dislay_UserName_tv;
+    ImageView displ_Userimg_iv;
+
+
+    SharedPreferences sharedpref_username_Obj;
+    SharedPreferences sharedpref_userimage_Obj;
+    String str_feedback = "";
+
+    SharedPreferences sharedpref_feedback;
+    public static final String MyPREFERENCES_Feedback = "MyPrefsFeedback" ;
+    public static final String FeedBack = "feedBack";
+    SharedPreferences sharedpref_flag_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fstpage);
+
         userService1 = Class_ApiUtils.getUserService();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setTitle("Home");
+
+        internetDectector = new Class_InternetDectector(getApplicationContext());
+        isInternetPresent = internetDectector.isConnectingToInternet();
+
+//        help_ll = (LinearLayout) findViewById(R.id.help_ll);
+
         try {
             versioncode = String.valueOf(getPackageManager().getPackageInfo(getPackageName(), 0).versionCode);
         } catch (PackageManager.NameNotFoundException e) {
@@ -167,30 +184,23 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
             e.printStackTrace();
         }
 
-        //Added by shivaleela on aug 14th 2019
-        //  Class_SaveSharedPreference.getUserName(Activity_HomeScreen.this);
+        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
 
-       /* SharedPreferences myprefs_name = this.getSharedPreferences("googlelogin_name", Context.MODE_PRIVATE);
-        str_Googlelogin_Username = myprefs_name.getString("name_googlelogin", "nothing");
+        sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_employee_id = sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeid, "").trim();
+        Log.e("tag", "str_employee_id=" + str_employee_id);
 
-        SharedPreferences myprefs_img = this.getSharedPreferences("googlelogin_img", Context.MODE_PRIVATE);
-        str_Googlelogin_UserImg = myprefs_img.getString("profileimg_googlelogin", "nothing");
 
-        SharedPreferences myprefs = this.getSharedPreferences("user", Context.MODE_PRIVATE);
-        str_loginuserID = myprefs.getString("login_userid", "nothing");
+        sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
+        shared_syncId = getSharedPreferences(MyPREFERENCE_SyncId, Context.MODE_PRIVATE);
 
-        SharedPreferences myprefs_flag = this.getSharedPreferences("flag", Context.MODE_PRIVATE);
-       str_flag = myprefs_flag.getString("flag", "nothing");
-*/
 
-        sharedpref_username_Obj=getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
+        sharedpref_username_Obj = getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
         str_Googlelogin_Username = sharedpref_username_Obj.getString(Key_username, "").trim();
 
-        sharedpref_userimage_Obj=getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
+        sharedpref_userimage_Obj = getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
         str_Googlelogin_UserImg = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
-
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
 
         sharedpref_flag_Obj=getSharedPreferences(sharedpreferenc_flag, Context.MODE_PRIVATE);
         str_flag = sharedpref_flag_Obj.getString(key_flag, "").trim();
@@ -198,36 +208,7 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         sharedpref_feedback = getSharedPreferences(MyPREFERENCES_Feedback, Context.MODE_PRIVATE);
         str_feedback = sharedpref_feedback.getString(FeedBack, "").trim();
 
-
-        sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
-        shared_syncId = getSharedPreferences(MyPREFERENCE_SyncId, Context.MODE_PRIVATE);
-
-        // if(str_flag.equals("1")) {
-        Log.e("username",Class_SaveSharedPreference.getUserName(Activity_HomeScreen.this));
-            if (Class_SaveSharedPreference.getUserName(Activity_HomeScreen.this).length() == 0) {
-                Intent i = new Intent(Activity_HomeScreen.this, MainActivity.class);
-                startActivity(i);
-                finish();
-                // call Login Activity
-            } else {
-                // Stay at the current activity.
-            }
-
-//        }else {
-//
-//            if (Class_SaveSharedPreference.getUserName(Activity_HomeScreen.this).length() == 0) {
-//                Intent i = new Intent(Activity_HomeScreen.this, MainActivity.class);
-//                startActivity(i);
-//                finish();
-//                // call Login Activity
-//            } else {
-//                // Stay at the current activity.
-//            }
-//        }
-
-        internetDectector = new ConnectionDetector(getApplicationContext());
-        isInternetPresent = internetDectector.isConnectingToInternet();
-
+        Log.e("tag", "sel_districtsp=" + sel_districtsp + "sel_statesp=" + sel_statesp);
 
 
         LinearLayout homepagelayout_LL = findViewById(R.id.homepagelayout_ll);
@@ -237,32 +218,21 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         homepagelayout_LL.setAnimation(animation3);
         homepagelayout_LL.animate();
         animation3.start();
-
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
         dislay_UserName_tv = findViewById(R.id.dislay_UserName_TV);
         displ_Userimg_iv = findViewById(R.id.displ_Userimg_IV);
         // dislay_UserName_tv.setText(str_Googlelogin_Username);
-        dashboard_iv= findViewById(R.id.dashboard_IV);
-        stu_reg_iv= findViewById(R.id.stu_reg_IV);
-        scheduler_iv= findViewById(R.id.scheduler_iv);
-        usermanual_iv= findViewById(R.id.usermanual_iv);
-        docview_iv= findViewById(R.id.docview_iv);
+        dashboard_iv = findViewById(R.id.dashboard_IV);
+        stu_reg_iv = findViewById(R.id.stu_reg_IV);
+        scheduler_iv = findViewById(R.id.scheduler_iv);
+        usermanual_iv = findViewById(R.id.usermanual_iv);
+        docview_iv = findViewById(R.id.docview_iv);
         //mark_attendance_iv=(ImageView)findViewById(R.id.mark_attendance_iv);
-        assessment_iv= findViewById(R.id.assessment_iv);
-        onlineview_iv=findViewById(R.id.onlineview_iv);
-     //   onlineview_iv.setVisibility(View.GONE);
-        if(str_flag.equals("1")){
+        assessment_iv = findViewById(R.id.assessment_iv);
+        onlineview_iv = findViewById(R.id.onlineview_iv);
+        //   onlineview_iv.setVisibility(View.GONE);
+        if (str_flag.equals("1")) {
             dislay_UserName_tv.setText("");
-        }else {
+        } else {
             dislay_UserName_tv.setText(str_Googlelogin_Username);
             try {
                 Glide.with(this).load(str_Googlelogin_UserImg).into(displ_Userimg_iv);
@@ -270,33 +240,32 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                 // Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
             }
         }
-
-        if(isInternetPresent) {
-            AsyncCallWS2_Login task = new AsyncCallWS2_Login(Activity_HomeScreen.this);
-            task.execute();
+        if (isInternetPresent) {
             OnlineView_Feedback task1 = new OnlineView_Feedback(Activity_HomeScreen.this);
             task1.execute();
-            Add_setGCM1();
-            GetAppVersionCheck();
-            delete_CountDetailsRestTable_B4insertion();
-            deleteStateRestTable_B4insertion();
-            deleteDistrictRestTable_B4insertion();
-            deleteTalukRestTable_B4insertion();
-            deleteVillageRestTable_B4insertion();
-            deleteYearRestTable_B4insertion();
-            GetDropdownValuesRestData();
-            GetStudentValuesRestData();
-        }else{
+         //   Add_setGCM1();
+         ///   GetAppVersionCheck();
+//            delete_CountDetailsRestTable_B4insertion();
+//            deleteStateRestTable_B4insertion();
+//            deleteDistrictRestTable_B4insertion();
+//            deleteTalukRestTable_B4insertion();
+//            deleteVillageRestTable_B4insertion();
+//            deleteYearRestTable_B4insertion();
+//
+//            //deleteStudentdetailsRestTable_B4insertion();
+//            GetDropdownValuesRestData();
+//            GetStudentValuesRestData();
+            //GetStudentValuesResyncRestData();
+        } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
-        if(str_feedback!=null){
-            if (str_feedback.equalsIgnoreCase("Gone")||str_feedback.equalsIgnoreCase("")){
+        if (str_feedback != null) {
+            if (str_feedback.equalsIgnoreCase("Gone") || str_feedback.equalsIgnoreCase("")) {
                 onlineview_iv.setVisibility(View.GONE);
-                Log.e("tag","Oncreate-Gone");
-            }
-            else {
+                Log.e("tag", "Oncreate-Gone");
+            } else {
                 onlineview_iv.setVisibility(View.VISIBLE);
-                Log.e("tag","Oncreate-Visible");
+                Log.e("tag", "Oncreate-Visible");
             }
         }
 
@@ -378,10 +347,8 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                                         startActivity(i);*/
 
                                 //Added isInternetPresent by shivaleela on Aug 21st 2019
-                                internetDectector = new ConnectionDetector(getApplicationContext());
-                                isInternetPresent = internetDectector.isConnectingToInternet();
 
-                                if(isInternetPresent) {
+                                if (isInternetPresent) {
                                     Date date = new Date();
                                     Log.i("Tag_time", "date1=" + date);
                                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -390,8 +357,8 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
 
                                     cal_adapter1.getPositionList(PresentDayStr, Activity_HomeScreen.this);
                                     overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"No Internet", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -451,12 +418,12 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                                         onlineview_iv.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                if(str_feedback.equalsIgnoreCase("Visible")) {
+                                                if (str_feedback.equalsIgnoreCase("Visible")) {
                                                     Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
                                                     startActivity(i);
                                                     overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
-                                                }else{
-                                                    Toast.makeText(getApplicationContext(),"You Dont Have Access",Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(getApplicationContext(), "You Dont Have Access", Toast.LENGTH_SHORT).show();
                                                     Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
                                                     startActivity(i);
                                                     finish();
@@ -496,1241 +463,289 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         });
 
 
-
-
         String MsgNotfication = "";
 
         Bundle extras = getIntent().getExtras();
 
 // if (extras != null){}
-        if (extras != null)
-        {
+        if (extras != null) {
             MsgNotfication = extras.getString("2");
-            if(MsgNotfication!=null||MsgNotfication!="")
-            {
-                Toast.makeText(getApplicationContext()," "+ MsgNotfication,Toast.LENGTH_LONG).show();
-                Log.e("notifMsg","notifMsg: "+ MsgNotfication);
+            if (MsgNotfication != null || MsgNotfication != "") {
+                Toast.makeText(getApplicationContext(), " " + MsgNotfication, Toast.LENGTH_LONG).show();
+                Log.e("notifMsg", "notifMsg: " + MsgNotfication);
             }
-        }else{
+        } else {
             Log.e("extranull", String.valueOf(extras));
         }
 
-       // gethelp();
-    }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
-//        if (opr.isDone()) {
-//            GoogleSignInResult result = opr.get();
-//            handleSignInResult(result);
-//        } else {
-//            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-//                @Override
-//                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-//                    //handleSignInResult(googleSignInResult);
-//                }
-//            });
-//        }
-//    }
-
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount account = result.getSignInAccount();
-            dislay_UserName_tv.setText(account.getDisplayName());
-            try {
-                Glide.with(this).load(account.getPhotoUrl()).into(displ_Userimg_iv);
-            } catch (NullPointerException e) {
-                // Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
-            }
-
-        } else {
-            //gotoMainActivity();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
-        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(startMain);
-    }
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate menu items
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Show toast when menu items selected
-        switch (item.getItemId()) {
-
-           *//* case R.id.next:
-                Intent in =new Intent(Activity_HomeScreen.this,Home1.class);
-                startActivity(in);
-                finish();
-                break;*//*
-            case R.id.share:
-                Toast.makeText(Activity_HomeScreen.this, "Action clicked", Toast.LENGTH_LONG).show();
-                internetDectector = new ConnectionDetector(getApplicationContext());
-                isInternetPresent = internetDectector.isConnectingToInternet();
-
-                if (isInternetPresent) {
-
-
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.putExtra("logout_key1", "yes");
-                    startActivity(i);
-                    finish();
-                    //}
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"No Internet", Toast.LENGTH_SHORT).show();
-                }
-            case android.R.id.home:
-                Intent i =new Intent(Activity_HomeScreen.this,MainActivity.class);
-                startActivity(i);
-                finish();
-                break;
-
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    private class AsyncCallWS2_Login extends AsyncTask<String, Void, Void>
-    {
-        // ProgressDialog dialog;
-
-        Context context;
-
-        @Override
-        protected void onPreExecute()
-        {
-            Log.i("tag", "onPreExecute---tab2");
-            /*dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();*/
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values)
-        {
-            Log.i("tag", "onProgressUpdate---tab2");
-        }
-
-        public AsyncCallWS2_Login(Activity_HomeScreen activity) {
-            context =  activity;
-            //  dialog = new ProgressDialog(activity);
-        }
-        @Override
-        protected Void doInBackground(String... params)
-        {
-            Log.i("tag", "doInBackground");
-
-            fetch_all_info("");
-
-			/*  if(!login_result.equals("Fail"))
-			  {
-				  GetAllEvents(u1,p1);
-			  }*/
-
-            //GetAllEvents(u1,p1);
-
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result)
-        {
-            //  dialog.dismiss();
-
-            cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
-            cal_month_copy = (GregorianCalendar) cal_month.clone();
-            cal_adapter1 = new CalendarAdapter(Activity_HomeScreen.this, cal_month, UserInfo.user_info_arr);
-
-           /* Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
-            SharedPreferences myprefs = Activity_HomeScreen.this.getSharedPreferences("user", MODE_PRIVATE);
-            myprefs.edit().putString("login_userid", str_loginuserID).apply();
-            SharedPreferences myprefs_scheduleId = Activity_HomeScreen.this.getSharedPreferences("scheduleId", MODE_PRIVATE);
-            myprefs_scheduleId.edit().putString("scheduleId", Schedule_ID).apply();
-            startActivity(i);
-            finish();*/
-        }
-    }
-
-
-
-    public void fetch_all_info(String email) {
-
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadScheduleEmployee";
-        String Namespace = "http://mis.detedu.org:8089/", SOAP_ACTION1 = "http://mis.detedu.org:8089/LoadScheduleEmployee";
-
-        try {
-            //mis.leadcampus.org
-
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-
-            Log.i("User_ID=", str_loginuserID);
-            request.addProperty("User_ID", str_loginuserID);//str_loginuserID
-            Log.d("request :", request.toString());
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            //SoapSerializationEnvelope evp = new SoapSoapEnvelope.XSD;
-
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            //envelope.encodingStyle = SoapSerializationEnvelope.XSD;
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-            //androidHttpTransport.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-
-            try {
-                androidHttpTransport.call(SOAP_ACTION1, envelope);
-                Log.d("soap responseyyyyyyy", envelope.getResponse().toString());
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.d("soap responseyyyyyyy", response.toString());
-                //	for (SoapObject cs : result1)
-                if (response.getPropertyCount() > 0) {
-                    int Count = response.getPropertyCount();
-
-                    for (int i = 0; i < Count; i++) {
-                        // sizearray=result1.size();
-                        //  Log.i("Tag","sizearray="+sizearray);
-                        /*  <Schedule_ID>int</Schedule_ID>
-          <Lavel_ID>int</Lavel_ID>
-          <Schedule_Date>string</Schedule_Date>
-          <Start_Time>string</Start_Time>
-          <End_Time>string</End_Time>
-          <Schedule_Session>string</Schedule_Session>
-          <Subject_Name>string</Subject_Name>
-          <Schedule_Status>string</Schedule_Status>*/
-
-
-                        SoapObject list = (SoapObject) response.getProperty(i);
-                        Schedule_Status = list.getProperty("Schedule_Status").toString();
-
-                        Schedule_ID = list.getProperty("Schedule_ID").toString();
-                        Lavel_ID = list.getProperty("Lavel_ID").toString();
-                        Schedule_Date = list.getProperty("Schedule_Date").toString();
-                        End_Time = list.getProperty("End_Time").toString();
-                        Start_Time = list.getProperty("Start_Time").toString();
-                        Subject_Name = list.getProperty("Subject_Name").toString();
-                        Schedule_Session = list.getProperty("Schedule_Session").toString();
-                        Leason_Name = list.getProperty("Leason_Name").toString();
-                        Lavel_Name = list.getProperty("Lavel_Name").toString();
-                        Institute_Name = list.getProperty("Institute_Name").toString();
-                        Cluster_Name = list.getProperty("Cluster_Name").toString();
-
-                        //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                        UserInfo userInfo = new UserInfo(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
-                        arrayList.add(userInfo);
-
-                    }
-
-                    final String[] items = new String[Count];
-                    userInfosarr = new UserInfo[Count];
-                    UserInfo obj = new UserInfo();
-
-                    UserInfo.user_info_arr.clear();
-                    for (int i = 0; i < response.getPropertyCount(); i++) {
-                        Schedule_ID = arrayList.get(i).Schedule_ID;
-                        Lavel_ID = arrayList.get(i).Lavel_ID;
-                        Schedule_Date = arrayList.get(i).Schedule_Date;
-                        End_Time = arrayList.get(i).End_Time;
-                        Start_Time = arrayList.get(i).Start_Time;
-                        Schedule_Session = arrayList.get(i).Schedule_Session;
-                        Schedule_Status = arrayList.get(i).Schedule_Status;
-                        Subject_Name = arrayList.get(i).Subject_Name;
-                        Lavel_Name = arrayList.get(i).Lavel_Name;
-                        Leason_Name = arrayList.get(i).Leason_Name;
-                        Cluster_Name = arrayList.get(i).Cluster_Name;
-                        Institute_Name = arrayList.get(i).Institute_Name;
-
-                        obj.setSchedule_ID(Schedule_ID);
-                        obj.setLavel_ID(Lavel_ID);
-                        obj.setSchedule_Date(Schedule_Date);
-                        obj.setEnd_Time(End_Time);
-                        obj.setStart_Time(Start_Time);
-                        obj.setSchedule_Session(Schedule_Session);
-                        obj.setSchedule_Status(Schedule_Status);
-                        obj.setSubject_Name(Subject_Name);
-                        obj.setLavel_Name(Lavel_Name);
-                        obj.setLeason_Name(Leason_Name);
-                        obj.setInstitute_Name(Institute_Name);
-                        obj.setCluster_Name(Cluster_Name);
-
-                        userInfosarr[i] = obj;
-                        //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
-
-                        UserInfo.user_info_arr.add(new UserInfo(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name, Leason_Name,Cluster_Name, Institute_Name));
-
-                        Log.i("Tag", "items aa=" + arrayList.get(i).Schedule_ID);
-
-                    }
-
-                    Log.i("Tag", "items=" + items.length);
-                }
-                //  Log.e("TAG","bookid="+bookid+"cohartName="+cohartName+"fellowshipName="+fellowshipName+"eventdate="+eventdate+"start_time"+start_time);
-
-			/*	 for(int i=0;i<result1.size();i++);
-				 {
-					 String booking_id_temp, user_id_temp,date_temp,notes_temp,start_time_temp;
-					 if(Event_Discription.equals(result1.elementAt(i)))
-
-				 }*/
-
-                //	 SoapPrimitive messege = (SoapPrimitive)response.getProperty("Status");
-                // version = (SoapPrimitive)response.getProperty("AppVersion");
-                // release_not = (SoapPrimitive)response.getProperty("ReleseNote");
-
-            } catch (Throwable t) {
-                //Toast.makeText(MainActivity.this, "Request failed: " + t.toString(),
-                //		Toast.LENGTH_LONG).show();
-                Log.e("request fail 5", "> " + t.getMessage());
-            }
-        } catch (Throwable t) {
-            Log.e("Tag", "UnRegister Receiver Error 5" + " > " + t.getMessage());
-
-        }
-
-    }
-
-    public class OnlineView_Feedback extends AsyncTask<String, Void, Void> {
-        Context context;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            list_detaile();
-            //return HttpULRConnect.getData(url);
-            return null;
-        }
-
-        public OnlineView_Feedback(Context context1) {
-            context = context1;
-            //  dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void s) {
-            if (str_feedback.toString().equalsIgnoreCase("")|| str_feedback.toString().equalsIgnoreCase("anyType{}")  || str_feedback.toString().equalsIgnoreCase(null)) {
-                onlineview_iv.setVisibility(View.GONE);
-                Log.e("tag","API-Gone");
-                SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                editor.putString(FeedBack, "Gone");
-                editor.commit();
-            }else {
-                onlineview_iv.setVisibility(View.VISIBLE);
-                Log.e("tag","API-Visible");
-                SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                editor.putString(FeedBack, "Visible");
-                editor.commit();
-            }
-            //populateExpandableList();
-//            MyAdapter   adapter = new MyAdapter(mainmenulist, Onlineview_Navigation.this);
-//            expandableListView.setAdapter(adapter);
-
-        }
-
-    }
-
-    public void list_detaile() {
-        Vector<SoapObject> result1 = null;
-        String url ="http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadMobileMenu";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadMobileMenu";
-
-        try {
-            int userid = Integer.parseInt(str_loginuserID);
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", userid);//userid
-
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(url);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-
-                Log.i("value at response", response.toString());
-                if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-                str_feedback="";
-                }
-                /*if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-                    onlineview_iv.setVisibility(View.GONE);
-                    Log.e("tag","API-Gone");
-                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                    editor.putString(FeedBack, "Gone");
-                    editor.commit();
-                }else {
-                    onlineview_iv.setVisibility(View.VISIBLE);
-                    Log.e("tag","API-Visible");
-                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                    editor.putString(FeedBack, "Visible");
-                    editor.commit();
-                }*/
-
-            }catch(Throwable t){
-                Log.e("requestload fail", "> " + t.getMessage());
-            }
-
-        } catch (Throwable t) {
-            Log.e("UnRegisterload  Error", "> " + t.getMessage());
-
+        if (isInternetPresent) {
+            Add_setGCM1();
+            GetAutoSyncVersion();
+            GetAppVersionCheck();
+            // GetDropdownValuesRestData();
+            //GetStudentValuesRestData();
         }
 
 
-    }//End of leaveDetail method
+//        help_ll.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent i = new Intent(Activity_HomeScreen.this, ContactUs_Activity.class);
+//                startActivity(i);
+//
+//            }
+//        });
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.schedule_menu, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.share) {
-            // Toast.makeText(CalenderActivity.this, "Action clicked", Toast.LENGTH_LONG).show();
-            internetDectector = new ConnectionDetector(getApplicationContext());
-            isInternetPresent = internetDectector.isConnectingToInternet();
-
+        if (VersionStatus.equalsIgnoreCase("true")) {
+            internetDectector2 = new Class_InternetDectector(getApplicationContext());
+            isInternetPresent = internetDectector2.isConnectingToInternet();
             if (isInternetPresent) {
 
-//                SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                SharedPreferences.Editor editor = settings.edit();
-//                editor.remove("login_userEmail");
-                Class_SaveSharedPreference.setUserName(Activity_HomeScreen.this, "");
-                deleteSandBoxTable_B4insertion();
-                deleteAcademicTable_B4insertion();
-                deleteClusterTable_B4insertion();
-                deleteInstituteTable_B4insertion();
-                deleteSchoolTable_B4insertion();
-                deleteLevelTable_B4insertion();
-                deleteLearningOptionTable_B4insertion();
+                //GetDropdownValues();
+                deleteStateRestTable_B4insertion();
+                deleteDistrictRestTable_B4insertion();
+                deleteTalukRestTable_B4insertion();
+                deleteVillageRestTable_B4insertion();
+                deleteYearRestTable_B4insertion();
 
-                LogoutCountAsynctask logoutCountAsynctask=new LogoutCountAsynctask(Activity_HomeScreen.this);
-                logoutCountAsynctask.execute();
+                //   deleteStudentdetailsRestTable_B4insertion();
+                deleteSchoolRestTable_B4insertion();
+                deleteSandboxRestTable_B4insertion();
+                deleteInstituteRestTable_B4insertion();
+                deleteLevelRestTable_B4insertion();
+                deleteClusterRestTable_B4insertion();
 
 
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                i.putExtra("logout_key1", "yes");
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-                finish();
+                GetDropdownValuesRestData();
+                GetStudentValuesResyncRestData();
 
-//                Intent i = new Intent(getApplicationContext(), NormalLogin.class);
-//                i.putExtra("logout_key1", "yes");
-//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                startActivity(i);
 
-                //}
+                String Sync_IDNew = shared_syncId.getString(SyncId, "");
+                Log.e("tag", "Sync_IDNew=" + Sync_IDNew);
             } else {
-                Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
             }
-            return true;
-        }
-        if (id == android.R.id.home) {
-            //  Toast.makeText(getApplicationContext(),"Back button clicked", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
-            startActivity(i);
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-
-
-    public class LogoutCountAsynctask extends AsyncTask<String, Void, Void> {
-       // ProgressDialog dialog;
-        Context context;
-
-        protected void onPreExecute() {
-            //  Log.i(TAG, "onPreExecute---tab2");
-//            dialog.setMessage("Please wait...");
-//            dialog.setCanceledOnTouchOutside(false);
-//            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            //Log.i(TAG, "onProgressUpdate---tab2");
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("df", "doInBackground");
-
-            getlogoutcount();
-            return null;
-        }
-
-        public LogoutCountAsynctask(Activity_HomeScreen activity) {
-            context = activity;
-            //dialog = new ProgressDialog(activity);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-
-           // dialog.dismiss();
-            if(!str_logout_count_Status.equals("")){
-                if (str_logout_count_Status.equals("Success")) {
-                   // Toast.makeText(Activity_HomeScreen.this, "Success", Toast.LENGTH_SHORT).show();
-
-                } else if (str_logout_count_Status.equals("Failure")){
-                    //Toast.makeText(Activity_HomeScreen.this, "Failure", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }//end of onPostExecute
-    }// end Async task
-
-    public void getlogoutcount() {
-        Vector<SoapObject> result1 = null;
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "userLogoutrecord";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/userLogoutrecord";
-
-        try {
-
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            if(!str_loginuserID.equals("")) {
-                request.addProperty("user_id", str_loginuserID);
-                Log.i("request", request.toString());
-            }
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.e("value at response", response.getProperty(0).toString());
-                SoapObject obj2 =(SoapObject) response.getProperty(0);
-                Log.e("obj2", obj2.toString());
-
-                if (response.getProperty(0).toString().contains("status")) {
-                    Log.e("str_logout_count_Status", "hello");
-                    if (response.getProperty(0).toString().contains("status=Success")) {
-                        Log.e("str_logout_count_Status", "success");
-
-                        SoapPrimitive soap_status = (SoapPrimitive) obj2.getProperty("status");
-                        str_logout_count_Status = soap_status.toString();
-                        Log.e("str_logout_count_Status", str_logout_count_Status);
-
-
-                    }
-                } else {
-                    Log.e("str_logout_count_Status", "str_logout_count_Status=null");
-
-                }
-
-            } catch (Throwable t) {
-                Log.e("request fail", "> " + t.getMessage());
-                str_logout_count_Status = "slow internet";
-
-            }
-        } catch (Throwable t) {
-            Log.e("UnRegister Receiver ", "> " + t.getMessage());
-
-        }
-
-    }
-
-    public void deleteSandBoxTable_B4insertion() {
-
-        SQLiteDatabase db_sandboxtable_delete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_sandboxtable_delete.execSQL("CREATE TABLE IF NOT EXISTS SandBoxList(SandID VARCHAR,SandName VARCHAR);");
-        Cursor cursor = db_sandboxtable_delete.rawQuery("SELECT * FROM SandBoxList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_sandboxtable_delete.delete("SandBoxList", null, null);
-            // Toast.makeText(getApplicationContext(),"All records deleted",Toast.LENGTH_LONG).show();
-        }
-        db_sandboxtable_delete.close();
-    }
-
-    public void deleteAcademicTable_B4insertion() {
-
-        SQLiteDatabase db1 = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS AcademicList(AcaID VARCHAR,AcaName VARCHAR,ASandID VARCHAR);");
-        Cursor cursor1 = db1.rawQuery("SELECT * FROM AcademicList", null);
-        int x = cursor1.getCount();
-
-        if (x > 0) {
-            db1.delete("AcademicList", null, null);
-
-        }
-        db1.close();
-    }
-
-    public void deleteClusterTable_B4insertion() {
-
-        SQLiteDatabase db_clustertable_delete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_clustertable_delete.execSQL("CREATE TABLE IF NOT EXISTS ClusterList(clustID VARCHAR,clustName VARCHAR,clust_sand_ID VARCHAR,clust_aca_ID VARCHAR);");
-        Cursor cursor = db_clustertable_delete.rawQuery("SELECT * FROM ClusterList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_clustertable_delete.delete("ClusterList", null, null);
-
-        }
-        db_clustertable_delete.close();
-    }
-
-    public void deleteInstituteTable_B4insertion() {
-
-        SQLiteDatabase db_inst_delete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_inst_delete.execSQL("CREATE TABLE IF NOT EXISTS InstituteList(inst_ID VARCHAR,inst_Name VARCHAR,inst_sand_ID VARCHAR,inst_aca_ID VARCHAR,inst_clust_ID VARCHAR);");
-        Cursor cursor = db_inst_delete.rawQuery("SELECT * FROM InstituteList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_inst_delete.delete("InstituteList", null, null);
-            // Toast.makeText(getApplicationContext(),"All records deleted",Toast.LENGTH_LONG).show();
-        }
-        db_inst_delete.close();
-    }
-
-    public void deleteSchoolTable_B4insertion() {
-
-        SQLiteDatabase db_school_delete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_school_delete.execSQL("CREATE TABLE IF NOT EXISTS SchoolList(school_ID VARCHAR,school_Name VARCHAR,school_sand_ID VARCHAR,school_aca_ID VARCHAR,school_clust_ID VARCHAR);");
-        Cursor cursor = db_school_delete.rawQuery("SELECT * FROM SchoolList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_school_delete.delete("SchoolList", null, null);
-        }
-        db_school_delete.close();
-    }
-
-    public void deleteLevelTable_B4insertion() {
-
-        SQLiteDatabase db_leveldelete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_leveldelete.execSQL("CREATE TABLE IF NOT EXISTS LevelList(LevelID VARCHAR,LevelName VARCHAR,Lev_SandID VARCHAR,Lev_AcaID VARCHAR,Lev_ClustID VARCHAR,Lev_InstID VARCHAR,Lev_AdmissionFee VARCHAR);");
-        Cursor cursor = db_leveldelete.rawQuery("SELECT * FROM LevelList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_leveldelete.delete("LevelList", null, null);
-
-        }
-        db_leveldelete.close();
-    }
-    public void deleteLearningOptionTable_B4insertion() {
-
-        SQLiteDatabase db_LearningOption_delete = openOrCreateDatabase("sivdb", Context.MODE_PRIVATE, null);
-        db_LearningOption_delete.execSQL("CREATE TABLE IF NOT EXISTS LearningOptionList(Option_ID VARCHAR,Group_Name VARCHAR,Option_Name VARCHAR,Option_Status VARCHAR);");
-        Cursor cursor = db_LearningOption_delete.rawQuery("SELECT * FROM LearningOptionList", null);
-        int x = cursor.getCount();
-
-        if (x > 0) {
-            db_LearningOption_delete.delete("LearningOptionList", null, null);
-            // Toast.makeText(getApplicationContext(),"All records deleted",Toast.LENGTH_LONG).show();
-        }
-        db_LearningOption_delete.close();
-    }
-
-
-
-
-
-    public void gethelp()
-    {
-        internetDectector = new ConnectionDetector(getApplicationContext());
-        isInternetPresent = internetDectector.isConnectingToInternet();
-
-        if(isInternetPresent)
-        {
-             gethelp_api();
-        }
-    }
-
-    private void gethelp_api()
-    {
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
-        progressDoalog.setMessage("Fetching Helpdetails....");
-        progressDoalog.setTitle("Please wait....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-
-        Interface_userservice userService;
-        userService = Class_ApiUtils.getUserService();
-
-        Call<Class_gethelp_Response> call = userService.GetHelp("12");
-
-
-        call.enqueue(new Callback<Class_gethelp_Response>() {
-            @Override
-            public void onResponse(Call<Class_gethelp_Response> call, Response<Class_gethelp_Response> response) {
-
-                // Toast.makeText(MainActivity.this, ""+response.toString(), Toast.LENGTH_SHORT).show();
-
-                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
-
-               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
-                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
-
-
-
-                if(response.isSuccessful())
-                {
-                    DBCreate_Helpdetails();
-                    Class_gethelp_Response gethelp_response_obj = response.body();
-                    Log.e("response.body", response.body().getLst().toString());
-
-
-                    if (gethelp_response_obj.getStatus().equals(true))
-                    {
-
-                        List<Class_gethelp_resplist> helplist = response.body().getLst();
-                        Log.e("length", String.valueOf(helplist.size()));
-                        int int_helpcount=helplist.size();
-
-                        for(int i=0;i<int_helpcount;i++)
-                        {
-                            Log.e("title",helplist.get(i).getTitle().toString());
-
-                            String str_title=helplist.get(i).getTitle().toString();
-                            String str_content=helplist.get(i).getContent().toString();
-                            DBCreate_HelpDetails_insert_2sqliteDB(str_title,str_content);
-                        }
-
-
-                        // Data_from_HelpDetails_table();
-
-                        //helplist.get(0).
-                        progressDoalog.dismiss();
-
-                        getdemo();
-                    }
-                    // Log.e("response.body", response.body().size);
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                progressDoalog.dismiss();
-                Log.e("WS", "error" + t.getMessage());
-                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-
-
-    public void DBCreate_HelpDetails_insert_2sqliteDB(String title,String content)
-    {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
-
-        ContentValues cv = new ContentValues();
-        cv.put("TitleDB", title);
-        cv.put("ContentDB", content);
-        db2.insert("HelpDetails_table", null, cv);
-        db2.close();
-
-        Log.e("insert","DBCreate_HelpDetails_insert_2sqliteDB");
-
-    }
-
-
-    public void DBCreate_Helpdetails() {
-
-        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
-        Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
-        int x = cursor.getCount();
-        if (x > 0) {
-            db2.delete("HelpDetails_table", null, null);
-        }
-        db2.close();
-    }
-
-
-
-
-    public void Data_from_HelpDetails_table()
-    {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
-        Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
-        int x = cursor.getCount();
-
-        Log.e("helpcount", String.valueOf(x));
-
-    }
-
-    public void getdemo()
-    {
-        internetDectector = new ConnectionDetector(getApplicationContext());
-        isInternetPresent = internetDectector.isConnectingToInternet();
-
-        if(isInternetPresent)
-        {
-            getdemo_api();
-        }
-    }
-
-    private void getdemo_api()
-    {
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
-        progressDoalog.setMessage("Fetching Demodetails....");
-        progressDoalog.setTitle("Please wait....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDoalog.show();
-
-        Interface_userservice userService;
-        userService = Class_ApiUtils.getUserService();
-
-        Call<Class_getdemo_Response> call = userService.GetDemo("12");
-
-
-        call.enqueue(new Callback<Class_getdemo_Response>() {
-            @Override
-            public void onResponse(Call<Class_getdemo_Response> call, Response<Class_getdemo_Response> response) {
-                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
-
-               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
-                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
-
-
-
-                if(response.isSuccessful())
-                {
-                    DBCreate_Demodetails();
-                    Class_getdemo_Response getdemo_response_obj = response.body();
-                    Log.e("response.body", response.body().getLst().toString());
-
-
-                    if (getdemo_response_obj.getStatus().equals(true))
-                    {
-
-                        List<Class_getdemo_resplist> demolist = response.body().getLst();
-                        Log.e("length", String.valueOf(demolist.size()));
-                        int int_helpcount=demolist.size();
-
-                        for(int i=0;i<int_helpcount;i++)
-                        {
-                            Log.e("language",demolist.get(i).getLanguage_Name().toString());
-
-                            String str_languagename=demolist.get(i).getLanguage_Name().toString();
-                            String str_languagelink=demolist.get(i).getLanguage_Link().toString();
-                            DBCreate_DemoDetails_insert_2sqliteDB(str_languagename,str_languagelink);
-                        }
-
-                        //Data_from_HelpDetails_table();
-
-                        //helplist.get(0).
-                        progressDoalog.dismiss();
-                    }
-                    // Log.e("response.body", response.body().size);
-
-                }
-
-
-
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                progressDoalog.dismiss();
-                Log.e("WS", "error" + t.getMessage());
-                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-
-
-    public void DBCreate_Demodetails() {
-
-        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
-        Cursor cursor = db2.rawQuery("SELECT * FROM DemoDetails_table", null);
-        int x = cursor.getCount();
-        if (x > 0) {
-            db2.delete("DemoDetails_table", null, null);
-        }
-        db2.close();
-    }
-
-
-
-
-    public void DBCreate_DemoDetails_insert_2sqliteDB(String str_languagename,String str_languagelink)
-    {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
-
-        ContentValues cv = new ContentValues();
-        cv.put("LanguageDB", str_languagename);
-        cv.put("LinkDB", str_languagelink);
-        db2.insert("DemoDetails_table", null, cv);
-        db2.close();
-
-        Log.e("insert","DBCreate_DemoDetails_insert_2sqliteDB");
-
-    }
-
-
-
-    private void GetAppVersionCheck(){
-//        Map<String,String> params = new HashMap<String, String>();
-//
-//        params.put("User_ID","90");// for dynamic
-
-        retrofit2.Call call = userService1.getAppVersion();
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
-        progressDoalog.setMessage("Loading....");
-        progressDoalog.setTitle("Please wait....");
-        progressDoalog.setCancelable(false);
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        // show it
-        progressDoalog.show();
-        call.enqueue(new Callback<GetAppVersion>()
-        {
-            @Override
-            public void onResponse(Call<GetAppVersion> call, Response<GetAppVersion> response)
-            {
-                Log.e("response",response.toString());
-                Log.e("TAG", "response: "+new Gson().toJson(response) );
-                Log.e("response body", String.valueOf(response.body()));
-
-                if(response.isSuccessful())
-                {
-                    //        progressDoalog.dismiss();
-                    GetAppVersion  class_loginresponse = response.body();
-                    Log.e("tag","res=="+class_loginresponse.toString());
-                    if(class_loginresponse.getStatus()) {
-
-
-                        List<GetAppVersionList> getAppVersionList=response.body().getlistVersion();
-                        String str_releaseVer=getAppVersionList.get(0).getAppVersion();
-
-                        int int_versioncode= Integer.parseInt(versioncode);
-                        int int_releaseVer= Integer.parseInt(str_releaseVer);
-
-                        Log.e("tag","str_releaseVer="+str_releaseVer);
-                        if(int_releaseVer>int_versioncode)
-                        {
-                            //call pop
-                            Log.e("popup","popup");
-                            //alerts();
-                            alerts_dialog_playstoreupdate();
-                        }
-                        else{
-
-                        }
-                        progressDoalog.dismiss();
-                    }else{
-                        progressDoalog.dismiss();
-                        Toast.makeText(Activity_HomeScreen.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    }
-                } else {
-                    progressDoalog.dismiss();
-
-                    DefaultResponse error = ErrorUtils.parseError(response);
-                    // … and use it to show error information
-
-                    // … or just log the issue like we’re doing :)
-                    Log.d("error message", error.getMsg());
-
-                    Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t)
-            {
-                progressDoalog.dismiss();
-                Log.e("TAG", "onFailure: "+t.toString() );
-
-                Log.e("tag","Error:"+t.getMessage());
-                Toast.makeText(Activity_HomeScreen.this, "WS:Error:"+t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-    public  void alerts_dialog_playstoreupdate()
-    {
-
-        AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_HomeScreen.this);
-        dialog.setCancelable(false);
-        dialog.setTitle(R.string.alert);
-        dialog.setMessage("Kindly update from playstore");
-
-        dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=df.farmponds"));
-                startActivity(intent);
-            }
-        });
-
-
-        final AlertDialog alert = dialog.create();
-        alert.setOnShowListener( new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
-            }
-        });
-        alert.show();
-
-    }
-
-    private void Add_setGCM1()
-    {
-        Interface_userservice userService;
-        userService = Class_ApiUtils.getUserService();
-
-        tm1 = (TelephonyManager) getBaseContext()
-                .getSystemService(Context.TELEPHONY_SERVICE);
-
-        String NetworkType;
-        simOperatorName = tm1.getSimOperatorName();
-        Log.e("Operator", "" + simOperatorName);
-        NetworkType = "GPRS";
-
-
-        int simSpeed = tm1.getNetworkType();
-        if (simSpeed == 1)
-            NetworkType = "Gprs";
-        else if (simSpeed == 4)
-            NetworkType = "Edge";
-        else if (simSpeed == 8)
-            NetworkType = "HSDPA";
-        else if (simSpeed == 13)
-            NetworkType = "LTE";
-        else if (simSpeed == 3)
-            NetworkType = "UMTS";
-        else
-            NetworkType = "Unknown";
-
-        Log.e("SIM_INTERNET_SPEED", "" + NetworkType);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        tmDevice = "" + tm1.getDeviceId();
-        Log.e("DeviceIMEI", "" + tmDevice);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mobileNumber = "" + tm1.getLine1Number();
-        Log.e("getLine1Number value", "" + mobileNumber);
-
-        String mobileNumber1 = "" + tm1.getPhoneType();
-        Log.e("getPhoneType value", "" + mobileNumber1);
-        tmSerial = "" + tm1.getSimSerialNumber();
-        //  Log.v("GSM devices Serial Number[simcard] ", "" + tmSerial);
-        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        Log.e("androidId CDMA devices", "" + androidId);
-        UUID deviceUuid = new UUID(androidId.hashCode(),
-                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        deviceId = deviceUuid.toString();
-        //  Log.v("deviceIdUUID universally unique identifier", "" + deviceId);
-
-
-        deviceModelName = Build.MODEL;
-        Log.v("Model Name", "" + deviceModelName);
-        deviceUSER = Build.USER;
-        Log.v("Name USER", "" + deviceUSER);
-        devicePRODUCT = Build.PRODUCT;
-        Log.v("PRODUCT", "" + devicePRODUCT);
-        deviceHARDWARE = Build.HARDWARE;
-        Log.v("HARDWARE", "" + deviceHARDWARE);
-        deviceBRAND = Build.BRAND;
-        Log.v("BRAND", "" + deviceBRAND);
-        myVersion = Build.VERSION.RELEASE;
-        Log.v("VERSION.RELEASE", "" + myVersion);
-        sdkVersion = Build.VERSION.SDK_INT;
-        Log.v("VERSION.SDK_INT", "" + sdkVersion);
-        sdkver = Integer.toString(sdkVersion);
-        // Get display details
-
-        Measuredwidth = 0;
-        Measuredheight = 0;
-        Point size = new Point();
-        WindowManager w = getWindowManager();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            //   w.getDefaultDisplay().getSize(size);
-            Measuredwidth = w.getDefaultDisplay().getWidth();//size.x;
-            Measuredheight = w.getDefaultDisplay().getHeight();//size.y;
         } else {
-            Display d = w.getDefaultDisplay();
-            Measuredwidth = d.getWidth();
-            Measuredheight = d.getHeight();
-        }
 
-        Log.e("SCREEN_Width", "" + Measuredwidth);
-        Log.e("SCREEN_Height", "" + Measuredheight);
+            internetDectector2 = new Class_InternetDectector(getApplicationContext());
+            isInternetPresent = internetDectector2.isConnectingToInternet();
+            if (isInternetPresent) {
+                CountCheckList();
+                UserStudentDataCountCheckList();
+                stateListRest_dbCount();
 
-
-        regId = FirebaseInstanceId.getInstance().getToken();
-
-
-
-        Log.e("regId_DeviceID", "" + regId);
-
-        Class_devicedetails request = new Class_devicedetails();
-        request.setUser_ID("12");
-        request.setDeviceId(regId);
-        request.setOSVersion(myVersion);
-        request.setManufacturer(deviceBRAND);
-        request.setModelNo(deviceModelName);
-        request.setSDKVersion(sdkver);
-        request.setDeviceSrlNo(tmDevice);
-        request.setServiceProvider(simOperatorName);
-        request.setSIMSrlNo(tmSerial);
-        request.setDeviceWidth(String.valueOf(Measuredwidth));
-        request.setDeviceHeight(String.valueOf(Measuredheight));
-        request.setAppVersion(versioncode);
-
-       // Log.e("gcm() usrid", "" + str_loginuserID);
-        Log.e("regId", "" + regId);
-        Log.e("myVersion()", "" + myVersion);
-        Log.e("deviceBRAND()", "" + deviceBRAND);
-        Log.e("deviceModelName()", "" + deviceModelName);
-        Log.e("sdkver()", "" + sdkver);
-        Log.e("tmDevice()", "" + tmDevice);
-        Log.e("simOperatorName()", "" + simOperatorName);
-        Log.e("tmSerial()", "" + tmSerial);
-        Log.e("Measuredwidth()", "" + Measuredwidth);
-        Log.e("Measuredheight()", "" + Measuredheight);
-        Log.e("versioncode()", "" + versioncode);
-
-        {
-            retrofit2.Call call = userService.Post_ActionDeviceDetails(request);
-
-            call.enqueue(new Callback<Class_devicedetails>()
-            {
-                @Override
-                public void onResponse(retrofit2.Call<Class_devicedetails> call, Response<Class_devicedetails> response) {
-
-
-                    Log.e("response", response.toString());
-                    Log.e("response_body", String.valueOf(response.body()));
-
-                    if (response.isSuccessful())
-                    {
-                        //  progressDoalog.dismiss();
-
-
-                        Class_devicedetails class_addfarmponddetailsresponse = response.body();
-
-                        if (class_addfarmponddetailsresponse.getStatus().equals("true"))
-                        {
-                            Log.e("devicedetails", "devicedetails_Added");
-
-                            gethelp();
-
-                        } else if (class_addfarmponddetailsresponse.getStatus().equals("false")) {
-                            //     progressDoalog.dismiss();
-                            Toast.makeText(Activity_HomeScreen.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
-                            gethelp();
-                        }
-                    } else {
-                        //   progressDoalog.dismiss();
-                        DefaultResponse error = ErrorUtils.parseError(response);
-                        Log.e("devicedetailserror", error.getMsg());
-                        Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
-                        gethelp();
-
-
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    Toast.makeText(Activity_HomeScreen.this, "error" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("response_error", t.getMessage().toString());
-                }
-            });
-
+            }
         }
     }
 
+    ////////////////////////////////// Auto Sync 1st time //////////////////////////////////////
 
-    private void GetDropdownValuesRestData() {
+    public void stateListRest_dbCount() {
+        SQLiteDatabase db_statelist = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_statelist.execSQL("CREATE TABLE IF NOT EXISTS StateListRest(StateID VARCHAR,StateName VARCHAR,state_yearid VARCHAR);");
+        Cursor cursor = db_statelist.rawQuery("SELECT * FROM StateListRest", null);
+        int State_x = cursor.getCount();
+        Log.e("cursor State_xcount", Integer.toString(State_x));
 
+        if (State_x == 0) {
+            GetDropdownValuesRestData();
+            GetStudentValuesRestData();
+        } else {
+            SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db1.execSQL("CREATE TABLE IF NOT EXISTS DistrictListRest(DistrictID VARCHAR,DistrictName VARCHAR,Distr_yearid VARCHAR,Distr_Stateid VARCHAR);");
+            Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM DistrictListRest", null);
+            int District_x = cursor1.getCount();
+            Log.e("cursor Talukcount", Integer.toString(District_x));
+
+            SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db2.execSQL("CREATE TABLE IF NOT EXISTS TalukListRest(TalukID VARCHAR,TalukName VARCHAR,Taluk_districtid VARCHAR);");
+            Cursor cursor2 = db2.rawQuery("SELECT DISTINCT * FROM TalukListRest", null);
+            int Taluk_x = cursor2.getCount();
+            Log.e("cursor Talukcount", Integer.toString(Taluk_x));
+
+            SQLiteDatabase db_village = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_village.execSQL("CREATE TABLE IF NOT EXISTS VillageListRest(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR,PanchayatID VARCHAR);");
+            Cursor cursor3 = db_village.rawQuery("SELECT DISTINCT * FROM VillageListRest", null);
+            int village_x = cursor3.getCount();
+            Log.e("cursor village_xcount", Integer.toString(village_x));
+
+            SQLiteDatabase db_year = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_year.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
+            Cursor cursor5 = db_year.rawQuery("SELECT DISTINCT * FROM YearListRest", null);
+            int Year_x = cursor5.getCount();
+            Log.d("cursor Yearcount", Integer.toString(Year_x));
+
+            SQLiteDatabase db_clusterlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_clusterlist.execSQL("CREATE TABLE IF NOT EXISTS ClusterListRest(ClusterName VARCHAR,ClusterID VARCHAR,Clust_AcademicID VARCHAR, Clust_SandboxID VARCHAR);");
+            Cursor cursor6 = db_clusterlist.rawQuery("SELECT DISTINCT * FROM ClusterListRest", null);
+            int cluster_x = cursor6.getCount();
+            Log.d("cursor clustercount", Integer.toString(cluster_x));
+
+            SQLiteDatabase db_Institutelist = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_Institutelist.execSQL("CREATE TABLE IF NOT EXISTS InstituteListRest(InstituteName VARCHAR, InstituteID VARCHAR,Inst_AcademicID VARCHAR,Inst_ClusterID VARCHAR);");
+            Cursor cursor7 = db_Institutelist.rawQuery("SELECT * FROM InstituteListRest", null);
+            int Institute_x = cursor7.getCount();
+            Log.d("cursor Institute_x", Integer.toString(Institute_x));
+
+            SQLiteDatabase db_Levellist = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_Levellist.execSQL("CREATE TABLE IF NOT EXISTS LevelListRest(LevelName VARCHAR, LevelID VARCHAR, Level_InstituteID VARCHAR,Level_AcademicID VARCHAR,Level_ClusterID VARCHAR,Level_AdmissionFee VARCHAR);");
+            Cursor cursor8 = db_Levellist.rawQuery("SELECT * FROM LevelListRest", null);
+            int Level_x = cursor8.getCount();
+            Log.d("cursor Level_x", Integer.toString(Level_x));
+
+            SQLiteDatabase db_Sandboxlist = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_Sandboxlist.execSQL("CREATE TABLE IF NOT EXISTS SandboxListRest(SandboxName VARCHAR,SandboxID VARCHAR);");
+            Cursor cursor9 = db_Sandboxlist.rawQuery("SELECT * FROM SandboxListRest", null);
+            int Sandbox_x = cursor9.getCount();
+            Log.d("cursor Sandbox_x", Integer.toString(Sandbox_x));
+
+            SQLiteDatabase db_Schoollist = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_Schoollist.execSQL("CREATE TABLE IF NOT EXISTS SchoolListRest(SchoolName VARCHAR, SchoolID VARCHAR, School_InstituteID VARCHAR);");
+            Cursor cursor10 = db_Schoollist.rawQuery("SELECT * FROM SchoolListRest", null);
+            int School_x = cursor10.getCount();
+            Log.d("cursor School_x", Integer.toString(School_x));
+
+            SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+            db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
+                    "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+            Cursor cursor14 = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
+            int studentDetails_x = cursor14.getCount();
+            Log.e("tag", "studentDetails_x=" + studentDetails_x);
+            cursor14.close();
+
+            State_x = State_x - 1;
+            District_x = District_x - 1;
+            Taluk_x = Taluk_x - 1;
+            village_x = village_x - 1;
+            Year_x = Year_x - 1;
+            cluster_x = cluster_x - 1;
+            Institute_x = Institute_x - 1;
+            Level_x = Level_x - 1;
+            Sandbox_x = Sandbox_x - 1;
+            School_x = School_x - 1;
+
+            Log.e("State_x", String.valueOf(State_x));
+            Log.e("StateCount",StateCount);
+            Log.e("District_x", String.valueOf(District_x));
+            Log.e("DistrictCount",DistrictCount);
+            Log.e("Taluk_x", String.valueOf(Taluk_x));
+            Log.e("TalukaCount",TalukaCount);
+            Log.e("village_x", String.valueOf(village_x));
+            Log.e("VillageCount",VillageCount);
+            Log.e("Year_x", String.valueOf(Year_x));
+            Log.e("YearCount",YearCount);
+            Log.e("cluster_x", String.valueOf(cluster_x));
+            Log.e("ClusterCount",ClusterCount);
+            Log.e("Institute_x", String.valueOf(Institute_x));
+            Log.e("InstituteCount",InstituteCount);
+            Log.e("Level_x", String.valueOf(Level_x));
+            Log.e("LevelCount",LevelCount);
+            Log.e("School_x", String.valueOf(School_x));
+            Log.e("SchoolCount",SchoolCount);
+            Log.e("studentDetails_x", String.valueOf(studentDetails_x));
+            Log.e("Student_Count",Student_Count);
+            if (State_x == Integer.valueOf(StateCount) && District_x == Integer.valueOf(DistrictCount) && Taluk_x == Integer.valueOf(TalukaCount) && village_x == Integer.valueOf(VillageCount) && Year_x == Integer.valueOf(YearCount)
+                    && cluster_x == Integer.valueOf(ClusterCount) && Institute_x == Integer.valueOf(InstituteCount) && Level_x == Integer.valueOf(LevelCount) && Sandbox_x == Integer.valueOf(SandboxCount) && School_x == Integer.valueOf(SchoolCount)) {
+
+            } else {
+                delete_CountDetailsRestTable_B4insertion();
+                deleteStateRestTable_B4insertion();
+                deleteDistrictRestTable_B4insertion();
+                deleteTalukRestTable_B4insertion();
+                deleteVillageRestTable_B4insertion();
+                deleteYearRestTable_B4insertion();
+
+                deleteClusterRestTable_B4insertion();
+                deleteLevelRestTable_B4insertion();
+                deleteInstituteRestTable_B4insertion();
+                deleteSandboxRestTable_B4insertion();
+                deleteSchoolRestTable_B4insertion();
+
+                GetDropdownValuesRestData();
+
+            }
+            if (studentDetails_x == Integer.valueOf(Student_Count)) {
+
+            } else if (studentDetails_x < Integer.valueOf(Student_Count)) {
+                deleteStudentdetailsRestTable_B4insertion();
+                GetStudentValuesRestData();
+            }
+            //AddFarmerDetailsNew();
+        }
+    }
+
+    public void CountCheckList() {
+        SQLiteDatabase db_locationCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_locationCount.execSQL("CREATE TABLE IF NOT EXISTS LocationCountListRest(StateCount VARCHAR,DistrictCount VARCHAR,TalukaCount VARCHAR,VillageCount VARCHAR,YearCount VARCHAR,Sync_ID VARCHAR,ClusterCount VARCHAR,LevelCount VARCHAR,InstituteCount VARCHAR,SandboxCount VARCHAR,SchoolCount VARCHAR);");
+        Cursor cursor1 = db_locationCount.rawQuery("SELECT DISTINCT * FROM LocationCountListRest", null);
+
+        int x = cursor1.getCount();
+        Log.d("cursor countlist", Integer.toString(x));
+
+        int i = 0;
+        if (cursor1.moveToFirst()) {
+
+            do {
+                StateCount = cursor1.getString(cursor1.getColumnIndex("StateCount"));
+                DistrictCount = cursor1.getString(cursor1.getColumnIndex("DistrictCount"));
+                TalukaCount = cursor1.getString(cursor1.getColumnIndex("TalukaCount"));
+                //     PanchayatCount=cursor1.getString(cursor1.getColumnIndex("PanchayatCount"));
+                VillageCount = cursor1.getString(cursor1.getColumnIndex("VillageCount"));
+                YearCount = cursor1.getString(cursor1.getColumnIndex("YearCount"));
+                Sync_ID = cursor1.getString(cursor1.getColumnIndex("Sync_ID"));
+                ClusterCount = cursor1.getString(cursor1.getColumnIndex("ClusterCount"));
+                LevelCount = cursor1.getString(cursor1.getColumnIndex("LevelCount"));
+                InstituteCount = cursor1.getString(cursor1.getColumnIndex("InstituteCount"));
+                SandboxCount = cursor1.getString(cursor1.getColumnIndex("SandboxCount"));
+                SchoolCount = cursor1.getString(cursor1.getColumnIndex("SchoolCount"));
+                // arrayObj_Class_DistrictListDetails2[i] = innerObj_Class_AcademicList;
+                i++;
+            } while (cursor1.moveToNext());
+            Log.e("tag", "StateCount=" + StateCount);
+            Log.e("tag", "DistrictCount=" + DistrictCount);
+            Log.e("tag", "VillageCount=" + VillageCount);
+            Log.e("tag", "Sync_ID=" + Sync_ID);
+            SharedPreferences.Editor editor = shared_syncId.edit();
+            editor.putString(SyncId, Sync_ID);
+            editor.commit();
+            SharedPreferences.Editor myprefs_spinner = sharedpref_spinner_Obj.edit();
+            myprefs_spinner.putString(Key_syncId, Sync_ID);
+            myprefs_spinner.apply();
+        }//if ends
+
+    }
+
+    public void UserStudentDataCountCheckList() {
+        SQLiteDatabase db_userdataCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+        Cursor cursor1 = db_userdataCount.rawQuery("SELECT DISTINCT * FROM StudDataCountListRest", null);
+
+        int x = cursor1.getCount();
+        Log.d("tag", "cursor userdatacountlist" + Integer.toString(x));
+
+        int i = 0;
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Student_Count = cursor1.getString(cursor1.getColumnIndex("Student_Count"));
+                i++;
+            } while (cursor1.moveToNext());
+            Log.e("tag", "Student_Count=" + Student_Count);
+
+            if (Student_Count == null || Student_Count.equalsIgnoreCase("")) {
+                Student_Count = "0";
+            }
+
+        }//if ends
+    }
+
+    ////////////////////////////////// API Call /////////////////////////////////////////////////
+    public void GetDropdownValuesRestData() {
+        Log.e("Entered ", "GetAppVersionCheck");
+        Log.e("getLocationData", "str_employee_id=" + str_employee_id);
         Call<Location_Data> call = userService1.getLocationData("12");
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
@@ -1741,13 +756,13 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         // show it
         progressDoalog.show();
         call.enqueue(new Callback<Location_Data>() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onResponse(Call<Location_Data> call, Response<Location_Data> response) {
                 Log.e("Entered resp", response.message());
                 //     Log.e("Entered resp", response.body().getMessage());
 
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     Location_Data class_locaitonData = response.body();
                     Log.e("response.body", response.body().getLst().toString());
                     if (class_locaitonData.getStatus().equals(true)) {
@@ -1786,13 +801,18 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                                 String VCount = class_locaitonData.getLst().get(i).getCount().get(j).getVillageCount();
                                 String YCount = class_locaitonData.getLst().get(i).getCount().get(j).getYearCount();
                                 String Sync_ID = class_locaitonData.getLst().get(i).getCount().get(j).getSyncID();
+                                String ClusterCount = class_locaitonData.getLst().get(i).getCount().get(j).getClusterCount();
+                                String LevelCount = class_locaitonData.getLst().get(i).getCount().get(j).getLevelCount();
+                                String InstituteCount = class_locaitonData.getLst().get(i).getCount().get(j).getInstituteCount();
+                                String SandboxCount = class_locaitonData.getLst().get(i).getCount().get(j).getSandboxCount();
+                                String SchoolCount = class_locaitonData.getLst().get(i).getCount().get(j).getSchoolCount();
                                 SharedPreferences.Editor editor = shared_syncId.edit();
                                 editor.putString(SyncId, Sync_ID);
                                 editor.commit();
                                 SharedPreferences.Editor myprefs_spinner = sharedpref_spinner_Obj.edit();
                                 myprefs_spinner.putString(Key_syncId, Sync_ID);
                                 myprefs_spinner.apply();
-                                DBCreate_CountDetailsRest_insert_2SQLiteDB(SCount,DCount,TCount,VCount,YCount,Sync_ID);
+                                DBCreate_CountDetailsRest_insert_2SQLiteDB(SCount, DCount, TCount, VCount, YCount, Sync_ID, ClusterCount, LevelCount, InstituteCount, SandboxCount, SchoolCount);
 
                             }
 
@@ -1835,9 +855,81 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                                 Log.e("tag", "Year name==" + class_locaitonData.getLst().get(i).getYear().get(j).getAcademicName());
                                 String YearName = class_locaitonData.getLst().get(i).getYear().get(j).getAcademicName();
                                 String YearId = class_locaitonData.getLst().get(i).getYear().get(j).getAcademicID();
-                                DBCreate_YeardetailsRest_insert_2SQLiteDB(YearId, YearName, j);
+                                String Sandbox_ID = class_locaitonData.getLst().get(i).getYear().get(j).getSandbox_ID();
+                                DBCreate_YeardetailsRest_insert_2SQLiteDB(YearId, YearName,Sandbox_ID, j);
                             }
-                        }
+                            int sizeSandbox = class_locaitonData.getLst().get(i).getSandbox().size();
+                            for (int j = 0; j < sizeSandbox; j++) {
+                                Log.e("tag", "Sandbox name==" + class_locaitonData.getLst().get(i).getSandbox().get(j).getSandboxName());
+                                String SandboxName = class_locaitonData.getLst().get(i).getSandbox().get(j).getSandboxName();
+                                String SandboxID = class_locaitonData.getLst().get(i).getSandbox().get(j).getSandboxID();
+                                DBCreate_SandboxdetailsRest_insert_2SQLiteDB(SandboxName, SandboxID, j);
+                            }
+                            int sizeCluster = class_locaitonData.getLst().get(i).getCluster().size();
+                            for (int j = 0; j < sizeCluster; j++) {
+                                Log.e("tag", "Cluster name==" + class_locaitonData.getLst().get(i).getCluster().get(j).getClusterName());
+                                String ClusterName = class_locaitonData.getLst().get(i).getCluster().get(j).getClusterName();
+                                String ClusterID = class_locaitonData.getLst().get(i).getCluster().get(j).getClusterID();
+                                String Clust_AcademicID = class_locaitonData.getLst().get(i).getCluster().get(j).getAcademicID();
+                                String Clust_SandboxID = class_locaitonData.getLst().get(i).getCluster().get(j).getSandboxID();
+                                DBCreate_ClusterdetailsRest_insert_2SQLiteDB(ClusterName, ClusterID, Clust_AcademicID, Clust_SandboxID, j);
+                            }
+                            int sizeInstitute = class_locaitonData.getLst().get(i).getInstitute().size();
+                            for (int j = 0; j < sizeInstitute; j++) {
+                                Log.e("tag", "Institute name==" + class_locaitonData.getLst().get(i).getInstitute().get(j).getInstituteName());
+                                String InstituteName = class_locaitonData.getLst().get(i).getInstitute().get(j).getInstituteName();
+                                String InstituteID = class_locaitonData.getLst().get(i).getInstitute().get(j).getInstituteID();
+                                String Inst_AcademicID = class_locaitonData.getLst().get(i).getInstitute().get(j).getAcademicID();
+                                String Inst_ClusterID = class_locaitonData.getLst().get(i).getInstitute().get(j).getClusterID();
+                                DBCreate_InstitutedetailsRest_insert_2SQLiteDB(InstituteName, InstituteID, Inst_AcademicID, Inst_ClusterID, j);
+                            }
+                            int sizeSchool = class_locaitonData.getLst().get(i).getSchool().size();
+                            for (int j = 0; j < sizeSchool; j++) {
+                                Log.e("tag", "School name==" + class_locaitonData.getLst().get(i).getSchool().get(j).getSchoolName());
+                                String SchoolName = class_locaitonData.getLst().get(i).getSchool().get(j).getSchoolName();
+                                String SchoolID = class_locaitonData.getLst().get(i).getSchool().get(j).getSchoolID();
+                                String School_InstituteID = class_locaitonData.getLst().get(i).getSchool().get(j).getInstituteID();
+                                DBCreate_SchooldetailsRest_insert_2SQLiteDB(SchoolName, SchoolID, School_InstituteID, j);
+                            }
+                            int sizeLevel = class_locaitonData.getLst().get(i).getLevel().size();
+                            for (int j = 0; j < sizeLevel; j++) {
+                                Log.e("tag", "Level name==" + class_locaitonData.getLst().get(i).getLevel().get(j).getLevelName());
+                                String LevelName = class_locaitonData.getLst().get(i).getLevel().get(j).getLevelName();
+                                String LevelID = class_locaitonData.getLst().get(i).getLevel().get(j).getLevelID();
+                                String Level_InstituteID = class_locaitonData.getLst().get(i).getLevel().get(j).getInstituteID();
+                                String Level_AcademicID = class_locaitonData.getLst().get(i).getLevel().get(j).getAcademicID();
+                                String Level_ClusterID = class_locaitonData.getLst().get(i).getLevel().get(j).getClusterID();
+                                String Level_AdmissionFee = class_locaitonData.getLst().get(i).getLevel().get(j).getAdmissionFee();
+                                DBCreate_LeveldetailsRest_insert_2SQLiteDB(LevelName, LevelID, Level_InstituteID, Level_AcademicID, Level_ClusterID, Level_AdmissionFee, j);
+                            }
+
+                            int sizeAssessment = class_locaitonData.getLst().get(i).getAssessment().size();
+                            for (int j = 0; j < sizeAssessment; j++) {
+                                Log.e("tag", "Assement name==" + class_locaitonData.getLst().get(i).getAssessment().get(j).getAssessment_Name());
+                                String Assessment_Name = class_locaitonData.getLst().get(i).getAssessment().get(j).getAssessment_Name();
+                                String Assessment_ID = class_locaitonData.getLst().get(i).getAssessment().get(j).getAssessment_ID();
+                                //  String OptionID = class_locaitonData.getLst().get(i).getAssessment().get(j).g();
+                                DBCreate_AssementRest_insert_2SQLiteDB(Assessment_Name, Assessment_ID,j);
+                            }
+                            int sizeLearningMode = class_locaitonData.getLst().get(i).getLearningMode().size();
+                            for (int j = 0; j < sizeLearningMode; j++) {
+                                Log.e("tag", "LearningMode name==" + class_locaitonData.getLst().get(i).getLearningMode().get(j).getLearningMode_Name());
+                                String LearningMode_Name = class_locaitonData.getLst().get(i).getLearningMode().get(j).getLearningMode_Name();
+                                String LearningMode_ID = class_locaitonData.getLst().get(i).getLearningMode().get(j).getLearningMode_ID();
+
+                                DBCreate_LearningModeRest_insert_2SQLiteDB(LearningMode_ID,LearningMode_Name,j);
+                            }
+                            int sizeEducation = class_locaitonData.getLst().get(i).getEducation().size();
+                            for (int j = 0; j < sizeEducation; j++) {
+                                Log.e("tag", "Education name==" + class_locaitonData.getLst().get(i).getEducation().get(j).getEducation_Name());
+                                String Education_Name = class_locaitonData.getLst().get(i).getEducation().get(j).getEducation_Name();
+                                String Education_ID = class_locaitonData.getLst().get(i).getEducation().get(j).getEducation_ID();
+
+                                DBCreate_EducationRest_insert_2SQLiteDB(Education_ID,Education_Name,j);
+                            }
+
+
+                    }
 
                         /*uploadfromDB_Yearlist();
                         uploadfromDB_Statelist();
@@ -1846,11 +938,10 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                         uploadfromDB_Villagelist();
                         uploadfromDB_Grampanchayatlist();*/
                     } else {
-                        Log.e("getLocationData",class_locaitonData.getMessage());
                         Toast.makeText(Activity_HomeScreen.this, class_locaitonData.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     progressDoalog.dismiss();
-                    Log.e("tag","working");
+                    Log.e("tag", "working");
                 } else {
                     progressDoalog.dismiss();
                     Log.e("Entered resp else", "");
@@ -1858,7 +949,7 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                     // … and use it to show error information
 
                     // … or just log the issue like we’re doing :)
-                    Log.e("error message", error.getMsg());
+                    Log.e("GetDropdownValuesRestData", "error message=" + error.getMsg());
 
                     Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -1867,14 +958,18 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
             @Override
             public void onFailure(Call call, Throwable t) {
 
-                Log.e("tag",t.getMessage());
+                Log.e("tag", t.getMessage());
                 Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });// end of call
 
     }
-    private void GetStudentValuesRestData() {
 
+    @SuppressLint("LongLogTag")
+    public void GetStudentValuesRestData() {
+        Log.e("Entered ", "GetStudentValuesRestData");
+
+        Log.e("str_employee_id_studentva", str_employee_id);
         Call<Student> call = userService1.getStudentData("12");
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
@@ -1885,103 +980,120 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         // show it
         progressDoalog.show();
         call.enqueue(new Callback<Student>() {
+            @SuppressLint("LongLogTag")
             @Override
             public void onResponse(Call<Student> call, Response<Student> response) {
                 Log.e("Entered resp", response.message());
                 //     Log.e("Entered resp", response.body().getMessage());
 
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     Student class_studentData = response.body();
-                    Log.e("response.body", response.body().getLst().toString());
+                    Log.e("response.body", response.body().getLstCount1().toString());
                     if (class_studentData.getStatus().equals(true)) {
-                        List<StudentList> studentLists = response.body().getLst();
-                        Log.e("tag","studentlist.size()="+ String.valueOf(studentLists.size()));
+                        List<StudCountList> studentcountLists = response.body().getLstCount1();
+                        Log.e("tag", "studentlist.size()=" + String.valueOf(studentcountLists.size()));
 
-                        StudentLists = new StudentList[studentLists.size()];
-                        // Toast.makeText(getContext(), "" + class_monthCounts.getMessage(), Toast.LENGTH_SHORT).show();
-
-
-                        for (int i = 0; i < studentLists.size(); i++) {
+                        studCountLists = new StudCountList[studentcountLists.size()];
+                        for (int i1 = 0; i1 < studCountLists.length; i1++) {
 
 
-                            Log.e("status", String.valueOf(class_StudentList.getStudentStatus()));
+                            // Toast.makeText(getContext(), "" + class_monthCounts.getMessage(), Toast.LENGTH_SHORT).show();
+                            class_studCountLists.setCount(class_studentData.getLstCount1().get(i1).getCount());
+                            class_studCountLists.setStudents(class_studentData.getLstCount1().get(i1).getStudents());
+                            int sizeCount = 0;
+                            if (class_studentData.getLstCount1().get(i1).getCount() != null) {
+                                sizeCount = class_studentData.getLstCount1().get(i1).getCount().size();
+                            }
+                            for (int j = 0; j < sizeCount; j++) {
+                                String Student_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getStudentCount();
+                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count);
+                            }
+                            int sizeStudList = 0;
+                            if (class_studentData.getLstCount1().get(i1).getStudents() != null) {
+                                sizeStudList = class_studentData.getLstCount1().get(i1).getStudents().size();
+                            }
+                            for (int i = 0; i < sizeStudList; i++) {
+
+
+                                Log.e("status", String.valueOf(class_StudentList.getStudentStatus()));
                            /* Log.e("msg", class_loginresponse.getMessage());
                             Log.e("list", class_loginresponse.getList().get(i).getId());
                             Log.e("list", class_loginresponse.getList().get(i).getProgramCode());
                             Log.e("size", String.valueOf(class_loginresponse.getList().size()));*/
 
-                            String AcademicID= String.valueOf(class_studentData.getLst().get(i).getAcademicID());
-                            String AcademicName=class_studentData.getLst().get(i).getAcademicName();
-                            String AdmissionFee=class_studentData.getLst().get(i).getAdmissionFee();
-                            String ApplicationNo=class_studentData.getLst().get(i).getApplicationNo();
-                            String BalanceFee=class_studentData.getLst().get(i).getBalanceFee();
-                            String BirthDate=class_studentData.getLst().get(i).getBirthDate();
-                            String ClusterID= String.valueOf(class_studentData.getLst().get(i).getClusterID());
-                            String ClusterName=class_studentData.getLst().get(i).getClusterName();
-                            String CreatedDate=class_studentData.getLst().get(i).getCreatedDate();
-                            String Education=class_studentData.getLst().get(i).getEducation();
-                            String FatherName=class_studentData.getLst().get(i).getFatherName();
-                            String Gender=class_studentData.getLst().get(i).getGender();
-                            String InstituteName=class_studentData.getLst().get(i).getInstituteName();
-                            String InstituteID= String.valueOf(class_studentData.getLst().get(i).getInstituteID());
-                            String LevelID= String.valueOf(class_studentData.getLst().get(i).getLevelID());
-                            String LevelName=class_studentData.getLst().get(i).getLevelName();
-                            String Marks4=class_studentData.getLst().get(i).getMarks4();
-                            String Marks5=class_studentData.getLst().get(i).getMarks5();
-                            String Marks6=class_studentData.getLst().get(i).getMarks6();
-                            String Marks7=class_studentData.getLst().get(i).getMarks7();
-                            String Marks8=class_studentData.getLst().get(i).getMarks8();
-                            String Mobile=class_studentData.getLst().get(i).getMobile();
-                            String MotherName=class_studentData.getLst().get(i).getMotherName();
-                            String PaidFee=class_studentData.getLst().get(i).getPaidFee();
-                            String ReceiptNo=class_studentData.getLst().get(i).getReceiptNo();
-                            String SandboxID= String.valueOf(class_studentData.getLst().get(i).getSandboxID());
-                            String SandboxName=class_studentData.getLst().get(i).getSandboxName();
-                            String SchoolID= String.valueOf(class_studentData.getLst().get(i).getSchoolID());
-                            String SchoolName=class_studentData.getLst().get(i).getSchoolName();
-                            String StudentAadhar=class_studentData.getLst().get(i).getStudentAadhar();
-                            String StudentID= String.valueOf(class_studentData.getLst().get(i).getStudentID());
-                            String StudentName=class_studentData.getLst().get(i).getStudentName();
-                            String StudentPhoto=class_studentData.getLst().get(i).getStudentPhoto();
-                            String StudentStatus=class_studentData.getLst().get(i).getStudentStatus();
+                                String AcademicID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicID());
+                                String AcademicName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicName();
+                                String AdmissionFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAdmissionFee();
+                                String ApplicationNo = class_studentData.getLstCount1().get(i1).getStudents().get(i).getApplicationNo();
+                                String BalanceFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getBalanceFee();
+                                String BirthDate = class_studentData.getLstCount1().get(i1).getStudents().get(i).getBirthDate();
+                                String ClusterID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getClusterID());
+                                String ClusterName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getClusterName();
+                                String CreatedDate = class_studentData.getLstCount1().get(i1).getStudents().get(i).getCreatedDate();
+                                String Education = class_studentData.getLstCount1().get(i1).getStudents().get(i).getEducation();
+                                String FatherName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getFatherName();
+                                String Gender = class_studentData.getLstCount1().get(i1).getStudents().get(i).getGender();
+                                String InstituteName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getInstituteName();
+                                String InstituteID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getInstituteID());
+                                String LevelID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getLevelID());
+                                String LevelName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLevelName();
+                                String Marks4 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks4();
+                                String Marks5 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks5();
+                                String Marks6 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks6();
+                                String Marks7 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks7();
+                                String Marks8 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks8();
+                                String Mobile = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMobile();
+                                String MotherName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMotherName();
+                                String PaidFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getPaidFee();
+                                String ReceiptNo = class_studentData.getLstCount1().get(i1).getStudents().get(i).getReceiptNo();
+                                String SandboxID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getSandboxID());
+                                String SandboxName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getSandboxName();
+                                String SchoolID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getSchoolID());
+                                String SchoolName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getSchoolName();
+                                String StudentAadhar = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentAadhar();
+                                String StudentID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentID());
+                                String StudentName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentName();
+                                String StudentPhoto = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentPhoto();
+                                String StudentStatus = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentStatus();
+                                String Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                                String Learning_Mode = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLearningMode();
 
-                            Log.e("tag","StudentName="+StudentName+"StudentStatus="+StudentStatus+"AcademicName="+AcademicName);
+                                Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "AcademicName=" + AcademicName);
 
-                            String str_imageurl = StudentPhoto;
-                            Log.e("tag", "str_imageurl==" + str_imageurl);
-                            String str_base64image = null;
-                            if (str_imageurl == null || str_imageurl.equals("") || str_imageurl.equals("0")) {
-                            } else {
-                                //  str_imageurl=class_farmerlistdetails_arrayobj2[i].getFarmerPhoto();
+                                String str_imageurl = StudentPhoto;
+                                Log.e("tag", "str_imageurl==" + str_imageurl);
+                                String str_base64image = null;
+                                if (str_imageurl == null || str_imageurl.equals("") || str_imageurl.equals("0")) {
+                                } else {
+                                    //  str_imageurl=class_farmerlistdetails_arrayobj2[i].getFarmerPhoto();
 
-                                String str_farmpondimageurl = str_imageurl;
+                                    String str_farmpondimageurl = str_imageurl;
 
-                                InputStream inputstream_obj = null;
-                                try {
-                                    if (android.os.Build.VERSION.SDK_INT > 9) {
-                                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                        StrictMode.setThreadPolicy(policy);
-                                        inputstream_obj = new URL(str_farmpondimageurl).openStream();
+                                    InputStream inputstream_obj = null;
+                                    try {
+                                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                            StrictMode.setThreadPolicy(policy);
+                                            inputstream_obj = new URL(str_farmpondimageurl).openStream();
 
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                    Bitmap mIcon12 = BitmapFactory.decodeStream(inputstream_obj);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    mIcon12.compress(Bitmap.CompressFormat.PNG, 60, baos);
+                                    byte[] b = baos.toByteArray();
+                                    str_base64image = Base64.encodeToString(b, Base64.DEFAULT);
+
+                                    Log.e("tag", "byteArray img=" + b);
+
+                                    //  str_base64image1 = str_base64image;
                                 }
-                                Bitmap mIcon12 = BitmapFactory.decodeStream(inputstream_obj);
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                mIcon12.compress(Bitmap.CompressFormat.PNG, 60, baos);
-                                byte[] b = baos.toByteArray();
-                                str_base64image = Base64.encodeToString(b, Base64.DEFAULT);
 
-                                Log.e("tag", "byteArray img=" + b);
-
-                                //  str_base64image1 = str_base64image;
-                            }
-
-                            DBCreate_StudentdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID,
-                                    ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,
-                                    Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,str_base64image);
+                                DBCreate_StudentdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID,
+                                        ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8,
+                                        Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId,"online",Learning_Mode);
 
 
                           /*  class_StudentList.setAcademicID((class_studentData.getLst().get(i).getAcademicID()));
@@ -2018,20 +1130,22 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                             class_StudentList.setStudentName(class_studentData.getLst().get(i).getStudentName());
                             class_StudentList.setStudentPhoto(class_studentData.getLst().get(i).getStudentPhoto());
                             class_StudentList.setStudentStatus(class_studentData.getLst().get(i).getStudentStatus());*/
+                            }
                         }
-
                         /*uploadfromDB_Yearlist();
                         uploadfromDB_Statelist();
                         uploadfromDB_Districtlist();
                         uploadfromDB_Taluklist();
                         uploadfromDB_Villagelist();
                         uploadfromDB_Grampanchayatlist();*/
+
+
                     } else {
-                        Log.e("getStudentData",class_studentData.getMessage());
                         Toast.makeText(Activity_HomeScreen.this, class_studentData.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     progressDoalog.dismiss();
-                    Log.e("tag","working");
+                    Log.e("tag", "working");
+                    AddStudentDetailsNew();
                 } else {
                     progressDoalog.dismiss();
                     Log.e("Entered resp else", "");
@@ -2039,7 +1153,8 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
                     // … and use it to show error information
 
                     // … or just log the issue like we’re doing :)
-                    Log.e("error message", error.getMsg());
+                    //  Log.e("error message", error.getMsg());
+                    Log.e("GetStudentValuesRestData", "error message=" + error.getMsg());
 
                     Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
                 }
@@ -2048,21 +1163,803 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
             @Override
             public void onFailure(Call call, Throwable t) {
 
-                Log.e("tag",t.getMessage());
+                Log.e("tag", t.getMessage());
                 Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });// end of call
 
     }
 
+    public void GetAppVersionCheck() {
+        Log.e("Entered ", "GetAppVersionCheck");
+
+//        Map<String,String> params = new HashMap<String, String>();
+//
+//        params.put("User_ID","90");// for dynamic
+
+        retrofit2.Call call = userService1.getAppVersion();
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setCancelable(false);
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+        call.enqueue(new Callback<GetAppVersion>() {
+            @Override
+            public void onResponse(Call<GetAppVersion> call, Response<GetAppVersion> response) {
+                Log.e("response", response.toString());
+                Log.e("TAG", "response: " + new Gson().toJson(response));
+                Log.e("response body", String.valueOf(response.body()));
+
+                if (response.isSuccessful()) {
+                    //        progressDoalog.dismiss();
+                    GetAppVersion class_loginresponse = response.body();
+                    Log.e("tag", "res==" + class_loginresponse.toString());
+                    if (class_loginresponse.getStatus()) {
 
 
-    public void DBCreate_CountDetailsRest_insert_2SQLiteDB(String str_sCount, String str_dCount, String str_tCount,String str_vCount,String yearCount,String str_Sync_Id) {
+                        List<GetAppVersionList> getAppVersionList = response.body().getlistVersion();
+                        String str_releaseVer = getAppVersionList.get(0).getAppVersion();
+
+                        int int_versioncode = Integer.parseInt(versioncode);
+                        int int_releaseVer = Integer.parseInt(str_releaseVer);
+
+                        Log.e("tag", "str_releaseVer=" + str_releaseVer);
+                        if (int_releaseVer > int_versioncode) {
+                            //call pop
+                            Log.e("popup", "popup");
+                            //alerts();
+                            alerts_dialog_playstoreupdate();
+                        } else {
+
+                        }
+                        progressDoalog.dismiss();
+                    } else {
+                        progressDoalog.dismiss();
+                        Toast.makeText(Activity_HomeScreen.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    progressDoalog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    // Log.d("error message", error.getMsg());
+                    Log.e("GetAppVersionCheck", "error message" + error.getMsg());
+
+                    Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:Error:" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @SuppressLint("HardwareIds")
+    public void Add_setGCM1() {
+        Log.e("Entered ", "Add_setGCM1");
+
+        tm1 = (TelephonyManager) getBaseContext()
+                .getSystemService(Context.TELEPHONY_SERVICE);
+
+        String NetworkType;
+        simOperatorName = tm1.getSimOperatorName();
+        Log.e("Operator", "" + simOperatorName);
+        NetworkType = "GPRS";
+
+
+        int simSpeed = tm1.getNetworkType();
+        if (simSpeed == 1)
+            NetworkType = "Gprs";
+        else if (simSpeed == 4)
+            NetworkType = "Edge";
+        else if (simSpeed == 8)
+            NetworkType = "HSDPA";
+        else if (simSpeed == 13)
+            NetworkType = "LTE";
+        else if (simSpeed == 3)
+            NetworkType = "UMTS";
+        else
+            NetworkType = "Unknown";
+
+        Log.e("SIM_INTERNET_SPEED", "" + NetworkType);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+//        tmDevice = "" + tm1.getDeviceId();
+//        Log.e("DeviceIMEI", "" + tmDevice);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            tmDevice = Settings.Secure.getString(
+                    Activity_HomeScreen.this.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+        } else {
+            if (tm1.getDeviceId() != null) {
+                tmDevice = tm1.getDeviceId();
+            } else {
+                tmDevice = Settings.Secure.getString(
+                        Activity_HomeScreen.this.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+            }
+        }
+
+        Log.e("tmDevice", "" + tmDevice);
+
+        mobileNumber = "" + tm1.getLine1Number();
+        Log.e("getLine1Number value", "" + mobileNumber);
+
+        String mobileNumber1 = "" + tm1.getPhoneType();
+        Log.e("getPhoneType value", "" + mobileNumber1);
+        // tmSerial = "" + tm1.getSimSerialNumber();
+
+        /*added by shivaleela */
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            tmSerial = Settings.Secure.getString(
+                    Activity_HomeScreen.this.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+
+            // tmSerial = "" + tm1.getSimSerialNumber();
+
+        } else {
+            if (tm1.getSimSerialNumber() != null) {
+                tmSerial = tm1.getSimSerialNumber();
+            } else {
+                tmSerial = Settings.Secure.getString(
+                        Activity_HomeScreen.this.getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+            }
+        }
+        Log.e("tmSerial", "" + tmSerial);
+
+
+        //  Log.v("GSM devices Serial Number[simcard] ", "" + tmSerial);
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(),
+                android.provider.Settings.Secure.ANDROID_ID);
+        Log.e("androidId CDMA devices", "" + androidId);
+        UUID deviceUuid = new UUID(androidId.hashCode(),
+                ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        deviceId = deviceUuid.toString();
+        //  Log.v("deviceIdUUID universally unique identifier", "" + deviceId);
+
+
+        deviceModelName = Build.MODEL;
+        Log.v("Model Name", "" + deviceModelName);
+        deviceUSER = Build.USER;
+        Log.v("Name USER", "" + deviceUSER);
+        devicePRODUCT = Build.PRODUCT;
+        Log.v("PRODUCT", "" + devicePRODUCT);
+        deviceHARDWARE = Build.HARDWARE;
+        Log.v("HARDWARE", "" + deviceHARDWARE);
+        deviceBRAND = Build.BRAND;
+        Log.v("BRAND", "" + deviceBRAND);
+        myVersion = Build.VERSION.RELEASE;
+        Log.v("VERSION.RELEASE", "" + myVersion);
+        sdkVersion = Build.VERSION.SDK_INT;
+        Log.v("VERSION.SDK_INT", "" + sdkVersion);
+        sdkver = Integer.toString(sdkVersion);
+        // Get display details
+
+        Measuredwidth = 0;
+        Measuredheight = 0;
+        Point size = new Point();
+        WindowManager w = getWindowManager();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //   w.getDefaultDisplay().getSize(size);
+            Measuredwidth = w.getDefaultDisplay().getWidth();//size.x;
+            Measuredheight = w.getDefaultDisplay().getHeight();//size.y;
+        } else {
+            Display d = w.getDefaultDisplay();
+            Measuredwidth = d.getWidth();
+            Measuredheight = d.getHeight();
+        }
+
+        Log.e("SCREEN_Width", "" + Measuredwidth);
+        Log.e("SCREEN_Height", "" + Measuredheight);
+
+
+        regId = FirebaseInstanceId.getInstance().getToken();
+
+
+        Log.e("regId_DeviceID", "" + regId);
+
+        Class_devicedetails request = new Class_devicedetails();
+        Log.e("str_userid1", "" + str_userid);
+
+        request.setUser_ID("12");
+        request.setDeviceId(regId);
+        request.setOSVersion(myVersion);
+        request.setManufacturer(deviceBRAND);
+        request.setModelNo(deviceModelName);
+        request.setSDKVersion(sdkver);
+        request.setDeviceSrlNo(tmDevice);
+        request.setServiceProvider(simOperatorName);
+        request.setSIMSrlNo(tmSerial);
+        request.setDeviceWidth(String.valueOf(Measuredwidth));
+        request.setDeviceHeight(String.valueOf(Measuredheight));
+        request.setAppVersion(versioncode);
+
+
+        {
+            retrofit2.Call call = userService1.Post_ActionDeviceDetails(request);
+
+            call.enqueue(new Callback<Class_devicedetails>() {
+                @Override
+                public void onResponse(retrofit2.Call<Class_devicedetails> call, Response<Class_devicedetails> response) {
+
+
+                    Log.e("response1", response.toString());
+                    Log.e("response_body1", String.valueOf(response.body()));
+
+                    if (response.isSuccessful()) {
+                        //  progressDoalog.dismiss();
+
+
+                        Class_devicedetails class_addfarmponddetailsresponse = response.body();
+
+                        if (class_addfarmponddetailsresponse.getStatus().equals("true")) {
+                            Log.e("devicedetails", "devicedetails_Added");
+
+                            gethelp();
+
+                        } else if (class_addfarmponddetailsresponse.getStatus().equals("false")) {
+                            //     progressDoalog.dismiss();
+                            Toast.makeText(Activity_HomeScreen.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                            gethelp();
+                        }
+                    } else {
+                        //   progressDoalog.dismiss();
+                        DefaultResponse error = ErrorUtils.parseError(response);
+                        Log.e("devicedetailserror", error.getMsg());
+                        Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+                        gethelp();
+
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    Toast.makeText(Activity_HomeScreen.this, "error" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("response_error", t.getMessage().toString());
+                }
+            });
+
+        }
+    }
+
+    public void gethelp() {
+        internetDectector = new Class_InternetDectector(getApplicationContext());
+        isInternetPresent = internetDectector.isConnectingToInternet();
+
+        if (isInternetPresent) {
+            gethelp_api();
+            //getdemo();
+        }
+    }
+
+    private void gethelp_api() {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Fetching Helpdetails....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Call<Class_gethelp_Response> call = userService.GetHelp("12");
+
+
+        call.enqueue(new Callback<Class_gethelp_Response>() {
+            @Override
+            public void onResponse(Call<Class_gethelp_Response> call, Response<Class_gethelp_Response> response) {
+
+                // Toast.makeText(MainActivity.this, ""+response.toString(), Toast.LENGTH_SHORT).show();
+
+                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+                if (response.isSuccessful()) {
+                    DBCreate_Helpdetails();
+                    Class_gethelp_Response gethelp_response_obj = response.body();
+                    Log.e("response.body", response.body().getLst().toString());
+
+
+                    if (gethelp_response_obj.getStatus().equals(true)) {
+
+                        List<Class_gethelp_resplist> helplist = response.body().getLst();
+                        Log.e("length", String.valueOf(helplist.size()));
+                        int int_helpcount = helplist.size();
+
+                        for (int i = 0; i < int_helpcount; i++) {
+                            Log.e("title", helplist.get(i).getTitle().toString());
+
+                            String str_title = helplist.get(i).getTitle().toString();
+                            String str_content = helplist.get(i).getContent().toString();
+                            DBCreate_HelpDetails_insert_2sqliteDB(str_title, str_content);
+                        }
+
+
+                        // Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+                        progressDoalog.dismiss();
+
+                        getdemo();
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    public void getdemo() {
+        internetDectector = new Class_InternetDectector(getApplicationContext());
+        isInternetPresent = internetDectector.isConnectingToInternet();
+
+        if (isInternetPresent) {
+            getdemo_api();
+        }
+    }
+
+    private void getdemo_api() {
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Fetching Demodetails....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Call<Class_getdemo_Response> call = userService.GetDemo("12");//str_userid
+
+
+        call.enqueue(new Callback<Class_getdemo_Response>() {
+            @Override
+            public void onResponse(Call<Class_getdemo_Response> call, Response<Class_getdemo_Response> response) {
+                Log.e("response_gethelp", "response_gethelp: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+                if (response.isSuccessful()) {
+                    DBCreate_Demodetails();
+                    Class_getdemo_Response getdemo_response_obj = response.body();
+                    Log.e("response.body", response.body().getLst().toString());
+
+
+                    if (getdemo_response_obj.getStatus().equals(true)) {
+
+                        List<Class_getdemo_resplist> demolist = response.body().getLst();
+                        Log.e("length", String.valueOf(demolist.size()));
+                        int int_helpcount = demolist.size();
+
+                        for (int i = 0; i < int_helpcount; i++) {
+                            Log.e("language", demolist.get(i).getLanguage_Name().toString());
+
+                            String str_languagename = demolist.get(i).getLanguage_Name().toString();
+                            String str_languagelink = demolist.get(i).getLanguage_Link().toString();
+                            DBCreate_DemoDetails_insert_2sqliteDB(str_languagename, str_languagelink);
+                        }
+
+                        //Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+                        progressDoalog.dismiss();
+                    }
+                    // Log.e("response.body", response.body().size);
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    public void GetAutoSyncVersion() {
+        Log.e("Entered ", "GetAutoSyncVersion");
+
+//        Map<String,String> params = new HashMap<String, String>();
+//
+//        params.put("User_ID","90");// for dynamic
+        Log.e("GetAutoSyncVersion", " str_employee_id=" + str_employee_id);
+
+        retrofit2.Call call = userService1.getAutoSyncVersion("12");//str_employee_id
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setCancelable(false);
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+        call.enqueue(new Callback<AutoSyncVersion>() {
+            @Override
+            public void onResponse(Call<AutoSyncVersion> call, Response<AutoSyncVersion> response) {
+                Log.e("tag", "response AutoSyncVersion=" + response.toString());
+                Log.e("TAG", "response AutoSyncVersion: " + new Gson().toJson(response));
+                Log.e("response body", String.valueOf(response.body()));
+
+                if (response.isSuccessful()) {
+                    //  progressDoalog.dismiss();
+                    AutoSyncVersion class_loginresponse = response.body();
+                    Log.e("tag", "res==" + class_loginresponse.toString());
+                    VersionStatus = String.valueOf(class_loginresponse.getStatus());
+                    Log.e("tag", "res==" + VersionStatus);
+
+                    if (class_loginresponse.getStatus()) {
+
+                        List<AutoSyncVersionList> addFarmerResList = response.body().getListVersion();
+                        Log.e("tag", "getUserSync =" + addFarmerResList.get(0).getUserSync());
+                        Log.e("tag", "getUserID =" + addFarmerResList.get(0).getUserID());
+
+                        //  str_VersionStatus = String.valueOf(class_loginresponse.getStatus());
+                        alerts_dialog_AutoSyncVersion();
+                        progressDoalog.dismiss();
+
+                    } else {
+                        progressDoalog.dismiss();
+
+                        Log.e("tag", "class_loginresponse.getMessage() =" + class_loginresponse.getMessage());
+
+                        //  Toast.makeText(Activity_MarketingHomeScreen.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    progressDoalog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("autosync", "error message" + error.getMsg());
+
+                    // Toast.makeText(Activity_MarketingHomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:Error:" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    public void AddFarmerDetailsNew() {
+
+        Log.e("tag", "Location_Response2=" + class_location_dataList.getResponse());
+        //  Log.e("tag","UserData_Response2="+class_userDatalist.getResponse());
+        String locationData = null, userData = null;
+        if (class_location_dataList.getResponse() != null) {
+            if (class_location_dataList.getResponse().equalsIgnoreCase("Success")) {
+                locationData = "Success";
+            } else {
+                locationData = "Error";
+            }
+        }
+       /* if(class_userDatalist.getResponse()!=null) {
+
+            if (class_userDatalist.getResponse().equalsIgnoreCase("Success")) {
+                userData = "Success";
+            }
+            else{
+                userData = "Error";
+            }
+        }*/
+        Log.e("tag", "Location_Response3=" + locationData);
+        Log.e("tag", "UserData_Response3=" + userData);
+
+        String Sync_IDNew = shared_syncId.getString(SyncId, "");
+        Log.e("tag", "Sync_IDNew=" + Sync_IDNew);
+
+        sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
+        String Sync_IDNew1 = sharedpref_spinner_Obj.getString(Key_syncId, "").trim();
+        Log.e("tag", "Sync_IDNew1=" + Sync_IDNew1);
+
+        ValidateSyncRequest request = new ValidateSyncRequest();
+        request.setSyncID(Sync_IDNew);
+        request.setSyncVersion(versioncode);
+        request.setSyncStatus("Success");
+
+        Call<ValidateSyncResponse> call = userService1.Post_ValidateSync(request);
+
+        Log.e("TAG", "Post_ValidateSync Request: " + new Gson().toJson(call.request()));
+        Log.e("TAG", "Request Post_ValidateSync: " + request.toString());
+
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setCancelable(false);
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDoalog.show();
+
+        call.enqueue(new Callback<ValidateSyncResponse>() {
+            @Override
+            public void onResponse(Call<ValidateSyncResponse> call, Response<ValidateSyncResponse> response) {
+                Log.e("response", response.toString());
+                Log.e("TAG", "ValidateSyncResponse : " + new Gson().toJson(response));
+                Log.e("tag", "ValidateSyncResponse body" + String.valueOf(response.body()));
+                //   DefaultResponse error1 = ErrorUtils.parseError(response);
+                   /* Log.e("response new:",error1.getMsg());
+                    Log.e("response new status:", String.valueOf(error1.getstatus()));*/
+                // Log.e("response",Gson.fromJson(response.toString(),AddFarmer_Activity1.class));
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    ValidateSyncResponse class_loginresponse = response.body();
+                    Log.e("tag", "res==" + class_loginresponse.toString());
+                    Toast.makeText(Activity_HomeScreen.this, "Sync completed successfully", Toast.LENGTH_SHORT).show();
+
+                    if (class_loginresponse.getStatus().equals("true")) {
+
+                    } else if (class_loginresponse.getStatus().equals("false")) {
+                        //  progressDoalog.dismiss();
+                        Toast.makeText(Activity_HomeScreen.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    progressDoalog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.d("error message", error.getMsg());
+
+                    // Toast.makeText(Activity_ViewFarmers.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void alerts_dialog_playstoreupdate() {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_HomeScreen.this);
+        dialog.setCancelable(false);
+        dialog.setTitle(R.string.alert);
+        dialog.setMessage("Kindly update from playstore");
+
+        dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.det.skillinvillage"));
+                startActivity(intent);
+            }
+        });
+
+
+        final AlertDialog alert = dialog.create();
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
+            }
+        });
+        alert.show();
+
+    }
+
+    public  void alerts_dialog_AutoSyncVersion()
+    {
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_HomeScreen.this);
+        dialog.setCancelable(false);
+        dialog.setTitle(R.string.alert);
+        dialog.setMessage("Kindly Re-Sync your data");
+
+        dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+
+                if(VersionStatus.equalsIgnoreCase("true")){
+                    internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                    isInternetPresent = internetDectector2.isConnectingToInternet();
+                    if (isInternetPresent) {
+
+                        //GetDropdownValues();
+                        deleteStateRestTable_B4insertion();
+                        deleteDistrictRestTable_B4insertion();
+                        deleteTalukRestTable_B4insertion();
+                        deleteVillageRestTable_B4insertion();
+                        deleteYearRestTable_B4insertion();
+
+                        //   deleteStudentdetailsRestTable_B4insertion();
+                        deleteSchoolRestTable_B4insertion();
+                        deleteSandboxRestTable_B4insertion();
+                        deleteInstituteRestTable_B4insertion();
+                        deleteLevelRestTable_B4insertion();
+                        deleteClusterRestTable_B4insertion();
+
+
+                        GetDropdownValuesRestData();
+                        GetStudentValuesResyncRestData();
+
+                        String Sync_IDNew = shared_syncId.getString(SyncId, "");
+                        Log.e("tag","Sync_IDNew="+Sync_IDNew);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+
+                    internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                    isInternetPresent = internetDectector2.isConnectingToInternet();
+                    if (isInternetPresent) {
+                        CountCheckList();
+                        UserStudentDataCountCheckList();
+                        stateListRest_dbCount();
+
+                    }
+                }
+                /*if (isInternetPresent)
+                {
+
+                    //working
+                    //fetch_DB_farmerprofile_offline_data();
+
+                    *//* fetch_DB_edited_offline_data();*//*
+                    // fetch_DB_Edited_farmerprofile_offline_data();
+                }*/
+
+               /* Intent i = new Intent(Activity_HomeScreen.this, Activity_ViewFarmers.class);
+                i.putExtra("VersionStatus", String.valueOf(str_VersionStatus));
+                SharedPreferences.Editor myprefs_spinner = sharedpref_spinner_Obj.edit();
+                myprefs_spinner.putString(Key_sel_yearsp, "0");
+                myprefs_spinner.putString(Key_sel_statesp, "0");
+                myprefs_spinner.putString(Key_sel_districtsp, "0");
+                myprefs_spinner.putString(Key_sel_taluksp, "0");
+                myprefs_spinner.putString(Key_sel_villagesp, "0");
+                myprefs_spinner.putString(Key_sel_grampanchayatsp, "0");
+
+                myprefs_spinner.apply();
+                startActivity(i);*/
+            }
+        });
+
+
+        final AlertDialog alert = dialog.create();
+        alert.setOnShowListener( new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
+            }
+        });
+        alert.show();
+
+    }
+    ///////////////////////////////////SQLite DB///////////////////////////////////////////////
+
+    public void DBCreate_Helpdetails() {
+
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
+        Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
+        int x = cursor.getCount();
+        if (x > 0) {
+            db2.delete("HelpDetails_table", null, null);
+        }
+        db2.close();
+    }
+
+    public void DBCreate_HelpDetails_insert_2sqliteDB(String title, String content) {
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
+
+        ContentValues cv = new ContentValues();
+        cv.put("TitleDB", title);
+        cv.put("ContentDB", content);
+        db2.insert("HelpDetails_table", null, cv);
+        db2.close();
+
+        Log.e("insert", "DBCreate_HelpDetails_insert_2sqliteDB");
+
+    }
+
+    public void DBCreate_Demodetails() {
+
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
+        Cursor cursor = db2.rawQuery("SELECT * FROM DemoDetails_table", null);
+        int x = cursor.getCount();
+        if (x > 0) {
+            db2.delete("DemoDetails_table", null, null);
+        }
+        db2.close();
+    }
+
+    public void DBCreate_DemoDetails_insert_2sqliteDB(String str_languagename, String str_languagelink) {
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
+
+        ContentValues cv = new ContentValues();
+        cv.put("LanguageDB", str_languagename);
+        cv.put("LinkDB", str_languagelink);
+        db2.insert("DemoDetails_table", null, cv);
+        db2.close();
+
+        Log.e("insert", "DBCreate_DemoDetails_insert_2sqliteDB");
+
+    }
+
+    public void DBCreate_CountDetailsRest_insert_2SQLiteDB(String str_sCount, String str_dCount, String str_tCount, String str_vCount, String yearCount, String str_Sync_Id, String ClusterCount, String LevelCount, String InstituteCount, String SandboxCount, String SchoolCount) {
         SQLiteDatabase db_locationCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_locationCount.execSQL("CREATE TABLE IF NOT EXISTS LocationCountListRest(StateCount VARCHAR,DistrictCount VARCHAR,TalukaCount VARCHAR,VillageCount VARCHAR,YearCount VARCHAR,Sync_ID VARCHAR);");
+        db_locationCount.execSQL("CREATE TABLE IF NOT EXISTS LocationCountListRest(StateCount VARCHAR,DistrictCount VARCHAR,TalukaCount VARCHAR,VillageCount VARCHAR,YearCount VARCHAR,Sync_ID VARCHAR,ClusterCount VARCHAR,LevelCount VARCHAR,InstituteCount VARCHAR,SandboxCount VARCHAR,SchoolCount VARCHAR);");
 
-        String SQLiteQuery = "INSERT INTO LocationCountListRest (StateCount,DistrictCount,TalukaCount,VillageCount,YearCount,Sync_ID)" +
-                " VALUES ('" + str_sCount + "','" + str_dCount +"','"+ str_tCount +"','"+str_vCount + "','" + yearCount + "','" + str_Sync_Id +"');";
+        String SQLiteQuery = "INSERT INTO LocationCountListRest (StateCount,DistrictCount,TalukaCount,VillageCount,YearCount,Sync_ID,ClusterCount,LevelCount,InstituteCount,SandboxCount,SchoolCount)" +
+                " VALUES ('" + str_sCount + "','" + str_dCount + "','" + str_tCount + "','" + str_vCount + "','" + yearCount + "','" + str_Sync_Id + "','" + ClusterCount + "','" + LevelCount + "','" + InstituteCount + "','" + SandboxCount + "','" + SchoolCount + "');";
         db_locationCount.execSQL(SQLiteQuery);
 
         Log.e("str_sCount DB", str_sCount);
@@ -2071,10 +1968,11 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
 //        Log.e("str_Sync_Id DB", str_Sync_Id);
         db_locationCount.close();
     }
+
     public void delete_CountDetailsRestTable_B4insertion() {
 
         SQLiteDatabase db_locationCount = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_locationCount.execSQL("CREATE TABLE IF NOT EXISTS LocationCountListRest(StateCount VARCHAR,DistrictCount VARCHAR,TalukaCount VARCHAR,PanchayatCount VARCHAR,VillageCount VARCHAR,YearCount VARCHAR,MachineCount VARCHAR,MachineCostCount VARCHAR,Farmer_Count VARCHAR,Pond_Count VARCHAR,Sync_ID VARCHAR);");
+        db_locationCount.execSQL("CREATE TABLE IF NOT EXISTS LocationCountListRest(StateCount VARCHAR,DistrictCount VARCHAR,TalukaCount VARCHAR,VillageCount VARCHAR,YearCount VARCHAR,Sync_ID VARCHAR,ClusterCount VARCHAR,LevelCount VARCHAR,InstituteCount VARCHAR,SandboxCount VARCHAR,SchoolCount VARCHAR);");
         Cursor cursor = db_locationCount.rawQuery("SELECT * FROM LocationCountListRest", null);
         int x = cursor.getCount();
 
@@ -2083,6 +1981,33 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
 
         }
         db_locationCount.close();
+    }
+
+    public void DBCreate_StudDataCountListRest_insert_2SQLiteDB(String str_StudentCount) {
+        SQLiteDatabase db_userdataCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+
+        String SQLiteQuery = "INSERT INTO StudDataCountListRest (Student_Count)" +
+                " VALUES ('" + str_StudentCount + "');";
+        db_userdataCount.execSQL(SQLiteQuery);
+
+        Log.e("str_StudentCount DB", str_StudentCount);
+
+        db_userdataCount.close();
+    }
+
+    public void delete_StudDataCountListRestTable_B4insertion() {
+
+        SQLiteDatabase db_userdataCount = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+        Cursor cursor = db_userdataCount.rawQuery("SELECT * FROM StudDataCountListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_userdataCount.delete("StudDataCountListRest", null, null);
+
+        }
+        db_userdataCount.close();
     }
 
     public void DBCreate_StatedetailsRest_insert_2SQLiteDB(String str_stateID, String str_statename, String str_yearid, int i) {
@@ -2228,12 +2153,18 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         db_villagelist_delete.close();
     }
 
-    public void DBCreate_YeardetailsRest_insert_2SQLiteDB(String str_yearID, String str_yearname, int i) {
+    public void DBCreate_YeardetailsRest_insert_2SQLiteDB(String str_yearID, String str_yearname,String Sandbox_ID, int i) {
         SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR);");
+        db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
 
-        String SQLiteQuery = "INSERT INTO YearListRest (YearID, YearName)" +
-                " VALUES ('" + str_yearID + "','" + str_yearname + "');";
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO YearListRest (YearID, YearName,Sandbox_ID)" +
+                    " VALUES ('" + "0" + "','" + "Select"  + "','" + "0" + "');";
+            db_yearlist.execSQL(SQLiteQuery);
+        }
+
+        String SQLiteQuery = "INSERT INTO YearListRest (YearID, YearName,Sandbox_ID)" +
+                " VALUES ('" + str_yearID + "','" + str_yearname +"','" + Sandbox_ID+ "');";
         db_yearlist.execSQL(SQLiteQuery);
 
         Log.e("str_yearname DB", str_yearname);
@@ -2243,7 +2174,7 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
     public void deleteYearRestTable_B4insertion() {
 
         SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR);");
+        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
         Cursor cursor = db_yearlist_delete.rawQuery("SELECT * FROM YearListRest", null);
         int x = cursor.getCount();
 
@@ -2254,20 +2185,271 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         db_yearlist_delete.close();
     }
 
-    public void DBCreate_StudentdetailsRest_insert_2SQLiteDB(String AcademicID,String AcademicName,String AdmissionFee,String ApplicationNo,String BalanceFee,String BirthDate,String ClusterID,
-                                                             String ClusterName,String CreatedDate,String Education,String FatherName,String Gender,String InstituteName,String InstituteID,String LevelID,String LevelName,String Marks4,String Marks5,String Marks6,String Marks7,String Marks8,
-                                                             String Mobile,String MotherName,String PaidFee,String ReceiptNo,String SandboxID,String SandboxName,String SchoolID,String SchoolName,String StudentAadhar,String StudentID,String StudentName,String StudentPhoto,String StudentStatus, String str_base64image) {
+    public void DBCreate_ClusterdetailsRest_insert_2SQLiteDB(String ClusterName, String ClusterID, String Clust_AcademicID, String Clust_SandboxID, int i) {
+        SQLiteDatabase db_clusterlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_clusterlist.execSQL("CREATE TABLE IF NOT EXISTS ClusterListRest(ClusterName VARCHAR,ClusterID VARCHAR,Clust_AcademicID VARCHAR, Clust_SandboxID VARCHAR);");
+
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO ClusterListRest (ClusterName,ClusterID,Clust_AcademicID, Clust_SandboxID)" +
+                    " VALUES ('" + "Select" + "','" + "0" + "','" + "0" + "','" + "0" + "');";
+            db_clusterlist.execSQL(SQLiteQuery);
+        }
+//        else {
+//            String SQLiteQuery = "INSERT INTO ClusterListRest (ClusterName,ClusterID,Clust_AcademicID, Clust_SandboxID)" +
+//                    " VALUES ('" + ClusterName + "','" + ClusterID + "','" + Clust_AcademicID + "','" + Clust_SandboxID + "');";
+//            db_clusterlist.execSQL(SQLiteQuery);
+//        }
+
+        String SQLiteQuery = "INSERT INTO ClusterListRest (ClusterName,ClusterID,Clust_AcademicID, Clust_SandboxID)" +
+                " VALUES ('" + ClusterName + "','" + ClusterID + "','" + Clust_AcademicID + "','" + Clust_SandboxID + "');";
+        db_clusterlist.execSQL(SQLiteQuery);
+
+
+        Log.e("ClusterName DB", ClusterName);
+        db_clusterlist.close();
+    }
+
+    public void deleteClusterRestTable_B4insertion() {
+
+        SQLiteDatabase db_Clusterlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Clusterlist_delete.execSQL("CREATE TABLE IF NOT EXISTS ClusterListRest(ClusterName VARCHAR,ClusterID VARCHAR,Clust_AcademicID VARCHAR, Clust_SandboxID VARCHAR);");
+        Cursor cursor = db_Clusterlist_delete.rawQuery("SELECT * FROM ClusterListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Clusterlist_delete.delete("ClusterListRest", null, null);
+
+        }
+        db_Clusterlist_delete.close();
+    }
+
+    public void DBCreate_InstitutedetailsRest_insert_2SQLiteDB(String InstituteName, String InstituteID, String Inst_AcademicID, String Inst_ClusterID, int i) {
+        SQLiteDatabase db_Institutelist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Institutelist.execSQL("CREATE TABLE IF NOT EXISTS InstituteListRest(InstituteName VARCHAR, InstituteID VARCHAR,Inst_AcademicID VARCHAR,Inst_ClusterID VARCHAR);");
+
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO InstituteListRest (InstituteName, InstituteID, Inst_AcademicID,Inst_ClusterID)" +
+                    " VALUES ('" + "Select" + "','" + "0" + "','" + "0" + "','" + "0" + "');";
+            db_Institutelist.execSQL(SQLiteQuery);
+        }
+        //else {
+
+
+            String SQLiteQuery = "INSERT INTO InstituteListRest (InstituteName, InstituteID, Inst_AcademicID,Inst_ClusterID)" +
+                    " VALUES ('" + InstituteName + "','" + InstituteID + "','" + Inst_AcademicID + "','" + Inst_ClusterID + "');";
+            db_Institutelist.execSQL(SQLiteQuery);
+       // }
+        Log.e("InstituteName DB", InstituteName);
+        db_Institutelist.close();
+    }
+
+    public void deleteInstituteRestTable_B4insertion() {
+
+        SQLiteDatabase db_Institutelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Institutelist_delete.execSQL("CREATE TABLE IF NOT EXISTS InstituteListRest(InstituteName VARCHAR, InstituteID VARCHAR,Inst_AcademicID VARCHAR,Inst_ClusterID VARCHAR);");
+        Cursor cursor = db_Institutelist_delete.rawQuery("SELECT * FROM InstituteListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Institutelist_delete.delete("InstituteListRest", null, null);
+
+        }
+        db_Institutelist_delete.close();
+    }
+
+    public void DBCreate_LeveldetailsRest_insert_2SQLiteDB(String LevelName, String LevelID, String Level_InstituteID, String Level_AcademicID, String Level_ClusterID, String Level_AdmissionFee, int i) {
+        SQLiteDatabase db_Levellist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Levellist.execSQL("CREATE TABLE IF NOT EXISTS LevelListRest(LevelName VARCHAR, LevelID VARCHAR, Level_InstituteID VARCHAR,Level_AcademicID VARCHAR,Level_ClusterID VARCHAR,Level_AdmissionFee VARCHAR);");
+
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO LevelListRest (LevelName, LevelID, Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
+                    " VALUES ('" + "Select" + "','" + "0" + "','" + "0" + "','" + "0" + "','" + "0" + "','" + "0" + "');";
+            db_Levellist.execSQL(SQLiteQuery);
+        }
+
+        //else {
+            String SQLiteQuery = "INSERT INTO LevelListRest (LevelName, LevelID, Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
+                    " VALUES ('" + LevelName + "','" + LevelID + "','" + Level_InstituteID + "','" + Level_AcademicID + "','" + Level_ClusterID + "','" + Level_AdmissionFee + "');";
+            db_Levellist.execSQL(SQLiteQuery);
+       // }
+        Log.e("LevelName DB", LevelName);
+        db_Levellist.close();
+    }
+
+    public void deleteLevelRestTable_B4insertion() {
+
+        SQLiteDatabase db_Levellist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Levellist_delete.execSQL("CREATE TABLE IF NOT EXISTS LevelListRest(LevelName VARCHAR, LevelID VARCHAR, Level_InstituteID VARCHAR,Level_AcademicID VARCHAR,Level_ClusterID VARCHAR,Level_AdmissionFee VARCHAR);");
+        Cursor cursor = db_Levellist_delete.rawQuery("SELECT * FROM LevelListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Levellist_delete.delete("LevelListRest", null, null);
+
+        }
+        db_Levellist_delete.close();
+    }
+
+    public void DBCreate_AssementRest_insert_2SQLiteDB(String str_AssementID, String str_Assementname, int i) {
+        SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS AssementListRest(AssementID VARCHAR,AssementName VARCHAR);");
+
+        String SQLiteQuery = "INSERT INTO AssementListRest (AssementID, AssementName)" +
+                " VALUES ('" + str_AssementID + "','" + str_Assementname + "');";
+        db_yearlist.execSQL(SQLiteQuery);
+
+        // Log.e("str_Assementname DB", str_Assementname);
+        db_yearlist.close();
+    }
+    public void deleteAssementRestTable_B4insertion() {
+
+        SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS AssementListRest(AssementID VARCHAR,AssementName VARCHAR);");
+        Cursor cursor = db_yearlist_delete.rawQuery("SELECT * FROM AssementListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_yearlist_delete.delete("AssementListRest", null, null);
+
+        }
+        db_yearlist_delete.close();
+    }
+
+    public void DBCreate_LearningModeRest_insert_2SQLiteDB(String str_LearningModeID, String str_LearningModename, int i) {
+        SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS LearningModeListRest(LearningModeID VARCHAR,LearningModeName VARCHAR);");
+
+        String SQLiteQuery = "INSERT INTO LearningModeListRest (LearningModeID, LearningModeName)" +
+                " VALUES ('" + str_LearningModeID + "','" + str_LearningModename + "');";
+        db_yearlist.execSQL(SQLiteQuery);
+
+        Log.e("str_LearningModename DB", str_LearningModename);
+        db_yearlist.close();
+    }
+
+    public void deleteLearningModeRestTable_B4insertion() {
+
+        SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS LearningModeListRest(LearningModeID VARCHAR,LearningModeName VARCHAR);");
+        Cursor cursor = db_yearlist_delete.rawQuery("SELECT * FROM LearningModeListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_yearlist_delete.delete("LearningModeListRest", null, null);
+
+        }
+        db_yearlist_delete.close();
+    }
+    public void DBCreate_EducationRest_insert_2SQLiteDB(String str_EducationID, String str_Educationname, int i) {
+        SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS EducationListRest(EducationID VARCHAR,EducationName VARCHAR);");
+
+        String SQLiteQuery = "INSERT INTO EducationListRest (EducationID, EducationName)" +
+                " VALUES ('" + str_EducationID + "','" + str_Educationname + "');";
+        db_yearlist.execSQL(SQLiteQuery);
+
+        Log.e("str_Educationname DB", str_Educationname);
+        db_yearlist.close();
+    }
+
+    public void deleteEducationRestTable_B4insertion() {
+
+        SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS EducationListRest(EducationID VARCHAR,EducationName VARCHAR);");
+        Cursor cursor = db_yearlist_delete.rawQuery("SELECT * FROM EducationListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_yearlist_delete.delete("EducationListRest", null, null);
+
+        }
+        db_yearlist_delete.close();
+    }
+
+
+
+    public void DBCreate_SandboxdetailsRest_insert_2SQLiteDB(String SandboxName, String SandboxID, int i) {
+        SQLiteDatabase db_Sandboxlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Sandboxlist.execSQL("CREATE TABLE IF NOT EXISTS SandboxListRest(SandboxName VARCHAR,SandboxID VARCHAR);");
+
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO SandboxListRest (SandboxName, SandboxID)" +
+                    " VALUES ('" + "Select" + "','" + "0" + "');";
+            db_Sandboxlist.execSQL(SQLiteQuery);
+        }
+//        else {
+//            String SQLiteQuery = "INSERT INTO SandboxListRest (SandboxName, SandboxID)" +
+//                    " VALUES ('" + SandboxName + "','" + SandboxID + "');";
+//            db_Sandboxlist.execSQL(SQLiteQuery);
+//        }
+
+        String SQLiteQuery = "INSERT INTO SandboxListRest (SandboxName, SandboxID)" +
+                " VALUES ('" + SandboxName + "','" + SandboxID + "');";
+        db_Sandboxlist.execSQL(SQLiteQuery);
+
+        Log.e("SandboxName DB", SandboxName);
+        db_Sandboxlist.close();
+    }
+
+    public void deleteSandboxRestTable_B4insertion() {
+
+        SQLiteDatabase db_Sandboxlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Sandboxlist_delete.execSQL("CREATE TABLE IF NOT EXISTS SandboxListRest(SandboxName VARCHAR,SandboxID VARCHAR);");
+        Cursor cursor = db_Sandboxlist_delete.rawQuery("SELECT * FROM SandboxListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Sandboxlist_delete.delete("SandboxListRest", null, null);
+
+        }
+        db_Sandboxlist_delete.close();
+    }
+
+    public void DBCreate_SchooldetailsRest_insert_2SQLiteDB(String SchoolName, String SchoolID, String School_InstituteID, int i) {
+        SQLiteDatabase db_Schoollist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Schoollist.execSQL("CREATE TABLE IF NOT EXISTS SchoolListRest(SchoolName VARCHAR, SchoolID VARCHAR, School_InstituteID VARCHAR);");
+        if (i == 0) {
+            String SQLiteQuery = "INSERT INTO SchoolListRest (SchoolName, SchoolID, School_InstituteID)" +
+                    " VALUES ('" + "Select" + "','" + "0" + "','" + "0" + "');";
+            db_Schoollist.execSQL(SQLiteQuery);
+        }
+        //else {
+            String SQLiteQuery = "INSERT INTO SchoolListRest (SchoolName, SchoolID, School_InstituteID)" +
+                    " VALUES ('" + SchoolName + "','" + SchoolID + "','" + School_InstituteID + "');";
+            db_Schoollist.execSQL(SQLiteQuery);
+       // }
+        Log.e("SchoolName DB", SchoolName);
+        db_Schoollist.close();
+    }
+
+    public void deleteSchoolRestTable_B4insertion() {
+
+        SQLiteDatabase db_Schoollist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Schoollist_delete.execSQL("CREATE TABLE IF NOT EXISTS SchoolListRest(SchoolName VARCHAR, SchoolID VARCHAR, School_InstituteID VARCHAR);");
+        Cursor cursor = db_Schoollist_delete.rawQuery("SELECT * FROM SchoolListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Schoollist_delete.delete("SchoolListRest", null, null);
+
+        }
+        db_Schoollist_delete.close();
+    }
+
+    public void DBCreate_StudentdetailsRest_insert_2SQLiteDB(String AcademicID, String AcademicName, String AdmissionFee, String ApplicationNo, String BalanceFee, String BirthDate, String ClusterID,
+                                                             String ClusterName, String CreatedDate, String Education, String FatherName, String Gender, String InstituteName, String InstituteID, String LevelID, String LevelName, String Marks4, String Marks5, String Marks6, String Marks7, String Marks8,
+                                                             String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId,String str_online,String str_learningmode) {
         SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                 "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR);");
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
 
         String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID, AcademicName, AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID," +
                 "ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8," +
-                "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image)" +
-                " VALUES ('" + AcademicID+ "','" + AcademicName+ "','" +AdmissionFee+ "','" +ApplicationNo+ "','" +BalanceFee+ "','" +BirthDate+ "','" +ClusterID+ "','" +
-                ClusterName+ "','" +CreatedDate+ "','" +Education+ "','" +FatherName+ "','" +Gender+ "','" +InstituteName+ "','" +InstituteID+ "','" +LevelID+ "','" +LevelName+ "','" +Marks4+ "','" +Marks5+ "','" +Marks6+ "','" +Marks7+ "','" +Marks8+ "','" +
-                Mobile+ "','" +MotherName+ "','" +PaidFee+ "','" +ReceiptNo+ "','" +SandboxID+ "','" +SandboxName+ "','" +SchoolID+ "','" +SchoolName+ "','" +StudentAadhar+ "','" +StudentID+ "','" +StudentName+ "','" +StudentPhoto+ "','" +StudentStatus +"','" +str_base64image +"');";
+                "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode)" +
+                " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
+                ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
+                Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode +"');";
         db_studentDetails.execSQL(SQLiteQuery);
 
         //  Log.e("ApplicationNo DB", ApplicationNo);
@@ -2277,5 +2459,470 @@ public class Activity_HomeScreen extends AppCompatActivity implements GoogleApiC
         db_studentDetails.close();
     }
 
+    public void deleteStudentdetailsRestTable_B4insertion() {
+
+        SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR,AcademicName VARCHAR,AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
+                "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+        @SuppressLint("Recycle")
+        Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_studentDetails.delete("StudentDetailsRest", null, null);
+
+            Log.e("StudentDetailsRest","deleted table successfully");
+        }
+        db_studentDetails.close();
+        Log.e("deleted", "deleteStudentdetailsRestTable_B4insertion");
+
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public class OnlineView_Feedback extends AsyncTask<String, Void, Void> {
+        Context context;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            list_detaile();
+            //return HttpULRConnect.getData(url);
+            return null;
+        }
+
+        public OnlineView_Feedback(Context context1) {
+            context = context1;
+            //  dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
+        }
+
+        @Override
+        protected void onPostExecute(Void s) {
+            if (str_feedback.toString().equalsIgnoreCase("")|| str_feedback.toString().equalsIgnoreCase("anyType{}")  || str_feedback.toString().equalsIgnoreCase(null)) {
+                onlineview_iv.setVisibility(View.GONE);
+                Log.e("tag","API-Gone");
+                SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                editor.putString(FeedBack, "Gone");
+                editor.commit();
+            }else {
+                onlineview_iv.setVisibility(View.VISIBLE);
+                Log.e("tag","API-Visible");
+                SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                editor.putString(FeedBack, "Visible");
+                editor.commit();
+            }
+            //populateExpandableList();
+//            MyAdapter   adapter = new MyAdapter(mainmenulist, Onlineview_Navigation.this);
+//            expandableListView.setAdapter(adapter);
+
+        }
+
+    }
+
+    public void list_detaile() {
+        Vector<SoapObject> result1 = null;
+        String url ="http://mis.detedu.org:8089/SIVService.asmx?WSDL";
+        String METHOD_NAME = "LoadMobileMenu";
+        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadMobileMenu";
+
+        try {
+            int userid = Integer.parseInt(str_loginuserID);
+            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
+            request.addProperty("User_ID", userid);//userid
+
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            //Set output SOAP object
+            envelope.setOutputSoapObject(request);
+            //Create HTTP call object
+            HttpTransportSE androidHttpTransport = new HttpTransportSE(url);
+
+            try {
+
+                androidHttpTransport.call(SOAPACTION, envelope);
+
+                SoapObject response = (SoapObject) envelope.getResponse();
+
+                Log.i("value at response", response.toString());
+                if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
+                    str_feedback="";
+                }
+                /*if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
+                    onlineview_iv.setVisibility(View.GONE);
+                    Log.e("tag","API-Gone");
+                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                    editor.putString(FeedBack, "Gone");
+                    editor.commit();
+                }else {
+                    onlineview_iv.setVisibility(View.VISIBLE);
+                    Log.e("tag","API-Visible");
+                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                    editor.putString(FeedBack, "Visible");
+                    editor.commit();
+                }*/
+
+            }catch(Throwable t){
+                Log.e("requestload fail", "> " + t.getMessage());
+            }
+
+        } catch (Throwable t) {
+            Log.e("UnRegisterload  Error", "> " + t.getMessage());
+
+        }
+
+
+    }//End of leaveDetail method
+
+    public void GetStudentValuesResyncRestData() {
+
+        Call<Student> call = userService1.getStudentDataReSync(str_employee_id);
+        //  Call<Location_Data> call = userService1.getLocationData("90");
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+        call.enqueue(new Callback<Student>() {
+            @Override
+            public void onResponse(Call<Student> call, Response<Student> response) {
+                Log.e("Entered resp", response.message());
+                //     Log.e("Entered resp", response.body().getMessage());
+                AddStudentDetailsNew();
+                if (response.isSuccessful())
+                {
+                    Student class_studentData = response.body();
+                    Log.e("response.body", response.body().getLstCount1().toString());
+                    if (class_studentData.getStatus().equals(true)) {
+                        List<StudCountList> studentcountLists = response.body().getLstCount1();
+                        Log.e("tag","studentlist.size()="+ String.valueOf(studentcountLists.size()));
+
+                        studCountLists = new StudCountList[studentcountLists.size()];
+                        for (int i1 = 0; i1 < studCountLists.length; i1++) {
+
+
+                            // Toast.makeText(getContext(), "" + class_monthCounts.getMessage(), Toast.LENGTH_SHORT).show();
+                            class_studCountLists.setCount(class_studentData.getLstCount1().get(i1).getCount());
+                            class_studCountLists.setStudents(class_studentData.getLstCount1().get(i1).getStudents());
+                            class_studCountLists.setResponse(class_studentData.getLstCount1().get(i1).getResponse());
+                            int sizeCount = 0;
+                            if (class_studentData.getLstCount1().get(i1).getCount() != null) {
+                                sizeCount = class_studentData.getLstCount1().get(i1).getCount().size();
+                            }
+                            for (int j = 0; j < sizeCount; j++) {
+                                String Student_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getStudentCount();
+                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count);
+                            }
+                            int sizeStudList = 0;
+                            if (class_studentData.getLstCount1().get(i1).getStudents() != null) {
+                                sizeStudList = class_studentData.getLstCount1().get(i1).getStudents().size();
+                            }
+                            for (int i = 0; i < sizeStudList; i++) {
+
+
+                                Log.e("status", String.valueOf(class_StudentList.getStudentStatus()));
+                           /* Log.e("msg", class_loginresponse.getMessage());
+                            Log.e("list", class_loginresponse.getList().get(i).getId());
+                            Log.e("list", class_loginresponse.getList().get(i).getProgramCode());
+                            Log.e("size", String.valueOf(class_loginresponse.getList().size()));*/
+
+                                String AcademicID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicID());
+                                String AcademicName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicName();
+                                String AdmissionFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAdmissionFee();
+                                String ApplicationNo = class_studentData.getLstCount1().get(i1).getStudents().get(i).getApplicationNo();
+                                String BalanceFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getBalanceFee();
+                                String BirthDate = class_studentData.getLstCount1().get(i1).getStudents().get(i).getBirthDate();
+                                String ClusterID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getClusterID());
+                                String ClusterName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getClusterName();
+                                String CreatedDate = class_studentData.getLstCount1().get(i1).getStudents().get(i).getCreatedDate();
+                                String Education = class_studentData.getLstCount1().get(i1).getStudents().get(i).getEducation();
+                                String FatherName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getFatherName();
+                                String Gender = class_studentData.getLstCount1().get(i1).getStudents().get(i).getGender();
+                                String InstituteName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getInstituteName();
+                                String InstituteID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getInstituteID());
+                                String LevelID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getLevelID());
+                                String LevelName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLevelName();
+                                String Marks4 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks4();
+                                String Marks5 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks5();
+                                String Marks6 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks6();
+                                String Marks7 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks7();
+                                String Marks8 = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMarks8();
+                                String Mobile = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMobile();
+                                String MotherName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getMotherName();
+                                String PaidFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getPaidFee();
+                                String ReceiptNo = class_studentData.getLstCount1().get(i1).getStudents().get(i).getReceiptNo();
+                                String SandboxID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getSandboxID());
+                                String SandboxName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getSandboxName();
+                                String SchoolID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getSchoolID());
+                                String SchoolName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getSchoolName();
+                                String StudentAadhar = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentAadhar();
+                                String StudentID = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentID();
+                                String StudentName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentName();
+                                String StudentPhoto = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentPhoto();
+                                String StudentStatus = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentStatus();
+                                String Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                                String Learning_Mode = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLearningMode();
+
+                                Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "AcademicName=" + AcademicName);
+
+                                String str_imageurl = StudentPhoto;
+                                Log.e("tag", "str_imageurl==" + str_imageurl);
+                                String str_base64image = null;
+                                if (str_imageurl == null || str_imageurl.equals("") || str_imageurl.equals("0")) {
+                                } else {
+                                    //  str_imageurl=class_farmerlistdetails_arrayobj2[i].getFarmerPhoto();
+
+                                    String str_farmpondimageurl = str_imageurl;
+
+                                    InputStream inputstream_obj = null;
+                                    try {
+                                        if (android.os.Build.VERSION.SDK_INT > 9) {
+                                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                                            StrictMode.setThreadPolicy(policy);
+                                            inputstream_obj = new URL(str_farmpondimageurl).openStream();
+
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Bitmap mIcon12 = BitmapFactory.decodeStream(inputstream_obj);
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    mIcon12.compress(Bitmap.CompressFormat.PNG, 60, baos);
+                                    byte[] b = baos.toByteArray();
+                                    str_base64image = Base64.encodeToString(b, Base64.DEFAULT);
+
+                                    Log.e("tag", "byteArray img=" + b);
+
+                                    //  str_base64image1 = str_base64image;
+                                }
+
+                                DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(AcademicID,AcademicName,AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,str_base64image,Stud_TempId,"online",Learning_Mode);
+
+
+                            }
+                        }
+                        /*uploadfromDB_Yearlist();
+                        uploadfromDB_Statelist();
+                        uploadfromDB_Districtlist();
+                        uploadfromDB_Taluklist();
+                        uploadfromDB_Villagelist();
+                        uploadfromDB_Grampanchayatlist();*/
+                    } else {
+                        Toast.makeText(Activity_HomeScreen.this, class_studentData.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                    progressDoalog.dismiss();
+                    Log.e("tag","working");
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("error message", error.getMsg());
+
+                    Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+                Log.e("tag",t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
+    private void AddStudentDetailsNew() {
+
+        Log.e("tag","Location_Response2="+class_location_dataList.getResponse());
+        //  Log.e("tag","UserData_Response2="+class_userDatalist.getResponse());
+        String locationData = null,userData = null;
+        if(class_location_dataList.getResponse()!=null) {
+            if (class_location_dataList.getResponse().equalsIgnoreCase("Success")) {
+                locationData = "Success";
+            }else{
+                locationData = "Error";
+            }
+        }
+        if(class_studCountLists.getResponse()!=null) {
+
+            if (class_studCountLists.getResponse().equalsIgnoreCase("Success")) {
+                userData = "Success";
+            }
+            else{
+                userData = "Error";
+            }
+        }
+        Log.e("tag","Location_Response3="+locationData);
+        Log.e("tag","UserData_Response3="+userData);
+
+        String Sync_IDNew = shared_syncId.getString(SyncId, "");
+        Log.e("tag","Sync_IDNew="+Sync_IDNew);
+
+        sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
+        String Sync_IDNew1 = sharedpref_spinner_Obj.getString(Key_syncId, "").trim();
+        Log.e("tag","Sync_IDNew1="+Sync_IDNew1);
+
+        ValidateSyncRequest request = new ValidateSyncRequest();
+        request.setSyncID(Sync_IDNew);
+        request.setSyncVersion(versioncode);
+        request.setSyncStatus("Success");
+        /*request.setSyncID("1129");
+        request.setSyncVersion("8");
+        request.setSyncStatus("Success");*/
+        Log.e("tag","Sync_ID="+Sync_IDNew+"versioncode="+versioncode+"SyncStatus=Success");
+        Call<ValidateSyncResponse> call = userService1.Post_ValidateSync(request);
+
+        Log.e("TAG", "Post_ValidateSync Request: " + new Gson().toJson(call.request()));
+        Log.e("TAG", "Request Post_ValidateSync: " + request.toString());
+
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(Activity_HomeScreen.this);
+        progressDialog.setMessage("Loading....");
+        progressDialog.setTitle("Please wait....");
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+
+        call.enqueue(new Callback<ValidateSyncResponse>() {
+            @Override
+            public void onResponse(Call<ValidateSyncResponse> call, Response<ValidateSyncResponse> response) {
+                Log.e("response", response.toString());
+                Log.e("TAG", "ValidateSyncResponse : " + new Gson().toJson(response));
+                Log.e("tag","ValidateSyncResponse body"+ String.valueOf(response.body()));
+                //   DefaultResponse error1 = ErrorUtils.parseError(response);
+                   /* Log.e("response new:",error1.getMsg());
+                    Log.e("response new status:", String.valueOf(error1.getstatus()));*/
+                // Log.e("response",Gson.fromJson(response.toString(),AddFarmer_Activity1.class));
+
+                if (response.isSuccessful()) {
+                    progressDialog.dismiss();
+                    ValidateSyncResponse class_loginresponse = response.body();
+                    Log.e("tag", "res==" + class_loginresponse.toString());
+                    Toast.makeText(Activity_HomeScreen.this, "Sync completed successfully", Toast.LENGTH_SHORT).show();
+
+                    if (class_loginresponse.getStatus().equals("true")) {
+
+                    } else if (class_loginresponse.getStatus().equals("false")) {
+                        //  progressDoalog.dismiss();
+                        //       Toast.makeText(Activity_HomeScreen.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+                } else {
+                    progressDialog.dismiss();
+
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.d("error message", error.getMsg());
+
+                    // Toast.makeText(Activity_ViewFarmers.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Log.e("TAG", "onFailure: " + t.toString());
+
+                Log.e("tag", "Error:" + t.getMessage());
+                //    Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+    }
+
+    public void DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(String AcademicID,String AcademicName,String AdmissionFee,String ApplicationNo,String BalanceFee,String BirthDate,String ClusterID,
+                                                                   String ClusterName,String CreatedDate,String Education,String FatherName,String Gender,String InstituteName,String InstituteID,String LevelID,String LevelName,String Marks4,String Marks5,String Marks6,String Marks7,String Marks8,
+                                                                   String Mobile,String MotherName,String PaidFee,String ReceiptNo,String SandboxID,String SandboxName,String SchoolID,String SchoolName,String StudentAadhar,String StudentID,String StudentName,String StudentPhoto,String StudentStatus, String str_base64image, String Stud_TempId,String str_online_offline,String Learning_Mode) {
+        SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+
+        @SuppressLint("Recycle")
+        Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='" + StudentID + "'", null);
+        int x = cursor.getCount();
+
+        if(x>0) {
+            db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
+                    "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+
+            ContentValues cv_studentlistupdate = new ContentValues();
+            cv_studentlistupdate.put("AcademicID", AcademicID);
+            cv_studentlistupdate.put("AcademicName", AcademicName);
+            cv_studentlistupdate.put("AdmissionFee", AdmissionFee);
+            cv_studentlistupdate.put("ApplicationNo", ApplicationNo);
+            cv_studentlistupdate.put("BalanceFee", BalanceFee);
+            cv_studentlistupdate.put("BirthDate", BirthDate);
+            cv_studentlistupdate.put("ClusterID", ClusterID);
+            cv_studentlistupdate.put("ClusterName", ClusterName);
+            cv_studentlistupdate.put("CreatedDate", CreatedDate);
+            cv_studentlistupdate.put("Education", Education);
+            cv_studentlistupdate.put("FatherName", FatherName);
+            cv_studentlistupdate.put("Gender", Gender);
+            cv_studentlistupdate.put("InstituteName", InstituteName);
+            cv_studentlistupdate.put("InstituteID", InstituteID);
+            cv_studentlistupdate.put("LevelID", LevelID);
+            cv_studentlistupdate.put("LevelName", LevelName);
+            cv_studentlistupdate.put("Marks4", Marks4);
+            cv_studentlistupdate.put("Marks5", Marks5);
+            cv_studentlistupdate.put("Marks6", Marks6);
+            cv_studentlistupdate.put("Marks7", Marks7);
+            cv_studentlistupdate.put("Marks8", Marks8);
+            cv_studentlistupdate.put("Mobile", Mobile);
+            cv_studentlistupdate.put("MotherName", MotherName);
+            cv_studentlistupdate.put("PaidFee", PaidFee);
+            cv_studentlistupdate.put("ReceiptNo", ReceiptNo);
+            cv_studentlistupdate.put("SandboxID", SandboxID);
+            cv_studentlistupdate.put("SandboxName", SandboxName);
+            cv_studentlistupdate.put("SchoolID", SchoolID);
+            cv_studentlistupdate.put("StudentAadhar", StudentAadhar);
+            cv_studentlistupdate.put("StudentName", StudentName);
+            cv_studentlistupdate.put("StudentPhoto", StudentPhoto);
+            cv_studentlistupdate.put("StudentStatus", StudentStatus);
+            cv_studentlistupdate.put("Base64image", str_base64image);
+            cv_studentlistupdate.put("Stud_TempId", Stud_TempId);
+            cv_studentlistupdate.put("UpadateOff_Online",str_online_offline);
+            cv_studentlistupdate.put("Learning_Mode",Learning_Mode);
+
+            db_studentDetails.update("StudentDetailsRest", cv_studentlistupdate, "StudentID = ?", new String[]{StudentID});
+            db_studentDetails.close();
+        }else {
+            db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
+                    "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR);");
+
+            String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID, AcademicName, AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID," +
+                    "ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8," +
+                    "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode)" +
+                    " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
+                    ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
+                    Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode+"');";
+            db_studentDetails.execSQL(SQLiteQuery);
+
+            //  Log.e("ApplicationNo DB", ApplicationNo);
+            Log.e("StudentName DB", StudentName);
+            Log.e("SandboxName DB", SandboxName);
+
+            db_studentDetails.close();
+        }
+    }
+
+
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
 
 }

@@ -1,4 +1,7 @@
 package com.det.skillinvillage.remote;
+import com.det.skillinvillage.model.AddStudentDetailsRequest;
+import com.det.skillinvillage.model.AddStudentDetailsResponse;
+import com.det.skillinvillage.model.AutoSyncVersion;
 import com.det.skillinvillage.model.Class_AssessmentData;
 import com.det.skillinvillage.model.Class_Get_User_DocumentResponse;
 import com.det.skillinvillage.model.Class_PostUpdateStudentAssessmentRequest;
@@ -17,6 +20,8 @@ import com.det.skillinvillage.model.GetAppVersion;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.NormalLogin_Response;
 import com.det.skillinvillage.model.Student;
+import com.det.skillinvillage.model.ValidateSyncRequest;
+import com.det.skillinvillage.model.ValidateSyncResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -113,6 +118,25 @@ public interface Interface_userservice {
     @Headers("Content-Type: application/json;charset=utf-8")
     @GET("Authentication/Get_User_Data")
     Call<Student> getStudentData(@Query("User_ID") String User_ID);
+
+
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_ValidateSync")
+    Call<ValidateSyncResponse> Post_ValidateSync(@Body ValidateSyncRequest request);
+
+    @GET("Authentication/Get_Sync_Version")
+    Call<AutoSyncVersion> getAutoSyncVersion(@Query("User_ID") String User_ID);
+
+    @Headers("Content-Type: application/json")
+    @GET("Authentication/Get_User_Data_Sync")
+    Call<Student> getStudentDataReSync(@Query("User_ID") String User_ID);
+
+
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_ActionStudent")
+    Call<AddStudentDetailsResponse> Post_ActionStudent(@Body AddStudentDetailsRequest request);
 
 }
 
