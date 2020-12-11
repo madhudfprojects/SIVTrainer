@@ -152,7 +152,51 @@ public class StudentList {
     private String address;
 
 
-    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName,String stu_id) {
+//    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName,String stu_id) {
+//
+//        this.academicID = Integer.valueOf(academicID);
+//        this.academicName=academicName;
+//        this.admissionFee=admissionFee;
+//        this.applicationNo=applicationNo;
+//        this.balanceFee=balanceFee;
+//        this.birthDate=birthDate;
+//        this.clusterID= Integer.valueOf(clusterID);
+//        this.clusterName=clusterName;
+//        this.createdDate=createdDate;
+//        this.education=education;
+//        this.fatherName=fatherName;
+//        this.gender=gender;
+//        this.instituteName=instituteName;
+//        this.instituteID= Integer.valueOf(instituteID);
+//        this.levelID= Integer.valueOf(levelID);
+//        this.levelName=levelName;
+//        this.marks4=marks4;
+//        this.marks5=marks5;
+//        this.marks6=marks6;
+//        this.marks7=marks7;
+//        this.marks8=marks8;
+//        this.motherName=motherName;
+//
+//        this.paidFee=paidFee;
+//        this.receiptNo=receiptNo;
+//        this.sandboxID=sandboxID;
+//        this.sandboxName=sandboxName;
+//        this.schoolID=schoolID;
+//        this.schoolName=schoolName;
+//        this.studentAadhar=studentAadhar;
+//        this.studentPhoto=studentPhoto;
+//        this.studentStatus=studentStatus;
+//        this.studentName=studentName;
+//        this.studentID= stu_id;
+//
+//
+//    }
+
+    public StudentList() {
+
+    }
+
+    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName, String studentID, String learning_mode, String stateid, String statename, String districtid, String districtname, String talukid, String talukname, String villageid, String villagename, String student_address) {
 
         this.academicID = Integer.valueOf(academicID);
         this.academicName=academicName;
@@ -187,12 +231,24 @@ public class StudentList {
         this.studentPhoto=studentPhoto;
         this.studentStatus=studentStatus;
         this.studentName=studentName;
-        this.studentID= stu_id;
+        this.studentID= studentID;
 
 
-    }
 
-    public StudentList() {
+        this.learningMode= learning_mode;
+        this.State_ID= stateid;
+        this.State_Name= statename;
+        this.District_ID= districtid;
+        this.District_Name= districtname;
+        this.Taluk_ID= talukid;
+        this.Taluk_Name= talukname;
+        this.Village_ID= villageid;
+        this.Village_Name= villagename;
+        this.address= student_address;
+
+
+
+
 
     }
 

@@ -1010,7 +1010,21 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                         cursor1.getString(cursor1.getColumnIndex("StudentPhoto")),
                         cursor1.getString(cursor1.getColumnIndex("StudentStatus")),
                         cursor1.getString(cursor1.getColumnIndex("StudentName")),
-                        cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                        cursor1.getString(cursor1.getColumnIndex("StudentID")),
+
+                        cursor1.getString(cursor1.getColumnIndex("Learning_Mode")),
+                        cursor1.getString(cursor1.getColumnIndex("stateid")),
+                        cursor1.getString(cursor1.getColumnIndex("statename")),
+                        cursor1.getString(cursor1.getColumnIndex("districtid")),
+                        cursor1.getString(cursor1.getColumnIndex("districtname")),
+                        cursor1.getString(cursor1.getColumnIndex("talukid")),
+                        cursor1.getString(cursor1.getColumnIndex("talukname")),
+                        cursor1.getString(cursor1.getColumnIndex("villageid")),
+                        cursor1.getString(cursor1.getColumnIndex("villagename")),
+                        cursor1.getString(cursor1.getColumnIndex("student_address"))
+
+
+                );
 
 
                 //farmer_image
@@ -1186,7 +1200,22 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                         cursor1.getString(cursor1.getColumnIndex("StudentAadhar")),
                         cursor1.getString(cursor1.getColumnIndex("StudentPhoto")),
                         cursor1.getString(cursor1.getColumnIndex("StudentStatus")),
-                        cursor1.getString(cursor1.getColumnIndex("StudentName")),cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                        cursor1.getString(cursor1.getColumnIndex("StudentName")),
+                        cursor1.getString(cursor1.getColumnIndex("StudentID")),
+
+                        cursor1.getString(cursor1.getColumnIndex("Learning_Mode")),
+                        cursor1.getString(cursor1.getColumnIndex("stateid")),
+                        cursor1.getString(cursor1.getColumnIndex("statename")),
+                        cursor1.getString(cursor1.getColumnIndex("districtid")),
+                        cursor1.getString(cursor1.getColumnIndex("districtname")),
+                        cursor1.getString(cursor1.getColumnIndex("talukid")),
+                        cursor1.getString(cursor1.getColumnIndex("talukname")),
+                        cursor1.getString(cursor1.getColumnIndex("villageid")),
+                        cursor1.getString(cursor1.getColumnIndex("villagename")),
+                        cursor1.getString(cursor1.getColumnIndex("student_address"))
+
+
+                );
 
 
                 //farmer_image
@@ -1370,10 +1399,23 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                         cursor1.getString(cursor1.getColumnIndex("StudentPhoto")),
                         cursor1.getString(cursor1.getColumnIndex("StudentStatus")),
                         cursor1.getString(cursor1.getColumnIndex("StudentName")),
-                        cursor1.getString(cursor1.getColumnIndex("StudentID")));
+                        cursor1.getString(cursor1.getColumnIndex("StudentID")),
+
+                        cursor1.getString(cursor1.getColumnIndex("Learning_Mode")),
+                        cursor1.getString(cursor1.getColumnIndex("stateid")),
+                        cursor1.getString(cursor1.getColumnIndex("statename")),
+                        cursor1.getString(cursor1.getColumnIndex("districtid")),
+                        cursor1.getString(cursor1.getColumnIndex("districtname")),
+                        cursor1.getString(cursor1.getColumnIndex("talukid")),
+                        cursor1.getString(cursor1.getColumnIndex("talukname")),
+                        cursor1.getString(cursor1.getColumnIndex("villageid")),
+                        cursor1.getString(cursor1.getColumnIndex("villagename")),
+                        cursor1.getString(cursor1.getColumnIndex("student_address"))
 
 
-                //farmer_image
+                );
+
+
 
 
                 ViewStudentList_arraylist.add(item);
@@ -1421,7 +1463,6 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
     public static class ViewHolder {
 
 
-        public ImageView farmerimage_iv;
         ///////////////////////sept16th2019
         TextView FarmerNamelabel_tv;
         TextView FarmerName_tv;
@@ -1429,6 +1470,7 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
         TextView farmercode_tv;
         Button farmpond_bt;
 
+        ImageView fees_payment_IV;
         ///////////////////////sept16th2019
 
     }
@@ -1482,7 +1524,7 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
               //  holder.FarmerIDlabel_tv = (TextView) convertView.findViewById(R.id.FarmerIDlabel_tv);
                 holder.farmercode_tv = (TextView) convertView.findViewById(R.id.Applno_tv);
                 holder.farmpond_bt = (Button) convertView.findViewById(R.id.farmpond_bt);
-                holder.farmerimage_iv = (ImageView) convertView.findViewById(R.id.farmerimage_iv);
+                holder.fees_payment_IV = (ImageView) convertView.findViewById(R.id.fees_payment_IV);
 
 
                 // holder.status_tv=(TextView)convertView.findViewById(R.id.status_tv);
@@ -1498,6 +1540,16 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                     String FullName = Obj_Class_farmerlistdetails.getStudentName();
                     holder.FarmerName_tv.setText(FullName);
                     holder.farmercode_tv.setText(Obj_Class_farmerlistdetails.getApplicationNo());
+
+                    holder.fees_payment_IV.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i=new Intent(Activity_ViewStudentList_new.this,Activity_FeesPayment.class);
+                            startActivity(i);
+                            finish();
+
+                        }
+                    });
 
                 }
 

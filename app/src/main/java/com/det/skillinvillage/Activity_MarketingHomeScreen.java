@@ -434,13 +434,13 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setEducation(class_farmerprofileoffline_array_obj[j].getEducation());
 
         request.setState_ID(class_farmerprofileoffline_array_obj[j].getState_ID());
-        request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
+       // request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
         request.setDistrict_ID(class_farmerprofileoffline_array_obj[j].getDistrict_ID());
-        request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
+       // request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
         request.setTaluk_ID(class_farmerprofileoffline_array_obj[j].getTaluk_ID());
-        request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
+      //  request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
         request.setVillage_ID(class_farmerprofileoffline_array_obj[j].getVillage_ID());
-        request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
+       // request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
         request.setAddress(class_farmerprofileoffline_array_obj[j].getAddress());
 
         if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){
@@ -701,13 +701,13 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
 
         request.setState_ID(class_farmerprofileoffline_array_obj[j].getState_ID());
-        request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
+       // request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
         request.setDistrict_ID(class_farmerprofileoffline_array_obj[j].getDistrict_ID());
-        request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
+        //request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
         request.setTaluk_ID(class_farmerprofileoffline_array_obj[j].getTaluk_ID());
-        request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
+       // request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
         request.setVillage_ID(class_farmerprofileoffline_array_obj[j].getVillage_ID());
-        request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
+       // request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
         request.setAddress(class_farmerprofileoffline_array_obj[j].getAddress());
 
         if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){

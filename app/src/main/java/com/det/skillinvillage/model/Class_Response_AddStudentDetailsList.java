@@ -81,6 +81,55 @@ public class Class_Response_AddStudentDetailsList {
     @Expose
     private Object Temp_ID;
 
+
+    @SerializedName("State_ID")
+    @Expose
+    private String State_ID;
+
+    @SerializedName("District_ID")
+    @Expose
+    private String District_ID;
+
+    @SerializedName("Taluk_ID")
+    @Expose
+    private String Taluk_ID;
+
+    @SerializedName("Village_ID")
+    @Expose
+    private String Village_ID;
+
+    public String getState_ID() {
+        return State_ID;
+    }
+
+    public void setState_ID(String state_ID) {
+        State_ID = state_ID;
+    }
+
+    public String getDistrict_ID() {
+        return District_ID;
+    }
+
+    public void setDistrict_ID(String district_ID) {
+        District_ID = district_ID;
+    }
+
+    public String getTaluk_ID() {
+        return Taluk_ID;
+    }
+
+    public void setTaluk_ID(String taluk_ID) {
+        Taluk_ID = taluk_ID;
+    }
+
+    public String getVillage_ID() {
+        return Village_ID;
+    }
+
+    public void setVillage_ID(String village_ID) {
+        Village_ID = village_ID;
+    }
+
     public Object getTemp_ID() {
         return Temp_ID;
     }

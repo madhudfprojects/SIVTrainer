@@ -2098,12 +2098,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
 
         if (i == 0) {
-            String SQLiteQuery = "INSERT INTO TalukListRest (TalukID, TalukName,Taluk_districtid)" +
+            String SQLiteQuery = "INSERT INTO TalukListRest (TalukID,TalukName,Taluk_districtid)" +
                     " VALUES ('" + "0" + "','" + "Select" + "','" + "0" + "');";
             db_taluklist.execSQL(SQLiteQuery);
         }
 
-        String SQLiteQuery = "INSERT INTO TalukListRest (TalukID, TalukName,Taluk_districtid)" +
+        String SQLiteQuery = "INSERT INTO TalukListRest (TalukID,TalukName,Taluk_districtid)" +
                 " VALUES ('" + str_talukID + "','" + str_talukname + "','" + str_districtid + "');";
         db_taluklist.execSQL(SQLiteQuery);
 

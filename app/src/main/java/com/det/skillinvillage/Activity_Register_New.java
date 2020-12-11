@@ -1946,6 +1946,13 @@ public class Activity_Register_New extends AppCompatActivity {
 
         try {
 
+            Log.e("inserting..stateid",sp_strstate_ID);
+            Log.e("inserting..stateName",selected_stateName);
+            Log.e("inserting..distid",sp_strdistrict_ID);
+            Log.e("inserting..DIST",selected_district);
+            Log.e("inserting..TALUKid",sp_strTaluk_ID);
+            Log.e("inserting..villageid",sp_strVillage_ID);
+
         String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID,AcademicName,AdmissionFee," +
                 "ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus, Base64image, Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
                 " VALUES ('" + sp_straca_ID + "','" + selected_academicname + "','" + admissionfee_et.getText().toString() + "','" + "" + "','" + "0" + "','"+ yyyyMMdd_birthdate + "','" + sp_strClust_ID + "'," +
@@ -1993,7 +2000,7 @@ public class Activity_Register_New extends AppCompatActivity {
         Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId='"+ str_tempid  + "'", null);
 
         int x = cursor1.getCount();
-        Log.e("addnew_studentcount", String.valueOf(x));
+        Log.e("FETCH_studentcount", String.valueOf(x));
 
 
         int i = 0;
@@ -2104,13 +2111,13 @@ public class Activity_Register_New extends AppCompatActivity {
         request.setEducation(class_farmerprofileoffline_array_obj[j].getEducation());
 
         request.setState_ID(class_farmerprofileoffline_array_obj[j].getState_ID());
-        request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
+       // request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
         request.setDistrict_ID(class_farmerprofileoffline_array_obj[j].getDistrict_ID());
-        request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
+        //request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
         request.setTaluk_ID(class_farmerprofileoffline_array_obj[j].getTaluk_ID());
-        request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
+        //request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
         request.setVillage_ID(class_farmerprofileoffline_array_obj[j].getVillage_ID());
-        request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
+       // request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
         request.setAddress(class_farmerprofileoffline_array_obj[j].getAddress());
 
         if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){

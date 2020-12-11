@@ -17,6 +17,7 @@ import com.det.skillinvillage.model.Class_getdemo_Response;
 import com.det.skillinvillage.model.Class_gethelp_Response;
 import com.det.skillinvillage.model.Class_getuserlist;
 import com.det.skillinvillage.model.GetAppVersion;
+import com.det.skillinvillage.model.GetStudentPaymentResponse;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.NormalLogin_Response;
 import com.det.skillinvillage.model.Student;
@@ -137,6 +138,13 @@ public interface Interface_userservice {
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("Authentication/Post_ActionStudent")
     Call<AddStudentDetailsResponse> Post_ActionStudent(@Body AddStudentDetailsRequest request);
+
+
+
+
+    @Headers("Content-Type: application/json")
+    @GET("Authentication/Get_Student_Payment")
+    Call<GetStudentPaymentResponse> getStudentPayment(@Query("Student_ID") String Student_ID);
 
 }
 

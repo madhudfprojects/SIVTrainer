@@ -1084,7 +1084,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_DistrictListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             district_new_SP.setAdapter(dataAdapter);
-            district_new_SP.setSelection(districtpos);
+          //  district_new_SP.setSelection(districtpos);
             /*if(x>sel_districtsp) {
                 districtlist_SP.setSelection(sel_districtsp);
             }*/
@@ -1129,7 +1129,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_TalukListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             taluk_new_SP.setAdapter(dataAdapter);
-            taluk_new_SP.setSelection(talukpos);
+         //   taluk_new_SP.setSelection(talukpos);
             /*if(x>sel_taluksp) {
                 taluklist_SP.setSelection(sel_taluksp);
             }*/
@@ -1187,7 +1187,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_VillageListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             village_new_SP.setAdapter(dataAdapter);
-            village_new_SP.setSelection(villagepos);
+          //  village_new_SP.setSelection(villagepos);
             /*if(x>sel_villagesp) {
                 villagelist_SP.setSelection(sel_villagesp);
             }*/
@@ -1388,13 +1388,19 @@ public class Activity_EditRegistration extends AppCompatActivity {
                     str_fetched_learningmode=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
                     str_fetched_edu=cursor1.getString(cursor1.getColumnIndex("Education"));
 
-                    str_fetched_statename=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
-                    str_fetched_distname=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
-                    str_fetched_talukname=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
-                    str_fetched_villagename=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
-                    str_fetched_address=cursor1.getString(cursor1.getColumnIndex("Learning_Mode"));
+                    str_fetched_statename=cursor1.getString(cursor1.getColumnIndex("statename"));
+                    str_fetched_distname=cursor1.getString(cursor1.getColumnIndex("districtname"));
+                    str_fetched_talukname=cursor1.getString(cursor1.getColumnIndex("talukname"));
+                    str_fetched_villagename=cursor1.getString(cursor1.getColumnIndex("villagename"));
+                    str_fetched_address=cursor1.getString(cursor1.getColumnIndex("student_address"));
 
                     Log.e("Gender.fetching",cursor1.getString(cursor1.getColumnIndex("Gender")));
+                    Log.e("str_fetched_statename",cursor1.getString(cursor1.getColumnIndex("statename")));
+                    Log.e("str_fetched_distname",cursor1.getString(cursor1.getColumnIndex("districtname")));
+                    Log.e("str_fetched_talukname",cursor1.getString(cursor1.getColumnIndex("talukname")));
+                    Log.e("str_fetched_villagename",cursor1.getString(cursor1.getColumnIndex("villagename")));
+
+
                     class_farmponddetails_offline_obj = innerObj_Class_SandboxList;
                     i++;
                 } while (cursor1.moveToNext());
@@ -1775,6 +1781,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
             cv.put("StudentAadhar", stu_aadharno);
             cv.put("BirthDate", str_edit_birthdate);
             cv.put("Gender", str_gen_new);//pond_enddate
+                Log.e("str_gen_new", str_gen_new);
             cv.put("Education", str_edu);
             cv.put("StudentStatus", str_stustatus);
             cv.put("Marks4", str_stumarks4);
@@ -1844,7 +1851,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
         db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
 //        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "edittemp%" + "'", null);
        // Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='"+ stuid  + "'", null);
-        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offline"  + "'", null);
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offlineedit"  + "'", null);
 
         int x = cursor1.getCount();
         Log.e("addnew_studentcount", String.valueOf(x));
@@ -1958,13 +1965,13 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
 
         request.setState_ID(class_farmerprofileoffline_array_obj[j].getState_ID());
-        request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
+       // request.setState_Name(class_farmerprofileoffline_array_obj[j].getState_Name());
         request.setDistrict_ID(class_farmerprofileoffline_array_obj[j].getDistrict_ID());
-        request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
+      //  request.setDistrict_Name(class_farmerprofileoffline_array_obj[j].getDistrict_Name());
         request.setTaluk_ID(class_farmerprofileoffline_array_obj[j].getTaluk_ID());
-        request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
+       // request.setTaluk_Name(class_farmerprofileoffline_array_obj[j].getTaluk_Name());
         request.setVillage_ID(class_farmerprofileoffline_array_obj[j].getVillage_ID());
-        request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
+       // request.setVillage_Name(class_farmerprofileoffline_array_obj[j].getVillage_Name());
         request.setAddress(class_farmerprofileoffline_array_obj[j].getAddress());
 
         if(!class_farmerprofileoffline_array_obj[j].getMarks4().equals("")){
