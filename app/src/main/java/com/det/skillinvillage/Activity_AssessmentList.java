@@ -52,11 +52,13 @@ import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_AssessmentList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout swipeLayout;
     SharedPreferences sharedpref_loginuserid_Obj;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     String str_loginuserID = "";
     Class_Assessments_List[] userInfosarr,arrayObj_Class_ViewlistStudentData2,userInfosarr2;
     ArrayList<Class_Assessments_List> assessment_array_List = new ArrayList<Class_Assessments_List>();
@@ -97,8 +99,11 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+       // sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
         swipeLayout = findViewById(R.id.swipe_container_assessment);
         swipeLayout.setOnRefreshListener(this);
         lv_eventlist = findViewById(R.id.lv_assessmentlist);
@@ -416,7 +421,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
     public void getassessmentlist() {
 
-        Call<Class_getassessmentlistResponse> call = userService1.GetAssesmentList("12");
+        Call<Class_getassessmentlistResponse> call = userService1.GetAssesmentList(str_loginuserID);
         // Set up progress before call
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_AssessmentList.this);

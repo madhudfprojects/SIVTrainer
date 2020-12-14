@@ -121,6 +121,7 @@ import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferen
 import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_studentid_new;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_EditRegistration extends AppCompatActivity {
 
@@ -162,8 +163,8 @@ public class Activity_EditRegistration extends AppCompatActivity {
     String str_school;
     String str_level;
     String str_applNo;
-    String str_studentname;
-    String str_gender;
+    String str_studentname="";
+    String str_gender="",str_gen_new="";
     static String str_edit_birthdate="";
     String str_marks="",str_marks_4="",str_marks_5="",str_marks_6="",str_marks_7="",str_marks_8="";
     String str_mobileno="";
@@ -172,7 +173,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
     String str_aadar="",str_receiptno="";
     String str_admissionfee="";
     String str_created_date;
-    String str_created_by;
+    String str_created_by="",str_loginuserID="";
     String str_imgfile="",str_fetched_imgfile="";
     int str_stuID=0;
     String str_learningOpt="";
@@ -199,6 +200,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
   //  Class_LearningOption obj_Class_LearningOption;
     SharedPreferences sharedpref_stuid_Obj;
     SharedPreferences sharedpref_loginuserid_Obj;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     SharedPreferences sharedpref_camera_Obj;
     public static final String sharedpreferenc_camera = "cameraflag";
     public static final String key_flagcamera = "flag_camera";
@@ -292,8 +294,11 @@ public class Activity_EditRegistration extends AppCompatActivity {
        // sharedpref_stuid_Obj_new=getSharedPreferences(sharedpreferenc_studentid_new, Context.MODE_PRIVATE);
         //Stu_ID_Received= sharedpref_spinner_Obj.getString(key_studentid, "").trim();
 
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_created_by = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+       // sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+        str_created_by = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
         sharedpref_stuid_Obj=getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
         str_stuID = sharedpref_stuid_Obj.getInt(key_studentid, 0);
@@ -538,6 +543,26 @@ public class Activity_EditRegistration extends AppCompatActivity {
                     paymentdate_edit_tv.setVisibility(View.GONE);
 
                 }*/
+
+
+//                if (class_farmponddetails_offline_obj.getAdmissionFee().equals("0")) {
+//                    ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray_admission);
+//                    dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
+//                    studentstatus_edit_SP.setAdapter(dataAdapter_status);
+//                    admission_edit_ll.setVisibility(View.GONE);
+//                    paymentdate_edit_tv.setVisibility(View.GONE);
+//
+//                } else {
+//                    ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
+//                    dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
+//                    studentstatus_edit_SP.setAdapter(dataAdapter_status);
+//                    admission_edit_ll.setVisibility(View.VISIBLE);
+//                    admissionfees_edit_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", class_farmponddetails_offline_obj.getAdmissionFee())});
+//                    admissionfees_edit_et.setText(class_farmponddetails_offline_obj.getAdmissionFee());
+//                    maxfees_edit_tv.setText(getResources().getString(R.string.Rs) + "" + class_farmponddetails_offline_obj.getAdmissionFee());
+//
+//                    paymentdate_edit_tv.setVisibility(View.VISIBLE);
+//                }
                 if(selected_studentstatus.equals("Admission")){
                     isAdmission=true;
                     PaymentDate_edit_ll.setVisibility(View.VISIBLE);
@@ -1424,16 +1449,16 @@ public class Activity_EditRegistration extends AppCompatActivity {
     }// end of Data_from_PondDetails_DB
 
     public void DisplayData_Data_from_PondDetails_DB() {
-      //  if(!class_farmponddetails_offline_obj.getGender().equals("")) {
-            if (class_farmponddetails_offline_obj.getGender().equals("Boy")) {
-                male_edit_RB.setChecked(true);
-                female_edit_RB.setChecked(false);
-            } else {
-                male_edit_RB.setChecked(false);
-                female_edit_RB.setChecked(true);
+        //  if(!class_farmponddetails_offline_obj.getGender().equals("")) {
+        if (class_farmponddetails_offline_obj.getGender().equals("Boy")) {
+            male_edit_RB.setChecked(true);
+            female_edit_RB.setChecked(false);
+        } else {
+            male_edit_RB.setChecked(false);
+            female_edit_RB.setChecked(true);
 
-            }
-      //  }
+        }
+        //  }
 
         sandbox_edit_tv.setText(class_farmponddetails_offline_obj.getSandboxName());
         academic_edit_tv.setText(class_farmponddetails_offline_obj.getAcademicName());
@@ -1441,59 +1466,82 @@ public class Activity_EditRegistration extends AppCompatActivity {
         institute_edit_tv.setText(class_farmponddetails_offline_obj.getInstituteName());
         school_edit_tv.setText(class_farmponddetails_offline_obj.getSchoolName());
         level_edit_tv.setText(class_farmponddetails_offline_obj.getLevelName());
-        if(!class_farmponddetails_offline_obj.getStudentName().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getStudentName().equals("0")) {
             studentName_edit_et.setText(class_farmponddetails_offline_obj.getStudentName());
         }
 
-        if(!class_farmponddetails_offline_obj.getBirthDate().equals("")) {
+        if (!class_farmponddetails_offline_obj.getBirthDate().equals("")) {
             dateofbirth_edit_tv.setText(class_farmponddetails_offline_obj.getBirthDate());
         }
 
-        if(!class_farmponddetails_offline_obj.getFatherName().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getFatherName().equals("0")) {
             fathername_edit_et.setText(class_farmponddetails_offline_obj.getFatherName());
         }
-        if(!class_farmponddetails_offline_obj.getMotherName().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getMotherName().equals("0")) {
             mothername_edit_et.setText(class_farmponddetails_offline_obj.getMotherName());
         }
-        if(!class_farmponddetails_offline_obj.getMobile().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getMobile().equals("0")) {
             mobileno_edit_et.setText(class_farmponddetails_offline_obj.getMobile());
 
         }
 
-        if(!class_farmponddetails_offline_obj.getStudentAadhar().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getStudentAadhar().equals("0")) {
             aadhaarno_edit_et.setText(class_farmponddetails_offline_obj.getStudentAadhar());
 
         }
-        if(!class_farmponddetails_offline_obj.getMarks4().equals("0")) {
+        if (!class_farmponddetails_offline_obj.getMarks4().equals("0")) {
             //  marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-            Log.e("displayingmarks..",class_farmponddetails_offline_obj.getMarks4());
+            Log.e("displayingmarks..", class_farmponddetails_offline_obj.getMarks4());
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks4());
-            str_marks=class_farmponddetails_offline_obj.getMarks4();
-        }else if(!class_farmponddetails_offline_obj.getMarks5().equals("0")) {
+            str_marks = class_farmponddetails_offline_obj.getMarks4();
+        } else if (!class_farmponddetails_offline_obj.getMarks5().equals("0")) {
             //   marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
 
 
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks5());
-            str_marks=class_farmponddetails_offline_obj.getMarks5();
-        } else if(!class_farmponddetails_offline_obj.getMarks6().equals("0")) {
+            str_marks = class_farmponddetails_offline_obj.getMarks5();
+        } else if (!class_farmponddetails_offline_obj.getMarks6().equals("0")) {
             Log.e("str_marks_6 setvalues", "Entered in Marks6");
 
             // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks6());
-            str_marks=class_farmponddetails_offline_obj.getMarks6();
-        } else if(!class_farmponddetails_offline_obj.getMarks7().equals("0")) {
+            str_marks = class_farmponddetails_offline_obj.getMarks6();
+        } else if (!class_farmponddetails_offline_obj.getMarks7().equals("0")) {
             // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks7());
-            str_marks=class_farmponddetails_offline_obj.getMarks7();
-        } else if(!class_farmponddetails_offline_obj.getMarks8().equals("0")) {
+            str_marks = class_farmponddetails_offline_obj.getMarks7();
+        } else if (!class_farmponddetails_offline_obj.getMarks8().equals("0")) {
             //marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks8());
-            str_marks=class_farmponddetails_offline_obj.getMarks8();
-        } else if(!class_farmponddetails_offline_obj.getAdmissionFee().equals("")) {
-            admissionfees_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", class_farmponddetails_offline_obj.getAdmissionFee())});
-            admissionfees_edit_et.setText(class_farmponddetails_offline_obj.getAdmissionFee());
-            maxfees_edit_tv.setText(getResources().getString(R.string.Rs) +""+class_farmponddetails_offline_obj.getAdmissionFee());
+            str_marks = class_farmponddetails_offline_obj.getMarks8();
         }
+
+//        if (!class_farmponddetails_offline_obj.getAdmissionFee().equals("")) {
+//            admissionfees_edit_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", class_farmponddetails_offline_obj.getAdmissionFee())});
+//            admissionfees_edit_et.setText(class_farmponddetails_offline_obj.getAdmissionFee());
+//            maxfees_edit_tv.setText(getResources().getString(R.string.Rs) + "" + class_farmponddetails_offline_obj.getAdmissionFee());
+//        }
+        if (class_farmponddetails_offline_obj.getAdmissionFee().equals("0")) {
+            ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray_admission);
+            dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
+            studentstatus_edit_SP.setAdapter(dataAdapter_status);
+            admission_edit_ll.setVisibility(View.GONE);
+            paymentdate_edit_tv.setVisibility(View.GONE);
+
+        } else {
+            ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
+            dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
+            studentstatus_edit_SP.setAdapter(dataAdapter_status);
+            admission_edit_ll.setVisibility(View.VISIBLE);
+            admissionfees_edit_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", class_farmponddetails_offline_obj.getAdmissionFee())});
+            admissionfees_edit_et.setText(class_farmponddetails_offline_obj.getAdmissionFee());
+            maxfees_edit_tv.setText(getResources().getString(R.string.Rs) + "" + class_farmponddetails_offline_obj.getAdmissionFee());
+
+            paymentdate_edit_tv.setVisibility(View.VISIBLE);
+        }
+
+
+
         paymentmode_edit_tv.setText("Cash");
         Log.e("getedu",class_farmponddetails_offline_obj.getEducation());
 
@@ -1724,8 +1772,14 @@ public class Activity_EditRegistration extends AppCompatActivity {
         String  str_stumothername = mothername_edit_et.getText().toString();
         String  str_mobno= mobileno_edit_et.getText().toString();
         String  stu_aadharno= aadhaarno_edit_et.getText().toString();
-        String str_dob=dateofbirth_edit_tv.getText().toString();
-        String str_gen_new=str_gender;
+        str_edit_birthdate=dateofbirth_edit_tv.getText().toString();
+
+       // String str_gen_new=str_gender;
+        if(str_gender.equals("")) {
+             str_gen_new = class_farmponddetails_offline_obj.getGender();
+        }else{
+              str_gen_new=str_gender;
+        }
 //        String  str_edu=class_farmponddetails_offline_obj.getEducation();
         String  str_edu=selected_edu;
 
@@ -1994,7 +2048,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
         request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
         request.setStudentID(class_farmerprofileoffline_array_obj[j].getStudentID());
         request.setSchoolID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSchoolID()));
-        request.setCreatedBy(String.valueOf(str_stuID));
+        request.setCreatedBy(str_loginuserID);
         request.setCreatedDate(class_farmerprofileoffline_array_obj[j].getCreatedDate());
      //   request.setCreatedDate("2020-12-05");
         request.setReceiptManual(class_farmerprofileoffline_array_obj[j].getReceiptNo());
@@ -2004,7 +2058,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
         //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
-
+        request.setApplication_Type("SIV");
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -2135,12 +2189,15 @@ public class Activity_EditRegistration extends AppCompatActivity {
     public void setPaymentDate ( final Calendar calendar){
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
-        paymentdate_edit_tv.setText(dateFormat.format(calendar.getTime()));
+//        paymentdate_edit_tv.setText(dateFormat.format(calendar.getTime()));
         str_paymentDate = dateFormat.format(calendar.getTime());
 
 
         SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
         str_paymentDate = mdyFormat.format(calendar.getTime());
+
+        paymentdate_edit_tv.setText(str_paymentDate);
+
         Calendar c = Calendar.getInstance();
         DateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
@@ -2153,12 +2210,14 @@ public class Activity_EditRegistration extends AppCompatActivity {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
         SimpleDateFormat mdyFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-        dateofbirth_edit_tv.setText(mdyFormat1.format(calendar.getTime()));
+//        dateofbirth_edit_tv.setText(mdyFormat1.format(calendar.getTime()));
         str_edit_birthdate = dateFormat.format(calendar.getTime());
 
 
         SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
         str_edit_birthdate = mdyFormat.format(calendar.getTime());
+        dateofbirth_edit_tv.setText(str_edit_birthdate);
+
         Log.e("str_edit_birthdate",str_edit_birthdate);
         Calendar c = Calendar.getInstance();
         DateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
@@ -3505,31 +3564,26 @@ public boolean Validation() {
 
     }
 
-    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
-        if (str_paymentDate.length() == 0) {
-            //paymentdate_tv.setError("Empty is not allowed");
-            bpaymentdate = false;
-            Toast.makeText(getApplicationContext(), "Please select payment date", Toast.LENGTH_LONG).show();
-
-        }
-
-        if (admissionfees_edit_et.getText().toString().length() == 0) {
-            bfee = false;
-            Toast.makeText(getApplicationContext(), "Please Enter Admission fees", Toast.LENGTH_LONG).show();
-
-        }
-//            if (admissionfee_et.getText().toString()>selected_admissionfee) {
-//                bfee = false;
-//                Toast.makeText(getApplicationContext(), "Please Enter Valid Admission fees", Toast.LENGTH_LONG).show();
+//    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
+//        if (str_paymentDate.length() == 0) {
+//            //paymentdate_tv.setError("Empty is not allowed");
+//            bpaymentdate = false;
+//            Toast.makeText(getApplicationContext(), "Please select payment date", Toast.LENGTH_LONG).show();
 //
-//            }
-
-        if (receipt_no_edit_et.getText().toString().length() == 0) {
-            brecno = false;
-            Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_LONG).show();
-
-        }
-    }
+//        }
+//
+//        if (admissionfees_edit_et.getText().toString().length() == 0) {
+//            bfee = false;
+//            Toast.makeText(getApplicationContext(), "Please Enter Admission fees", Toast.LENGTH_LONG).show();
+//
+//        }
+//
+//        if (receipt_no_edit_et.getText().toString().length() == 0) {
+//            brecno = false;
+//            Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_LONG).show();
+//
+//        }
+//    }
 
 //        if (str_img.length() == 0) {
 //            bphoto = false;
@@ -3543,13 +3597,14 @@ public boolean Validation() {
 //            return false;
 //        }
 
-    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
-        return bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee && brecno;
-
-    } else {
-        return bname && bcellnumber && bedu && bbirthdate && bfee;
-
-    }
+//    if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
+//        return bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee && brecno;
+//
+//    } else {
+//        return bname && bcellnumber && bedu && bbirthdate;
+//
+//    }
+    return bname && bcellnumber && bedu && bbirthdate;
 
 //        if (bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee) {
 //            return true;

@@ -47,6 +47,7 @@ import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -63,6 +64,7 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
     int latlongcount=0;
     Interface_userservice userService1;
     int latlong_count;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +74,10 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
         userService1 = Class_ApiUtils.getUserService();
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
 
         if(isServicesOK()){

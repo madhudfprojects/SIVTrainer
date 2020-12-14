@@ -55,6 +55,7 @@ import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class MainActivity2 extends AppCompatActivity {
 
@@ -87,6 +88,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     Class_PostUpdateAssessmentSubmitList[] arrayObjPostUpdateAssessmentSubmitList;
 
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,8 +105,13 @@ public class MainActivity2 extends AppCompatActivity {
         message_TV = findViewById(R.id.message_tv);
         save_assesmentView_BT = findViewById(R.id.save_assesmentView_BT);
         submit_assesmentView_BT = findViewById(R.id.submit_assesmentView_BT);
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+
         Intent intent = getIntent();
         str_assessmentID = intent.getStringExtra("str_assessmentid");
         intval_flag = intent.getIntExtra("Flag", 0);
@@ -190,6 +197,7 @@ public class MainActivity2 extends AppCompatActivity {
         jsonArray_MARKS = new JSONArray(list_finalsubmit);
         jsonArray_Studentid = new JSONArray(list_studentid);
         Log.e("jsonArray", jsonArray_MARKS.toString());
+        Log.e("jsonArray_Studentid", jsonArray_Studentid.toString());
 
         if (isInternetPresent) {
 //            AsyncCall_save_assessmentview task3 = new AsyncCall_save_assessmentview(MainActivity2.this);
@@ -939,14 +947,17 @@ public class MainActivity2 extends AppCompatActivity {
             public void onResponse(Call<Class_Post_UpdateStudentAssessmentSubmitResponse> call, Response<Class_Post_UpdateStudentAssessmentSubmitResponse> response) {
                 if (response.isSuccessful()) {
                     progressDoalog.dismiss();
-                    arrayObj_Class_assesmentmodel_Status = new Class_AssessmentModel[1];
-                    EditModel_arraylist2 = new ArrayList<>();
-                    Class_Post_UpdateStudentAssessmentSubmitResponse class_loginresponse = response.body();
+              Class_Post_UpdateStudentAssessmentSubmitResponse class_loginresponse = response.body();
                     List<Class_PostUpdateAssessmentSubmitList> monthContents_list = response.body().getLst();
                     arrayObjPostUpdateAssessmentSubmitList = new Class_PostUpdateAssessmentSubmitList[monthContents_list.size()];
+                    arrayObj_Class_assesmentmodel_Status = new Class_AssessmentModel[monthContents_list.size()];
+                    EditModel_arraylist2 = new ArrayList<>();
+
+
                     if (class_loginresponse.getStatus()) {
                         for (int i = 0; i < arrayObjPostUpdateAssessmentSubmitList.length; i++) {
                             str_response_submit = class_loginresponse.getLst().get(i).getMarksStatus();
+                            Log.e("str_response_submit",str_response_submit);
                             Class_AssessmentModel innerObj_Class_AssessmentModel = new Class_AssessmentModel();
                             innerObj_Class_AssessmentModel.setAssementModel_status(str_response_submit);
                             innerObj_Class_AssessmentModel.setAssementModel_Flag("1");

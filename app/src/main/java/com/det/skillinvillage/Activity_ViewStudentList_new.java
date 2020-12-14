@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -110,6 +111,9 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__view_student_list_new);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Student List");
 
         sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
         sel_yearsp = sharedpref_spinner_Obj.getInt(Key_sel_yearsp, 0);
@@ -1536,22 +1540,43 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
 
 
             if (Obj_Class_farmerlistdetails != null) {
-                {
+
                     String FullName = Obj_Class_farmerlistdetails.getStudentName();
                     holder.FarmerName_tv.setText(FullName);
                     holder.farmercode_tv.setText(Obj_Class_farmerlistdetails.getApplicationNo());
+//                    holder.fees_payment_IV.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            Intent i = new Intent(Activity_ViewStudentList_new.this, Activity_FeesPayment.class);
+//                            startActivity(i);
+//                            finish();
+//                        }
+//
+//
+//                    });
 
-                    holder.fees_payment_IV.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent i=new Intent(Activity_ViewStudentList_new.this,Activity_FeesPayment.class);
-                            startActivity(i);
-                            finish();
+                            if(selected_studentstatus.equals("Applicant")){
+                                holder.fees_payment_IV.setVisibility(View.GONE);
+                            }else if(selected_studentstatus.equals("Admission")) {
+                                if(Obj_Class_farmerlistdetails.getAdmissionFee().equals("0")){
+                                    holder.fees_payment_IV.setVisibility(View.GONE);
+                                }else {
+                                    holder.fees_payment_IV.setVisibility(View.VISIBLE);
 
-                        }
-                    });
+                                    holder.fees_payment_IV.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent i = new Intent(Activity_ViewStudentList_new.this, Activity_FeesPayment.class);
+                                            startActivity(i);
+                                            finish();
+                                        }
 
-                }
+
+                                    });
+                                }
+                            }
+
+              ///  }
 
             }
 

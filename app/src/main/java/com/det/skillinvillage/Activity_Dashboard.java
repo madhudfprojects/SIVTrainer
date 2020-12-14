@@ -61,11 +61,13 @@ import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_Dashboard extends AppCompatActivity {
 
     TextView dropoutscount_TV, femalecount_TV, malecount_TV, studentcount_TV, schoolcount_TV, villagecount_TV;
     SharedPreferences sharedpref_loginuserid_Obj;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     String str_loginuserID, str_dashboard_status = "", str_no_of_villages, str_no_of_students, str_no_of_schools, str_no_of_male, str_no_of_female, str_no_of_dropouts, str_dashboard_status_barchart = "";
     Boolean isInternetPresent = false;
     Class_InternetDectector internetDectector;
@@ -123,7 +125,11 @@ public class Activity_Dashboard extends AppCompatActivity {
         isInternetPresent = internetDectector.isConnectingToInternet();
         userService1 = Class_ApiUtils.getUserService();
         sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+        //str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
         dropoutscount_TV = findViewById(R.id.dropoutscount_TV);
         femalecount_TV = findViewById(R.id.femalecount_TV);
         malecount_TV = findViewById(R.id.malecount_TV);

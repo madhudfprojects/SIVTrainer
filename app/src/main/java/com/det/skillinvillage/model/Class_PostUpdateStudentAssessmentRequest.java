@@ -9,15 +9,16 @@ public class Class_PostUpdateStudentAssessmentRequest {
     @Expose
     private String UserID;
 
-    @SerializedName("Assesment_ID")
+    @SerializedName("Assessment_ID")
     @Expose
     private String AssesmentID;
 
-    @SerializedName("Student_ID")
+    @SerializedName("Marks_ID")
     @Expose
     private String StudentID;
 
-    @SerializedName("Student_Marks")
+    //Student_Marks
+    @SerializedName("Marks")
     @Expose
     private String StudentMarks;
 

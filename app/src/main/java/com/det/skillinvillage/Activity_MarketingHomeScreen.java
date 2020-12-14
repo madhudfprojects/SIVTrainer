@@ -50,6 +50,7 @@ import static com.det.skillinvillage.Activity_ViewStudentList_new.key_studentid;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_selectedspinner;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 
 public class Activity_MarketingHomeScreen extends AppCompatActivity {
@@ -89,7 +90,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
     SharedPreferences sharedpref_stuid_Obj;
     int str_stuID = 0;
     StudentList[] class_farmerprofileoffline_array_obj;
-
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +101,11 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
         sharedpref_validMailID_Obj = getSharedPreferences(sharedpreferenc_mailbook, Context.MODE_PRIVATE);
 
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
 
 //        sharedpref_stuid_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
@@ -463,7 +467,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
         request.setStudentID(class_farmerprofileoffline_array_obj[j].getStudentID());
         request.setSchoolID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSchoolID()));
-        request.setCreatedBy(String.valueOf(str_stuID));
+        request.setCreatedBy(str_loginuserID);
         request.setCreatedDate(class_farmerprofileoffline_array_obj[j].getCreatedDate());
         //   request.setCreatedDate("2020-12-05");
         request.setReceiptManual(class_farmerprofileoffline_array_obj[j].getReceiptNo());
@@ -473,7 +477,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
-
+        request.setApplication_Type("SIV");
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -730,7 +734,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
         request.setStudentID(class_farmerprofileoffline_array_obj[j].getStudentID());
         request.setSchoolID(String.valueOf(class_farmerprofileoffline_array_obj[j].getSchoolID()));
-        request.setCreatedBy(String.valueOf(str_stuID));
+        request.setCreatedBy(str_loginuserID);
         request.setCreatedDate(class_farmerprofileoffline_array_obj[j].getCreatedDate());
         //   request.setCreatedDate("2020-12-05");
         request.setReceiptManual(class_farmerprofileoffline_array_obj[j].getReceiptNo());
@@ -740,7 +744,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
-
+        request.setApplication_Type("SIV");
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));

@@ -1,6 +1,7 @@
 package com.det.skillinvillage;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +16,15 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.det.skillinvillage.adapter.MyAdapter;
+import com.det.skillinvillage.model.Class_GetPendingPaymentResponseList;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.GetMobileMenuResponse;
+import com.det.skillinvillage.model.GetMobileMenuResponseList;
+import com.det.skillinvillage.model.GetMobileSubMenuResponseList;
+import com.det.skillinvillage.model.GetPendingPaymentResponse;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -23,10 +33,16 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_OnlineView_MainmenuList extends AppCompatActivity implements ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
     ExpandableListView lv_onlineview;
@@ -39,7 +55,10 @@ public class Activity_OnlineView_MainmenuList extends AppCompatActivity implemen
     private MyAdapter adapter;
     Boolean isInternetPresent = false;
     Class_InternetDectector internetDectector;
-
+    Interface_userservice userService1;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
+    GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
+    GetMobileSubMenuResponseList[] arrayObj_class_getMobilesubmenuresp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +67,16 @@ public class Activity_OnlineView_MainmenuList extends AppCompatActivity implemen
         getSupportActionBar().setTitle("Online View");
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
+        userService1 = Class_ApiUtils.getUserService();
 
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+       // sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+
         lv_onlineview=(ExpandableListView)findViewById(R.id.lv_onlineview);
 
         lv_onlineview.setOnChildClickListener(this);
@@ -215,6 +241,10 @@ public class Activity_OnlineView_MainmenuList extends AppCompatActivity implemen
         }
 
     }//End of leaveDetail method
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

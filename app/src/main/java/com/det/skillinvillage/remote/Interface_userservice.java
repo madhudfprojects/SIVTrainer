@@ -17,12 +17,22 @@ import com.det.skillinvillage.model.Class_getdemo_Response;
 import com.det.skillinvillage.model.Class_gethelp_Response;
 import com.det.skillinvillage.model.Class_getuserlist;
 import com.det.skillinvillage.model.GetAppVersion;
+import com.det.skillinvillage.model.GetMobileMenuResponse;
+import com.det.skillinvillage.model.GetPaymentPendingSummaryResponse;
+import com.det.skillinvillage.model.GetPendingPaymentResponse;
 import com.det.skillinvillage.model.GetStudentPaymentResponse;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.NormalLogin_Response;
+import com.det.skillinvillage.model.PostSavePaymentRequest;
+import com.det.skillinvillage.model.Post_Save_PaymentResponse;
 import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.ValidateSyncRequest;
 import com.det.skillinvillage.model.ValidateSyncResponse;
+import com.det.skillinvillage.util.Post_studData_Request;
+import com.det.skillinvillage.util.StudentData_Response;
+import com.det.skillinvillage.util.StudentInfoRest;
+import com.det.skillinvillage.util.Subjects;
+import com.det.skillinvillage.util.UserInfoRest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -84,13 +94,13 @@ public interface Interface_userservice {
 
 
     @Headers("Content-Type: application/json;charset=utf-8")
-    @GET("Authentication/Get_Assesment_List")
+    @GET("Authentication/Get_Assessment_List")
     Call<Class_getassessmentlistResponse>GetAssesmentList(@Query("User_ID") String User_ID);
 
 
     @Headers("Content-Type: application/json;charset=utf-8")
-    @GET("Authentication/Get_Assesment_Data")
-    Call<Class_AssessmentData>GetAssesmentData(@Query("Assesment_ID") String Assessment_ID);
+    @GET("Authentication/Get_Assessment_Data")
+    Call<Class_AssessmentData>GetAssesmentData(@Query("Assessment_ID") String Assessment_ID);
 
 
     @Headers("Content-Type: application/json;charset=utf-8")
@@ -113,7 +123,7 @@ public interface Interface_userservice {
 
     @Headers("Content-Type: application/json;charset=utf-8")
     @GET("Authentication/Get_User_Location")
-    Call<Location_Data> getLocationData(@Query("User_ID") String User_ID);
+    Call<Location_Data> getLocationData(@Query("User_ID") String User_ID,@Query("Application_Type") String Application_type);
 
 
     @Headers("Content-Type: application/json;charset=utf-8")
@@ -145,6 +155,49 @@ public interface Interface_userservice {
     @Headers("Content-Type: application/json")
     @GET("Authentication/Get_Student_Payment")
     Call<GetStudentPaymentResponse> getStudentPayment(@Query("Student_ID") String Student_ID);
+
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_Save_Payment")
+    Call<Post_Save_PaymentResponse> PostSavePayment(@Body PostSavePaymentRequest request);
+
+
+    @Headers("Content-Type: application/json")
+    @GET("Authentication/Get_Payment_Pending_Summary")
+    Call<GetPaymentPendingSummaryResponse>GetPaymentPendingSummary(@Query("User_ID") String User_ID);
+
+
+    @Headers("Content-Type: application/json")
+    @GET("Authentication/Get_Pending_Payment")
+    Call<GetPendingPaymentResponse> GetPendingPayment(@Query("User_ID") String User_ID);
+
+
+
+
+    //////////////////---------Schedule--------------/////////////////////////////////////////////
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_User_Schedule")
+    Call<UserInfoRest> get_User_Schedule(@Query("User_ID") String User_ID);
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_User_Schedule_Students")
+    Call<StudentInfoRest> get_User_Schedule_Students(@Query("Schedule_ID") String Schedule_ID);
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_ActionScheduleAttendance")
+    Call<StudentData_Response> post_ActionScheduleAttendance(@Body Post_studData_Request request);
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_Schedule_Subject")
+    Call<Subjects> get_Schedule_Subject(@Query("Schedule_ID") String Schedule_ID);
+
+
+//http://mis.detedu.org:8090/api/Authentication/Get_Mobile_Menu?User_ID=12
+
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_Mobile_Menu")
+    Call<GetMobileMenuResponse> GetMobileMenu(@Query("User_ID") String User_ID);
 
 }
 

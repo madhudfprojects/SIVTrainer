@@ -2,7 +2,6 @@ package com.det.skillinvillage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.det.skillinvillage.R;
 import com.det.skillinvillage.Remarks;

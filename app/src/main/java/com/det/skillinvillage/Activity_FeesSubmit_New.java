@@ -27,15 +27,34 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.det.skillinvillage.model.Class_GetPaymentPendingSummaryResponseList;
+import com.det.skillinvillage.model.Class_GetPendingPaymentResponseList;
+import com.det.skillinvillage.model.Class_GetStudentPaymentResponseList;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.GetPaymentPendingSummaryResponse;
+import com.det.skillinvillage.model.GetPendingPaymentResponse;
+import com.det.skillinvillage.model.GetStudentPaymentResponse;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+
+import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_FeesSubmit_New extends AppCompatActivity {
 
@@ -56,6 +75,12 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
 
    String str_paymentstatus_feesSummary;
    LinearLayout fees_summary_ll;
+
+    Interface_userservice userService1;
+    Class_GetPaymentPendingSummaryResponseList[] arrayObj_class_getpaymentpendingsummaryresp;
+    Class_GetPendingPaymentResponseList[] arrayObj_class_getpaymentpendingresp;
+
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +91,15 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
 
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
-
+        userService1 = Class_ApiUtils.getUserService();
 //        SharedPreferences myprefs_userid = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 //        str_loginuserID = myprefs_userid.getString("login_userid", "nothing");
 
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
         tableLayout= findViewById(R.id.tableLayout);
 
@@ -103,12 +131,103 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
 
         if (isInternetPresent) {
             deletePendingStudentTable_B4insertion();
-            PendingpaymentlistTask task = new PendingpaymentlistTask(Activity_FeesSubmit_New.this);
-            task.execute();
+            GetPendingPayment();
+//            PendingpaymentlistTask task = new PendingpaymentlistTask(Activity_FeesSubmit_New.this);
+//            task.execute();
         } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+    public void GetPendingPayment() {
+
+        Call<GetPendingPaymentResponse> call = userService1.GetPendingPayment(str_loginuserID);//String.valueOf(str_stuID)
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_FeesSubmit_New.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<GetPendingPaymentResponse>() {
+            @Override
+            public void onResponse(Call<GetPendingPaymentResponse> call, Response<GetPendingPaymentResponse> response) {
+                Log.e("Entered resp", "GetPendingPayment");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    GetPendingPaymentResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+
+                        List<Class_GetPendingPaymentResponseList> monthContents_list = response.body().getLst();
+                        loadPendingPaymentCount=monthContents_list.size();
+                        Log.e("count", String.valueOf(loadPendingPaymentCount));
+
+                        Class_GetPendingPaymentResponseList []  arrayObj_Class_monthcontents = new Class_GetPendingPaymentResponseList[monthContents_list.size()];
+                        arrayObj_class_getpaymentpendingresp = new Class_GetPendingPaymentResponseList[arrayObj_Class_monthcontents.length];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("PaymentPending", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("PaymentPending", class_loginresponse.getMessage());
+
+                            Class_GetPendingPaymentResponseList innerObj_Class_academic = new Class_GetPendingPaymentResponseList();
+                            innerObj_Class_academic.setStudentName(class_loginresponse.getLst().get(i).getStudentName());
+                            innerObj_Class_academic.setApplicationNo(class_loginresponse.getLst().get(i).getApplicationNo());
+                            innerObj_Class_academic.setPaymentAmount(class_loginresponse.getLst().get(i).getPaymentAmount());
+                            arrayObj_class_getpaymentpendingresp[i] = innerObj_Class_academic;
+//                            str_paymentstatus_feesSummary = class_loginresponse.getLst().get(i).getPaymentStatus();
+
+                            String str_stuName = class_loginresponse.getLst().get(i).getStudentName();
+                            String str_ApplicationNo = class_loginresponse.getLst().get(i).getApplicationNo();
+                            String str_paymentamt = class_loginresponse.getLst().get(i).getPaymentAmount();
+                            Log.e("str_stuName", str_stuName);
+
+                            DBCreate_pendinglist_insert_2SQLiteDB(str_stuName,str_ApplicationNo,str_paymentamt);
+
+                        }//for loop end
+
+                        uploadfromDB_PendingAmtStudentList();
+
+                    } else {
+                        progressDoalog.dismiss();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("error message", error.getMsg());
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_FeesSubmit_New.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
 
     }
 
@@ -295,17 +414,123 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
 
 
 
+//    public void getfeesSubmitSummary() {
+//
+//        if (isInternetPresent) {
+//         //   fees_summary_ll.setVisibility(View.VISIBLE);
+//            GetfeesSubmitSummaryTask task = new GetfeesSubmitSummaryTask(Activity_FeesSubmit_New.this);
+//            task.execute();
+//        } else {
+//          //  fees_summary_ll.setVisibility(View.GONE);
+//            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+//        }
+//
+//
+//    }
+
     public void getfeesSubmitSummary() {
 
-        if (isInternetPresent) {
-         //   fees_summary_ll.setVisibility(View.VISIBLE);
-            GetfeesSubmitSummaryTask task = new GetfeesSubmitSummaryTask(Activity_FeesSubmit_New.this);
-            task.execute();
-        } else {
-          //  fees_summary_ll.setVisibility(View.GONE);
-            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-        }
+        Call<GetPaymentPendingSummaryResponse> call = userService1.GetPaymentPendingSummary(str_loginuserID);//String.valueOf(str_stuID)
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_FeesSubmit_New.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
 
+        call.enqueue(new Callback<GetPaymentPendingSummaryResponse>() {
+            @Override
+            public void onResponse(Call<GetPaymentPendingSummaryResponse> call, Response<GetPaymentPendingSummaryResponse> response) {
+                Log.e("Entered resp", "GetPaymentPendingSummary");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    GetPaymentPendingSummaryResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+
+                        List<Class_GetPaymentPendingSummaryResponseList> monthContents_list = response.body().getLst();
+                        int count=monthContents_list.size();
+                        Class_GetStudentPaymentResponseList []  arrayObj_Class_monthcontents = new Class_GetStudentPaymentResponseList[monthContents_list.size()];
+                        arrayObj_class_getpaymentpendingsummaryresp = new Class_GetPaymentPendingSummaryResponseList[arrayObj_Class_monthcontents.length];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("PaymentPendingSummary", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("PaymentPendingSummary", class_loginresponse.getMessage());
+
+                            Class_GetPaymentPendingSummaryResponseList innerObj_Class_academic = new Class_GetPaymentPendingSummaryResponseList();
+                            innerObj_Class_academic.setStudentCount(class_loginresponse.getLst().get(i).getStudentCount());
+                            innerObj_Class_academic.setReceviedFee(class_loginresponse.getLst().get(i).getReceviedFee());
+                            innerObj_Class_academic.setAccountRecevied(class_loginresponse.getLst().get(i).getAccountRecevied());
+                            innerObj_Class_academic.setTrainerPending(class_loginresponse.getLst().get(i).getTrainerPending());
+                            arrayObj_class_getpaymentpendingsummaryresp[i] = innerObj_Class_academic;
+                            str_paymentstatus_feesSummary = class_loginresponse.getLst().get(i).getPaymentStatus();
+                            if((str_paymentstatus_feesSummary.equals("No Result")) || (str_paymentstatus_feesSummary.equals("Error"))) {
+                                Log.e("paymentstatusfeesSumm", str_paymentstatus_feesSummary);
+
+                            }else{
+                                str_no_of_students_paid_fees = class_loginresponse.getLst().get(i).getStudentCount();
+                                str_fees_payment = class_loginresponse.getLst().get(i).getReceviedFee();
+                                str_amt_received_by_accountant = class_loginresponse.getLst().get(i).getAccountRecevied();
+                                str_balance_not_submitted_to_accountant = class_loginresponse.getLst().get(i).getTrainerPending();
+                                Log.e("Student_Count", str_no_of_students_paid_fees);
+                            }
+
+                        }//for loop end
+                        if(arrayObj_class_getpaymentpendingsummaryresp.length>0) {
+
+                            if ((str_paymentstatus_feesSummary.equals("No Result")) || (str_paymentstatus_feesSummary.equals("Error"))) {
+
+
+                                Log.e("paymentstatus_feeSmmary", "no result");
+
+                            } else {
+                                setvalues();
+                            }
+                        }else{
+                            fees_summary_ll.setVisibility(View.GONE);
+                            Toast.makeText(Activity_FeesSubmit_New.this,"No Summary data available", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    } else {
+                        progressDoalog.dismiss();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("error message", error.getMsg());
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_FeesSubmit_New.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
 
     }
 
@@ -413,11 +638,13 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
                          Log.e("Student_Count", String.valueOf(soap_no_of_students_paid_fees));
 
 
-
                     }
 
 
                 }// End of for loop
+
+
+
 
             } catch (Throwable t) {
 

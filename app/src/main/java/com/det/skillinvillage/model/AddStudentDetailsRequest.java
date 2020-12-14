@@ -115,6 +115,19 @@ public class AddStudentDetailsRequest {
     private String address;
 
 
+    @SerializedName("Application_Type")
+    @Expose
+    private String Application_Type;
+
+
+    public String getApplication_Type() {
+        return Application_Type;
+    }
+
+    public void setApplication_Type(String application_Type) {
+        Application_Type = application_Type;
+    }
+
     public String getState_ID() {
         return State_ID;
     }

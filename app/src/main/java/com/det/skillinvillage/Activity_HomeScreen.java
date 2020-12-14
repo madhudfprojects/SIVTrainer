@@ -52,6 +52,9 @@ import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.GetAppVersion;
 import com.det.skillinvillage.model.GetAppVersionList;
+import com.det.skillinvillage.model.GetMobileMenuResponse;
+import com.det.skillinvillage.model.GetMobileMenuResponseList;
+import com.det.skillinvillage.model.GetMobileSubMenuResponseList;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.Location_DataList;
 import com.det.skillinvillage.model.StudCountList;
@@ -62,6 +65,8 @@ import com.det.skillinvillage.model.ValidateSyncRequest;
 import com.det.skillinvillage.model.ValidateSyncResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
+import com.det.skillinvillage.util.UserInfoListRest;
+import com.det.skillinvillage.util.UserInfoRest;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
@@ -75,8 +80,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -100,7 +107,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     Interface_userservice userService1;
     Class_InternetDectector internetDectector, internetDectector2, internetDectector3;
     Boolean isInternetPresent = false;
-    String str_employee_id;
+  //  String str_employee_id;
     private String versioncode;
 
     TelephonyManager tm1 = null;
@@ -165,6 +172,19 @@ public class Activity_HomeScreen extends AppCompatActivity {
     public static final String MyPREFERENCES_Feedback = "MyPrefsFeedback" ;
     public static final String FeedBack = "feedBack";
     SharedPreferences sharedpref_flag_Obj;
+
+
+    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name="",Lavel_Name,Cluster_Name,Institute_Name;
+    ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
+    UserInfoListRest[] userInfosarr;
+    GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
+    GetMobileSubMenuResponseList[] arrayObj_class_getMobilesubmenuresp;
+    Class_SubMenu[] objclassarr_Class_SubMenu;
+    ArrayList<ExpandListGroup>mainmenulist;
+    ArrayList<Class_SubMenu>submenuList;
+    List<MenuModel> headerList = new ArrayList<>();
+    HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
+    ExpandListGroup[] objclassarr_expandedlistgroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,12 +204,15 @@ public class Activity_HomeScreen extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+     //   sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
 
-        sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
-        str_employee_id = sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeid, "").trim();
-        Log.e("tag", "str_employee_id=" + str_employee_id);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+        Log.e("homepage", "str_loginuserID=" + str_loginuserID);
+
+      //  sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+      //  str_employee_id = sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeid, "").trim();
+       // Log.e("tag", "str_employee_id=" + str_employee_id);
 
 
         sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
@@ -241,8 +264,13 @@ public class Activity_HomeScreen extends AppCompatActivity {
             }
         }
         if (isInternetPresent) {
-            OnlineView_Feedback task1 = new OnlineView_Feedback(Activity_HomeScreen.this);
-            task1.execute();
+            AsyncCallWS2_Login task = new AsyncCallWS2_Login(Activity_HomeScreen.this);
+            task.execute();
+
+            GetMobileMenu();
+
+//            OnlineView_Feedback task1 = new OnlineView_Feedback(Activity_HomeScreen.this);
+//            task1.execute();
          //   Add_setGCM1();
          ///   GetAppVersionCheck();
 //            delete_CountDetailsRestTable_B4insertion();
@@ -375,7 +403,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             }
                         });
 
-
                         final Handler handler2 = new Handler();
                         handler2.postDelayed(new Runnable() {
                             @Override
@@ -418,6 +445,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                         onlineview_iv.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
+//                                                Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
+//                                                startActivity(i);
+//                                                overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+
                                                 if (str_feedback.equalsIgnoreCase("Visible")) {
                                                     Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
                                                     startActivity(i);
@@ -538,6 +569,197 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
             }
         }
+    }
+
+
+    public class AsyncCallWS2_Login extends AsyncTask<String, Void, Void>
+    {
+        // ProgressDialog dialog;
+        ProgressDialog progressDoalog;
+        Context context;
+
+        @Override
+        protected void onPreExecute()
+        {
+            Log.i("tag", "onPreExecute---tab2");
+            /*dialog.setMessage("Please wait..");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();*/
+
+            progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+            progressDoalog.setMessage("Loading....");
+            progressDoalog.setTitle("Please wait....");
+            progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDoalog.show();
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values)
+        {
+            Log.i("tag", "onProgressUpdate---tab2");
+        }
+
+        public AsyncCallWS2_Login(Activity_HomeScreen activity) {
+            context =  activity;
+            //  dialog = new ProgressDialog(activity);
+        }
+        @Override
+        protected Void doInBackground(String... params)
+        {
+            Log.i("tag", "doInBackground");
+
+            //  fetch_all_info("");
+
+			/*  if(!login_result.equals("Fail"))
+			  {
+				  GetAllEvents(u1,p1);
+			  }*/
+
+            //GetAllEvents(u1,p1);
+
+            get_User_Schedule();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            //  dialog.dismiss();
+            progressDoalog.dismiss();
+            cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
+            cal_month_copy = (GregorianCalendar) cal_month.clone();
+            cal_adapter1 = new CalendarAdapter(Activity_HomeScreen.this, cal_month, UserInfoListRest.user_info_arr);
+
+           /* Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
+            SharedPreferences myprefs = Activity_HomeScreen.this.getSharedPreferences("user", MODE_PRIVATE);
+            myprefs.edit().putString("login_userid", str_loginuserID).apply();
+            SharedPreferences myprefs_scheduleId = Activity_HomeScreen.this.getSharedPreferences("scheduleId", MODE_PRIVATE);
+            myprefs_scheduleId.edit().putString("scheduleId", Schedule_ID).apply();
+            startActivity(i);
+            finish();*/
+        }
+    }
+
+    public void get_User_Schedule(){
+
+
+//        Interface_userservice userService;
+//        userService = Class_ApiUtils.getUserService();
+
+        Log.i("User_ID=", str_loginuserID);
+        Call<UserInfoRest> call = userService1.get_User_Schedule(str_loginuserID);
+
+        call.enqueue(new Callback<UserInfoRest>() {
+            @Override
+            public void onResponse(Call<UserInfoRest> call, Response<UserInfoRest> response) {
+                Log.e("response_userschd", "response_userschd: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+
+                if(response.isSuccessful())
+                {
+                    UserInfoRest userInfoRest = response.body();
+                    Log.e("response.user schedule", response.body().getListVersion().toString());
+
+
+                    if (userInfoRest.getStatus().equals(true))
+                    {
+
+                        List<UserInfoListRest> usershedulelist = response.body().getListVersion();
+                        Log.e("length", String.valueOf(usershedulelist.size()));
+                        int int_usercount=usershedulelist.size();
+
+                        for(int i=0;i<int_usercount;i++)
+                        {
+                            Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+
+                            Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
+
+                            Schedule_ID = usershedulelist.get(i).getScheduleID().toString();
+                            Lavel_ID = usershedulelist.get(i).getLavelID().toString();
+                            Schedule_Date = usershedulelist.get(i).getScheduleDate().toString();
+                            End_Time = usershedulelist.get(i).getEndTime().toString();
+                            Start_Time = usershedulelist.get(i).getStartTime().toString();
+                            Subject_Name = usershedulelist.get(i).getSubjectName().toString();
+                            Schedule_Session = usershedulelist.get(i).getScheduleSession().toString();
+                           if(usershedulelist.get(i).getLeasonName()==null || usershedulelist.get(i).getLeasonName().equals("")){
+                               Leason_Name="";
+                           }else {
+                               Leason_Name = usershedulelist.get(i).getLeasonName().toString();
+                           }
+                            Lavel_Name = usershedulelist.get(i).getLavelName().toString();
+                            Institute_Name = usershedulelist.get(i).getInstituteName().toString();
+                            Cluster_Name = usershedulelist.get(i).getClusterName().toString();
+
+                            //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                            arrayList.add(userInfo);
+
+                        }
+                        final String[] items = new String[int_usercount];
+                        userInfosarr = new UserInfoListRest[int_usercount];
+                        UserInfoListRest obj = new UserInfoListRest();
+
+                        UserInfoListRest.user_info_arr.clear();
+                        for (int i = 0; i < int_usercount; i++) {
+                            Schedule_ID = arrayList.get(i).scheduleID;
+                            Lavel_ID = arrayList.get(i).lavelID;
+                            Schedule_Date = arrayList.get(i).scheduleDate;
+                            End_Time = arrayList.get(i).endTime;
+                            Start_Time = arrayList.get(i).startTime;
+                            Schedule_Session = arrayList.get(i).scheduleSession;
+                            Schedule_Status = arrayList.get(i).scheduleStatus;
+                            Subject_Name = arrayList.get(i).subjectName;
+                            Lavel_Name = arrayList.get(i).lavelName;
+                            Leason_Name = arrayList.get(i).leasonName;
+                            Cluster_Name = arrayList.get(i).clusterName;
+                            Institute_Name = arrayList.get(i).instituteName;
+
+                            obj.setScheduleID(Schedule_ID);
+                            obj.setLavelID(Lavel_ID);
+                            obj.setScheduleDate(Schedule_Date);
+                            obj.setEndTime(End_Time);
+                            obj.setStartTime(Start_Time);
+                            obj.setScheduleSession(Schedule_Session);
+                            obj.setScheduleStatus(Schedule_Status);
+                            obj.setSubjectName(Subject_Name);
+                            obj.setLavelName(Lavel_Name);
+                            obj.setLeasonName(Leason_Name);
+                            obj.setInstituteName(Institute_Name);
+                            obj.setClusterName(Cluster_Name);
+
+                            userInfosarr[i] = obj;
+                            //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
+
+                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+
+                            Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
+                        }
+                        //Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Activity_HomeScreen.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     ////////////////////////////////// Auto Sync 1st time //////////////////////////////////////
@@ -745,8 +967,8 @@ public class Activity_HomeScreen extends AppCompatActivity {
     ////////////////////////////////// API Call /////////////////////////////////////////////////
     public void GetDropdownValuesRestData() {
         Log.e("Entered ", "GetAppVersionCheck");
-        Log.e("getLocationData", "str_employee_id=" + str_employee_id);
-        Call<Location_Data> call = userService1.getLocationData("12");
+        Log.e("getLocationData", "str_loginuserID=" + str_loginuserID);
+        Call<Location_Data> call = userService1.getLocationData(str_loginuserID,"SIV");
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
@@ -900,8 +1122,15 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String Level_AcademicID = class_locaitonData.getLst().get(i).getLevel().get(j).getAcademicID();
                                 String Level_ClusterID = class_locaitonData.getLst().get(i).getLevel().get(j).getClusterID();
                                 String Level_AdmissionFee = class_locaitonData.getLst().get(i).getLevel().get(j).getAdmissionFee();
-                                DBCreate_LeveldetailsRest_insert_2SQLiteDB(LevelName, LevelID, Level_InstituteID, Level_AcademicID, Level_ClusterID, Level_AdmissionFee, j);
-                            }
+
+                              //  String Level_AdmissionFee = "0";
+
+                                DBCreate_LeveldetailsRest_insert_2SQLiteDB(LevelName,LevelID,Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee,j);
+
+
+
+
+                                }
 
                             int sizeAssessment = class_locaitonData.getLst().get(i).getAssessment().size();
                             for (int j = 0; j < sizeAssessment; j++) {
@@ -969,8 +1198,8 @@ public class Activity_HomeScreen extends AppCompatActivity {
     public void GetStudentValuesRestData() {
         Log.e("Entered ", "GetStudentValuesRestData");
 
-        Log.e("str_employee_id_studentva", str_employee_id);
-        Call<Student> call = userService1.getStudentData("12");
+        Log.e("str_loginuser_id", str_loginuserID);
+        Call<Student> call = userService1.getStudentData(str_loginuserID);
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
@@ -1405,7 +1634,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         Class_devicedetails request = new Class_devicedetails();
         Log.e("str_userid1", "" + str_userid);
 
-        request.setUser_ID("12");
+        request.setUser_ID(str_loginuserID);
         request.setDeviceId(regId);
         request.setOSVersion(myVersion);
         request.setManufacturer(deviceBRAND);
@@ -1489,7 +1718,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         Interface_userservice userService;
         userService = Class_ApiUtils.getUserService();
 
-        Call<Class_gethelp_Response> call = userService.GetHelp("12");
+        Call<Class_gethelp_Response> call = userService.GetHelp(str_loginuserID);
 
 
         call.enqueue(new Callback<Class_gethelp_Response>() {
@@ -1569,7 +1798,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         Interface_userservice userService;
         userService = Class_ApiUtils.getUserService();
 
-        Call<Class_getdemo_Response> call = userService.GetDemo("12");//str_userid
+        Call<Class_getdemo_Response> call = userService.GetDemo(str_loginuserID);//str_userid
 
 
         call.enqueue(new Callback<Class_getdemo_Response>() {
@@ -1626,9 +1855,9 @@ public class Activity_HomeScreen extends AppCompatActivity {
 //        Map<String,String> params = new HashMap<String, String>();
 //
 //        params.put("User_ID","90");// for dynamic
-        Log.e("GetAutoSyncVersion", " str_employee_id=" + str_employee_id);
+        Log.e("GetAutoSyncVersion", " str_loginuserID=" + str_loginuserID);
 
-        retrofit2.Call call = userService1.getAutoSyncVersion("12");//str_employee_id
+        retrofit2.Call call = userService1.getAutoSyncVersion(str_loginuserID);//str_employee_id
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
         progressDoalog.setMessage("Loading....");
@@ -2168,7 +2397,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
 
         if (i == 0) {
-            String SQLiteQuery = "INSERT INTO YearListRest (YearID, YearName,Sandbox_ID)" +
+            String SQLiteQuery = "INSERT INTO YearListRest (YearID,YearName,Sandbox_ID)" +
                     " VALUES ('" + "0" + "','" + "Select"  + "','" + "0" + "');";
             db_yearlist.execSQL(SQLiteQuery);
         }
@@ -2272,7 +2501,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         db_Levellist.execSQL("CREATE TABLE IF NOT EXISTS LevelListRest(LevelName VARCHAR, LevelID VARCHAR, Level_InstituteID VARCHAR,Level_AcademicID VARCHAR,Level_ClusterID VARCHAR,Level_AdmissionFee VARCHAR);");
 
         if (i == 0) {
-            String SQLiteQuery = "INSERT INTO LevelListRest (LevelName, LevelID, Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
+            String SQLiteQuery = "INSERT INTO LevelListRest (LevelName,LevelID,Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
                     " VALUES ('" + "Select" + "','" + "0" + "','" + "0" + "','" + "0" + "','" + "0" + "','" + "0" + "');";
             db_Levellist.execSQL(SQLiteQuery);
         }
@@ -2282,7 +2511,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     " VALUES ('" + LevelName + "','" + LevelID + "','" + Level_InstituteID + "','" + Level_AcademicID + "','" + Level_ClusterID + "','" + Level_AdmissionFee + "');";
             db_Levellist.execSQL(SQLiteQuery);
        // }
-        Log.e("LevelName DB", LevelName);
+        Log.e("Level_AdmissionFee DB", Level_AdmissionFee);
         db_Levellist.close();
     }
 
@@ -2592,7 +2821,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void GetStudentValuesResyncRestData() {
 
-        Call<Student> call = userService1.getStudentDataReSync(str_employee_id);
+        Call<Student> call = userService1.getStudentDataReSync(str_loginuserID);//str_loginuserID
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
@@ -2950,6 +3179,169 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
 
 
+    public void GetMobileMenu() {
+
+        Call<GetMobileMenuResponse> call = userService1.GetMobileMenu(str_loginuserID);//String.valueOf(str_stuID)
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<GetMobileMenuResponse>() {
+            @Override
+            public void onResponse(Call<GetMobileMenuResponse> call, Response<GetMobileMenuResponse> response) {
+                Log.e("Entered resp", "GetMobileMenu");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    GetMobileMenuResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+
+                        List<GetMobileMenuResponseList> monthContents_list = response.body().getObjMenu();
+                        int loadPendingPaymentCount=monthContents_list.size();
+                        Log.e("count", String.valueOf(loadPendingPaymentCount));
+
+                        GetMobileMenuResponseList []  arrayObj_Class_monthcontents = new GetMobileMenuResponseList[monthContents_list.size()];
+                        arrayObj_class_getpaymentpendingresp = new GetMobileMenuResponseList[arrayObj_Class_monthcontents.length];
+                        objclassarr_expandedlistgroup = new ExpandListGroup[arrayObj_class_getpaymentpendingresp.length];
+                        mainmenulist = new ArrayList<ExpandListGroup>();
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("GetMobileMenu", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("GetMobileMenu", class_loginresponse.getMessage());
+
+                            GetMobileMenuResponseList innerObj_Class_academic = new GetMobileMenuResponseList();
+                            innerObj_Class_academic.setMenuID(class_loginresponse.getObjMenu().get(i).getMenuID());
+                            innerObj_Class_academic.setMenuName(class_loginresponse.getObjMenu().get(i).getMenuName());
+                            innerObj_Class_academic.setMenuSort(class_loginresponse.getObjMenu().get(i).getMenuSort());
+                            innerObj_Class_academic.setSubMenu(class_loginresponse.getObjMenu().get(i).getSubMenu());
+                            arrayObj_class_getpaymentpendingresp[i] = innerObj_Class_academic;
+
+                            List<GetMobileMenuResponseList> monthContents_list_submenu = response.body().getObjMenu();
+
+                            //  GetMobileSubMenuResponseList []  arrayObj_Class_submenu= new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+
+                            objclassarr_Class_SubMenu = new Class_SubMenu[monthContents_list_submenu.size()];
+                           // submenuList = new ArrayList<Class_SubMenu>();
+                            Log.e("soap_SubMenulength()", String.valueOf(monthContents_list_submenu.size()));
+                            arrayObj_class_getMobilesubmenuresp=new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+                            Class_SubMenu child = new Class_SubMenu();
+                            MenuModel menuModel = null;
+                            List<MenuModel> childModelsList = new ArrayList<>();
+
+
+                            for (int j = 0; j < objclassarr_Class_SubMenu.length; j++) {
+                                Log.e("entered 2nd for loop", "def");
+
+                                GetMobileSubMenuResponseList innerObj_Class = new GetMobileSubMenuResponseList();
+                                innerObj_Class.setMenuID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID());
+                                innerObj_Class.setMenuName(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
+                                innerObj_Class.setMenuLink(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+                                innerObj_Class.setParentID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID());
+                                arrayObj_class_getMobilesubmenuresp[i] = innerObj_Class;
+
+                                if (class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID().equals(class_loginresponse.getObjMenu().get(i).getMenuID())) {
+//                                    child.setMenu_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID()));
+//                                    child.setMenu_Name(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
+//                                    //   Log.e("inside",soap_Menu_Name_submenu.toString());
+//                                    child.setMenu_Link(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+//                                    child.setParent_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID()));
+
+                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName(), false, false, class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+                                    childModelsList.add(childModel);
+
+
+                                } else {
+
+                                }
+                              //  submenuList.add(child);
+
+
+                            }
+                            menuModel = new MenuModel(class_loginresponse.getObjMenu().get(i).getMenuName(), true, true, ""); //Menu of Java Tutorials
+                            headerList.add(menuModel);
+//
+                            if (menuModel.hasChildren) {
+                                Log.d("API123", "here");
+                                childList.put(menuModel, childModelsList);
+                            }
+
+//                            ExpandListGroup group = new ExpandListGroup();
+//                            Log.e("entered", "ExpandListGroup");
+//                            group.setMenu_Name(class_loginresponse.getObjMenu().get(i).getMenuName());
+//                            Log.e("main", class_loginresponse.getObjMenu().get(i).getMenuName());
+//                            // adding child to Group POJO Class
+//                            group.setChildItems(submenuList);
+//                            mainmenulist.add(group);
+//
+
+
+
+                        }//for loop end
+                        Log.e("arrayObjclassndingresp", String.valueOf(arrayObj_class_getpaymentpendingresp.length));
+
+                        if (arrayObj_class_getpaymentpendingresp.length==0) {
+                            str_feedback="";
+                        }else{
+                            str_feedback="1";
+                        }
+                        if (str_feedback.equals("")) {
+                            onlineview_iv.setVisibility(View.GONE);
+                            Log.e("tag","API-Gone");
+                            SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                            editor.putString(FeedBack, "Gone");
+                            editor.apply();
+                        }else {
+                            onlineview_iv.setVisibility(View.VISIBLE);
+                            Log.e("tag","API-Visible");
+                            SharedPreferences.Editor editor = sharedpref_feedback.edit();
+                            editor.putString(FeedBack, "Visible");
+                            editor.apply();
+                        }
+                       // populateExpandableList();
+                    } else {
+                        progressDoalog.dismiss();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("error message", error.getMsg());
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_HomeScreen.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
 
 
     //////////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.det.skillinvillage.model.AddStudentDetailsRequest;
+import com.det.skillinvillage.model.Class_GetStudentPaymentResponseList;
+import com.det.skillinvillage.model.Class_PostSavePaymentResponseList;
+import com.det.skillinvillage.model.Class_VillageLatLongList;
+import com.det.skillinvillage.model.Class_getVillageLatLong;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.GetStudentPaymentResponse;
+import com.det.skillinvillage.model.PostSavePaymentRequest;
+import com.det.skillinvillage.model.Post_Save_PaymentResponse;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
@@ -40,12 +60,20 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.Activity_Student_List.key_studentid_pay;
 import static com.det.skillinvillage.Activity_Student_List.sharedpreferenc_studentid_pay;
+import static com.det.skillinvillage.Activity_ViewStudentList_new.key_studentid;
+import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_selectedspinner;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_FeesPayment extends AppCompatActivity {
 
@@ -89,6 +117,15 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
     SharedPreferences sharedpref_loginuserid_Obj;
     SharedPreferences sharedpref_stuid_pay_Obj;
+
+    int str_stuID=0;
+    SharedPreferences sharedpref_stuid_Obj;
+    Interface_userservice userService1;
+    int payment_count;
+    Class_GetStudentPaymentResponseList[] arrayObj_class_studentpaymentresp;
+    Class_PostSavePaymentResponseList[]  arrayObj_class_postsavepaymentresp;
+
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,18 +138,27 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
+        userService1 = Class_ApiUtils.getUserService();
 
 //        SharedPreferences myprefs_userid = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 //        str_loginuserID = myprefs_userid.getString("login_userid", "nothing");
 
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
 //        SharedPreferences myprefs = this.getSharedPreferences("studentid", Context.MODE_PRIVATE);
 //        str_studentID_myprefs = myprefs.getString("str_studentID", "nothing");
 
-        sharedpref_stuid_pay_Obj=getSharedPreferences(sharedpreferenc_studentid_pay, Context.MODE_PRIVATE);
-        str_studentID_myprefs = sharedpref_stuid_pay_Obj.getString(key_studentid_pay, "").trim();
+       // sharedpref_stuid_pay_Obj=getSharedPreferences(sharedpreferenc_studentid_pay, Context.MODE_PRIVATE);
+       // str_studentID_myprefs = sharedpref_stuid_pay_Obj.getString(key_studentid_pay, "").trim();
+
+        sharedpref_stuid_Obj=getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
+        str_stuID = sharedpref_stuid_Obj.getInt(key_studentid, 0);
+        Log.e("str_stuID.oncreate..", String.valueOf(str_stuID));
 
 
 
@@ -226,14 +272,23 @@ public class Activity_FeesPayment extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(Validation()){
-                    SaveStudentpayment();
+                    if (isInternetPresent) {
+                        SaveStudentpayment();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+
+                    }
                 }else{
                     Toast.makeText(Activity_FeesPayment.this, "Please enter all the valid data", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-        GetLoadStudentpayment();
+        if (isInternetPresent) {
+            GetLoadStudentpayment();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+        }
 
 
     }//oncreate
@@ -322,18 +377,139 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
     }
 
+//    public void GetLoadStudentpayment() {
+//
+//        if (isInternetPresent) {
+//
+//            GetstudentpaymentTask task = new GetstudentpaymentTask(Activity_FeesPayment.this);
+//            task.execute();
+//
+//        } else {
+//            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+
     public void GetLoadStudentpayment() {
 
-        if (isInternetPresent) {
+//        Call<GetStudentPaymentResponse> call = userService1.getStudentPayment(String.valueOf(str_stuID));//String.valueOf(str_stuID)
+        Call<GetStudentPaymentResponse> call = userService1.getStudentPayment("1463");//String.valueOf(str_stuID)
 
-            GetstudentpaymentTask task = new GetstudentpaymentTask(Activity_FeesPayment.this);
-            task.execute();
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_FeesPayment.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
 
-        } else {
-            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-        }
+        call.enqueue(new Callback<GetStudentPaymentResponse>() {
+            @Override
+            public void onResponse(Call<GetStudentPaymentResponse> call, Response<GetStudentPaymentResponse> response) {
+                Log.e("Entered resp", "getStudentPayment");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    GetStudentPaymentResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+
+                        List<Class_GetStudentPaymentResponseList> monthContents_list = response.body().getLst();
+                        payment_count=monthContents_list.size();
+                        Class_GetStudentPaymentResponseList []  arrayObj_Class_monthcontents = new Class_GetStudentPaymentResponseList[monthContents_list.size()];
+                        arrayObj_class_studentpaymentresp = new Class_GetStudentPaymentResponseList[arrayObj_Class_monthcontents.length];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("getUserPayment", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getUserPayment", class_loginresponse.getMessage());
+
+                            Class_GetStudentPaymentResponseList innerObj_Class_academic = new Class_GetStudentPaymentResponseList();
+                            innerObj_Class_academic.setStudentID(class_loginresponse.getLst().get(i).getStudentID());
+                            innerObj_Class_academic.setSandboxName(class_loginresponse.getLst().get(i).getSandboxName());
+                            innerObj_Class_academic.setAcademicName(class_loginresponse.getLst().get(i).getAcademicName());
+                            innerObj_Class_academic.setClusterName(class_loginresponse.getLst().get(i).getClusterName());
+                            innerObj_Class_academic.setInstituteName(class_loginresponse.getLst().get(i).getInstituteName());
+                            innerObj_Class_academic.setLavelName(class_loginresponse.getLst().get(i).getLavelName());
+                            innerObj_Class_academic.setApplicationNo(class_loginresponse.getLst().get(i).getApplicationNo());
+                            innerObj_Class_academic.setStudentName(class_loginresponse.getLst().get(i).getStudentName());
+                            innerObj_Class_academic.setPaymentReceivable(class_loginresponse.getLst().get(i).getPaymentReceivable());
+                            innerObj_Class_academic.setPaymentReceived(class_loginresponse.getLst().get(i).getPaymentReceived());
+                            innerObj_Class_academic.setPaymentBalance(class_loginresponse.getLst().get(i).getPaymentBalance());
+                            arrayObj_class_studentpaymentresp[i] = innerObj_Class_academic;
+                            str_receive_studentstatus = class_loginresponse.getLst().get(i).getStudentStatus();
+                            Log.e("receive_studentstatus", str_receive_studentstatus);
+                            if (str_receive_studentstatus.equals("Admission")) {
+
+                                str_receive_studentid = String.valueOf(class_loginresponse.getLst().get(i).getStudentID());
+                                str_receive_sandbox = class_loginresponse.getLst().get(i).getSandboxName();
+                                str_receive_academic = class_loginresponse.getLst().get(i).getAcademicName();
+                                str_receive_cluster = class_loginresponse.getLst().get(i).getClusterName();
+                                str_receive_institute = class_loginresponse.getLst().get(i).getInstituteName();
+                                str_receive_level = class_loginresponse.getLst().get(i).getLavelName();
+                                str_receive_applno = class_loginresponse.getLst().get(i).getApplicationNo();
+                                str_receive_studentname = class_loginresponse.getLst().get(i).getStudentName();
+                                str_receiveAble = class_loginresponse.getLst().get(i).getPaymentReceivable();
+                                str_received = class_loginresponse.getLst().get(i).getPaymentReceived();
+                                str_receive_balance = class_loginresponse.getLst().get(i).getPaymentBalance();
+                               // str_receive_balance="500";
+                                Log.e("str_receive_studentid", str_receive_studentid);
+                            } else if (str_receive_studentstatus.equals("No Result")) {
+                                Log.e("recstudentstatus else", str_receive_studentstatus);
+
+                            }
+
+
+                        }//for loop end
+                        if (str_receive_studentstatus.equals("Admission")) {
+                            SetValues();
+                        } else {
+                            Toast.makeText(Activity_FeesPayment.this, "No Data Found", Toast.LENGTH_LONG).show();
+                            Intent i=new Intent(Activity_FeesPayment.this,Activity_ViewStudentList_new.class);
+                            startActivity(i);
+                            finish();
+
+                            //  alert();
+
+                        }
+                    } else {
+                        progressDoalog.dismiss();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                  Log.e("error message", error.getMsg());
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_FeesPayment.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
     }
-
 
     private class GetstudentpaymentTask extends AsyncTask<String, Void, Void> {
         ProgressDialog dialog;
@@ -491,7 +667,7 @@ public class Activity_FeesPayment extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i=new Intent(getApplicationContext(),Activity_Student_List.class);
+        Intent i=new Intent(getApplicationContext(),Activity_ViewStudentList_new.class);
         startActivity(i);
         finish();
     }
@@ -574,14 +750,131 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
     public void SaveStudentpayment() {
 
-        if (isInternetPresent) {
+//        if (isInternetPresent) {
+//
+//            SaveStudentpaymentTask task = new SaveStudentpaymentTask(Activity_FeesPayment.this);
+//            task.execute();
+//
+//        } else {
+//            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+//        }
+        PostSavePaymentRequest request = new PostSavePaymentRequest();
+        request.setStudentID(String.valueOf(str_stuID));//String.valueOf(str_stuID)
+        request.setPaymentAmount(amount_et.getText().toString());
+        request.setCreatedBy(str_loginuserID);
+        request.setPaymentDate(str_receiveddate);
+        request.setPaymentMode(selected_paymentMode);
+        request.setPaymentRemarks(remarks_et.getText().toString());
+        request.setPaymentType(selected_paymentType);
+        request.setReceiptManual(receipt_feepayment_et.getText().toString());
 
-            SaveStudentpaymentTask task = new SaveStudentpaymentTask(Activity_FeesPayment.this);
-            task.execute();
 
-        } else {
-            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-        }
+        Call<Post_Save_PaymentResponse> call = userService1.PostSavePayment(request);
+            // Set up progress before call
+            final ProgressDialog progressDoalog;
+            progressDoalog = new ProgressDialog(Activity_FeesPayment.this);
+            //  progressDoalog.setMax(100);
+            //  progressDoalog.setMessage("Loading....");
+            progressDoalog.setTitle("Please wait....");
+            progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            // show it
+            progressDoalog.show();
+
+            call.enqueue(new Callback<Post_Save_PaymentResponse>() {
+                @Override
+                public void onResponse(Call<Post_Save_PaymentResponse> call, Response<Post_Save_PaymentResponse> response) {
+                    Log.e("Entered resp", "PostSavePayment");
+
+                    if (response.isSuccessful()) {
+                        progressDoalog.dismiss();
+                        Post_Save_PaymentResponse class_loginresponse = response.body();
+                        if (class_loginresponse.getStatus()) {
+
+                            List<Class_PostSavePaymentResponseList> monthContents_list = response.body().getLst();
+                            payment_count=monthContents_list.size();
+                            Class_PostSavePaymentResponseList []  arrayObj_Class_monthcontents = new Class_PostSavePaymentResponseList[monthContents_list.size()];
+                            arrayObj_class_postsavepaymentresp = new Class_PostSavePaymentResponseList[arrayObj_Class_monthcontents.length];
+
+                            for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                                Log.e("PostSavePayment", String.valueOf(class_loginresponse.getStatus()));
+                                Log.e("PostSavePayment", class_loginresponse.getMessage());
+
+                                Class_PostSavePaymentResponseList innerObj_Class_academic = new Class_PostSavePaymentResponseList();
+                                innerObj_Class_academic.setStudentID(class_loginresponse.getLst().get(i).getStudentID());
+                                innerObj_Class_academic.setSandboxName(class_loginresponse.getLst().get(i).getSandboxName());
+                                innerObj_Class_academic.setAcademicName(class_loginresponse.getLst().get(i).getAcademicName());
+                                innerObj_Class_academic.setClusterName(class_loginresponse.getLst().get(i).getClusterName());
+                                innerObj_Class_academic.setInstituteName(class_loginresponse.getLst().get(i).getInstituteName());
+                                innerObj_Class_academic.setLavelName(class_loginresponse.getLst().get(i).getLavelName());
+                                innerObj_Class_academic.setApplicationNo(class_loginresponse.getLst().get(i).getApplicationNo());
+                                innerObj_Class_academic.setStudentName(class_loginresponse.getLst().get(i).getStudentName());
+                                innerObj_Class_academic.setPaymentReceivable(class_loginresponse.getLst().get(i).getPaymentReceivable());
+                                innerObj_Class_academic.setPaymentReceived(class_loginresponse.getLst().get(i).getPaymentReceived());
+                                innerObj_Class_academic.setPaymentBalance(class_loginresponse.getLst().get(i).getPaymentBalance());
+                                arrayObj_class_postsavepaymentresp[i] = innerObj_Class_academic;
+
+
+                            }//for loop end
+                            ClearData();
+                            Toast.makeText(Activity_FeesPayment.this, "Successfully submitted", Toast.LENGTH_SHORT).show();
+                            Intent i=new Intent(Activity_FeesPayment.this,Activity_ViewStudentList_new.class);
+                            startActivity(i);
+                            finish();
+
+
+//                            if(save_receive_studentstatus.equals("Sucess")){
+//                                ClearData();
+//                                Toast.makeText(Activity_FeesPayment.this, "Successfully submitted", Toast.LENGTH_SHORT).show();
+//                                Intent i=new Intent(getApplicationContext(),Activity_Student_List.class);
+//                                startActivity(i);
+//                                finish();
+//                            }else  if(save_receive_studentstatus.equals("Error")){
+//                                Toast.makeText(Activity_FeesPayment.this, "Error", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+
+
+                        } else {
+                            progressDoalog.dismiss();
+                        }
+                    } else {
+                        progressDoalog.dismiss();
+                        Log.e("Entered resp else", "");
+                        DefaultResponse error = ErrorUtils.parseError(response);
+                        // … and use it to show error information
+
+                        // … or just log the issue like we’re doing :)
+                        Log.e("error message", error.getMsg());
+
+                        if (error.getMsg() != null) {
+
+                            Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                            //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_FeesPayment.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                        }else{
+                          //  Toast.makeText(Activity_FeesPayment.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                     Toast.makeText(Activity_FeesPayment.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });// end of call
+
+
+
     }
 
     private class SaveStudentpaymentTask extends AsyncTask<String, Void, Void> {

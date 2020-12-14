@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,16 +18,17 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
-
 import com.det.skillinvillage.adapter.AndroidListAdapter;
 import com.det.skillinvillage.adapter.CalendarAdapter;
 import com.det.skillinvillage.adapter.CardsAdapter;
 import com.det.skillinvillage.adapter.EventlistAdapter;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 import com.det.skillinvillage.util.Eventlist;
 import com.det.skillinvillage.util.ListviewEvents;
-import com.det.skillinvillage.util.UserInfo;
-
+import com.det.skillinvillage.util.UserInfoListRest;
+import com.det.skillinvillage.util.UserInfoRest;
+import com.google.gson.Gson;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -43,6 +43,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
@@ -62,9 +66,9 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
     String bookid, cohartName, fellowshipName, eventdate, start_time, userId, status, end_time, module_name, attendance;
     String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
 
-    ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
+    ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
 
-    UserInfo[] userInfosarr;
+    UserInfoListRest[] userInfosarr;
     public GregorianCalendar cal_month, cal_month_copy;
     String u1;
     ConnectionDetector internetDectector;
@@ -103,7 +107,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
         cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
         cal_month_copy = (GregorianCalendar) cal_month.clone();
 
-        cal_adapter1 = new CalendarAdapter(this, cal_month, UserInfo.user_info_arr);
+        cal_adapter1 = new CalendarAdapter(this, cal_month, UserInfoListRest.user_info_arr);
         swipeLayout = findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
 
@@ -140,9 +144,9 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
         //  Log.i("Tagg", "arr_eventUpdate=" + arr_eventUpdate[0]);
         Log.i("tag", "Main-event=" + arr_stime  + "arr_bookId=" + arr_bookId + "arr_cohort=" + arr_cohort );
 
-        String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name;
+        /*String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name;
         ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
-        UserInfo[] userInfosarr;
+        UserInfo[] userInfosarr;*/
 
         CardsAdapter adapter = new CardsAdapter(this, ListviewEvents.listview_info_arr);
 
@@ -290,7 +294,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
     @Override
     public void onBackPressed() {
         // your code.
-        Intent i  = new Intent (getApplicationContext(),Activity_HomeScreen.class);
+        Intent i  = new Intent(getApplicationContext(), Activity_HomeScreen.class);
         startActivity(i);
         //   super.onBackPressed();
     }
@@ -327,7 +331,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
 
         public AsyncCallWS2(EventListActivity activity) {
             context =  activity;
-            dialog = new ProgressDialog(activity,R.style.AppCompatAlertDialogStyle);
+            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
         }
         @Override
         protected Void doInBackground(String... params)
@@ -335,7 +339,8 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
             Log.i("tag", "doInBackground");
 
 
-            fetch_all_info(u1);
+           // fetch_all_info(u1);
+            get_User_Schedule();
             return null;
         }
 
@@ -353,122 +358,127 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
             String PresentDayStr=sdf.format(date);
             Log.i("Tag_time","PresentDayStr="+PresentDayStr);
 
-            cal_adapter1.getPositionList(PresentDayStr,EventListActivity.this);
+            cal_adapter1.getPositionList(PresentDayStr, EventListActivity.this);
             finish();
         }
     }
 
- /*   public void fetch_all_info(String email) {
-        String METHOD_NAME = "GetTrainerScheduleList";
-        String SOAP_ACTION1 = "http://mis.detedu.org/GetTrainerScheduleList";
+    public void get_User_Schedule(){
 
-        try {
-            //mis.leadcampus.org
 
-            SoapObject request = new SoapObject("http://mis.detedu.org/", METHOD_NAME);
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
 
-            Log.i("email=", email);
-            request.addProperty("Email", email);
+        Log.i("User_ID=", str_loginuserID);
+        Call<UserInfoRest> call = userService.get_User_Schedule(str_loginuserID);
 
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            //SoapSerializationEnvelope evp = new SoapSoapEnvelope.XSD;
+        call.enqueue(new Callback<UserInfoRest>() {
+            @Override
+            public void onResponse(Call<UserInfoRest> call, Response<UserInfoRest> response) {
+                Log.e("response_userschd", "response_userschd: " + new Gson().toJson(response));
 
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            //envelope.encodingStyle = SoapSerializationEnvelope.XSD;
-            HttpTransportSE androidHttpTransport = new HttpTransportSE("http://mis.detedu.org/DETServices.asmx?WSDL");
-            //androidHttpTransport.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
 
-            try {
-                androidHttpTransport.call(SOAP_ACTION1, envelope);
-                Log.d("soap responseyyyyyyy", envelope.getResponse().toString());
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.d("soap responseyyyyyyy", response.toString());
-                //	for (SoapObject cs : result1)
-                if (response.getPropertyCount() > 0) {
-                    int Count = response.getPropertyCount();
 
-                    for (int i = 0; i < Count; i++) {
-                        // sizearray=result1.size();
-                        //  Log.i("Tag","sizearray="+sizearray);
-                        SoapObject list = (SoapObject) response.getProperty(i);
-                        status = list.getProperty("status").toString();
 
-                        String a = list.getProperty("notes").toString().trim();
-                        bookid = list.getProperty("booking_id").toString();
-                        cohartName = list.getProperty("cohortname").toString();
-                        fellowshipName = list.getProperty("fellowshipname").toString();
-                        eventdate = list.getProperty("date").toString();
-                        start_time = list.getProperty("start_time").toString();
-                        userId = list.getProperty("user_id").toString();
-                        end_time = list.getProperty("end_time").toString();
+                if(response.isSuccessful())
+                {
+                    UserInfoRest userInfoRest = response.body();
+                    Log.e("response.user schedule", response.body().getListVersion().toString());
 
-                        module_name = list.getProperty("module_name").toString();
-                        attendance = list.getProperty("attendance").toString();
-                        eventUpdate = true;
 
-                        //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                        UserInfo userInfo = new UserInfo(bookid, userId, eventdate, start_time, cohartName, fellowshipName, eventUpdate, end_time, module_name, status, attendance);
-                        arrayList.add(userInfo);
+                    if (userInfoRest.getStatus().equals(true))
+                    {
 
-                        Log.e("TAG", "bookid=" + bookid + "module_name=" + module_name + "cohartName=" + cohartName + "fellowshipName=" + fellowshipName + "eventdate=" + eventdate + "start_time" + start_time);
+                        List<UserInfoListRest> usershedulelist = response.body().getListVersion();
+                        Log.e("length", String.valueOf(usershedulelist.size()));
+                        int int_usercount=usershedulelist.size();
+
+                        for(int i=0;i<int_usercount;i++)
+                        {
+                            Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+
+                            Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
+
+                            Schedule_ID = usershedulelist.get(i).getScheduleID().toString();
+                            Lavel_ID = usershedulelist.get(i).getLavelID().toString();
+                            Schedule_Date = usershedulelist.get(i).getScheduleDate().toString();
+                            End_Time = usershedulelist.get(i).getEndTime().toString();
+                            Start_Time = usershedulelist.get(i).getStartTime().toString();
+                            Subject_Name = usershedulelist.get(i).getSubjectName().toString();
+                            Schedule_Session = usershedulelist.get(i).getScheduleSession().toString();
+                            Leason_Name = usershedulelist.get(i).getLeasonName().toString();
+                            Lavel_Name = usershedulelist.get(i).getLavelName().toString();
+                            Institute_Name = usershedulelist.get(i).getInstituteName().toString();
+                            Cluster_Name = usershedulelist.get(i).getClusterName().toString();
+
+                            //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                            arrayList.add(userInfo);
+
+                        }
+                        final String[] items = new String[int_usercount];
+                        userInfosarr = new UserInfoListRest[int_usercount];
+                        UserInfoListRest obj = new UserInfoListRest();
+
+                        UserInfoListRest.user_info_arr.clear();
+                        for (int i = 0; i < int_usercount; i++) {
+                            Schedule_ID = arrayList.get(i).scheduleID;
+                            Lavel_ID = arrayList.get(i).lavelID;
+                            Schedule_Date = arrayList.get(i).scheduleDate;
+                            End_Time = arrayList.get(i).endTime;
+                            Start_Time = arrayList.get(i).startTime;
+                            Schedule_Session = arrayList.get(i).scheduleSession;
+                            Schedule_Status = arrayList.get(i).scheduleStatus;
+                            Subject_Name = arrayList.get(i).subjectName;
+                            Lavel_Name = arrayList.get(i).lavelName;
+                            Leason_Name = arrayList.get(i).leasonName;
+                            Cluster_Name = arrayList.get(i).clusterName;
+                            Institute_Name = arrayList.get(i).instituteName;
+
+                            obj.setScheduleID(Schedule_ID);
+                            obj.setLavelID(Lavel_ID);
+                            obj.setScheduleDate(Schedule_Date);
+                            obj.setEndTime(End_Time);
+                            obj.setStartTime(Start_Time);
+                            obj.setScheduleSession(Schedule_Session);
+                            obj.setScheduleStatus(Schedule_Status);
+                            obj.setSubjectName(Subject_Name);
+                            obj.setLavelName(Lavel_Name);
+                            obj.setLeasonName(Leason_Name);
+                            obj.setInstituteName(Institute_Name);
+                            obj.setClusterName(Cluster_Name);
+
+                            userInfosarr[i] = obj;
+                            //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
+
+                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+
+                            Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
+                        }
+                        //Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
 
                     }
+                    // Log.e("response.body", response.body().size);
 
-                    final String[] items = new String[Count];
-                    userInfosarr = new UserInfo[Count];
-                    UserInfo obj = new UserInfo();
-
-                    UserInfo.user_info_arr.clear();
-                    for (int i = 0; i < response.getPropertyCount(); i++) {
-                        bookid = arrayList.get(i).booking_id;
-                        cohartName = arrayList.get(i).cohortname;
-                        userId = arrayList.get(i).user_id;
-                        eventUpdate = arrayList.get(i).eventUpdate;
-                        start_time = arrayList.get(i).start_time;
-                        fellowshipName = arrayList.get(i).fellowshipname;
-                        eventdate = arrayList.get(i).date1;
-                        end_time = arrayList.get(i).end_time;
-                        status = arrayList.get(i).event_status;
-                        module_name = arrayList.get(i).module_name;
-                        attendance = arrayList.get(i).attendance;
-                        obj.setBooking_id(bookid);
-                        obj.setCohortname(cohartName);
-                        obj.setDate1(eventdate);
-                        obj.setFellowshipname(fellowshipName);
-                        obj.setStart_time(start_time);
-                        obj.setUser_id(userId);
-                        obj.setEnd_time(end_time);
-                        obj.setEvent_status(status);
-                        obj.setModule_name(module_name);
-                        obj.setAttendance(attendance);
-                        userInfosarr[i] = obj;
-                        //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
-
-                        UserInfo.user_info_arr.add(new UserInfo(bookid, userId, eventdate, start_time, cohartName, fellowshipName, eventUpdate, end_time, module_name, status, attendance));
-
-                        Log.i("Tag", "items aa=" + arrayList.get(i).booking_id);
-
-                    }
-
-                    Log.i("Tag", "items=" + items.length);
                 }
 
-            } catch (Throwable t) {
-                //Toast.makeText(MainActivity.this, "Request failed: " + t.toString(),
-                //		Toast.LENGTH_LONG).show();
-                Log.e("request fail 5", "> " + t.getMessage());
+
+
             }
-        } catch (Throwable t) {
-            Log.e("Tag", "UnRegister Receiver Error" + " > " + t.getMessage());
 
-        }
+            @Override
+            public void onFailure(Call call, Throwable t) {
 
-    }*/
-
-    public void fetch_all_info(String email) {
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(EventListActivity.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    /*public void fetch_all_info(String email) {
 
         String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
         String METHOD_NAME = "LoadScheduleEmployee";
@@ -506,14 +516,14 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                     for (int i = 0; i < Count; i++) {
                         // sizearray=result1.size();
                         //  Log.i("Tag","sizearray="+sizearray);
-                        /*  <Schedule_ID>int</Schedule_ID>
+                        *//*  <Schedule_ID>int</Schedule_ID>
           <Lavel_ID>int</Lavel_ID>
           <Schedule_Date>string</Schedule_Date>
           <Start_Time>string</Start_Time>
           <End_Time>string</End_Time>
           <Schedule_Session>string</Schedule_Session>
           <Subject_Name>string</Subject_Name>
-          <Schedule_Status>string</Schedule_Status>*/
+          <Schedule_Status>string</Schedule_Status>*//*
 
 
                         SoapObject list = (SoapObject) response.getProperty(i);
@@ -582,12 +592,12 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                 }
                 //  Log.e("TAG","bookid="+bookid+"cohartName="+cohartName+"fellowshipName="+fellowshipName+"eventdate="+eventdate+"start_time"+start_time);
 
-			/*	 for(int i=0;i<result1.size();i++);
+			*//*	 for(int i=0;i<result1.size();i++);
 				 {
 					 String booking_id_temp, user_id_temp,date_temp,notes_temp,start_time_temp;
 					 if(Event_Discription.equals(result1.elementAt(i)))
 
-				 }*/
+				 }*//*
 
                 //	 SoapPrimitive messege = (SoapPrimitive)response.getProperty("Status");
                 // version = (SoapPrimitive)response.getProperty("AppVersion");
@@ -603,7 +613,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
 
         }
 
-    }
+    }*/
 
 
     @Override
@@ -622,7 +632,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.monthview) {
-            Intent i  = new Intent (getApplicationContext(),CalendarView.class);
+            Intent i  = new Intent(getApplicationContext(), CalendarView.class);
             startActivity(i);
             return true;
         }

@@ -9,7 +9,7 @@ public class Class_Post_UpdateStudentAssessmentSubmitRequest {
     @Expose
     private String UserID;
 
-    @SerializedName("Assesment_ID")
+    @SerializedName("Assessment_ID")
     @Expose
     private String AssesmentID;
 

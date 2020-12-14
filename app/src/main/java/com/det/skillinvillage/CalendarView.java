@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.det.skillinvillage.adapter.AndroidListAdapter;
 import com.det.skillinvillage.adapter.CalendarAdapter;
-import com.det.skillinvillage.util.UserInfo;
+import com.det.skillinvillage.util.UserInfoListRest;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -59,8 +59,8 @@ public class CalendarView extends AppCompatActivity {
 	Boolean isInternetPresent = false;
 	//Button logout_bt;
 	String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
-	ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
-	UserInfo[] userInfosarr;
+	/*ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
+	UserInfo[] userInfosarr;*/
 	String str_loginuserID;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +82,7 @@ public class CalendarView extends AppCompatActivity {
 		str_loginuserID = myprefs.getString("login_userid", "nothing");
 
 		items = new ArrayList<String>();
-		adapter = new CalendarAdapter(this, month, UserInfo.user_info_arr);
+		adapter = new CalendarAdapter(this, month, UserInfoListRest.user_info_arr);
 
 		GridView gridview = findViewById(R.id.gv_calendar);
 		gridview.setAdapter(adapter);
@@ -117,7 +117,7 @@ public class CalendarView extends AppCompatActivity {
 
 		gridview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v,
-					int position, long id) {
+                                    int position, long id) {
 
 				((CalendarAdapter) parent.getAdapter()).setSelected(v,position);
 				String selectedGridDate = CalendarAdapter.day_string

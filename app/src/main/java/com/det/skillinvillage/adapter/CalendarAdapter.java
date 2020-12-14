@@ -12,12 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
 import com.det.skillinvillage.CalendarView;
 import com.det.skillinvillage.EventListActivity;
 import com.det.skillinvillage.R;
 import com.det.skillinvillage.util.EventChoosedList;
-import com.det.skillinvillage.util.UserInfo;
+import com.det.skillinvillage.util.UserInfoListRest;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,6 +26,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
+//import com.det.skillinvillage.util.UserInfo;
 
 
 public class CalendarAdapter extends BaseAdapter {
@@ -50,7 +51,7 @@ public class CalendarAdapter extends BaseAdapter {
 	String itemvalue, curentDateString;
 	DateFormat df;
 
-	List<UserInfo> UserInfolist = new ArrayList<UserInfo>();
+	//List<UserInfoListRest> UserInfolist = new ArrayList<UserInfoListRest>();
 	String datestr,stime,etime,cohortstr,classroomstr,modulestr,facultystr;
 	//Boolean eventUpdate;
 
@@ -66,14 +67,14 @@ public class CalendarAdapter extends BaseAdapter {
 	private View previousView;
 	//public ArrayList<CalendarCollection> date_collection_arr;
 	//public ArrayList<EventModule> event_module_arr;
-	public ArrayList<UserInfo> userInfo_arr;
-	ArrayList<UserInfo> arrayList= new ArrayList<UserInfo>();
+	public ArrayList<UserInfoListRest> userInfo_arr;
+	ArrayList<UserInfoListRest> arrayList= new ArrayList<UserInfoListRest>();
 	Date Selected_Date,Current_date;
 	final EventChoosedList eventChoosedList = new EventChoosedList();
 
 //	EventChoosedList eventChoosedList=new EventChoosedList();
 
-	public CalendarAdapter(Context context, GregorianCalendar monthCalendar, ArrayList<UserInfo> userInfo_arr) {
+	public CalendarAdapter(Context context, GregorianCalendar monthCalendar, ArrayList<UserInfoListRest> userInfo_arr) {
 		this.userInfo_arr=userInfo_arr;
 		CalendarAdapter.day_string = new ArrayList<String>();
 		Locale.setDefault(Locale.US);
@@ -195,14 +196,14 @@ public class CalendarAdapter extends BaseAdapter {
 		//	view.setBackgroundColor(Color.MAGENTA);
 		//view.setBackgroundColor(Color.parseColor("#343434"));
 		//	int len1=EventModule.event_module_arr.size();
-		int size1=UserInfo.user_info_arr.size();
+		int size1= UserInfoListRest.user_info_arr.size();
 		arrayList.size();
 		//UserInfolist.size();
 		Log.e("Tag","size="+size1);
 		for (int i = 0; i < size1; i++) {
 			//EventModule cal_obj = EventModule.event_module_arr.get(i);
-			UserInfo cal_obj = UserInfo.user_info_arr.get(i);
-			String date = cal_obj.Schedule_Date;
+			UserInfoListRest cal_obj = UserInfoListRest.user_info_arr.get(i);
+			String date = cal_obj.scheduleDate;
 			SimpleDateFormat daySDF = new SimpleDateFormat("yyyy-MM-dd");
 			try {
 				Selected_Date = daySDF.parse(date);
@@ -212,7 +213,7 @@ public class CalendarAdapter extends BaseAdapter {
 			}
 			//	boolean event_TF = cal_obj.eventUpdate;
 
-			String event_status = cal_obj.Schedule_Status;
+			String event_status = cal_obj.scheduleStatus;
 			//	Log.i("Tag","event_status="+event_status);
 			if (day_string.get(pos).equals(date) && event_status.equals("Taken")){
 				view.setBackgroundResource(R.drawable.rounded_calender_item);
@@ -338,12 +339,12 @@ public class CalendarAdapter extends BaseAdapter {
 	public void setEventView(View v, int pos, TextView txt){
 
 		//int len=EventModule.event_module_arr.size();
-		int size_new=UserInfo.user_info_arr.size();
+		int size_new= UserInfoListRest.user_info_arr.size();
 		Log.e("tag","size calendarAdapter=="+size_new);
 		for (int i = 0; i < size_new; i++) {
 			//EventModule cal_obj=EventModule.event_module_arr.get(i);
-			UserInfo cal_obj=UserInfo.user_info_arr.get(i);
-			String date= cal_obj.Schedule_Date; //cal_obj.strDate;
+			UserInfoListRest cal_obj= UserInfoListRest.user_info_arr.get(i);
+			String date= cal_obj.scheduleDate; //cal_obj.strDate;
 			//boolean event_TF= cal_obj.eventUpdate;
 			SimpleDateFormat daySDF = new SimpleDateFormat("yyyy-MM-dd");
 			try {
@@ -352,7 +353,7 @@ public class CalendarAdapter extends BaseAdapter {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			String event_status =cal_obj.Schedule_Status;
+			String event_status =cal_obj.scheduleStatus;
 			int len1=day_string.size();
 			//Log.i("Tag","len1="+len1);
 			if (len1>pos) {
@@ -404,7 +405,7 @@ public class CalendarAdapter extends BaseAdapter {
 		lv_android.setAdapter(list_adapter);
 
 	}*/
-	public void getPositionList( String date, final Activity act){
+	public void getPositionList(String date, final Activity act){
 		String event_date=null;
 		String event_date1=null;
 		ArrayList<String> arr_date=new ArrayList<>();
@@ -419,7 +420,7 @@ public class CalendarAdapter extends BaseAdapter {
 		ArrayList<String> arr_attandence=new ArrayList<>();
 		ArrayList<String> arr_scheduleId=new ArrayList<>();
 
-		int size=UserInfo.user_info_arr.size();
+		int size= UserInfoListRest.user_info_arr.size();
 		Log.e("TAG_TIME","size=="+size);
 		//int len=EventModule.event_module_arr.size();
 		//boolean[] arr_eventUpdate = new boolean[size];
@@ -449,20 +450,20 @@ public class CalendarAdapter extends BaseAdapter {
 			String event_fellowship=cal_collection.strFellowship;
 			Boolean event_update=cal_collection.eventUpdate;
 */
-			UserInfo cal_collection=UserInfo.user_info_arr.get(i);
-			event_date=cal_collection.Schedule_Date;
-			String event_starttime=cal_collection.Start_Time;
-			String event_endtime=cal_collection.End_Time;
-			String event_cohort=cal_collection.Subject_Name;
-			String bookId=cal_collection.Schedule_ID;
-			String event_scheduleSession=cal_collection.Schedule_Session;
-			String event_status=cal_collection.Schedule_Status;
+			UserInfoListRest cal_collection= UserInfoListRest.user_info_arr.get(i);
+			event_date=cal_collection.scheduleDate;
+			String event_starttime=cal_collection.startTime;
+			String event_endtime=cal_collection.endTime;
+			String event_cohort=cal_collection.subjectName;
+			String bookId=cal_collection.scheduleID;
+			String event_scheduleSession=cal_collection.scheduleSession;
+			String event_status=cal_collection.scheduleStatus;
 			//String event_attandence=cal_collection.Lavel_ID;
-			String event_lavelName=cal_collection.Lavel_Name;
-			String event_clusterName=cal_collection.Cluster_Name;
-			String event_leasonName=cal_collection.Leason_Name;
-			String event_instituteName=cal_collection.Institute_Name;
-			String event_scheduleId=cal_collection.Schedule_ID;
+			String event_lavelName=cal_collection.lavelName;
+			String event_clusterName=cal_collection.clusterName;
+			String event_leasonName=cal_collection.leasonName;
+			String event_instituteName=cal_collection.instituteName;
+			String event_scheduleId=cal_collection.scheduleID;
 			if (date.equals(event_date)) {
 
 				event_date1=event_date;
@@ -550,7 +551,7 @@ public class CalendarAdapter extends BaseAdapter {
 	            }).show();
 			break;	*/
 			}else{
-				Intent intent1  = new Intent (context,CalendarView.class);
+				Intent intent1  = new Intent(context, CalendarView.class);
 				context.startActivity(intent1);
 			}
 
@@ -561,7 +562,7 @@ public class CalendarAdapter extends BaseAdapter {
 			context.startActivity(intent);
 		}
 		else{
-			Intent intent1  = new Intent (context,CalendarView.class);
+			Intent intent1  = new Intent(context, CalendarView.class);
 			context.startActivity(intent1);
 		}
 		//	Activity activity = (Activity) context;

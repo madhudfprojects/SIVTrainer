@@ -182,19 +182,20 @@ public class MainActivity extends AppCompatActivity
 
         userService1 = Class_ApiUtils.getUserService();
 
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserid = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
-
-        sharedpref_username_Obj=getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
-        str_loginusername = sharedpref_username_Obj.getString(Key_username, "").trim();
-        sharedpref_userimage_Obj=getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
-        str_profileimage = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
 
         // sharedpreferencebookRest_usercredential_Obj=this.getSharedPreferences(sharedpreferencebook_User_Credential, Context.MODE_PRIVATE);
         sharedpreferencebook_usercredential_Obj=this.getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
 
         sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
         Employee_Role=sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeRoleName, "").trim();
+      //  sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+
+        str_loginuserid = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+        sharedpref_username_Obj=getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
+        str_loginusername = sharedpref_username_Obj.getString(Key_username, "").trim();
+        sharedpref_userimage_Obj=getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
+        str_profileimage = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
 
 
         Log.e("tag","Employee_Role="+Employee_Role);
@@ -633,6 +634,7 @@ public class MainActivity extends AppCompatActivity
                         Log.e("RoleName", user_object.getLst1().get(i).getUserRole().get(i).getRoleName().toString());
                         editor_obj.putString(KeyValue_employeeRoleName, user_object.getLst1().get(i).getUserRole().get(i).getRoleName());
                         editor_obj.putString(KeyValue_employeeRoleId, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
+                        editor_obj.putString(key_loginuserid, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
 
                     }
 
@@ -651,7 +653,7 @@ public class MainActivity extends AppCompatActivity
 //            myprefs_schedulerid.putString(key_schedulerid, Schedule_ID);
 //            myprefs_schedulerid.apply();
 
-                    editor_obj.commit();
+                    editor_obj.apply();
 
                     login_progressDoalog.dismiss();
 
@@ -773,6 +775,8 @@ public class MainActivity extends AppCompatActivity
                         Log.e("RoleName", user_object.getLst1().get(i).getUserRole().get(i).getRoleName().toString());
                         editor_obj.putString(KeyValue_employeeRoleName, user_object.getLst1().get(i).getUserRole().get(i).getRoleName());
                         editor_obj.putString(KeyValue_employeeRoleId, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
+                        editor_obj.putString(key_loginuserid, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
+
                     }
 
                     editor_obj.putString(KeyValue_employeeid, user_object.getLst1().get(0).getUserID());
@@ -782,7 +786,7 @@ public class MainActivity extends AppCompatActivity
                     //  editor_obj.putString(KeyValue_employeesandbox, user_object.getLst1().get(0).getUserState());
                     //  editor_obj.putString(KeyValue_perdayamount, user_object.getLst1().get(0).getUserStateAmount());
 
-                    editor_obj.commit();
+                    editor_obj.apply();
 
                     login_progressDoalog.dismiss();
 

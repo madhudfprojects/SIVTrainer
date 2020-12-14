@@ -112,7 +112,7 @@ public class ContactUs_Activity extends AppCompatActivity {
 
     public int count_from_HelpDetails_table()
     {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
         Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
         int x = cursor.getCount();
@@ -122,7 +122,7 @@ public class ContactUs_Activity extends AppCompatActivity {
 
     public void Data_from_HelpDetails_table()
     {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db2.execSQL("CREATE TABLE IF NOT EXISTS HelpDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,TitleDB VARCHAR,ContentDB VARCHAR);");
         Cursor cursor = db2.rawQuery("SELECT * FROM HelpDetails_table", null);
         int x = cursor.getCount();
@@ -206,7 +206,7 @@ public class ContactUs_Activity extends AppCompatActivity {
 
 
     public void Data_from_DemoDetails_table() {
-        SQLiteDatabase db2 = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+        SQLiteDatabase db2 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db2.execSQL("CREATE TABLE IF NOT EXISTS DemoDetails_table(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,LanguageDB VARCHAR,LinkDB VARCHAR);");
         Cursor cursor = db2.rawQuery("SELECT * FROM DemoDetails_table", null);
         int x = cursor.getCount();

@@ -27,6 +27,13 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.det.skillinvillage.adapter.ExpandableListAdapter;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.GetMobileMenuResponse;
+import com.det.skillinvillage.model.GetMobileMenuResponseList;
+import com.det.skillinvillage.model.GetMobileSubMenuResponseList;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -39,8 +46,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Onlineview_Navigation extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,6 +70,12 @@ public class Onlineview_Navigation extends AppCompatActivity
 
     SharedPreferences sharedpref_loginuserid_Obj;
     String str_loginuserID;
+
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
+    GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
+    GetMobileSubMenuResponseList[] arrayObj_class_getMobilesubmenuresp;
+    Interface_userservice userService1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +83,16 @@ public class Onlineview_Navigation extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+        userService1 = Class_ApiUtils.getUserService();
+
+        // sharedpref_loginuserid_Obj=getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+
+
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -175,11 +201,11 @@ public class Onlineview_Navigation extends AppCompatActivity
         return true;
     }
 
-    private void prepareMenuData() {
-        BackTask task = new BackTask(Onlineview_Navigation.this);
-        task.execute();
+    public void prepareMenuData() {
+//        BackTask task = new BackTask(Onlineview_Navigation.this);
+//        task.execute();
 
-
+        GetMobileMenu();
 //        MenuModel menuModel = new MenuModel("Android WebView Tutorial", true, false, "https://www.journaldev.com/9333/android-webview-example-tutorial"); //Menu of Android Tutorial. No sub menus
 //        headerList.add(menuModel);
 //
@@ -219,7 +245,7 @@ public class Onlineview_Navigation extends AppCompatActivity
 //        }
     }
 
-    private void populateExpandableList() {
+    public void populateExpandableList() {
 
         expandableListAdapter = new ExpandableListAdapter(this, headerList, childList);
         expandableListView.setAdapter(expandableListAdapter);
@@ -244,6 +270,7 @@ public class Onlineview_Navigation extends AppCompatActivity
                         web_view.getSettings().setUserAgentString(System.getProperty( "http.agent" ));
 
                         String url = headerList.get(groupPosition).url;
+
                         //  String url=Class_SaveSharedPreference.getPREF_MENU_link(CDR_Openactivity.this);
                         Log.e("child(click url)",url);
 
@@ -359,7 +386,8 @@ public class Onlineview_Navigation extends AppCompatActivity
 
         @Override
         protected Void doInBackground(String... params) {
-            list_detaile();
+//            GetMobileMenu();
+           // list_detaile();
             //return HttpULRConnect.getData(url);
             return null;
         }
@@ -491,5 +519,150 @@ public class Onlineview_Navigation extends AppCompatActivity
 
 
     }//End of leaveDetail method
+
+    public void GetMobileMenu() {
+
+        Call<GetMobileMenuResponse> call = userService1.GetMobileMenu(str_loginuserID);//String.valueOf(str_stuID)
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Onlineview_Navigation.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<GetMobileMenuResponse>() {
+            @Override
+            public void onResponse(Call<GetMobileMenuResponse> call, Response<GetMobileMenuResponse> response) {
+                Log.e("Entered resp", "GetMobileMenu");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    GetMobileMenuResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+
+                        List<GetMobileMenuResponseList> monthContents_list = response.body().getObjMenu();
+                        int loadPendingPaymentCount=monthContents_list.size();
+                        Log.e("count", String.valueOf(loadPendingPaymentCount));
+
+                        GetMobileMenuResponseList []  arrayObj_Class_monthcontents = new GetMobileMenuResponseList[monthContents_list.size()];
+                        arrayObj_class_getpaymentpendingresp = new GetMobileMenuResponseList[arrayObj_Class_monthcontents.length];
+                        objclassarr_expandedlistgroup = new ExpandListGroup[arrayObj_class_getpaymentpendingresp.length];
+                        mainmenulist = new ArrayList<ExpandListGroup>();
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+                            Log.e("GetMobileMenu", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("GetMobileMenu", class_loginresponse.getMessage());
+
+                            GetMobileMenuResponseList innerObj_Class_academic = new GetMobileMenuResponseList();
+                            innerObj_Class_academic.setMenuID(class_loginresponse.getObjMenu().get(i).getMenuID());
+                            innerObj_Class_academic.setMenuName(class_loginresponse.getObjMenu().get(i).getMenuName());
+                            innerObj_Class_academic.setMenuSort(class_loginresponse.getObjMenu().get(i).getMenuSort());
+                            innerObj_Class_academic.setSubMenu(class_loginresponse.getObjMenu().get(i).getSubMenu());
+                            arrayObj_class_getpaymentpendingresp[i] = innerObj_Class_academic;
+
+                            List<GetMobileMenuResponseList> monthContents_list_submenu = response.body().getObjMenu();
+
+                          //  GetMobileSubMenuResponseList []  arrayObj_Class_submenu= new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+
+                            objclassarr_Class_SubMenu = new Class_SubMenu[monthContents_list_submenu.size()];
+                            submenuList = new ArrayList<Class_SubMenu>();
+                            Log.e("soap_SubMenulength()", String.valueOf(monthContents_list_submenu.size()));
+                            arrayObj_class_getMobilesubmenuresp=new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+                            Class_SubMenu child = new Class_SubMenu();
+                            MenuModel menuModel = null;
+                            List<MenuModel> childModelsList = new ArrayList<>();
+
+
+                            for (int j = 0; j < objclassarr_Class_SubMenu.length; j++) {
+                                Log.e("entered 2nd for loop", "def");
+
+                                GetMobileSubMenuResponseList innerObj_Class = new GetMobileSubMenuResponseList();
+                                innerObj_Class.setMenuID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID());
+                                innerObj_Class.setMenuName(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
+                                innerObj_Class.setMenuLink(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+                                innerObj_Class.setParentID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID());
+                                arrayObj_class_getMobilesubmenuresp[i] = innerObj_Class;
+
+                                if (class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID().equals(class_loginresponse.getObjMenu().get(i).getMenuID())) {
+//                                    child.setMenu_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID()));
+//                                    child.setMenu_Name(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
+//                                    //   Log.e("inside",soap_Menu_Name_submenu.toString());
+//                                    child.setMenu_Link(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+//                                    child.setParent_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID()));
+
+                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName(), false, false, class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+                                    childModelsList.add(childModel);
+
+
+                                } else {
+
+                                }
+                               // submenuList.add(child);
+
+
+                            }
+                            menuModel = new MenuModel(class_loginresponse.getObjMenu().get(i).getMenuName(), true, true, ""); //Menu of Java Tutorials
+                            headerList.add(menuModel);
+//
+                            if (menuModel.hasChildren) {
+                                Log.d("API123", "here");
+                                childList.put(menuModel, childModelsList);
+                            }
+
+//                            ExpandListGroup group = new ExpandListGroup();
+//                            Log.e("entered", "ExpandListGroup");
+//                            group.setMenu_Name(class_loginresponse.getObjMenu().get(i).getMenuName());
+//                            Log.e("main", class_loginresponse.getObjMenu().get(i).getMenuName());
+//                            // adding child to Group POJO Class
+//                            group.setChildItems(submenuList);
+//                            mainmenulist.add(group);
+//
+
+
+
+                        }//for loop end
+
+                        populateExpandableList();
+                    } else {
+                        progressDoalog.dismiss();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+                    Log.e("error message", error.getMsg());
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Onlineview_Navigation.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
+    }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,7 @@ public class CustomeAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
-
+      //  String str_studentmarks="";
         if (convertView == null) {
             holder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context
@@ -78,7 +79,8 @@ public class CustomeAdapter extends BaseAdapter {
         holder.viewholder_studentname_tv.setText(editModelArrayList.get(position).getStudentname());
 
 
-        String str_studentmarks = editModelArrayList.get(position).getAssementMarks();
+        String   str_studentmarks = editModelArrayList.get(position).getAssementMarks();
+         Log.e("str_studentmarks",str_studentmarks);
 
 
 //        if (str_studentmarks.equalsIgnoreCase("A")) {

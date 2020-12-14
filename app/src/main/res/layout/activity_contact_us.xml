@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.54"
                         android:gravity="center_horizontal"
-                        android:text="DF Agri Version"
+                        android:text="DF SIV Version"
                         android:textColor="@color/dark_black_red"
                         android:textStyle="bold"
                         android:textSize="17dp" />
@@ -157,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:gravity="center"
-                        android:text="1.2"
+                        android:text="1.0"
                         android:textColor="@color/dark_black_red"
                         android:textSize="15dp" />
 

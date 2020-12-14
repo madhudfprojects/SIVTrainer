@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,7 +19,6 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,14 +35,25 @@ import android.widget.Toast;
 
 
 import com.det.skillinvillage.adapter.CalendarAdapter;
-import com.det.skillinvillage.adapter.Class_SandBoxDetails;
-import com.det.skillinvillage.util.StudentInfo;
-import com.det.skillinvillage.util.UserInfo;
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.LearningMode;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+import com.det.skillinvillage.util.Post_studData_Request;
+import com.det.skillinvillage.util.StudentData_Response;
+import com.det.skillinvillage.util.StudentData_ResponseList;
+import com.det.skillinvillage.util.StudentInfoListRest;
+import com.det.skillinvillage.util.StudentInfoRest;
+import com.det.skillinvillage.util.SubjectList;
+import com.det.skillinvillage.util.Subjects;
+import com.det.skillinvillage.util.UserInfoListRest;
+import com.det.skillinvillage.util.UserInfoRest;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
@@ -49,12 +61,19 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Vector;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
+
 
 public class Remarks extends AppCompatActivity {
+
+
     EditText mDesc;
     int j = 0, k = 0, j1 = 0, j2 = 0, j3 = 0, j4 = 0;
     int i1 = 0;
@@ -70,27 +89,31 @@ public class Remarks extends AppCompatActivity {
     TableLayout tl;
     LinearLayout ll_listview1;
     TextView student_header;
-    StudentInfo[] absentSudentList;
-    StudentInfo[] presentSudentList;
-    StudentInfo[] ConferencecallOptionList;
-    StudentInfo[] FacetoFaceOptionList;
-    StudentInfo[] ZoomOptionList;
+    StudentInfoListRest[] absentSudentList;
+    StudentInfoListRest[] presentSudentList;
+    StudentInfoListRest[] ConferencecallOptionList;
+    StudentInfoListRest[] FacetoFaceOptionList;
+    StudentInfoListRest[] ZoomOptionList;
 
-    ArrayList<StudentInfo> absentList, studList;
-    StudentInfo studentInfoObj;
-    StudentInfo[] unselectedAbsentStudent;
-    SoapObject student_detail, verifyresponce;
-    StudentInfo[] studentlist;
+    ArrayList<StudentInfoListRest> absentList, studList;
+    StudentInfoListRest studentInfoObj;
+    StudentInfoListRest[] unselectedAbsentStudent;
+    SoapObject student_detail;
+    StudentInfoRest verifyresponce;
+    StudentInfoListRest[] studentlist;
+    SubjectList[] subjectList_array;
     private ArrayList<String> arrLst_AbsentIds = new ArrayList<String>();
     private ArrayList<String> arrLst_PresentIds = new ArrayList<String>();
     private ArrayList<String> arrLst_ConCallIds = new ArrayList<String>();
     private ArrayList<String> arrLst_FaceIds = new ArrayList<String>();
     private ArrayList<String> arrLst_ZoomIds = new ArrayList<String>();
+
+    String Ab_List="[",Prs_list="[",ConCall_list="[",Face_list="[",Zoom_list="[";
     String absent_studentId, present_studentId,conCall_studentId,Face_studentId,Zoom_studentId;
     String bookid, cohartName, fellowshipName, eventdate, start_time, userId, status_str, end_time, module_name, attendance;
     Boolean eventUpdate;
-    StudentInfo studentInfoObj1 = new StudentInfo();
-    StudentInfo studentInfoObj2 = new StudentInfo();
+  /*  StudentInfo studentInfoObj1 = new StudentInfo();
+    StudentInfo studentInfoObj2 = new StudentInfo();*/
 
 
     public CalendarAdapter cal_adapter1;
@@ -110,8 +133,8 @@ public class Remarks extends AppCompatActivity {
     TableRow tr;
 
     String Schedule_Status, Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Subject_Name, Leason_Name, Lavel_Name, Cluster_Name, Institute_Name;
-    ArrayList<UserInfo> arrayList = new ArrayList<UserInfo>();
-    UserInfo[] userInfosarr;
+    ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
+    UserInfoListRest[] userInfosarr;
 
     int studentCount;
     String str_loginuserID, str_scheduleId;
@@ -124,9 +147,12 @@ public class Remarks extends AppCompatActivity {
     public static final String sharedpreferenc_schedulerid = "scheduleId";
     public static final String key_schedulerid = "scheduleId";
 
-    Class_LearningOption[] Arrayclass_learningOption;
+    LearningMode[] Arrayclass_learningOption;
 
-
+    Spinner subjectlist_SP;
+    SubjectList Obj_subjectList;
+    String sp_subject_ID;
+    SharedPreferences sharedpreferencebook_usercredential_Obj;
 
     protected void onCreate(Bundle saveinstances) {
         super.onCreate(saveinstances);
@@ -145,6 +171,8 @@ public class Remarks extends AppCompatActivity {
         tl = findViewById(R.id.studentlist);
         ll_listview1 = findViewById(R.id.ll_listview1);
         student_header = findViewById(R.id.student_header);
+        subjectlist_SP = findViewById(R.id.subjectlist_SP);
+
         absentList = new ArrayList<>();
         studList = new ArrayList<>();
         Bundle extras = getIntent().getExtras();
@@ -152,8 +180,10 @@ public class Remarks extends AppCompatActivity {
         //tl.setVisibility(View.GONE);
 //		SharedPreferences myprefs = this.getSharedPreferences("user", Context.MODE_PRIVATE);
 //		str_loginuserID = myprefs.getString("login_userid", "nothing");
-        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+//        sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+//        str_loginuserID = sharedpref_loginuserid_Obj.getString(key_loginuserid, "").trim();
+        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
 
         Log.e("str_loginuserID",str_loginuserID);
 //		SharedPreferences myprefs_scheduleId = this.getSharedPreferences("scheduleId", Context.MODE_PRIVATE);
@@ -163,7 +193,7 @@ public class Remarks extends AppCompatActivity {
         str_scheduleId = sharedpref_schedulerid_Obj.getString(key_schedulerid, "").trim();
 
         cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
-        cal_adapter1 = new CalendarAdapter(this, cal_month, UserInfo.user_info_arr);
+        cal_adapter1 = new CalendarAdapter(this, cal_month, UserInfoListRest.user_info_arr);
 
         //    Toast.makeText(getApplicationContext(), "msgs:"+extras.getString("EventDiscription"), Toast.LENGTH_LONG).show();
 
@@ -194,8 +224,10 @@ public class Remarks extends AppCompatActivity {
         mDesc.setText(str_Subject_Name + " | " + str_Lavel_Name + " | " + str_Leason_Name + " | " + str_Cluster_Name + " | " + str_Institute_Name);
         ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
-        AsyncCallWS_learningMode task=new AsyncCallWS_learningMode(Remarks.this);
-        task.execute();
+     //   AsyncCallWS_learningMode task=new AsyncCallWS_learningMode(Remarks.this);
+     //   task.execute();
+        uploadfromDB_LearningOptionlist();
+        Get_Schedule_Subject();
         AsyncCallWS2 task2 = new AsyncCallWS2();
         task2.execute();
 
@@ -294,12 +326,26 @@ public class Remarks extends AppCompatActivity {
                 Log.e("tag", "j==" + j);
 
                 for (int i = 0; i < j; i++) {
-                    Log.e("tag", "absentSudentList[j]==" + absentSudentList[i].getStudentname());
+                    Log.e("tag", "absentSudentList[j]==" + absentSudentList[i].getStudentName());
                 }
             }
         });
 
+        subjectlist_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                       long id) {
 
+                Obj_subjectList = (SubjectList) subjectlist_SP.getSelectedItem();
+                sp_subject_ID = Obj_subjectList.getSubjectID();
+               // selected_academicname = subjectlist_SP.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void alerts() {
@@ -377,7 +423,8 @@ public class Remarks extends AppCompatActivity {
                 even_match = "yes";
                 if (Attandence.equals("1")) {
 
-                    fetchStudentNew();
+                  //  fetchStudentNew();
+                    Get_User_Schedule_Students();
                 }
 
             } else {
@@ -396,205 +443,11 @@ public class Remarks extends AppCompatActivity {
                 dialog.dismiss();
             }
             //  spinner.setVisibility(View.GONE);
-            if (Attandence.equals("1")) {
-                if (even_match.equals("no")) {
-                    NormalUpdate(Remarks.this, "Event Match", "No schedule matches");
 
-                } else {
-                    if (!even_match.equals("yes")) {
-                        NormalUpdate(Remarks.this, even_match, "Ntwork issue");
-                    } else {
-                        //	Log.e("madhu","verifyresponce"+verifyresponce.getProperty("Message").toString());
-                        if (!verifyresponce.getProperty("Attendance_Status").toString().equals("Error")) {
-                            if (!verifyresponce.getProperty("Attendance_Status").toString().equals("No Data") || !verifyresponce.getProperty("Attendance_Status").toString().equals("Error")) {
-                                if (student_detail.getPropertyCount() > 0) {
-                                    studentCount = student_detail.getPropertyCount();
-
-
-                                    absentSudentList = new StudentInfo[studentCount];
-                                    presentSudentList = new StudentInfo[studentCount];
-                                    ZoomOptionList = new StudentInfo[studentCount];
-                                    ConferencecallOptionList = new StudentInfo[studentCount];
-                                    FacetoFaceOptionList = new StudentInfo[studentCount];
-
-                                    unselectedAbsentStudent = new StudentInfo[studentCount];
-                                   /* ConferencecallOptionList = new  StudentInfo[studentCount];
-                                    ConferencecallOptionList = new  StudentInfo[studentCount];
-                                    ConferencecallOptionList = new  StudentInfo[studentCount];*/
-
-                                    for (int i = 0; i < studentCount; i++) {
-
-                                        String date = "hello";// get the first variable
-                                        String weight_kg = "hi";// get the second variable
-                                        // Create the table row
-                                        tr = new TableRow(Remarks.this);
-                                        //  tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT,1f));
-                                        // tr.setBackgroundResource(R.drawable.row_change);
-                                        tr.setId(i);
-//                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-
-                                        //Create two columns to add as table data
-                                        // Create a TextView to add date
-                                        learningOption_sp = new Spinner(Remarks.this);
-                                      //  learningOption_sp .setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-
-                                        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
-                                                android.R.layout.simple_spinner_dropdown_item, Arrayclass_learningOption);
-                                        learningOption_sp.setAdapter(spinnerArrayAdapter);
-
-                                       // learningOption_sp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                        //ArrayAdapter arrayAdapter = new ArrayAdapter(Remarks.this, android.R.layout.simple_spinner_item, personNames);
-                                        //learningOption_sp.setAdapter(arrayAdapter);
-                                        learningOption_sp.setId(i);
-                                        String str_learningOpt=studentlist[i].getLearningOption();
-                                        Log.e("str_learningOpt","str_learningOpt");
-                                        Log.e("str_learningOpt",str_learningOpt);
-
-                                        learningOption_sp.setSelection(getIndex_remarks(learningOption_sp, str_learningOpt));
-
-                                        attendence = new Switch(Remarks.this);
-                                        attendence.setId(i);
-                                        attendence.setTextOn("A");
-                                        attendence.setTextOff("P");
-                                        //attendence.getThumbDrawable().setColorFilter(checked ? Color.BLACK : Color.WHITE, PorterDuff.Mode.MULTIPLY);
-									/*
-									        android:thumbTint="@color/blue"
-        android:trackTint="@color/white"
-									 */
-                                        attendence.setShowText(true);
-
-                                        TextView labelDATE = new TextView(Remarks.this);
-                                        labelDATE.setId(i);
-                                        //  labelDATE.setWidth(50);
-
-                                        labelDATE.setText(studentlist[i].getstudId());
-                                        //  labelDATE.setTextColor(Color.YELLOW);
-                                        labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                                        tr.addView(labelDATE);
-                                        TextView labelWEIGHT = new TextView(Remarks.this);
-                                        //  labelWEIGHT.setBackgroundColor(R.drawable.button_change);
-                                        labelWEIGHT.setId(i);
-                                        labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                                        labelWEIGHT.setText(studentlist[i].getStudentname());
-                                        labelWEIGHT.setWidth(100);
-
-
-                                        //   labelWEIGHT.setGravity(0x00800005);
-                                        labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                                        tr.addView(labelWEIGHT);//student name
-                                        tr.addView(attendence);// persent or absent
-                                        tr.addView(learningOption_sp);// spinner learning option
-                                        //
-
-                                        final int finalI = i;
-                                        learningOption_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                            @Override
-                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                String sel_option=Arrayclass_learningOption[position].toString();
-                                                studentlist[finalI].setLearningOption(sel_option);
-                                              //  Toast.makeText(Remarks.this, "Selected item:" + " " + Arrayclass_learningOption[position], Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void onNothingSelected(AdapterView<?> parent) {
-                                            }
-                                        });
-
-                                        attendence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                            @Override
-                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                Log.v("Switch State=", "" + isChecked);
-
-                                                //	Toast.makeText(Remarks.this,"Id: "+attendence.getId(), Toast.LENGTH_SHORT).show();
-                                                //	Toast.makeText(Remarks.this,"studentlist[finalI].getStudentname(): "+studentlist[finalI].getStudentname(), Toast.LENGTH_SHORT).show();
-
-                                                //  Toast.makeText(getApplicationContext(),""+isChecked, Toast.LENGTH_SHORT).show();
-                                                String value = "" + isChecked;
-                                                if (isChecked) {
-                                                    studentlist[finalI].setPre_Ab("A");
-                                                    //StudentInfo studentInfoObj=new StudentInfo();
-
-                                                    Log.i("tag", "studentlist=" + studentlist[finalI].getPre_Ab());
-                                                    //	absentList.set(j++).setID(absentList.get(finalI));
-                                                    //	absentSudentList[j++] = studentlist[finalI];
-                                                    Log.i("tag", "absentSudentList=" + absentSudentList.toString());
-											/*	for(int t=0;t<absentList.size();t++) {
-													Log.e("tag", "absentList1=" + absentList.get(t).getStudentname());
-												}*/
-                                                }
-                                                if (!isChecked) {
-                                                    studentlist[finalI].setPre_Ab("P");
-
-                                                }
-                                                //absentSudentList[j++] = studentlist[finalI];
-											/*for(int o=0;o<j;o++) {
-												Log.e("tag", "absentSudentList[k]=" + absentSudentList[o].getStudentname());
-											}*/
-                                            }
-
-                                        });
-		  				  /*   tr.setOnTouchListener(new OnTouchListener() {
-		    			            @Override
-		    			            public boolean onTouch(View arg0, MotionEvent arg1) {
-		    			                switch (arg1.getAction()) {
-		    			                case MotionEvent.ACTION_DOWN: {
-		    			                 //   v.setImageBitmap(res.getDrawable(R.drawable.img_down));
-		    			                	arg0.setBackgroundColor(Color.GRAY);
-		    			                    break;
-		    			                }
-		    			               case MotionEvent.ACTION_CANCEL:{
-		    			            	   arg0.setBackgroundColor(0);
-		    			                    break;
-		    			                } 
-		    			                }
-		    			                return true;
-		    			            }
-		    			        }); */
-                                        //  tr.addView(tl, new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 0));
-                                        //   tr.setBackgroundDrawable(R.drawable.)
-
-
-                                        tr.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                // v.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
-                                                //  v.getId();
-
-                                                TableRow t = (TableRow) v;
-                                                TextView firstTextView = (TextView) t.getChildAt(0);
-                                                TextView secondTextView = (TextView) t.getChildAt(1);
-                                                String firstText = firstTextView.getText().toString();
-                                                String secondText = secondTextView.getText().toString();
-                                                //  Toast.makeText(getApplicationContext(),"first Text ="+firstText, Toast.LENGTH_SHORT).show();
-                                                //   Toast.makeText(getApplicationContext(),"second Text ="+secondText, Toast.LENGTH_SHORT).show();
-
-
-                                            }
-                                        });
-
-                                        tl.addView(tr, new TableLayout.LayoutParams(
-                                                LayoutParams.WRAP_CONTENT,
-                                                LayoutParams.WRAP_CONTENT, 1f));
-
-                                    }
-                                }
-                            }
-                        } else {
-                            Toast.makeText(Remarks.this, "No students in this class", Toast.LENGTH_LONG).show();
-                        }
-
-                    }
-
-                }
-
-                //	Toast.makeText(Remarks.this,even_match,Toast.LENGTH_LONG).show();
-
-            }
         }
     }
 
-    private class AsyncCallWS_learningMode extends AsyncTask<String, Void, Void> {
+   /* private class AsyncCallWS_learningMode extends AsyncTask<String, Void, Void> {
         ProgressDialog dialog;
 
         Context context;
@@ -620,7 +473,7 @@ public class Remarks extends AppCompatActivity {
 
         public AsyncCallWS_learningMode(Context context1) {
             context = context1;
-            dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
+            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
         }
 
         @Override
@@ -628,16 +481,16 @@ public class Remarks extends AppCompatActivity {
 
             if ((dialog != null) && dialog.isShowing()) {
                 dialog.dismiss();
-               /* ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
+               *//* ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
                         android.R.layout.simple_spinner_dropdown_item, Arrayclass_learningOption);
-                learningOption_sp.setAdapter(spinnerArrayAdapter);*/
+                learningOption_sp.setAdapter(spinnerArrayAdapter);*//*
             }
 
 
         }//end of onPostExecute
     }// end Async task
-
-    public void list_detaile() {
+*/
+    /*public void list_detaile() {
         Vector<SoapObject> result1 = null;
 
         String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
@@ -704,9 +557,47 @@ public class Remarks extends AppCompatActivity {
         }
 
     }//End of leaveDetail method
+*/
+    public void uploadfromDB_LearningOptionlist() {
+
+        SQLiteDatabase db_village = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        // db_village.execSQL("CREATE TABLE IF NOT EXISTS VillageList(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        db_village.execSQL("CREATE TABLE IF NOT EXISTS LearningModeListRest(LearningModeID VARCHAR,LearningModeName VARCHAR);");
+        Cursor cursor1 = db_village.rawQuery("SELECT DISTINCT * FROM LearningModeListRest", null);
+        int x = cursor1.getCount();
+        Log.e("cursor learingmodecount", Integer.toString(x));
+
+        int i = 0;
+        Arrayclass_learningOption = new LearningMode[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                LearningMode innerObj_Class_levelList = new LearningMode();
+                innerObj_Class_levelList.setLearningMode_ID(cursor1.getString(cursor1.getColumnIndex("LearningModeID")));
+                innerObj_Class_levelList.setLearningMode_Name(cursor1.getString(cursor1.getColumnIndex("LearningModeName")));
+               // arrayObj_Class_learningmodeDetails2[i] = innerObj_Class_levelList;
+                Arrayclass_learningOption[i] = innerObj_Class_levelList;
+                i++;
+
+            } while (cursor1.moveToNext());
 
 
-    public void fetchStudentNew() {
+        }//if ends
+
+        db_village.close();
+       /* if (x > 0) {
+
+            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_learningmodeDetails2);
+            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+            learnoption_Spinner.setAdapter(dataAdapter);
+            if (x > sel_learnmode) {
+                learnoption_Spinner.setSelection(sel_learnmode);
+            }
+        }*/
+
+
+    }
+   /* public void fetchStudentNew() {
         //student_header.setText("Student List");
         Vector<SoapObject> result1 = null;
         //	 String URL = "http://detmis.cloudapp.net/DETServices.asmx";//"Login.asmx?WSDL";
@@ -751,12 +642,12 @@ public class Remarks extends AppCompatActivity {
                 //Log.i("madhu","verifyresponce1="+verifyresponce.getProperty("Message").toString());
                 //  studentData= verifyresponce.getProperty("Message");
                 // Create the image
-				/*if(verifyresponce.getProperty("Message").toString().equals("Error")){
+				*//*if(verifyresponce.getProperty("Message").toString().equals("Error")){
 					Log.i("madhu","verifyresponce2="+verifyresponce.getProperty("Message").toString());
 					Toast.makeText(Remarks.this, "Student's List Not Found ", Toast.LENGTH_LONG).show();
 				}
 				else //if(!verifyresponce.getProperty("Message").toString().equals("No Data")||!verifyresponce.getProperty("Message").toString().equals("Error"))
-				{*/
+				{*//*
                 if (response.getPropertyCount() > 0) {
                     studentCount = response.getPropertyCount();
                     studentlist = new StudentInfo[response.getPropertyCount()];
@@ -774,10 +665,10 @@ public class Remarks extends AppCompatActivity {
                         Onestudent.setLearningOption(Onresponce.getProperty("Learning_Mode").toString());
                         //	Onestudent.se(Onresponce.getProperty("Student_Gender").toString());
 
-							/*if(!Onresponce.getProperty("studentMailId").toString().equals("anyType{}"))
+							*//*if(!Onresponce.getProperty("studentMailId").toString().equals("anyType{}"))
 							{
 								Onestudent.setStudEmail(Onresponce.getProperty("studentMailId").toString()) ;
-							}*/
+							}*//*
                         Onestudent.setPre_Ab("P");
                         // ash[i].setStatus(messeg1.getProperty("ProjectStatus").toString()) ;
                         studentlist[i] = Onestudent;
@@ -794,9 +685,9 @@ public class Remarks extends AppCompatActivity {
                     }
                 }
                 //}
-				/*else{
+				*//*else{
 					Toast.makeText(Remarks.this, "Student's List Not Found ", Toast.LENGTH_LONG).show();
-				}*/
+				}*//*
 
 
             } catch (Throwable t) {
@@ -809,8 +700,661 @@ public class Remarks extends AppCompatActivity {
 
         }
 
+    }*/
+
+    public void Get_Schedule_Subject(){
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Log.e("tag","ScheduleId="+str_ScheduleId_new);
+        Call<Subjects> call = userService.get_Schedule_Subject(str_ScheduleId_new);
+
+
+        call.enqueue(new Callback<Subjects>() {
+            @Override
+            public void onResponse(Call<Subjects> call, Response<Subjects> response) {
+                Log.e("response_schSubject", "response_schSubject: " + new Gson().toJson(response));
+
+                if(response.isSuccessful())
+                {
+                    Subjects subjects = response.body();
+
+                    Log.e("response schedule subj", response.body().getLst().toString());
+
+
+                    if (subjects.getStatus().equals(true))
+                    {
+
+                        List<SubjectList> subjectLists = response.body().getLst();
+                        Log.e("length", String.valueOf(subjectLists.size()));
+                        int int_usercount=subjectLists.size();
+                        subjectList_array = new SubjectList[int_usercount];
+                        for(int i=0;i<int_usercount;i++)
+                        {
+                            Log.e("SubjectName",subjectLists.get(i).getSubjectName().toString());
+                            SubjectList Onestudent = new SubjectList();
+                            Onestudent.setSubjectID(subjectLists.get(i).getSubjectID().toString());
+                            Log.e("tag", "Subject_ID=" + Onestudent.getSubjectID());
+                            Onestudent.setSubjectName(subjectLists.get(i).getSubjectName().toString());
+
+                           if(subjectLists.get(i).getSubjectID()==null||subjectLists.get(i).getSubjectID().equals("")){
+                                Onestudent.setSubjectID("");
+                            }else {
+                                Onestudent.setSubjectID(subjectLists.get(i).getSubjectID().toString());
+                            }
+                            if(subjectLists.get(i).getSubjectName()==null||subjectLists.get(i).getSubjectName().equals("")){
+                                Onestudent.setSubjectName("");
+                            }else {
+                                Onestudent.setSubjectName(subjectLists.get(i).getSubjectName().toString());
+                            }
+                                //	Toast.makeText(Remarks.this,even_match,Toast.LENGTH_LONG).show();
+                            subjectList_array[i]=Onestudent;
+                        }
+                        ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, subjectList_array);
+                        dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+                        subjectlist_SP.setAdapter(dataAdapter);
+
+                    }
+                    // Log.e("response.body", response.body().size);
+                    subjectlist_SP.setSelection(getIndex_remarks(subjectlist_SP, str_Subject_Name));
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Remarks.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
+    public void Get_User_Schedule_Students(){
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Log.e("tag","ScheduleId="+str_ScheduleId_new);
+        Call<StudentInfoRest> call = userService.get_User_Schedule_Students(str_ScheduleId_new);
+
+
+        call.enqueue(new Callback<StudentInfoRest>() {
+            @Override
+            public void onResponse(Call<StudentInfoRest> call, Response<StudentInfoRest> response) {
+                Log.e("response_schStud", "response_userschStud: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+
+                if(response.isSuccessful())
+                {
+                    StudentInfoRest studentInfoRest = response.body();
+                    verifyresponce = response.body();
+                    Log.e("response schedule schd", response.body().getListVersion().toString());
+
+
+                    if (studentInfoRest.getStatus().equals(true))
+                    {
+
+                        List<StudentInfoListRest> studentInfoList = response.body().getListVersion();
+                        Log.e("length", String.valueOf(studentInfoList.size()));
+                        int int_usercount=studentInfoList.size();
+                        studentlist = new StudentInfoListRest[int_usercount];
+                        for(int i=0;i<int_usercount;i++)
+                        {
+                            Log.e("student name",studentInfoList.get(i).getStudentName().toString());
+                            StudentInfoListRest Onestudent = new StudentInfoListRest();
+                            Onestudent.setStudentID(studentInfoList.get(i).getStudentID().toString());
+                            Log.e("tag", "Student_ID=" + Onestudent.getStudentID());
+                            Onestudent.setAttendanceStatus(studentInfoList.get(i).getAttendanceStatus().toString());
+                            Onestudent.setStudentName(studentInfoList.get(i).getStudentName().toString());
+                            Onestudent.setStudentEmail(studentInfoList.get(i).getStudentEmail().toString());
+                          //  Onestudent.setSubject_Name(studentInfoList.get(i).getSubject_Name().toString());
+
+                            if(studentInfoList.get(i).getApplicationNo()==null||studentInfoList.get(i).getApplicationNo().equals("")){
+                                Onestudent.setApplicationNo("");
+                            }else {
+                                Onestudent.setApplicationNo(studentInfoList.get(i).getApplicationNo().toString());
+                            }
+                            if(studentInfoList.get(i).getLearningMode()==null||studentInfoList.get(i).getLearningMode().equals("")){
+                                Onestudent.setLearningMode("Zoom");
+                            }else {
+                                Onestudent.setLearningMode(studentInfoList.get(i).getLearningMode().toString());
+                            }
+
+                            Onestudent.setPre_Ab("P");
+                            // ash[i].setStatus(messeg1.getProperty("ProjectStatus").toString()) ;
+                            studentlist[i] = Onestudent;
+                            studentInfoObj = new StudentInfoListRest();
+                            studentInfoObj.set_id(Onestudent.get_id());
+                            studentInfoObj.setStudentName(Onestudent.getStudentName());
+                            studentInfoObj.setStudentEmail(Onestudent.getStudentEmail());
+                            studentInfoObj.setStudentID(Onestudent.getStudentID());
+                            studentInfoObj.setLearningMode(Onestudent.getLearningMode());
+                            //studList.set(i).setID(Onestudent.getID());
+                            studList.add(studentInfoObj);
+
+                            if (Attandence.equals("1")) {
+                                if (even_match.equals("no")) {
+                                    NormalUpdate(Remarks.this, "Event Match", "No schedule matches");
+
+                                } else {
+                                    if (!even_match.equals("yes")) {
+                                        NormalUpdate(Remarks.this, even_match, "Ntwork issue");
+                                    } else {
+                                        //	Log.e("madhu","verifyresponce"+verifyresponce.getProperty("Message").toString());
+                                        //if (!verifyresponce.getProperty("Attendance_Status").toString().equals("Error")) {
+                                        if (!Onestudent.getAttendanceStatus().equals("Error")) {
+                                            if (!Onestudent.getAttendanceStatus().equals("No Data") || !Onestudent.getAttendanceStatus().equals("Error")) {
+                                                if (int_usercount > 0) {
+                                                    studentCount = int_usercount;
+
+
+                                                    absentSudentList = new StudentInfoListRest[studentCount];
+                                                    presentSudentList = new StudentInfoListRest[studentCount];
+                                                    ZoomOptionList = new StudentInfoListRest[studentCount];
+                                                    ConferencecallOptionList = new StudentInfoListRest[studentCount];
+                                                    FacetoFaceOptionList = new StudentInfoListRest[studentCount];
+
+                                                    unselectedAbsentStudent = new StudentInfoListRest[studentCount];
+                                   /* ConferencecallOptionList = new  StudentInfo[studentCount];
+                                    ConferencecallOptionList = new  StudentInfo[studentCount];
+                                    ConferencecallOptionList = new  StudentInfo[studentCount];*/
+
+                                                 //   for (int i = 0; i < studentCount; i++) {
+
+                                                        String date = "hello";// get the first variable
+                                                        String weight_kg = "hi";// get the second variable
+                                                        // Create the table row
+                                                        tr = new TableRow(Remarks.this);
+                                                        //  tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT,1f));
+                                                        // tr.setBackgroundResource(R.drawable.row_change);
+                                                        tr.setId(i);
+//                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+                                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+                                                        //Create two columns to add as table data
+                                                        // Create a TextView to add date
+                                                        learningOption_sp = new Spinner(Remarks.this);
+                                                        //  learningOption_sp .setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+
+                                                        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
+                                                                android.R.layout.simple_spinner_dropdown_item, Arrayclass_learningOption);
+                                                        learningOption_sp.setAdapter(spinnerArrayAdapter);
+
+                                                        // learningOption_sp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                                        //ArrayAdapter arrayAdapter = new ArrayAdapter(Remarks.this, android.R.layout.simple_spinner_item, personNames);
+                                                        //learningOption_sp.setAdapter(arrayAdapter);
+                                                        learningOption_sp.setId(i);
+                                                        String str_learningOpt=studentlist[i].getLearningMode();
+                                                        Log.e("str_learningOpt","str_learningOpt");
+                                                        Log.e("str_learningOpt",str_learningOpt);
+
+                                                        learningOption_sp.setSelection(getIndex_remarks(learningOption_sp, str_learningOpt));
+
+                                                        attendence = new Switch(Remarks.this);
+                                                        attendence.setId(i);
+                                                        attendence.setTextOn("A");
+                                                        attendence.setTextOff("P");
+                                                        //attendence.getThumbDrawable().setColorFilter(checked ? Color.BLACK : Color.WHITE, PorterDuff.Mode.MULTIPLY);
+									/*
+									        android:thumbTint="@color/blue"
+        android:trackTint="@color/white"
+									 */
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                            attendence.setShowText(true);
+                                                        }
+
+                                                        TextView labelDATE = new TextView(Remarks.this);
+                                                        labelDATE.setId(i);
+                                                        //  labelDATE.setWidth(50);
+
+                                                        labelDATE.setText(studentlist[i].getStudentID());
+                                                        //  labelDATE.setTextColor(Color.YELLOW);
+                                                        labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                                                        tr.addView(labelDATE);
+                                                        TextView labelWEIGHT = new TextView(Remarks.this);
+                                                        //  labelWEIGHT.setBackgroundColor(R.drawable.button_change);
+                                                        labelWEIGHT.setId(i);
+                                                        labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                                        labelWEIGHT.setText(studentlist[i].getStudentName());
+                                                        labelWEIGHT.setWidth(100);
+
+
+                                                        //   labelWEIGHT.setGravity(0x00800005);
+                                                        labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                                                        tr.addView(labelWEIGHT);//student name
+                                                        tr.addView(attendence);// persent or absent
+                                                        tr.addView(learningOption_sp);// spinner learning option
+                                                        //
+
+                                                        final int finalI = i;
+                                                        learningOption_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                            @Override
+                                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                                String sel_option=Arrayclass_learningOption[position].toString();
+                                                                studentlist[finalI].setLearningMode(sel_option);
+                                                                //  Toast.makeText(Remarks.this, "Selected item:" + " " + Arrayclass_learningOption[position], Toast.LENGTH_SHORT).show();
+                                                            }
+
+                                                            @Override
+                                                            public void onNothingSelected(AdapterView<?> parent) {
+                                                            }
+                                                        });
+
+                                                        attendence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                            @Override
+                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                                Log.v("Switch State=", "" + isChecked);
+
+                                                                //	Toast.makeText(Remarks.this,"Id: "+attendence.getId(), Toast.LENGTH_SHORT).show();
+                                                                //	Toast.makeText(Remarks.this,"studentlist[finalI].getStudentname(): "+studentlist[finalI].getStudentname(), Toast.LENGTH_SHORT).show();
+
+                                                                //  Toast.makeText(getApplicationContext(),""+isChecked, Toast.LENGTH_SHORT).show();
+                                                                String value = "" + isChecked;
+                                                                if (isChecked) {
+                                                                    studentlist[finalI].setPre_Ab("A");
+                                                                    //StudentInfo studentInfoObj=new StudentInfo();
+
+                                                                    Log.i("tag", "studentlist=" + studentlist[finalI].getPre_Ab());
+                                                                    //	absentList.set(j++).setID(absentList.get(finalI));
+                                                                    //	absentSudentList[j++] = studentlist[finalI];
+                                                                    Log.i("tag", "absentSudentList=" + absentSudentList.toString());
+											/*	for(int t=0;t<absentList.size();t++) {
+													Log.e("tag", "absentList1=" + absentList.get(t).getStudentname());
+												}*/
+                                                                }
+                                                                if (!isChecked) {
+                                                                    studentlist[finalI].setPre_Ab("P");
+
+                                                                }
+
+                                                            }
+
+                                                        });
+
+
+                                                        tr.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                TableRow t = (TableRow) v;
+                                                                TextView firstTextView = (TextView) t.getChildAt(0);
+                                                                TextView secondTextView = (TextView) t.getChildAt(1);
+                                                                String firstText = firstTextView.getText().toString();
+                                                                String secondText = secondTextView.getText().toString();
+                                                                //  Toast.makeText(getApplicationContext(),"first Text ="+firstText, Toast.LENGTH_SHORT).show();
+                                                                //   Toast.makeText(getApplicationContext(),"second Text ="+secondText, Toast.LENGTH_SHORT).show();
+
+
+                                                            }
+                                                        });
+
+                                                        tl.addView(tr, new TableLayout.LayoutParams(
+                                                                LayoutParams.WRAP_CONTENT,
+                                                                LayoutParams.WRAP_CONTENT, 1f));
+
+                                                    //} for loop
+                                                }
+                                            }
+                                        } else {
+                                            Toast.makeText(Remarks.this, "No students in this class", Toast.LENGTH_LONG).show();
+                                        }
+
+                                    }
+
+                                }
+
+                                //	Toast.makeText(Remarks.this,even_match,Toast.LENGTH_LONG).show();
+
+                            }
+                        }
+
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Remarks.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void UpdateStudentData()
+    {
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        for (int p = 0; p < studentCount; p++) {
+            if (studentlist[p].getPre_Ab().equals("A")) {
+                absentSudentList[j++] = studentlist[p];
+            }
+            if (studentlist[p].getPre_Ab().equals("P")) {
+                presentSudentList[j1++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Conference call")){
+                ConferencecallOptionList[j2++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face")||studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face ")){
+                FacetoFaceOptionList[j3++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Zoom")){
+                ZoomOptionList[j4++] = studentlist[p];
+            }
+
+        }
+        for (int i = 0; i < j; i++) {
+            absent_studentId = absentSudentList[i].getStudentID();
+
+            if (absent_studentId != null) {
+                arrLst_AbsentIds.add(absent_studentId);
+                Ab_List+=absent_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j1; i1++) {
+            present_studentId = presentSudentList[i1].getStudentID();
+
+            if (present_studentId != null) {
+                arrLst_PresentIds.add(present_studentId);
+                Prs_list+=present_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j2; i1++) {
+            conCall_studentId = ConferencecallOptionList[i1].getStudentID();
+
+            if (conCall_studentId != null) {
+                arrLst_ConCallIds.add(conCall_studentId);
+                ConCall_list+=conCall_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j3; i1++) {
+            Face_studentId = FacetoFaceOptionList[i1].getStudentID();
+
+            if (Face_studentId != null) {
+                arrLst_FaceIds.add(Face_studentId);
+                Face_list+=Face_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j4; i1++) {
+            Zoom_studentId = ZoomOptionList[i1].getStudentID();
+
+            if (Zoom_studentId != null) {
+                arrLst_ZoomIds.add(Zoom_studentId);
+                Zoom_list+=Zoom_studentId+",";
+            }
+        }
+
+        Log.e("tag", "arrLst_AbsentIds=" + arrLst_AbsentIds);
+        Log.e("tag", "arrLst_PresentIds=" + arrLst_PresentIds);
+        Log.e("tag", "arrLst_ConCallIds=" + arrLst_ConCallIds);
+        Log.e("tag", "arrLst_FaceIds=" + arrLst_FaceIds);
+        Log.e("tag", "arrLst_ZoomIds=" + arrLst_ZoomIds);
+        Log.e("tag", "Ab_List==" + Ab_List+"\"");
+
+        String Status_class = "Pending";
+        if (engage_status.equals("Yes")) {
+            Status_class = "Taken";
+        } else if (engage_status.equals("No")) {
+            Status_class = "Not Taken";
+        }
+
+        Post_studData_Request request = new Post_studData_Request();
+        request.setUser_ID(str_loginuserID);
+        request.setSchedule_ID(str_ScheduleId_new);
+        request.setSchedule_Status(Status_class);
+        request.setRemarks(remarks_info);
+        request.setSubject_ID(sp_subject_ID);
+        request.setAbsent_Value(Ab_List+"]");
+        request.setPresent_Value(Prs_list+"]");
+        request.setZoom_Value(Zoom_list+"]");
+        request.setFaceToFace_Value(Face_list+"]");
+        request.setConferance_Value(ConCall_list+"]");
+        Log.e("tag","request=="+request);
+
+
+        {
+            Call call = userService.post_ActionScheduleAttendance(request);
+
+            call.enqueue(new Callback<StudentData_Response>()
+            {
+                @Override
+              //  public void onResponse(retrofit2.Call<StudentData_Response> call, Response<StudentData_Response> response) {
+                 public void onResponse(Call<StudentData_Response> call, Response<StudentData_Response> response) {
+
+
+                        Log.e("response", response.toString());
+                    Log.e("response_body", String.valueOf(response.body()));
+
+                    if (response.isSuccessful())
+                    {
+                        //  progressDoalog.dismiss();
+
+
+                        StudentData_Response class_addfarmponddetailsresponse = response.body();
+                       // result_of_response= class_addfarmponddetailsresponse.getLst().getAttendanceStatus();
+                        result_of_response= "Taken"; //
+                        Log.e("tag", "result_of_response=="+result_of_response);
+                        if (class_addfarmponddetailsresponse.getStatus().equals("true"))
+                        {
+                            StudentData_ResponseList studentData_responseLists = response.body().getLst();
+                            result_of_response=studentData_responseLists.getAttendanceStatus().toString();
+                            Log.e("tag", "result_of_response=="+result_of_response);
+
+                        } else if (class_addfarmponddetailsresponse.getStatus().equals("false")) {
+                            //     progressDoalog.dismiss();
+                            Toast.makeText(Remarks.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        if (result_of_response != null && result_of_response.equalsIgnoreCase("Taken") || result_of_response.equalsIgnoreCase("Not Taken")) {
+                            Toast.makeText(Remarks.this, "Successfull Submission", Toast.LENGTH_LONG).show();
+                            Date date = new Date();
+                            Log.i("Tag_time", "date1=" + date);
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            String PresentDayStr = sdf.format(date);
+                            Log.i("Tag_time", "PresentDayStr=" + PresentDayStr);
+
+                            cal_adapter1.getPositionList(PresentDayStr, Remarks.this);
+                        } else {
+                            Toast.makeText(Remarks.this, "Error while saving", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        //   progressDoalog.dismiss();
+                        DefaultResponse error = ErrorUtils.parseError(response);
+                        Log.e("result_of_responseerror", error.getMsg());
+                        Toast.makeText(Remarks.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    Toast.makeText(Remarks.this, "error" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("response_error", t.getMessage().toString());
+                }
+            });
+
+        }
+    }
+    private void Update_studentData()
+    {
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        final ProgressDialog login_progressDoalog;
+       /* login_progressDoalog = new ProgressDialog(Remarks.this);
+        login_progressDoalog.setMessage("Loading....");
+        login_progressDoalog.setTitle("Please wait....");
+        login_progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        login_progressDoalog.show();*/
+
+        JSONArray jsArrayAb = new JSONArray();
+        JSONArray jsArrayPre = new JSONArray();
+        JSONArray jsArrayConcall = new JSONArray();
+        JSONArray jsArrayFace = new JSONArray();
+        JSONArray jsArrayZoom = new JSONArray();
+
+        for (int p = 0; p < studentCount; p++) {
+            if (studentlist[p].getPre_Ab().equals("A")) {
+                absentSudentList[j++] = studentlist[p];
+            }
+            if (studentlist[p].getPre_Ab().equals("P")) {
+                presentSudentList[j1++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Conference call")){
+                ConferencecallOptionList[j2++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face")||studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face ")){
+                FacetoFaceOptionList[j3++] = studentlist[p];
+            }
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Zoom")){
+                ZoomOptionList[j4++] = studentlist[p];
+            }
+
+        }
+        for (int i = 0; i < j; i++) {
+            absent_studentId = absentSudentList[i].getStudentID();
+
+            if (absent_studentId != null) {
+                arrLst_AbsentIds.add(absent_studentId);
+                Ab_List+=absent_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j1; i1++) {
+            present_studentId = presentSudentList[i1].getStudentID();
+
+            if (present_studentId != null) {
+                arrLst_PresentIds.add(present_studentId);
+                Prs_list+=present_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j2; i1++) {
+            conCall_studentId = ConferencecallOptionList[i1].getStudentID();
+
+            if (conCall_studentId != null) {
+                arrLst_ConCallIds.add(conCall_studentId);
+                ConCall_list+=conCall_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j3; i1++) {
+            Face_studentId = FacetoFaceOptionList[i1].getStudentID();
+
+            if (Face_studentId != null) {
+                arrLst_FaceIds.add(Face_studentId);
+                Face_list+=Face_studentId+",";
+            }
+        }
+        for (int i1 = 0; i1 < j4; i1++) {
+            Zoom_studentId = ZoomOptionList[i1].getStudentID();
+
+            if (Zoom_studentId != null) {
+                arrLst_ZoomIds.add(Zoom_studentId);
+                Zoom_list+=Zoom_studentId+",";
+            }
+        }
+        jsArrayAb = new JSONArray(arrLst_AbsentIds);
+        jsArrayPre = new JSONArray(arrLst_PresentIds);
+        jsArrayConcall = new JSONArray(arrLst_ConCallIds);
+        jsArrayFace = new JSONArray(arrLst_FaceIds);
+        jsArrayZoom = new JSONArray(arrLst_ZoomIds);
+
+        Log.e("tag", "arrLst_AbsentIds=" + arrLst_AbsentIds);
+        Log.e("tag", "arrLst_PresentIds=" + arrLst_PresentIds);
+        Log.e("tag", "arrLst_ConCallIds=" + arrLst_ConCallIds);
+        Log.e("tag", "arrLst_FaceIds=" + arrLst_FaceIds);
+        Log.e("tag", "arrLst_ZoomIds=" + arrLst_ZoomIds);
+        Log.e("tag", "Ab_List==" + Ab_List+"\"");
+
+        Log.e("tag", "jsArrayAb.toString()=" + jsArrayAb.toString());
+        Log.e("tag", "jsArrayPre.toString()=" + jsArrayPre.toString());
+        Log.e("tag", "jsArrayZoom.toString()=" + jsArrayZoom.toString());
+        Log.e("tag", "jsArrayConcall.toString()=" + jsArrayConcall.toString());
+        Log.e("tag", "jjsArrayFace.toString()=" + jsArrayFace.toString());
+
+        String Status_class = "Pending";
+        if (engage_status.equals("Yes")) {
+            Status_class = "Taken";
+        } else if (engage_status.equals("No")) {
+            Status_class = "Not Taken";
+        }
+
+        Post_studData_Request request = new Post_studData_Request();
+        request.setUser_ID(str_loginuserID);
+        request.setSchedule_ID(str_ScheduleId_new);
+        request.setSchedule_Status(Status_class);
+        request.setRemarks(remarks_info);
+        request.setAbsent_Value(Ab_List+"\"");
+        request.setPresent_Value(Prs_list+"\"");
+        request.setZoom_Value(Zoom_list+"\"");
+        request.setFaceToFace_Value(Face_list+"\"");
+        request.setConferance_Value(ConCall_list+"\"");
+        Log.e("tag","request=="+request);
+        Call call = userService.post_ActionScheduleAttendance(request);
+
+
+        call.enqueue(new Callback()
+        {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+                // Toast.makeText(MainActivity.this, ""+response.toString(), Toast.LENGTH_SHORT).show();
+
+                Log.e("response", response.toString());
+                Log.e("response_body", String.valueOf(response.body()));
+                if (response.isSuccessful())
+                {
+                    //  progressDoalog.dismiss();
+
+
+                 //   Class_devicedetails class_addfarmponddetailsresponse = response.body();
+/*
+                    if (class_addfarmponddetailsresponse.getStatus().equals("true"))
+                    {
+                        Log.e("devicedetails", "devicedetails_Added");
+
+                        gethelp();
+
+                    } else if (class_addfarmponddetailsresponse.getStatus().equals("false")) {
+                        //     progressDoalog.dismiss();
+                        Toast.makeText(Activity_HomeScreen.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        gethelp();
+                    }*/
+                } else {
+                    //   progressDoalog.dismiss();
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    Log.e("student", error.getMsg());
+//                    Toast.makeText(Activity_HomeScreen.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+//                    gethelp();
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t)
+            {
+              //  login_progressDoalog.dismiss();
+                Log.e("WS","error: "+t.getMessage());
+                Toast.makeText(Remarks.this, "WS:"+t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
     private int getIndex_remarks(Spinner spinner, String myString) {
         for (int i = 0; i < spinner.getCount(); i++) {
 
@@ -822,6 +1366,8 @@ public class Remarks extends AppCompatActivity {
 
         return 0;
     }
+
+
     private class AsyncCallWS3 extends AsyncTask<String, Void, Void> {
         ProgressDialog dialog;
 
@@ -858,10 +1404,12 @@ public class Remarks extends AppCompatActivity {
 			{
 				if(Attandence.equals("1")){
 			*/
-            StorestudentData();
-            Log.e("result_of_response1", result_of_response);
-            fetch_all_info1(u1);
-            Log.e("result_of_response2", result_of_response);
+           // StorestudentData();
+            UpdateStudentData();
+//            Log.e("result_of_response1", result_of_response);
+           // fetch_all_info1(u1);
+            get_User_Schedule();
+          //  Log.e("result_of_response2", result_of_response);
 				/*}
 			}*/
 
@@ -876,7 +1424,7 @@ public class Remarks extends AppCompatActivity {
             }
             Log.i("madhu", "onPostExecute");
 
-            if (result_of_response != null && result_of_response.equalsIgnoreCase("Taken") || result_of_response.equalsIgnoreCase("Not Taken")) {
+            /*if (result_of_response != null && result_of_response.equalsIgnoreCase("Taken") || result_of_response.equalsIgnoreCase("Not Taken")) {
                 Toast.makeText(Remarks.this, "Successfull Submission", Toast.LENGTH_LONG).show();
                 Date date = new Date();
                 Log.i("Tag_time", "date1=" + date);
@@ -887,7 +1435,7 @@ public class Remarks extends AppCompatActivity {
                 cal_adapter1.getPositionList(PresentDayStr, Remarks.this);
             } else {
                 Toast.makeText(Remarks.this, "Error while saving", Toast.LENGTH_LONG).show();
-            }
+            }*/
 
 			/* Intent i  = new Intent (getApplicationContext(),EventListActivity.class);
 			 				
@@ -899,9 +1447,128 @@ public class Remarks extends AppCompatActivity {
         }
     }
 
-    public void fetch_all_info1(String email) {
-	/*	Log.e("result fetch",result_of_submit);
-		result_of_response=result_of_submit;*/
+    public void get_User_Schedule(){
+
+
+        Interface_userservice userService;
+        userService = Class_ApiUtils.getUserService();
+
+        Log.i("User_ID=", str_loginuserID);
+        Call<UserInfoRest> call = userService.get_User_Schedule(str_loginuserID);
+
+        call.enqueue(new Callback<UserInfoRest>() {
+            @Override
+            public void onResponse(Call<UserInfoRest> call, Response<UserInfoRest> response) {
+                Log.e("response_userschd", "response_userschd: " + new Gson().toJson(response));
+
+               /* Class_gethelp_Response gethelp_response_obj = new Class_gethelp_Response();
+                gethelp_response_obj = (Class_gethelp_Response) response.body();*/
+
+
+
+                if(response.isSuccessful())
+                {
+                    UserInfoRest userInfoRest = response.body();
+                    Log.e("response.user schedule", response.body().getListVersion().toString());
+
+
+                    if (userInfoRest.getStatus().equals(true))
+                    {
+
+                        List<UserInfoListRest> usershedulelist = response.body().getListVersion();
+                        Log.e("length", String.valueOf(usershedulelist.size()));
+                        int int_usercount=usershedulelist.size();
+
+                        for(int i=0;i<int_usercount;i++)
+                        {
+                            Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+
+                            Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
+
+                            Schedule_ID = usershedulelist.get(i).getScheduleID().toString();
+                            Lavel_ID = usershedulelist.get(i).getLavelID().toString();
+                            Schedule_Date = usershedulelist.get(i).getScheduleDate().toString();
+                            End_Time = usershedulelist.get(i).getEndTime().toString();
+                            Start_Time = usershedulelist.get(i).getStartTime().toString();
+                            Subject_Name = usershedulelist.get(i).getSubjectName().toString();
+                            Schedule_Session = usershedulelist.get(i).getScheduleSession().toString();
+                            if(usershedulelist.get(i).getLeasonName()==null||usershedulelist.get(i).getLeasonName().equals("")){
+                                Leason_Name="";
+                            }else {
+                                Leason_Name = usershedulelist.get(i).getLeasonName().toString();
+                            }
+                            Lavel_Name = usershedulelist.get(i).getLavelName().toString();
+                            Institute_Name = usershedulelist.get(i).getInstituteName().toString();
+                            Cluster_Name = usershedulelist.get(i).getClusterName().toString();
+
+                            //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                            arrayList.add(userInfo);
+
+                        }
+                        final String[] items = new String[int_usercount];
+                        userInfosarr = new UserInfoListRest[int_usercount];
+                        UserInfoListRest obj = new UserInfoListRest();
+
+                        UserInfoListRest.user_info_arr.clear();
+                        for (int i = 0; i < int_usercount; i++) {
+                            Schedule_ID = arrayList.get(i).scheduleID;
+                            Lavel_ID = arrayList.get(i).lavelID;
+                            Schedule_Date = arrayList.get(i).scheduleDate;
+                            End_Time = arrayList.get(i).endTime;
+                            Start_Time = arrayList.get(i).startTime;
+                            Schedule_Session = arrayList.get(i).scheduleSession;
+                            Schedule_Status = arrayList.get(i).scheduleStatus;
+                            Subject_Name = arrayList.get(i).subjectName;
+                            Lavel_Name = arrayList.get(i).lavelName;
+                            Leason_Name = arrayList.get(i).leasonName;
+                            Cluster_Name = arrayList.get(i).clusterName;
+                            Institute_Name = arrayList.get(i).instituteName;
+
+                            obj.setScheduleID(Schedule_ID);
+                            obj.setLavelID(Lavel_ID);
+                            obj.setScheduleDate(Schedule_Date);
+                            obj.setEndTime(End_Time);
+                            obj.setStartTime(Start_Time);
+                            obj.setScheduleSession(Schedule_Session);
+                            obj.setScheduleStatus(Schedule_Status);
+                            obj.setSubjectName(Subject_Name);
+                            obj.setLavelName(Lavel_Name);
+                            obj.setLeasonName(Leason_Name);
+                            obj.setInstituteName(Institute_Name);
+                            obj.setClusterName(Cluster_Name);
+
+                            userInfosarr[i] = obj;
+                            //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
+
+                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+
+                            Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
+                        }
+                        //Data_from_HelpDetails_table();
+
+                        //helplist.get(0).
+
+                    }
+                    // Log.e("response.body", response.body().size);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+                Log.e("WS", "error" + t.getMessage());
+                Toast.makeText(Remarks.this, "WS:" + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    /*public void fetch_all_info1(String email) {
+	*//*	Log.e("result fetch",result_of_submit);
+		result_of_response=result_of_submit;*//*
 
         String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
         String METHOD_NAME = "LoadScheduleEmployee";
@@ -938,14 +1605,14 @@ public class Remarks extends AppCompatActivity {
                     for (int i = 0; i < Count; i++) {
                         // sizearray=result1.size();
                         //  Log.i("Tag","sizearray="+sizearray);
-                        /*  <Schedule_ID>int</Schedule_ID>
+                        *//*  <Schedule_ID>int</Schedule_ID>
           <Lavel_ID>int</Lavel_ID>
           <Schedule_Date>string</Schedule_Date>
           <Start_Time>string</Start_Time>
           <End_Time>string</End_Time>
           <Schedule_Session>string</Schedule_Session>
           <Subject_Name>string</Subject_Name>
-          <Schedule_Status>string</Schedule_Status>*/
+          <Schedule_Status>string</Schedule_Status>*//*
 
 
                         SoapObject list = (SoapObject) response.getProperty(i);
@@ -1023,7 +1690,7 @@ public class Remarks extends AppCompatActivity {
 
         }
 
-    }
+    }*/
 
 
 
@@ -1056,13 +1723,13 @@ public class Remarks extends AppCompatActivity {
             if (studentlist[p].getPre_Ab().equals("P")) {
                 presentSudentList[j1++] = studentlist[p];
             }
-            if (studentlist[p].getLearningOption().equalsIgnoreCase("Conference call")){
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Conference call")){
                 ConferencecallOptionList[j2++] = studentlist[p];
             }
-            if (studentlist[p].getLearningOption().equalsIgnoreCase("Face to Face")||studentlist[p].getLearningOption().equalsIgnoreCase("Face to Face ")){
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face")||studentlist[p].getLearningMode().equalsIgnoreCase("Face to Face ")){
                 FacetoFaceOptionList[j3++] = studentlist[p];
             }
-            if (studentlist[p].getLearningOption().equalsIgnoreCase("Zoom")){
+            if (studentlist[p].getLearningMode().equalsIgnoreCase("Zoom")){
                 ZoomOptionList[j4++] = studentlist[p];
             }
             //	Log.i("tag","present_studentId="+present_studentId + "absent_studentId="+absent_studentId);
@@ -1074,35 +1741,35 @@ public class Remarks extends AppCompatActivity {
 			}*/
         }
         for (int i = 0; i < j; i++) {
-            absent_studentId = absentSudentList[i].getstudId();
+            absent_studentId = absentSudentList[i].getStudentID();
 
             if (absent_studentId != null) {
                 arrLst_AbsentIds.add(absent_studentId);
             }
         }
         for (int i1 = 0; i1 < j1; i1++) {
-            present_studentId = presentSudentList[i1].getstudId();
+            present_studentId = presentSudentList[i1].getStudentID();
 
             if (present_studentId != null) {
                 arrLst_PresentIds.add(present_studentId);
             }
         }
         for (int i1 = 0; i1 < j2; i1++) {
-            conCall_studentId = ConferencecallOptionList[i1].getstudId();
+            conCall_studentId = ConferencecallOptionList[i1].getStudentID();
 
             if (conCall_studentId != null) {
                 arrLst_ConCallIds.add(conCall_studentId);
             }
         }
         for (int i1 = 0; i1 < j3; i1++) {
-            Face_studentId = FacetoFaceOptionList[i1].getstudId();
+            Face_studentId = FacetoFaceOptionList[i1].getStudentID();
 
             if (Face_studentId != null) {
                 arrLst_FaceIds.add(Face_studentId);
             }
         }
         for (int i1 = 0; i1 < j4; i1++) {
-            Zoom_studentId = ZoomOptionList[i1].getstudId();
+            Zoom_studentId = ZoomOptionList[i1].getStudentID();
 
             if (Zoom_studentId != null) {
                 arrLst_ZoomIds.add(Zoom_studentId);
@@ -1183,6 +1850,7 @@ public class Remarks extends AppCompatActivity {
         }
 
     }
+
 
     public void submit_status() {
 

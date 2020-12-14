@@ -613,145 +613,282 @@
 
             </RadioGroup>
         </LinearLayout>
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="start"
-            android:layout_margin="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+            <RelativeLayout
+                android:id="@+id/rel_learningmodelayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Learning Option"
-                android:layout_marginTop="10dp"
-                android:textColor="#5C5757"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
-                android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/learnoption_Sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
 
 
-            <Spinner
-                android:id="@+id/learnoption_Sp"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:textColor="#5C5757"
-                android:layout_marginTop="5dp"
-                android:popupBackground="@drawable/layout_background"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Learning Mode"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
 
         </LinearLayout>
-        <TableRow
-            android:layout_width="fill_parent"
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="start"-->
+<!--            android:layout_margin="8dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Learning Option"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:textColor="#5C5757"-->
+
+<!--                android:textStyle="bold"/>-->
+
+
+<!--            <Spinner-->
+<!--                android:id="@+id/learnoption_Sp"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="10dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"/>-->
+
+<!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="10dp"
-            android:gravity="start"
-            android:layout_margin="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
+            android:weightSum="2">
+            <RelativeLayout
+                android:id="@+id/rel_edulayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Education"
-                android:textColor="#5C5757"
-                
-                android:textStyle="bold"/>
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/markslabel_TV"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginLeft="90dp"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                android:text="Marks"-->
-            <!--                android:visibility="gone"-->
-            <!--                android:textColor="#5C5757"-->
-            <!--                -->
-            <!--                />-->
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="77dp"
-                android:paddingLeft="5dp"
-                android:text="    Application Status"
-                android:textColor="#5C5757"
-                
-                android:textStyle="bold"/>
-
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start">
-
-            <Spinner
-                android:id="@+id/education__edit_Spinner"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
+                android:layout_weight="1"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:popupBackground="@drawable/layout_background"
-                android:textColor="#5C5757"
-                />
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="12dp"-->
-            <!--android:layout_marginTop="15dp"-->
-            <!--android:gravity="center"-->
-            <!--android:text="Student Status"-->
-            <!--android:textColor="#276ca4" />-->
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
-            <!--<TableRow-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
 
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="10dp">-->
-
-            <!--<TextView-->
-
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="8dp"-->
-            <!--android:paddingLeft="5dp"-->
-            <!--android:text="Application Status"-->
-            <!--android:textColor="#276ca4" />-->
+                    <Spinner
+                        android:id="@+id/education__edit_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
 
 
-            <!--</TableRow>-->
+                </LinearLayout>
 
-            <!--            <EditText-->
-            <!--                android:id="@+id/marks_ET"-->
-            <!--                android:layout_width="150dp"-->
-            <!--                android:layout_height="40dp"-->
-            <!--                android:layout_marginLeft="8dp"-->
-            <!--                android:inputType="number"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                android:layout_marginTop="10dp"-->
-            <!--                android:background="@drawable/shadow_new"-->
-            <!--                android:visibility="gone"-->
-            <!--                android:maxLength="3"-->
-            <!--                android:textColor="#5C5757"-->
-            <!--                -->
-            <!--                android:hint="Marks"/>-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Education"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
 
-            <Spinner
-                android:id="@+id/studentstatus_edit_sp"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="18dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:textColor="#5C5757"
-                
-                android:popupBackground="@drawable/layout_background" />
+            <RelativeLayout
+                android:id="@+id/rel_applnstatus_new_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp">
 
-        </TableRow>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/studentstatus_edit_sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Application Status"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:gravity="start"-->
+<!--            android:layout_margin="8dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Education"-->
+<!--                android:textColor="#5C5757"-->
+<!--                -->
+<!--                android:textStyle="bold"/>-->
+
+<!--            &lt;!&ndash;            <TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:id="@+id/markslabel_TV"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_marginLeft="90dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:paddingLeft="5dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:text="Marks"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:visibility="gone"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:textColor="#5C5757"&ndash;&gt;-->
+<!--            &lt;!&ndash;                &ndash;&gt;-->
+<!--            &lt;!&ndash;                />&ndash;&gt;-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="77dp"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="    Application Status"-->
+<!--                android:textColor="#5C5757"-->
+<!--                -->
+<!--                android:textStyle="bold"/>-->
+
+
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="start">-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/education__edit_Spinner"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+<!--            &lt;!&ndash;<TextView&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_marginLeft="12dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_marginTop="15dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:text="Student Status"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:textColor="#276ca4" />&ndash;&gt;-->
+
+<!--            &lt;!&ndash;<TableRow&ndash;&gt;-->
+
+<!--            &lt;!&ndash;android:layout_width="fill_parent"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_marginTop="10dp">&ndash;&gt;-->
+
+<!--            &lt;!&ndash;<TextView&ndash;&gt;-->
+
+<!--            &lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:layout_marginLeft="8dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:paddingLeft="5dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:text="Application Status"&ndash;&gt;-->
+<!--            &lt;!&ndash;android:textColor="#276ca4" />&ndash;&gt;-->
+
+
+<!--            &lt;!&ndash;</TableRow>&ndash;&gt;-->
+
+<!--            &lt;!&ndash;            <EditText&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:id="@+id/marks_ET"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="150dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="40dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_marginLeft="8dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:inputType="number"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:paddingLeft="5dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_marginTop="10dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:background="@drawable/shadow_new"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:visibility="gone"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:maxLength="3"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:textColor="#5C5757"&ndash;&gt;-->
+<!--            &lt;!&ndash;                &ndash;&gt;-->
+<!--            &lt;!&ndash;                android:hint="Marks"/>&ndash;&gt;-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/studentstatus_edit_sp"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="18dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:textColor="#5C5757"-->
+<!--                -->
+<!--                android:popupBackground="@drawable/layout_background" />-->
+
+<!--        </TableRow>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -873,101 +1010,255 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/PaymentMode_edit_LL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="start"
-                android:layout_margin="8dp"
-                android:id="@+id/PaymentMode_edit_LL">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:weightSum="1">
+                <RelativeLayout
+                    android:id="@+id/rel_paymentmodelayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Payment Mode"
-                    android:layout_marginTop="10dp"
-                    android:textColor="#5C5757"
-                    
-                    android:textStyle="bold"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp">
 
 
-                <TextView
-                    android:id="@+id/paymentmode_edit_TV"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/shadow_new"
-                    android:paddingLeft="5dp"
-                    android:textColor="#5C5757"
-                    
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:text=""/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_layout"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/paymentmode_edit_TV"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:textColor="#5C5757"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:text=""/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="-4dp"
+                        android:background="#FFFFFF"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:text="Payment Mode"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="10sp" />
+                </RelativeLayout>
 
             </LinearLayout>
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="start"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:id="@+id/PaymentMode_edit_LL">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="Payment Mode"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    -->
+<!--                    android:textStyle="bold"/>-->
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/paymentmode_edit_TV"-->
+<!--                    android:layout_width="150dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:background="@drawable/shadow_new"-->
+<!--                    android:paddingLeft="5dp"-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    -->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text=""/>-->
+
+<!--            </LinearLayout>-->
+
+
+            <LinearLayout
+                android:id="@+id/PaymentDate_edit_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:weightSum="1">
+                <RelativeLayout
+                    android:id="@+id/rel_paymentdatelayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_layout"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/PaymentDate_edit_TV"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:text="Select Payment Date"
+                            android:textColor="#5C5757"
+
+                            android:gravity="center"/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/PaymentDatelabel_edit_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="-4dp"
+                        android:background="#FFFFFF"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:text="Payment Date"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="start"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:id="@+id/PaymentDate_edit_LL">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/PaymentDatelabel_edit_TV"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Payment Date"-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    android:textStyle="bold"-->
+<!--                    -->
+<!--                    android:visibility="visible"/>-->
+
+
+<!--                <TextView-->
+<!--                    android:id="@+id/PaymentDate_edit_TV"-->
+<!--                    android:layout_width="180dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:background="@drawable/shadow_new"-->
+<!--                    android:paddingLeft="5dp"-->
+<!--                    android:text="Select Payment Date"-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    -->
+<!--                    android:gravity="center"/>-->
+<!--            </LinearLayout>-->
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="start"
-                android:layout_margin="8dp"
-                android:id="@+id/PaymentDate_edit_LL">
-
-                <TextView
-                    android:id="@+id/PaymentDatelabel_edit_TV"
-                    android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:weightSum="1">
+                <RelativeLayout
+                    android:id="@+id/rel_reciptlayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Payment Date"
-                    android:textColor="#5C5757"
-                    android:textStyle="bold"
-                    
-                    android:visibility="visible"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp">
 
 
-                <TextView
-                    android:id="@+id/PaymentDate_edit_TV"
-                    android:layout_width="180dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/shadow_new"
-                    android:paddingLeft="5dp"
-                    android:text="Select Payment Date"
-                    android:textColor="#5C5757"
-                    
-                    android:gravity="center"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_layout"
+                        android:orientation="horizontal"
+                        >
+
+                        <EditText
+                            android:id="@+id/receipt_no_edit_ET"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:inputType="number"
+                            android:textColor="#5C5757"
+                            android:hint="Receipt Number"
+                            android:textSize="15sp"/>
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/receipt_nolabel_edit_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="-4dp"
+                        android:background="#FFFFFF"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:text="Receipt Number"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+
             </LinearLayout>
 
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="start"-->
+<!--                android:layout_margin="8dp">-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="start"
-                android:layout_margin="8dp">
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Receipt Number "-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    -->
+<!--                    android:visibility="visible"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:id="@+id/receipt_nolabel_edit_TV"/>-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Receipt Number "
-                    android:textColor="#5C5757"
-                    
-                    android:visibility="visible"
-                    android:textStyle="bold"
-                    android:id="@+id/receipt_nolabel_edit_TV"/>
-
-                <EditText
-                    android:id="@+id/receipt_no_edit_ET"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/shadow_new"
-                    android:inputType="number"
-                    android:paddingLeft="5dp"
-                    android:textColor="#5C5757"
-                    
-                    android:layout_marginLeft="8dp"/>
-            </LinearLayout>
+<!--                <EditText-->
+<!--                    android:id="@+id/receipt_no_edit_ET"-->
+<!--                    android:layout_width="150dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:background="@drawable/shadow_new"-->
+<!--                    android:inputType="number"-->
+<!--                    android:paddingLeft="5dp"-->
+<!--                    android:textColor="#5C5757"-->
+<!--                    -->
+<!--                    android:layout_marginLeft="8dp"/>-->
+<!--            </LinearLayout>-->
 
         </LinearLayout>
 
@@ -995,6 +1286,482 @@
         <!--android:popupBackground="#59b0b9"/>-->
 
 
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR_state_label"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="State"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"-->
+
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="90dp"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="District"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"/>-->
+
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR2_state"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/state_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+
+
+<!--            <Spinner-->
+<!--                android:id="@+id/district_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+<!--        </TableRow>-->
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR_taluk_label"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="Taluk"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"-->
+
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="90dp"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="Village"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"/>-->
+
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR2_spineraddress"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/taluk_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+
+
+<!--            <Spinner-->
+<!--                android:id="@+id/village_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+<!--        </TableRow>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/Studentaddress_ET"-->
+<!--            android:layout_width="300dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginLeft="8dp"-->
+<!--            android:background="@drawable/shadow_new"-->
+<!--            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "-->
+<!--            android:inputType="text"-->
+<!--            android:paddingLeft="5dp"-->
+<!--            android:textColor="#5C5757"-->
+<!--            android:hint="Student Address"-->
+<!--            android:layout_marginTop="20dp"/>-->
+
+                <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <RelativeLayout
+                android:id="@+id/rel_statelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/state_new_SP"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="State"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_distayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/district_new_SP"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shadow_new"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="District"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+
+
+
+
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR_state_label"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="State"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"-->
+
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="90dp"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="District"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"/>-->
+
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR2_state"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/state_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+
+
+<!--            <Spinner-->
+<!--                android:id="@+id/district_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+<!--        </TableRow>-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="2">
+            <RelativeLayout
+                android:id="@+id/rel_taluklayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/taluk_new_SP"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Taluk"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rel_villagelayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/village_new_SP"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/shadow_new"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Village"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR_taluk_label"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="Taluk"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"-->
+
+<!--                />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="90dp"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:text="Village"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"/>-->
+
+<!--        </TableRow>-->
+
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR2_spineraddress"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:gravity="center">-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/taluk_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+
+
+<!--            <Spinner-->
+<!--                android:id="@+id/village_new_SP"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:popupBackground="@drawable/layout_background"-->
+<!--                android:textColor="#5C5757"-->
+<!--                />-->
+<!--        </TableRow>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+            <RelativeLayout
+                android:id="@+id/rel_addresslayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <EditText
+                        android:id="@+id/Studentaddress_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:textColor="#5C5757"
+                        android:hint="Student Address"
+                        android:textSize="15sp"
+                        />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Student Address"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
+
+
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/UploadImage_edit_LL"
             android:layout_width="match_parent"
@@ -1015,7 +1782,7 @@
                 android:layout_marginTop="40dp"
                 android:text="Student Photo"
                 android:textColor="#5C5757"
-                
+
                 android:textStyle="bold"
                 />
 
@@ -1064,134 +1831,6 @@
             </FrameLayout>
 
         </LinearLayout>
-
-        <TableRow
-            android:id="@+id/tableR_state_label"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="State"
-                android:textColor="#5C5757"
-                android:textStyle="bold"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="90dp"
-                android:paddingLeft="5dp"
-                android:text="District"
-                android:textColor="#5C5757"
-                android:textStyle="bold"/>
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableR2_state"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:gravity="center">
-
-            <Spinner
-                android:id="@+id/state_new_SP"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:popupBackground="@drawable/layout_background"
-                android:textColor="#5C5757"
-                />
-
-
-            <Spinner
-                android:id="@+id/district_new_SP"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:popupBackground="@drawable/layout_background"
-                android:textColor="#5C5757"
-                />
-        </TableRow>
-        <TableRow
-            android:id="@+id/tableR_taluk_label"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="Taluk"
-                android:textColor="#5C5757"
-                android:textStyle="bold"
-
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="90dp"
-                android:paddingLeft="5dp"
-                android:text="Village"
-                android:textColor="#5C5757"
-                android:textStyle="bold"/>
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableR2_spineraddress"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:gravity="center">
-
-            <Spinner
-                android:id="@+id/taluk_new_SP"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:popupBackground="@drawable/layout_background"
-                android:textColor="#5C5757"
-                />
-
-
-            <Spinner
-                android:id="@+id/village_new_SP"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/spinnerarrow2"
-                android:paddingLeft="5dp"
-                android:popupBackground="@drawable/layout_background"
-                android:textColor="#5C5757"
-                />
-        </TableRow>
-
-        <EditText
-            android:id="@+id/Studentaddress_ET"
-            android:layout_width="300dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/shadow_new"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-            android:inputType="text"
-            android:paddingLeft="5dp"
-            android:textColor="#5C5757"
-            android:hint="Student Address"
-            android:layout_marginTop="20dp"/>
 
         <Button
             android:id="@+id/submit_edit_BTN"

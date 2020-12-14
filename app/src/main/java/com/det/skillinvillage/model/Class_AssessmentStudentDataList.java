@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Class_AssessmentStudentDataList {
-    @SerializedName("Student_ID")
+    @SerializedName("Marks_ID")
     @Expose
     private Integer studentID;
     @SerializedName("Student_Name")
@@ -13,16 +13,16 @@ public class Class_AssessmentStudentDataList {
     @SerializedName("Application_No")
     @Expose
     private String applicationNo;
-    @SerializedName("Assesment_Marks")
+    @SerializedName("Assessment_Marks")
     @Expose
     private String assesmentMarks;
-    @SerializedName("Assesment_Remarks")
+    @SerializedName("Assessment_Remarks")
     @Expose
     private Object assesmentRemarks;
     @SerializedName("Marks_Status")
     @Expose
     private String marksStatus;
-    @SerializedName("Assesment_Entry")
+    @SerializedName("Assessment_Entry")
     @Expose
     private String assesmentEntry;
 

@@ -8,10 +8,10 @@ public class Class_PostUpdateStudentAssessmentList {
     @SerializedName("User_ID")
     @Expose
     private Integer userID;
-    @SerializedName("Student_ID")
+    @SerializedName("Marks_ID")
     @Expose
     private String studentID;
-    @SerializedName("Student_Marks")
+    @SerializedName("Marks")
     @Expose
     private Object studentMarks;
     @SerializedName("Marks_Status")
