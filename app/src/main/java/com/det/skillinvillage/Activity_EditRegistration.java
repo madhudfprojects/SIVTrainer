@@ -1109,7 +1109,9 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_DistrictListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             district_new_SP.setAdapter(dataAdapter);
-          //  district_new_SP.setSelection(districtpos);
+            district_new_SP.setSelection(getIndex(district_new_SP, str_fetched_distname));
+
+            //  district_new_SP.setSelection(districtpos);
             /*if(x>sel_districtsp) {
                 districtlist_SP.setSelection(sel_districtsp);
             }*/
@@ -1154,7 +1156,9 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_TalukListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             taluk_new_SP.setAdapter(dataAdapter);
-         //   taluk_new_SP.setSelection(talukpos);
+            taluk_new_SP.setSelection(getIndex(taluk_new_SP, str_fetched_talukname));
+
+            //   taluk_new_SP.setSelection(talukpos);
             /*if(x>sel_taluksp) {
                 taluklist_SP.setSelection(sel_taluksp);
             }*/
@@ -1212,7 +1216,9 @@ public class Activity_EditRegistration extends AppCompatActivity {
             ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObj_Class_VillageListDetails2);
             dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
             village_new_SP.setAdapter(dataAdapter);
-          //  village_new_SP.setSelection(villagepos);
+            village_new_SP.setSelection(getIndex(village_new_SP, str_fetched_villagename));
+
+            //  village_new_SP.setSelection(villagepos);
             /*if(x>sel_villagesp) {
                 villagelist_SP.setSelection(sel_villagesp);
             }*/
@@ -1424,6 +1430,12 @@ public class Activity_EditRegistration extends AppCompatActivity {
                     Log.e("str_fetched_distname",cursor1.getString(cursor1.getColumnIndex("districtname")));
                     Log.e("str_fetched_talukname",cursor1.getString(cursor1.getColumnIndex("talukname")));
                     Log.e("str_fetched_villagename",cursor1.getString(cursor1.getColumnIndex("villagename")));
+                    Log.e("str_fetched_marks",cursor1.getString(cursor1.getColumnIndex("Marks4")));
+                    Log.e("str_fetched_marks",cursor1.getString(cursor1.getColumnIndex("Marks5")));
+                    Log.e("str_fetched_marks",cursor1.getString(cursor1.getColumnIndex("Marks6")));
+                    Log.e("str_fetched_marks",cursor1.getString(cursor1.getColumnIndex("Marks7")));
+                    Log.e("str_fetched_marks",cursor1.getString(cursor1.getColumnIndex("Marks8")));
+                    Log.e("StudentStatus..", cursor1.getString(cursor1.getColumnIndex("StudentStatus")));
 
 
                     class_farmponddetails_offline_obj = innerObj_Class_SandboxList;
@@ -1449,6 +1461,8 @@ public class Activity_EditRegistration extends AppCompatActivity {
     }// end of Data_from_PondDetails_DB
 
     public void DisplayData_Data_from_PondDetails_DB() {
+
+        Studentaddress_ET.setText(str_fetched_address);
         //  if(!class_farmponddetails_offline_obj.getGender().equals("")) {
         if (class_farmponddetails_offline_obj.getGender().equals("Boy")) {
             male_edit_RB.setChecked(true);
@@ -1491,26 +1505,34 @@ public class Activity_EditRegistration extends AppCompatActivity {
         }
         if (!class_farmponddetails_offline_obj.getMarks4().equals("0")) {
             //  marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
-            Log.e("displayingmarks..", class_farmponddetails_offline_obj.getMarks4());
+            Log.e("displayingmarks4..", class_farmponddetails_offline_obj.getMarks4());
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks4());
             str_marks = class_farmponddetails_offline_obj.getMarks4();
-        } else if (!class_farmponddetails_offline_obj.getMarks5().equals("0")) {
+        }
+        if (!class_farmponddetails_offline_obj.getMarks5().equals("0")) {
             //   marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
 
-
+            Log.e("displayingmarks5..", class_farmponddetails_offline_obj.getMarks5());
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks5());
             str_marks = class_farmponddetails_offline_obj.getMarks5();
-        } else if (!class_farmponddetails_offline_obj.getMarks6().equals("0")) {
-            Log.e("str_marks_6 setvalues", "Entered in Marks6");
+        }
+        if (!class_farmponddetails_offline_obj.getMarks6().equals("0")) {
+            Log.e("displayingmarks5..", class_farmponddetails_offline_obj.getMarks6());
 
             // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks6());
             str_marks = class_farmponddetails_offline_obj.getMarks6();
-        } else if (!class_farmponddetails_offline_obj.getMarks7().equals("0")) {
+        }
+        if (!class_farmponddetails_offline_obj.getMarks7().equals("0")) {
+            Log.e("displayingmarks7..", class_farmponddetails_offline_obj.getMarks7());
+
             // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks7());
             str_marks = class_farmponddetails_offline_obj.getMarks7();
-        } else if (!class_farmponddetails_offline_obj.getMarks8().equals("0")) {
+        }
+        if (!class_farmponddetails_offline_obj.getMarks8().equals("0")) {
+            Log.e("displayingmarks8..", class_farmponddetails_offline_obj.getMarks8());
+
             //marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
             marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks8());
             str_marks = class_farmponddetails_offline_obj.getMarks8();
@@ -1610,18 +1632,22 @@ public class Activity_EditRegistration extends AppCompatActivity {
                 Log.e("displayingmarks.2..",class_farmponddetails_offline_obj.getMarks4());
                 marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks4());
                 str_marks=class_farmponddetails_offline_obj.getMarks4();
-            } else if((!class_farmponddetails_offline_obj.getMarks5().equals("0")) && (!class_farmponddetails_offline_obj.getMarks5().equals(""))) {
+            }
+            if((!class_farmponddetails_offline_obj.getMarks5().equals("0")) && (!class_farmponddetails_offline_obj.getMarks5().equals(""))) {
                 marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks5());
                 str_marks=class_farmponddetails_offline_obj.getMarks5();
-            }else if((!class_farmponddetails_offline_obj.getMarks6().equals("0")) && (!class_farmponddetails_offline_obj.getMarks6().equals(""))) {
+            }
+            if((!class_farmponddetails_offline_obj.getMarks6().equals("0")) && (!class_farmponddetails_offline_obj.getMarks6().equals(""))) {
                 Log.e("str_marks_6 setvalues", "Entered in Marks6");
                 marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks6());
                 str_marks=class_farmponddetails_offline_obj.getMarks6();
-            }else if((!class_farmponddetails_offline_obj.getMarks7().equals("0")) && (!class_farmponddetails_offline_obj.getMarks7().equals(""))) {
+            }
+            if((!class_farmponddetails_offline_obj.getMarks7().equals("0")) && (!class_farmponddetails_offline_obj.getMarks7().equals(""))) {
                 // marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
                 marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks7());
                 str_marks=class_farmponddetails_offline_obj.getMarks7();
-            }else if((!class_farmponddetails_offline_obj.getMarks8().equals("0")) && (!class_farmponddetails_offline_obj.getMarks8().equals(""))) {
+            }
+            if((!class_farmponddetails_offline_obj.getMarks8().equals("0")) && (!class_farmponddetails_offline_obj.getMarks8().equals(""))) {
                 //marks_edit_et.setFilters(new InputFilter[]{ new InputFilterMinMax("1", "100")});
                 marks_edit_et.setText(class_farmponddetails_offline_obj.getMarks8());
                 str_marks=class_farmponddetails_offline_obj.getMarks8();
@@ -1783,24 +1809,18 @@ public class Activity_EditRegistration extends AppCompatActivity {
 //        String  str_edu=class_farmponddetails_offline_obj.getEducation();
         String  str_edu=selected_edu;
 
-        String  str_stustatus=class_farmponddetails_offline_obj.getStudentStatus();
+        String  str_stustatus=selected_studentstatus;
 //        String  str_stumarks4=class_farmponddetails_offline_obj.getMarks4();
-        if (selected_edu.equals("4th Standard")) {
-           // education__edit_Sp.setSelection(1);
-        }
+        // education__edit_Sp.setSelection(1);
         if (selected_edu.equals("5th Standard")) {
               str_stumarks4=marks_edit_et.getText().toString();
-        }
-        if (selected_edu.equals("6th Standard")) {
+        }else if (selected_edu.equals("6th Standard")) {
               str_stumarks5=marks_edit_et.getText().toString();
-        }
-        if (selected_edu.equals("7th Standard")) {
+        }else if (selected_edu.equals("7th Standard")) {
               str_stumarks6=marks_edit_et.getText().toString();
-        }
-        if (selected_edu.equals("8th Standard")) {
+        }else if (selected_edu.equals("8th Standard")) {
               str_stumarks7=marks_edit_et.getText().toString();
-        }
-        if (selected_edu.equals("9th Standard")) {
+        }else if (selected_edu.equals("9th Standard")) {
               str_stumarks8=marks_edit_et.getText().toString();
         }
 
@@ -1816,7 +1836,6 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
             try {
             Log.e("StudentID", String.valueOf(class_farmponddetails_offline_obj.getStudentID()));
-                Log.e("str_stufathername", str_stufathername);
 
                 ContentValues cv = new ContentValues();
             cv.put("SandboxID", int_val_sandboxID);
@@ -1838,15 +1857,23 @@ public class Activity_EditRegistration extends AppCompatActivity {
                 Log.e("str_gen_new", str_gen_new);
             cv.put("Education", str_edu);
             cv.put("StudentStatus", str_stustatus);
-            cv.put("Marks4", str_stumarks4);
+                Log.e("str_stufathername", str_stustatus);
+
+                cv.put("Marks4", str_stumarks4);
                 Log.e("str_stumarks4..updating", str_stumarks4);
             cv.put("Marks5", str_stumarks5);
-            cv.put("Marks6", str_stumarks6);
+                Log.e("str_stumarks5..updating", str_stumarks5);
 
+                cv.put("Marks6", str_stumarks6);
+                Log.e("str_stumarks6..updating", str_stumarks6);
 
                 cv.put("Marks7", str_stumarks7);
-            cv.put("Marks8",str_stumarks8);
-            cv.put("AdmissionFee", str_admissionfee);
+                Log.e("str_stumarks7..updating", str_stumarks7);
+
+                cv.put("Marks8",str_stumarks8);
+                Log.e("str_stumarks8..updating", str_stumarks8);
+
+                cv.put("AdmissionFee", str_admissionfee);
             ///cv.put("Reading_End", str_paymentdate);
             cv.put("ReceiptNo", str_receiptno);
             cv.put("StudentPhoto",str_imgfile);//str_stuphoto
@@ -1858,16 +1885,29 @@ public class Activity_EditRegistration extends AppCompatActivity {
             cv.put("UpadateOff_Online", "offlineedit");
             cv.put("Learning_Mode",selected_learnOption);//str_TemporaryID addonly wen new student is added
 
-                cv.put("stateid",class_farmponddetails_offline_obj.getState_ID());
-                cv.put("statename",class_farmponddetails_offline_obj.getState_Name());
-                cv.put("districtid",class_farmponddetails_offline_obj.getDistrict_ID());
-                cv.put("districtname",class_farmponddetails_offline_obj.getDistrict_Name());
-                cv.put("talukid",class_farmponddetails_offline_obj.getTaluk_ID());
-                cv.put("talukname",class_farmponddetails_offline_obj.getTaluk_Name());
-                cv.put("villageid",class_farmponddetails_offline_obj.getVillage_ID());
-                cv.put("villagename",class_farmponddetails_offline_obj.getVillage_Name());
-                cv.put("student_address",class_farmponddetails_offline_obj.getAddress());
+//                cv.put("stateid",class_farmponddetails_offline_obj.getState_ID());
+//                cv.put("statename",class_farmponddetails_offline_obj.getState_Name());
+//                cv.put("districtid",class_farmponddetails_offline_obj.getDistrict_ID());
+//                cv.put("districtname",class_farmponddetails_offline_obj.getDistrict_Name());
+//                cv.put("talukid",class_farmponddetails_offline_obj.getTaluk_ID());
+//                cv.put("talukname",class_farmponddetails_offline_obj.getTaluk_Name());
+//                cv.put("villageid",class_farmponddetails_offline_obj.getVillage_ID());
+//                cv.put("villagename",class_farmponddetails_offline_obj.getVillage_Name());
+//                cv.put("student_address",class_farmponddetails_offline_obj.getAddress());
 
+
+                cv.put("stateid",sp_strstate_ID);
+                cv.put("statename",selected_stateName);
+                cv.put("districtid",sp_strdistrict_ID);
+                cv.put("districtname",selected_district);
+                cv.put("talukid",sp_strTaluk_ID);
+                cv.put("talukname",selected_taluk);
+                cv.put("villageid",sp_strVillage_ID);
+                cv.put("villagename",selected_village);
+                cv.put("student_address",Studentaddress_ET.getText().toString());
+
+                Log.e("villagename..updating", selected_village);
+                Log.e("talukname..updating", selected_taluk);
 
             db1.update("StudentDetailsRest", cv, "StudentID = ?", new String[]{String.valueOf(str_stuID)});
             db1.close();
@@ -2059,6 +2099,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
         //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setApplication_Type("SIV");
+        request.setDivision_ID(null);
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));

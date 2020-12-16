@@ -445,20 +445,20 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                         onlineview_iv.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-//                                                Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
-//                                                startActivity(i);
-//                                                overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                                                Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
+                                                startActivity(i);
+                                                overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
 
-                                                if (str_feedback.equalsIgnoreCase("Visible")) {
-                                                    Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
-                                                    startActivity(i);
-                                                    overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
-                                                } else {
-                                                    Toast.makeText(getApplicationContext(), "You Dont Have Access", Toast.LENGTH_SHORT).show();
-                                                    Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
-                                                    startActivity(i);
-                                                    finish();
-                                                }
+//                                                if (str_feedback.equalsIgnoreCase("Visible")) {
+//                                                    Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
+//                                                    startActivity(i);
+//                                                    overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+//                                                } else {
+//                                                    Toast.makeText(getApplicationContext(), "You Dont Have Access", Toast.LENGTH_SHORT).show();
+//                                                    Intent i = new Intent(Activity_HomeScreen.this, Activity_HomeScreen.class);
+//                                                    startActivity(i);
+//                                                    finish();
+//                                                }
 
                                             }
                                         });
@@ -995,8 +995,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
                         // Toast.makeText(getContext(), "" + class_monthCounts.getMessage(), Toast.LENGTH_SHORT).show();
 
                         for (int i = 0; i < location_dataLists.length; i++) {
-
-
                             Log.e("status", String.valueOf(class_locaitonData.getStatus()));
                            /* Log.e("msg", class_loginresponse.getMessage());
                             Log.e("list", class_loginresponse.getList().get(i).getId());
@@ -1008,7 +1006,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             class_location_dataList.setTaluka(class_locaitonData.getLst().get(i).getTaluka());
                             class_location_dataList.setVillage(class_locaitonData.getLst().get(i).getVillage());
                             class_location_dataList.setYear(class_locaitonData.getLst().get(i).getYear());
-
                             class_location_dataList.setCount(class_locaitonData.getLst().get(i).getCount());
 
                             int sizeCount = class_locaitonData.getLst().get(i).getCount().size();
@@ -1297,7 +1294,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String str_villagename = class_studentData.getLstCount1().get(i1).getStudents().get(i).getVillage_Name();
                                 String str_address = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAddress();
 
-                                Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "AcademicName=" + AcademicName);
+                                Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "ApplicationNo=" + ApplicationNo);
 
                                 String str_imageurl = StudentPhoto;
                                 Log.e("tag", "str_imageurl==" + str_imageurl);
@@ -1319,15 +1316,20 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    Bitmap mIcon12 = BitmapFactory.decodeStream(inputstream_obj);
-                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                    mIcon12.compress(Bitmap.CompressFormat.PNG, 60, baos);
-                                    byte[] b = baos.toByteArray();
-                                    str_base64image = Base64.encodeToString(b, Base64.DEFAULT);
+                                    try {
+                                        Bitmap mIcon12 = BitmapFactory.decodeStream(inputstream_obj);
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        mIcon12.compress(Bitmap.CompressFormat.PNG, 60, baos);
+                                        byte[] b = baos.toByteArray();
+                                        str_base64image = Base64.encodeToString(b, Base64.DEFAULT);
 
-                                    Log.e("tag", "byteArray img=" + b);
+                                        Log.e("tag", "byteArray img=" + b);
 
-                                    //  str_base64image1 = str_base64image;
+                                        //  str_base64image1 = str_base64image;
+                                    }catch(Exception e){
+                                        e.printStackTrace();
+                                    }
+
                                 }
 
                                 DBCreate_StudentdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID,
@@ -2691,7 +2693,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname +"','" + str_talukid +  "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress +"');";
         db_studentDetails.execSQL(SQLiteQuery);
 
-        //  Log.e("ApplicationNo DB", ApplicationNo);
+         // Log.e("ApplicationNo DB", ApplicationNo);
         Log.e("StudentName DB", StudentName);
         Log.e("SandboxName DB", SandboxName);
 //
@@ -3152,6 +3154,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
             cv_studentlistupdate.put("villagename",str_villagename);
             cv_studentlistupdate.put("student_address",str_stuaddress);
 
+         //   Log.e("ApplicationNo..updating..",ApplicationNo);
             db_studentDetails.update("StudentDetailsRest", cv_studentlistupdate, "StudentID = ?", new String[]{StudentID});
             db_studentDetails.close();
         }else {
@@ -3167,7 +3170,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname +"','" + str_talukid +  "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress +"');";
             db_studentDetails.execSQL(SQLiteQuery);
 
-            //  Log.e("ApplicationNo DB", ApplicationNo);
+             // Log.e("ApplicationNoinserting", ApplicationNo);
             Log.e("StudentName DB", StudentName);
             Log.e("SandboxName DB", SandboxName);
 

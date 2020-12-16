@@ -910,20 +910,20 @@ public class Remarks extends AppCompatActivity {
                                                             attendence.setShowText(true);
                                                         }
 
-                                                        TextView labelDATE = new TextView(Remarks.this);
-                                                        labelDATE.setId(i);
+                                                       // TextView labelDATE = new TextView(Remarks.this);
+                                                      //  labelDATE.setId(i);
                                                         //  labelDATE.setWidth(50);
 
-                                                        labelDATE.setText(studentlist[i].getStudentID());
+                                                      //  labelDATE.setText(studentlist[i].getStudentID());
                                                         //  labelDATE.setTextColor(Color.YELLOW);
-                                                        labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                                                        tr.addView(labelDATE);
+                                                       // labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                                                       // tr.addView(labelDATE);
                                                         TextView labelWEIGHT = new TextView(Remarks.this);
                                                         //  labelWEIGHT.setBackgroundColor(R.drawable.button_change);
                                                         labelWEIGHT.setId(i);
                                                         labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                                         labelWEIGHT.setText(studentlist[i].getStudentName());
-                                                        labelWEIGHT.setWidth(100);
+                                                        labelWEIGHT.setWidth(150);
 
 
                                                         //   labelWEIGHT.setGravity(0x00800005);

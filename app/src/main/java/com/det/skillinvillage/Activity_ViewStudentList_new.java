@@ -974,8 +974,7 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
 //                String str_farmerpondcount = cursor1.getString(cursor1.getColumnIndex("Farmpondcount"));
 
                 byte[] str_LocalImg = cursor1.getBlob(cursor1.getColumnIndex("Base64image"));
-
-                //Log.e("tag", "str_LocalImg oo=" + str_LocalImg);
+                Log.e("tag", "applnno oo=" + cursor1.getString(cursor1.getColumnIndex("ApplicationNo")));
 
                 arrayObj_Class_FarmerListDetails2[i] = innerObj_Class_SandboxList;
                 StudentList item;
@@ -1543,6 +1542,7 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
 
                     String FullName = Obj_Class_farmerlistdetails.getStudentName();
                     holder.FarmerName_tv.setText(FullName);
+                    Log.e("getApplicationNo()",Obj_Class_farmerlistdetails.getApplicationNo());
                     holder.farmercode_tv.setText(Obj_Class_farmerlistdetails.getApplicationNo());
 //                    holder.fees_payment_IV.setOnClickListener(new View.OnClickListener() {
 //                        @Override

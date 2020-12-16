@@ -20,10 +20,13 @@ import com.det.skillinvillage.model.GetAppVersion;
 import com.det.skillinvillage.model.GetMobileMenuResponse;
 import com.det.skillinvillage.model.GetPaymentPendingSummaryResponse;
 import com.det.skillinvillage.model.GetPendingPaymentResponse;
+import com.det.skillinvillage.model.GetScheduleLessonPlanResponse;
 import com.det.skillinvillage.model.GetStudentPaymentResponse;
 import com.det.skillinvillage.model.Location_Data;
 import com.det.skillinvillage.model.NormalLogin_Response;
 import com.det.skillinvillage.model.PostSavePaymentRequest;
+import com.det.skillinvillage.model.PostScheduleLessonUpdateRequest;
+import com.det.skillinvillage.model.PostScheduleLessonUpdateResponse;
 import com.det.skillinvillage.model.Post_Save_PaymentResponse;
 import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.ValidateSyncRequest;
@@ -198,6 +201,17 @@ public interface Interface_userservice {
     @Headers("Content-Type: application/json;charset=utf-8")
     @GET("Authentication/Get_Mobile_Menu")
     Call<GetMobileMenuResponse> GetMobileMenu(@Query("User_ID") String User_ID);
+
+
+   // http://mis.detedu.org:8090/api/Authentication/Get_Schedule_Lesson_Plan?Schedule_ID=56
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_Schedule_Lesson_Plan")
+    Call<GetScheduleLessonPlanResponse>GetScheduleLessonPlan(@Query("Schedule_ID") String Schedule_ID);
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_Schedule_Lesson_Update")
+    Call<PostScheduleLessonUpdateResponse> PostScheduleLessonUpdate(@Body PostScheduleLessonUpdateRequest request);
 
 }
 

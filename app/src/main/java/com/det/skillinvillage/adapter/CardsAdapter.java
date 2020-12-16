@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.det.skillinvillage.Activity_SchedulerLessonPlan;
 import com.det.skillinvillage.R;
 import com.det.skillinvillage.Remarks;
 import com.det.skillinvillage.util.ListviewEvents;
@@ -131,9 +132,11 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         if(statusStr.equals("Taken") || statusStr.equals("Not Taken")){
             //holder.btUpdate.
             holder.btUpdate1.setVisibility(View.GONE);
+            holder.lessonplan_IV.setVisibility(View.VISIBLE);
         }else {
 
-            holder.btUpdate1.setVisibility(View.VISIBLE);
+            holder.btUpdate1.setVisibility(View.GONE);
+            holder.lessonplan_IV.setVisibility(View.GONE);
         }
 
         //holder.tvClassRoom.setText(model.getStrClassroom());
@@ -311,6 +314,17 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
             }
         });
 
+
+        holder.lessonplan_IV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i=new Intent(getContext(), Activity_SchedulerLessonPlan.class);
+                context1.startActivity(i);
+
+                //Display the table
+
+            }
+        });
                 return convertView;
     }
 
@@ -326,7 +340,7 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         TextView tvfellowship;
         TextView tv_attandence;
      //   Button btIncharge;
-        ImageView btUpdate1;
+        ImageView btUpdate1,lessonplan_IV;
         TextView tv_scheduleId;
        // Button btUpdate;
 
@@ -346,6 +360,9 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
            // btUpdate = (Button) view.findViewById(R.id.update_bt);
             btUpdate1 = view.findViewById(R.id.update_bt1);
          //   today_date = (TextView) view.findViewById(R.id.today_date);
+
+
+            lessonplan_IV=view.findViewById(R.id.lessonplan_IV);
         }
     }
 }

@@ -55,7 +55,21 @@
                     android:layout_gravity="right"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
-                    android:src="@drawable/update" />
+                    android:src="@drawable/update"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/lessonplan_IV"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:src="@drawable/lessonplan"
+                    android:visibility="visible"/>
+
+
+
+
+
                 <!--  <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -154,7 +168,11 @@
         android:text="Module"
         android:textAppearance="?android:textAppearanceMedium"/>-->
 
+
+
             </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

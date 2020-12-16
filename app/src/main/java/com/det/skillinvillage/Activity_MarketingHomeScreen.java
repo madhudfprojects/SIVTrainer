@@ -478,6 +478,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
         request.setApplication_Type("SIV");
+        request.setDivision_ID(null);
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -745,6 +746,8 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
         request.setApplication_Type("SIV");
+        request.setDivision_ID(null);
+
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));

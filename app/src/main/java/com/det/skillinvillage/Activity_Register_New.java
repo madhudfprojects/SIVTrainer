@@ -2291,6 +2291,7 @@ public class Activity_Register_New extends AppCompatActivity {
 //        Log.e("tag", "FarmerFirstName==" + class_farmerprofileoffline_array_obj[j].getStr_fname());
 //        Log.e("tag", "FarmerID==" + class_farmerprofileoffline_array_obj[j].getStr_farmerID());
         request.setApplication_Type("SIV");
+        request.setDivision_ID(null);
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -3726,7 +3727,7 @@ public class Activity_Register_New extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Activity_Register_New.this, Activity_MarketingHomeScreen.class);
+        Intent i = new Intent(Activity_Register_New.this, Activity_ViewStudentList_new.class);
         // i  = new Intent(Activity_Register_New.this, TransformationActivity.class);
         i.putExtra(TRANSFORMATION, CUBE_OUT_DEPTH_TRANSFORMATION);
         startActivity(i);

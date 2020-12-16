@@ -147,12 +147,36 @@ public class StudentList {
     @Expose
     private String Village_Name;
 
-    @SerializedName("address")
+    @SerializedName("Address")
     @Expose
     private String address;
 
 
-//    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName,String stu_id) {
+    @SerializedName("Division_ID")
+    @Expose
+    private String Division_ID;
+
+
+    @SerializedName("Division_Name")
+    @Expose
+    private String Division_Name;
+
+    public String getDivision_ID() {
+        return Division_ID;
+    }
+
+    public void setDivision_ID(String division_ID) {
+        Division_ID = division_ID;
+    }
+
+    public String getDivision_Name() {
+        return Division_Name;
+    }
+
+    public void setDivision_Name(String division_Name) {
+        Division_Name = division_Name;
+    }
+    //    public StudentList(String academicID, String academicName, String admissionFee, String applicationNo, String balanceFee, String birthDate, String clusterID, String clusterName, String createdDate, String education, String fatherName, String gender, String instituteName, String instituteID, String levelID, String levelName, String marks4, String marks5, String marks6, String marks7s, String marks8, String motherName, String paidFee, String receiptNo, Integer sandboxID, String sandboxName, Integer schoolID, String schoolName, String studentAadhar, String studentPhoto, String studentStatus, String studentName,String stu_id) {
 //
 //        this.academicID = Integer.valueOf(academicID);
 //        this.academicName=academicName;

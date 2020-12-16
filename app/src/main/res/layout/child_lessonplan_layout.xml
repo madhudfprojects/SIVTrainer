@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:background="@color/colorWhite">
+
+    <TextView
+        android:id="@+id/LP_Question_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Question1"
+        android:gravity="start"
+        android:fontFamily="serif"
+        android:layout_margin="5dp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/LP_Question_ID_TV"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
+
+    <EditText
+        android:id="@+id/LP_Answer_ET"
+        android:layout_width="380dp"
+        android:layout_height="80dp"
+        android:background="@drawable/shadow_new"
+        android:fontFamily="serif"
+        android:layout_margin="5dp"
+        android:inputType="textMultiLine"/>
+
+</LinearLayout>

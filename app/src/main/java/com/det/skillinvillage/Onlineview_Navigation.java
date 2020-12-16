@@ -118,13 +118,13 @@ public class Onlineview_Navigation extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        // super.onBackPressed();
-        Intent i = new Intent(Onlineview_Navigation.this, Activity_HomeScreen.class);
-        startActivity(i);
-        finish();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        // super.onBackPressed();
+//        Intent i = new Intent(Onlineview_Navigation.this, Activity_HomeScreen.class);
+//        startActivity(i);
+//        finish();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -368,7 +368,7 @@ public class Onlineview_Navigation extends AppCompatActivity
                         });
 
                         //////////////////////////////
-                        onBackPressed();
+                       // onBackPressed();
                     }
                 }
 
