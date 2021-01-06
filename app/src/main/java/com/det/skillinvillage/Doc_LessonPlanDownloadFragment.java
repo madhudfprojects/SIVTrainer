@@ -198,7 +198,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               downloadUrl = new URL(doc_path);
             } catch (MalformedURLException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+             // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
             HttpURLConnection c = null;//Open Url Connection
@@ -206,21 +206,21 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               c = (HttpURLConnection) downloadUrl.openConnection();
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+             // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
             try {
               c.setRequestMethod("GET");//Set Request Method to "GET" since we are grtting data
             } catch (ProtocolException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+              //Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
             try {
               c.connect();//connect the URL Connection
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+              //Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
 
@@ -233,7 +233,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               }
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+            //  Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
 
@@ -267,7 +267,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
                 outputFile.createNewFile();
               } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+               // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
               }
               Log.e(TAG, "File Created");
             }
@@ -277,7 +277,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               fos = new FileOutputStream(outputFile);
             } catch (FileNotFoundException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+            //  Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
             }
 
             InputStream is = null;//Get InputStream for connection
@@ -285,7 +285,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               is = c.getInputStream();
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+             // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
             }
 
             byte[] buffer = new byte[1024];//Set buffer type
@@ -296,7 +296,7 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               }
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+             // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
 
             }
 
@@ -307,13 +307,14 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
               is.close();
             } catch (IOException e) {
               e.printStackTrace();
-              Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+             // Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
             }
 
           } catch (Exception e) {
+            e.printStackTrace();
             //DocView_MainActivity.runOnUiThread(new Runnable() {
              // public void run() {
-                Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+              //  Toast.makeText(context,"Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
              /* }
             });*/
           }

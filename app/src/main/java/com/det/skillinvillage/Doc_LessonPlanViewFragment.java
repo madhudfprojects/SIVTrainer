@@ -191,7 +191,9 @@ public class Doc_LessonPlanViewFragment extends Fragment {
 
       getfile(dir);
 
+//      obj_adapter = new Doc_PDFAdapter(getContext(), fileList,DocView_Module.listview_arr);
       obj_adapter = new Doc_PDFAdapter(getContext(), fileList);
+
       lv_pdf.setAdapter(obj_adapter);
       mSwipeRefreshLayout.setRefreshing(false);
     }
@@ -206,7 +208,9 @@ public class Doc_LessonPlanViewFragment extends Fragment {
         boolean_permission = true;
         getfile(dir);
 
+//        obj_adapter = new Doc_PDFAdapter(getContext(), fileList,DocView_Module.listview_arr);
         obj_adapter = new Doc_PDFAdapter(getContext(), fileList);
+
         lv_pdf.setAdapter(obj_adapter);
 
       } else {

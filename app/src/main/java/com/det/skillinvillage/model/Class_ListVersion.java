@@ -26,6 +26,18 @@ public class Class_ListVersion {
     @Expose
     private String documentStatus;
 
+    @SerializedName("Document_Verification")
+    @Expose
+    private String DocumentVerification;
+
+    public String getDocumentVerification() {
+        return DocumentVerification;
+    }
+
+    public void setDocumentVerification(String documentVerification) {
+        DocumentVerification = documentVerification;
+    }
+
     public Integer getDocumentID() {
         return documentID;
     }

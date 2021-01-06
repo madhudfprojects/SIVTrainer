@@ -1,7 +1,9 @@
 package com.det.skillinvillage;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.widget.ImageView;
 
 import com.det.skillinvillage.model.Class_getdemo_resplist;
@@ -29,6 +31,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static com.det.skillinvillage.MainActivity.Key_username;
+import static com.det.skillinvillage.MainActivity.key_userimage;
+import static com.det.skillinvillage.MainActivity.sharedpreferenc_userimage;
+import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
+
 
 public class ContactUs_Activity extends AppCompatActivity {
 
@@ -38,12 +45,19 @@ public class ContactUs_Activity extends AppCompatActivity {
     Class_gethelp_resplist[] class_gethelp_resplist_arrayObj;
     Class_getdemo_resplist[] class_getdemo_resplist_arrayObj;
 
-    String str_link;
+    String str_link="",str_Googlelogin_Username="",str_Googlelogin_UserImg="";
+    SharedPreferences sharedpref_username_Obj;
+    SharedPreferences sharedpref_userimage_Obj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_contact_us);
+        sharedpref_username_Obj = getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
+        str_Googlelogin_Username = sharedpref_username_Obj.getString(Key_username, "").trim();
+
+        sharedpref_userimage_Obj = getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
+        str_Googlelogin_UserImg = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
 
         if(count_from_HelpDetails_table()>0)
         {
@@ -62,7 +76,7 @@ public class ContactUs_Activity extends AppCompatActivity {
 
             TextView title = (TextView) toolbar.findViewById(R.id.title_name);
             add_newfarmpond_iv = (ImageView) toolbar.findViewById(R.id.add_newfarmpond_iv);
-            title.setText("About Us");
+            title.setText("Help");
             getSupportActionBar().setTitle("");
             add_newfarmpond_iv.setVisibility(View.GONE);
 
@@ -94,7 +108,7 @@ public class ContactUs_Activity extends AppCompatActivity {
 
             TextView title = (TextView) toolbar.findViewById(R.id.title_name);
             add_newfarmpond_iv = (ImageView) toolbar.findViewById(R.id.add_newfarmpond_iv);
-            title.setText("About Us");
+            title.setText("Help");
             getSupportActionBar().setTitle("");
             add_newfarmpond_iv.setVisibility(View.GONE);
             setContentView(R.layout.activity_contact_us);
@@ -257,22 +271,22 @@ public class ContactUs_Activity extends AppCompatActivity {
                 language_tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
 
-                demo_ll.addView(language_tv);
+              //  demo_ll.addView(language_tv);
 
 
                 forlanguagename_tv.setText("Demo, Click here");
                 forlanguagename_tv.setTextSize(12);
                 forlanguagename_tv.setTypeface(Typeface.DEFAULT, Typeface.ITALIC);
-                forlanguagename_tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                demo_ll.addView(forlanguagename_tv);
+//                forlanguagename_tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT));
+             //   demo_ll.addView(forlanguagename_tv);
 
 
                 link_tv.setText(class_getdemo_resplist_arrayObj[k].getLanguage_Link());
                 link_tv.setTextSize(12);
                 //text.setGravity(Gravity.LEFT);
-                link_tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT));
+//                link_tv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+//                        LinearLayout.LayoutParams.WRAP_CONTENT));
                 link_tv.setVisibility(View.GONE);
 
                 str_link = class_getdemo_resplist_arrayObj[k].getLanguage_Link();
@@ -310,14 +324,215 @@ public class ContactUs_Activity extends AppCompatActivity {
                 });
 
 
-                demo_ll.addView(link_tv);
+              //  demo_ll.addView(link_tv);
 
 
                 nextline_tv.setText("\n");
-                demo_ll.addView(nextline_tv);
+               // demo_ll.addView(nextline_tv);
 
 
             }
         }
     }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Show toast when menu items selected
+        switch (item.getItemId()) {
+            case R.id.logout_menu:
+                Class_SaveSharedPreference.setUserName(getApplicationContext(), "");
+                Class_SaveSharedPreference.setPREF_MENU_link(getApplicationContext(), "");
+                Class_SaveSharedPreference.setPrefFlagUsermanual(getApplicationContext(), "");
+                Class_SaveSharedPreference.setSupportEmail(getApplicationContext(), "");
+                Class_SaveSharedPreference.setUserMailID(getApplicationContext(), "");
+                Class_SaveSharedPreference.setSupportPhone(getApplicationContext(), "");
+
+                SharedPreferences.Editor myprefs_UserImg = sharedpref_userimage_Obj.edit();
+                myprefs_UserImg.putString(key_userimage, "");
+                myprefs_UserImg.apply();
+                SharedPreferences.Editor myprefs_Username = sharedpref_username_Obj.edit();
+                myprefs_Username.putString(Key_username, "");
+                myprefs_Username.apply();
+
+
+                deleteStateRestTable_B4insertion();
+                deleteDistrictRestTable_B4insertion();
+                deleteTalukRestTable_B4insertion();
+                deleteVillageRestTable_B4insertion();
+                deleteYearRestTable_B4insertion();
+                deleteSchoolRestTable_B4insertion();
+                deleteSandboxRestTable_B4insertion();
+                deleteInstituteRestTable_B4insertion();
+                deleteLevelRestTable_B4insertion();
+                deleteClusterRestTable_B4insertion();
+
+                Intent i = new Intent(ContactUs_Activity.this, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+
+            case android.R.id.home:
+                Intent intent = new Intent(ContactUs_Activity.this, Activity_HomeScreen.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+
+
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public void deleteStateRestTable_B4insertion() {
+
+        SQLiteDatabase db_statelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_statelist_delete.execSQL("CREATE TABLE IF NOT EXISTS StateListRest(StateID VARCHAR,StateName VARCHAR,state_yearid VARCHAR);");
+        Cursor cursor = db_statelist_delete.rawQuery("SELECT * FROM StateListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_statelist_delete.delete("StateListRest", null, null);
+
+        }
+        db_statelist_delete.close();
+    }
+    public void deleteDistrictRestTable_B4insertion() {
+
+        SQLiteDatabase db_districtlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_districtlist_delete.execSQL("CREATE TABLE IF NOT EXISTS DistrictListRest(DistrictID VARCHAR,DistrictName VARCHAR,Distr_yearid VARCHAR,Distr_Stateid VARCHAR);");
+        Cursor cursor1 = db_districtlist_delete.rawQuery("SELECT * FROM DistrictListRest", null);
+        int x = cursor1.getCount();
+
+        if (x > 0) {
+            db_districtlist_delete.delete("DistrictListRest", null, null);
+
+        }
+        db_districtlist_delete.close();
+    }
+    public void deleteTalukRestTable_B4insertion() {
+
+        SQLiteDatabase db_taluklist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_taluklist_delete.execSQL("CREATE TABLE IF NOT EXISTS TalukListRest(TalukID VARCHAR,TalukName VARCHAR,Taluk_districtid VARCHAR);");
+        Cursor cursor1 = db_taluklist_delete.rawQuery("SELECT * FROM TalukListRest", null);
+        int x = cursor1.getCount();
+
+        if (x > 0) {
+            db_taluklist_delete.delete("TalukListRest", null, null);
+
+        }
+        db_taluklist_delete.close();
+    }
+    public void deleteVillageRestTable_B4insertion() {
+
+        SQLiteDatabase db_villagelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        // db_villagelist_delete.execSQL("CREATE TABLE IF NOT EXISTS VillageList(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        db_villagelist_delete.execSQL("CREATE TABLE IF NOT EXISTS VillageListRest(VillageID VARCHAR,Village VARCHAR,TalukID VARCHAR);");
+        Cursor cursor1 = db_villagelist_delete.rawQuery("SELECT * FROM VillageListRest", null);
+        int x = cursor1.getCount();
+
+        if (x > 0) {
+            db_villagelist_delete.delete("VillageListRest", null, null);
+
+        }
+        db_villagelist_delete.close();
+    }
+    public void deleteYearRestTable_B4insertion() {
+
+        SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_yearlist_delete.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
+        Cursor cursor = db_yearlist_delete.rawQuery("SELECT * FROM YearListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_yearlist_delete.delete("YearListRest", null, null);
+
+        }
+        db_yearlist_delete.close();
+    }
+    public void deleteSchoolRestTable_B4insertion() {
+
+        SQLiteDatabase db_Schoollist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Schoollist_delete.execSQL("CREATE TABLE IF NOT EXISTS SchoolListRest(SchoolName VARCHAR, SchoolID VARCHAR, School_InstituteID VARCHAR);");
+        Cursor cursor = db_Schoollist_delete.rawQuery("SELECT * FROM SchoolListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Schoollist_delete.delete("SchoolListRest", null, null);
+
+        }
+        db_Schoollist_delete.close();
+    }
+    public void deleteSandboxRestTable_B4insertion() {
+
+        SQLiteDatabase db_Sandboxlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Sandboxlist_delete.execSQL("CREATE TABLE IF NOT EXISTS SandboxListRest(SandboxName VARCHAR,SandboxID VARCHAR);");
+        Cursor cursor = db_Sandboxlist_delete.rawQuery("SELECT * FROM SandboxListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Sandboxlist_delete.delete("SandboxListRest", null, null);
+
+        }
+        db_Sandboxlist_delete.close();
+    }
+    public void deleteInstituteRestTable_B4insertion() {
+
+        SQLiteDatabase db_Institutelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Institutelist_delete.execSQL("CREATE TABLE IF NOT EXISTS InstituteListRest(InstituteName VARCHAR, InstituteID VARCHAR,Inst_AcademicID VARCHAR,Inst_ClusterID VARCHAR);");
+        Cursor cursor = db_Institutelist_delete.rawQuery("SELECT * FROM InstituteListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Institutelist_delete.delete("InstituteListRest", null, null);
+
+        }
+        db_Institutelist_delete.close();
+    }
+    public void deleteLevelRestTable_B4insertion() {
+
+        SQLiteDatabase db_Levellist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Levellist_delete.execSQL("CREATE TABLE IF NOT EXISTS LevelListRest(LevelName VARCHAR, LevelID VARCHAR, Level_InstituteID VARCHAR,Level_AcademicID VARCHAR,Level_ClusterID VARCHAR,Level_AdmissionFee VARCHAR);");
+        Cursor cursor = db_Levellist_delete.rawQuery("SELECT * FROM LevelListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Levellist_delete.delete("LevelListRest", null, null);
+
+        }
+        db_Levellist_delete.close();
+    }
+    public void deleteClusterRestTable_B4insertion() {
+
+        SQLiteDatabase db_Clusterlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db_Clusterlist_delete.execSQL("CREATE TABLE IF NOT EXISTS ClusterListRest(ClusterName VARCHAR,ClusterID VARCHAR,Clust_AcademicID VARCHAR, Clust_SandboxID VARCHAR);");
+        Cursor cursor = db_Clusterlist_delete.rawQuery("SELECT * FROM ClusterListRest", null);
+        int x = cursor.getCount();
+
+        if (x > 0) {
+            db_Clusterlist_delete.delete("ClusterListRest", null, null);
+
+        }
+        db_Clusterlist_delete.close();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(ContactUs_Activity.this, Activity_HomeScreen.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
+    }
+
 }

@@ -29,8 +29,7 @@
             android:hint="Marks"
             android:textColorHighlight="#000"
             android:textColorHint="#B9AFAF"
-            android:inputType="text"
-            />
+            android:inputType="text" />
 
 
         <TextView

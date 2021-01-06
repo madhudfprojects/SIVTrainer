@@ -257,7 +257,17 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
                 finish();
             }
+            if(Employee_Role.equalsIgnoreCase("Cluster Head")) {
+                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+                startActivity(i);
+                finish();
+            }
 
+            if(Employee_Role.equalsIgnoreCase("Administrator")) {
+                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+                startActivity(i);
+                finish();
+            }
             // Stay at the current activity.
         }
 
@@ -622,7 +632,7 @@ public class MainActivity extends AppCompatActivity
 
                     Log.e("response", user_object.getStatus().toString());
 
-                    Toast.makeText(MainActivity.this, "" + user_object.getStatus().toString(), Toast.LENGTH_LONG).show();
+                   // Toast.makeText(MainActivity.this, "" + user_object.getStatus().toString(), Toast.LENGTH_LONG).show();
 
                     Toast.makeText(MainActivity.this, "" + user_object.getLst1().get(0).getUserEmail(), Toast.LENGTH_LONG).show();
 
@@ -638,6 +648,7 @@ public class MainActivity extends AppCompatActivity
 
                     }
 
+                    Class_SaveSharedPreference.setPREF_RoleName(MainActivity.this, user_object.getLst1().get(0).getUserRole().get(0).getRoleName());
                     editor_obj.putString(KeyValue_employeeid, user_object.getLst1().get(0).getUserID());
                     editor_obj.putString(KeyValue_employeename, user_object.getLst1().get(0).getUserName());
                     editor_obj.putString(KeyValue_employee_mailid, user_object.getLst1().get(0).getUserEmail());
@@ -711,7 +722,7 @@ public class MainActivity extends AppCompatActivity
                     }*/
 
                 } else {
-
+                    Toast.makeText(MainActivity.this, user_object.getMessage().toString(), Toast.LENGTH_LONG).show();
                     login_progressDoalog.dismiss();
                     signOut_InvalidUser();
                 }
@@ -763,7 +774,6 @@ public class MainActivity extends AppCompatActivity
                     startActivity(intent);
                     Log.e("response", user_object.getStatus().toString());
 
-                    Toast.makeText(MainActivity.this, "" + user_object.getStatus().toString(), Toast.LENGTH_LONG).show();
 
                     Toast.makeText(MainActivity.this, "" + user_object.getLst1().get(0).getUserEmail(), Toast.LENGTH_LONG).show();
 
@@ -779,6 +789,7 @@ public class MainActivity extends AppCompatActivity
 
                     }
 
+                    Class_SaveSharedPreference.setPREF_RoleName(MainActivity.this, user_object.getLst1().get(0).getUserRole().get(0).getRoleName());
                     editor_obj.putString(KeyValue_employeeid, user_object.getLst1().get(0).getUserID());
                     editor_obj.putString(KeyValue_employeename, user_object.getLst1().get(0).getUserName());
                     editor_obj.putString(KeyValue_employee_mailid, user_object.getLst1().get(0).getUserEmail());
@@ -844,6 +855,7 @@ public class MainActivity extends AppCompatActivity
                     }*/
 
                 } else {
+                    Toast.makeText(MainActivity.this, user_object.getMessage().toString(), Toast.LENGTH_LONG).show();
 
                     login_progressDoalog.dismiss();
                     signOut_InvalidUser();
@@ -1084,6 +1096,16 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
 
 }// end of class
 

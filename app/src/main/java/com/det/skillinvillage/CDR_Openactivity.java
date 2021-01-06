@@ -93,7 +93,7 @@ public class CDR_Openactivity extends AppCompatActivity {
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }

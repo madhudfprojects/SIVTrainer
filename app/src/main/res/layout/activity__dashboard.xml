@@ -532,7 +532,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/colorWhite"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_gravity="center"
         android:gravity="center">
 <!--        <TextView-->

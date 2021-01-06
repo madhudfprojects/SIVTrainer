@@ -332,96 +332,245 @@
 
 
         </LinearLayout>
+
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="start"
             android:orientation="horizontal"
-            android:layout_margin="8dp">
-            <TextView
-                android:id="@+id/paymenttypelabel_TV"
-                android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+            <RelativeLayout
+                android:id="@+id/rel_paymenttypelayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Payment Type"
-                android:textColor="#5C5757"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                
-                android:layout_marginTop="5dp"/>
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
-            <Spinner
-                android:id="@+id/paymenttype_Spinner"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:background="@drawable/spinnerarrow2"
-                android:layout_marginLeft="30dp"
-                android:popupBackground="@drawable/layout_background"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <Spinner
+                        android:id="@+id/paymenttype_Spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:dropDownVerticalOffset="35dp"
+                        android:spinnerMode="dropdown"
+                        android:popupBackground="@drawable/layout_background"/>
 
 
+                </LinearLayout>
 
+                <TextView
+                    android:id="@+id/paymenttypelabel_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Payment Type"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
         </LinearLayout>
+    <LinearLayout
+        android:id="@+id/paymentmode_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:weightSum="1">
 
-        <LinearLayout
+
+        <RelativeLayout
+            android:id="@+id/rel_applnstatus_new_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:orientation="horizontal"
-            android:id="@+id/paymentmode_ll"
-            android:layout_margin="8dp">
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_layout"
+                android:orientation="horizontal"
+                >
+
+                <Spinner
+                    android:id="@+id/paymentMode_Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:dropDownVerticalOffset="35dp"
+                    android:spinnerMode="dropdown"
+                    android:popupBackground="@drawable/layout_background"/>
+
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/paymentModelabel_TV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="start"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="-4dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
                 android:text="Payment Mode"
-                android:textColor="#5C5757"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                
-                android:layout_marginTop="5dp"/>
-
-            <Spinner
-                android:id="@+id/paymentMode_Spinner"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:background="@drawable/spinnerarrow2"
-                android:layout_marginLeft="30dp"
-                android:popupBackground="@drawable/layout_background"/>
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+        </RelativeLayout>
+    </LinearLayout>
 
 
+        <!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="start"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_margin="8dp">-->
+<!--            <TextView-->
+<!--                android:id="@+id/paymenttypelabel_TV"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Payment Type"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textSize="15dp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_marginTop="5dp"/>-->
 
-        </LinearLayout>
+<!--            <Spinner-->
+<!--                android:id="@+id/paymenttype_Spinner"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:layout_marginLeft="30dp"-->
+<!--                android:popupBackground="@drawable/layout_background"/>-->
 
 
+
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="start"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:id="@+id/paymentmode_ll"-->
+<!--            android:layout_margin="8dp">-->
+<!--            <TextView-->
+<!--                android:id="@+id/paymentModelabel_TV"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="start"-->
+<!--                android:text="Payment Mode"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textSize="15dp"-->
+<!--                android:textStyle="bold"-->
+<!--                -->
+<!--                android:layout_marginTop="5dp"/>-->
+
+<!--            <Spinner-->
+<!--                android:id="@+id/paymentMode_Spinner"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/spinnerarrow2"-->
+<!--                android:layout_marginLeft="30dp"-->
+<!--                android:popupBackground="@drawable/layout_background"/>-->
+
+
+
+<!--        </LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="start"
-            android:layout_margin="8dp">
-
-            <TextView
-                android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:weightSum="1">
+            <RelativeLayout
+                android:id="@+id/rel_paymentdatelayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Received Date"
-                android:textColor="#5C5757"
-                android:layout_marginTop="5dp"
-                android:textSize="15dp"
-                android:textStyle="bold"
-                />
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
 
-            <TextView
-                android:id="@+id/ReceivedDate_TV"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="30dp"
-                android:background="@drawable/shadow_new"
-                android:gravity="center"
-                
-                android:text="Received Date"
-                android:textColor="@color/dark_black_red" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/ReceivedDate_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/shadow_new"
+                        android:text="Select Received Date"
+                        android:textColor="#5C5757"
+                        android:gravity="center"/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Received Date"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp" />
+            </RelativeLayout>
+
         </LinearLayout>
+
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="start"-->
+<!--            android:layout_margin="8dp">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Received Date"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:textSize="15dp"-->
+<!--                android:textStyle="bold"-->
+<!--                />-->
+
+
+<!--            <TextView-->
+<!--                android:id="@+id/ReceivedDate_TV"-->
+<!--                android:layout_width="150dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="30dp"-->
+<!--                android:background="@drawable/shadow_new"-->
+<!--                android:gravity="center"-->
+<!--                -->
+<!--                android:text="Received Date"-->
+<!--                android:textColor="@color/dark_black_red" />-->
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -486,38 +635,94 @@
 
 
 
-        <TableRow
-            android:id="@+id/tableR_remarks"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+<!--        <TableRow-->
+<!--            android:id="@+id/tableR_remarks"-->
+<!--            android:layout_width="fill_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="8dp">-->
 
-            <TextView
-                android:id="@+id/remarks_TV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Remarks"
-                android:textColor="#5C5757"
-                android:textStyle="bold"
-                />
-        </TableRow>
+<!--            <TextView-->
+<!--                android:id="@+id/remarks_TV"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Remarks"-->
+<!--                android:textColor="#5C5757"-->
+<!--                android:textStyle="bold"-->
+<!--                />-->
+<!--        </TableRow>-->
 
-        <TableRow
-            android:id="@+id/remarkstable"
+<!--        <TableRow-->
+<!--            android:id="@+id/remarkstable"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp">-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/remarks_ET"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:background="@drawable/shadow_new"-->
+<!--                android:inputType="textMultiLine"-->
+<!--                android:digits=""-->
+<!--                android:paddingLeft="5dp"-->
+<!--                android:layout_margin="10dp"/>-->
+
+<!--        </TableRow>-->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:background="@color/colorWhite"
+            android:baselineAligned="true">
 
-            <EditText
-                android:id="@+id/remarks_ET"
-                android:layout_width="300dp"
-                android:layout_height="40dp"
+            <RelativeLayout
+                android:id="@+id/rel_Comments_LPverification_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:background="@drawable/shadow_new"
-                android:inputType="text"
-                android:paddingLeft="5dp"
-                />
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1">
 
-        </TableRow>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_layout"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/remarks_ET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:layout_margin="5dp"
+                        android:inputType="textMultiLine"
+                        android:gravity="start"
+                        android:hint="Enter"
+                        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "/>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="-4dp"
+                    android:background="#FFFFFF"
+                    android:fontFamily="serif"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:text="Comments"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
 
         <Button
             android:id="@+id/Submit_Feessubmit_BT"

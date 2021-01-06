@@ -131,7 +131,7 @@ public class StudentList {
     @Expose
     private String District_Name;
 
-    @SerializedName("Taluk_ID")
+    @SerializedName("Taluka_ID")
     @Expose
     private String Taluk_ID;
 

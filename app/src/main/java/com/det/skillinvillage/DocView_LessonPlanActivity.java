@@ -3,6 +3,7 @@ package com.det.skillinvillage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -52,6 +53,10 @@ public class DocView_LessonPlanActivity extends AppCompatActivity {
     }
     public void tabselect(ViewPager view){
         tabs.setupWithViewPager(view);
+        tabs.setSelectedTabIndicatorColor(Color.parseColor("#FF0000"));
+        tabs.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
+        tabs.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#ffffff"));
+
     }
 
     @Override

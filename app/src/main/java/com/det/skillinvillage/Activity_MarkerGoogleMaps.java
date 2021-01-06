@@ -350,10 +350,14 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
                          latlong_count=monthContents_list.size();
                         Class_VillageLatLongList []  arrayObj_Class_monthcontents = new Class_VillageLatLongList[monthContents_list.size()];
                         arrayObj_class_GoogleLocations = new Class_GoogleLocations[arrayObj_Class_monthcontents.length];
+                        Log.e("1size", String.valueOf(monthContents_list.size()));
+                        Log.e("2size", String.valueOf(arrayObj_Class_monthcontents.length));
+                        Log.e("3size", String.valueOf(arrayObj_class_GoogleLocations.length));
 
-                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
-                            Log.e("getUserPayment", String.valueOf(class_loginresponse.getStatus()));
-                            Log.e("getUserPayment", class_loginresponse.getMessage());
+
+                        for (int i = 0; i < arrayObj_class_GoogleLocations.length; i++) {
+                            Log.e("getVillageLatLong", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getVillageLatLong", class_loginresponse.getMessage());
 
                             Class_GoogleLocations innerObj_Class_academic = new Class_GoogleLocations();
                             innerObj_Class_academic.setLatitude(class_loginresponse.getListVersion().get(i).getLattitude());
@@ -452,7 +456,7 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Activity_MarkerGoogleMaps.this, Activity_Dashboard.class);
+        Intent i = new Intent(Activity_MarkerGoogleMaps.this, Activity_HomeScreen.class);
         startActivity(i);
         finish();
     }
@@ -463,7 +467,7 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -472,16 +476,10 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Show toast when menu items selected
-        switch (item.getItemId()) {
-
-
-            case android.R.id.home:
-                Intent i = new Intent(Activity_MarkerGoogleMaps.this, Activity_Dashboard.class);
-                startActivity(i);
-                finish();
-
-                break;
-
+        if (item.getItemId() == android.R.id.home) {
+            Intent i = new Intent(Activity_MarkerGoogleMaps.this, Activity_HomeScreen.class);
+            startActivity(i);
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }

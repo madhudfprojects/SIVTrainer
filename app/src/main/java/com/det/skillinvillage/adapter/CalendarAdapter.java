@@ -223,7 +223,7 @@ public class CalendarAdapter extends BaseAdapter {
 					}*/
 			}
 			if (day_string.get(pos).equals(date) && event_status.equals("Not Taken")){
-				view.setBackgroundResource(R.drawable.rounded_calender_item);
+				view.setBackgroundResource(R.drawable.rounded_calender_item_not_taken);
 				dayView.setTextColor(Color.WHITE);
 			/*		if (previousView != null) {
 					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
@@ -249,6 +249,18 @@ public class CalendarAdapter extends BaseAdapter {
 					//	txt.setTextColor(Color.WHITE);
 				}
 			}
+
+			if (day_string.get(pos).equals(date) && event_status.equals("Lesson Pending")){
+				view.setBackgroundResource(R.drawable.rounded_calender_lesson_pending);
+				dayView.setTextColor(Color.WHITE);
+			/*		if (previousView != null) {
+					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
+					}*/
+			}
+
+
+
+
 		/*	if (day_string.get(pos).equals(date) && event_status.equals("0")) {
 				view.setBackgroundResource(R.drawable.rounded_calender_notupdated);
 				dayView.setTextColor(Color.WHITE);
@@ -371,7 +383,7 @@ public class CalendarAdapter extends BaseAdapter {
 					Log.e("event_TF","date="+date);
 					//	Log.e("event_TF","event_TF="+event_TF);
 					//v.setBackgroundColor(Color.parseColor("#343434"));
-					v.setBackgroundResource(R.drawable.rounded_calender_item);
+					v.setBackgroundResource(R.drawable.rounded_calender_item_not_taken);
 					txt.setTextColor(Color.WHITE);
 				}
 				if(day_string.get(pos).equals(date)&&event_status.equals("Pending")) {
@@ -391,6 +403,15 @@ public class CalendarAdapter extends BaseAdapter {
 						txt.setTextColor(Color.WHITE);
 						//}
 					}
+				}
+
+				if (day_string.get(pos).equals(date) && event_status.equalsIgnoreCase("Lesson Pending")) {
+					Log.e("event_TF","day_string="+day_string.get(pos));
+					Log.e("event_TF","date="+date);
+					//	Log.e("event_TF","event_TF="+event_TF);
+					//v.setBackgroundColor(Color.parseColor("#343434"));
+					v.setBackgroundResource(R.drawable.rounded_calender_lesson_pending);
+					txt.setTextColor(Color.WHITE);
 				}
 
 			}

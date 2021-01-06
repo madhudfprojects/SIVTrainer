@@ -33,6 +33,10 @@
         android:background="@drawable/shadow_new"
         android:fontFamily="serif"
         android:layout_margin="5dp"
-        android:inputType="textMultiLine"/>
+        android:hint="Enter answer"
+        android:gravity="start"
+        android:inputType="textMultiLine"
+        android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
+        />
 
 </LinearLayout>

@@ -8,6 +8,31 @@ public class StudentCount {
     @Expose
     private String studentCount;
 
+
+    @SerializedName("Applicant_Count")
+    @Expose
+    private String ApplicantCount;
+
+    @SerializedName("Admission_Count")
+    @Expose
+    private String AdmissionCount;
+
+    public String getApplicantCount() {
+        return ApplicantCount;
+    }
+
+    public void setApplicantCount(String applicantCount) {
+        ApplicantCount = applicantCount;
+    }
+
+    public String getAdmissionCount() {
+        return AdmissionCount;
+    }
+
+    public void setAdmissionCount(String admissionCount) {
+        AdmissionCount = admissionCount;
+    }
+
     public String getStudentCount() {
         return studentCount;
     }

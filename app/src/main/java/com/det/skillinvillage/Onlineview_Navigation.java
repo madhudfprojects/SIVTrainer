@@ -66,7 +66,7 @@ public class Onlineview_Navigation extends AppCompatActivity
     ExpandListGroup[] objclassarr_expandedlistgroup;
     Class_SubMenu[] objclassarr_Class_SubMenu;
     ArrayList<ExpandListGroup>mainmenulist;
-    ArrayList<Class_SubMenu>submenuList;
+    //ArrayList<Class_SubMenu>submenuList;
 
     SharedPreferences sharedpref_loginuserid_Obj;
     String str_loginuserID;
@@ -131,7 +131,7 @@ public class Onlineview_Navigation extends AppCompatActivity
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -460,7 +460,7 @@ public class Onlineview_Navigation extends AppCompatActivity
                         int count2 = soap_SubMenu.getPropertyCount();  // number of count in array in response 6,0-5,5
 
                         objclassarr_Class_SubMenu = new Class_SubMenu[count2];
-                        submenuList = new ArrayList<Class_SubMenu>();
+                       // submenuList = new ArrayList<Class_SubMenu>();
                         MenuModel menuModel = null;
                         List<MenuModel> childModelsList = new ArrayList<>();
 
@@ -563,37 +563,44 @@ public class Onlineview_Navigation extends AppCompatActivity
                             innerObj_Class_academic.setSubMenu(class_loginresponse.getObjMenu().get(i).getSubMenu());
                             arrayObj_class_getpaymentpendingresp[i] = innerObj_Class_academic;
 
-                            List<GetMobileMenuResponseList> monthContents_list_submenu = response.body().getObjMenu();
+                            List<GetMobileSubMenuResponseList> monthContents_list_submenu = response.body().getObjMenu().get(i).getSubMenu();
 
-                          //  GetMobileSubMenuResponseList []  arrayObj_Class_submenu= new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+                            GetMobileSubMenuResponseList []  arrayObj_Class_submenu= new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
 
-                            objclassarr_Class_SubMenu = new Class_SubMenu[monthContents_list_submenu.size()];
-                            submenuList = new ArrayList<Class_SubMenu>();
-                            Log.e("soap_SubMenulength()", String.valueOf(monthContents_list_submenu.size()));
-                            arrayObj_class_getMobilesubmenuresp=new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
-                            Class_SubMenu child = new Class_SubMenu();
+                            //objclassarr_Class_SubMenu = new Class_SubMenu[monthContents_list_submenu.size()];
+                            //submenuList = new ArrayList<Class_SubMenu>();
+                         //   Log.e("soap_SubMenulength()", String.valueOf(monthContents_list_submenu.size()));
+                            arrayObj_class_getMobilesubmenuresp=new GetMobileSubMenuResponseList[arrayObj_Class_submenu.length];
+                            //Class_SubMenu child = new Class_SubMenu();
                             MenuModel menuModel = null;
                             List<MenuModel> childModelsList = new ArrayList<>();
 
+                           // Log.e("arraylengthmenu", String.valueOf(arrayObj_class_getMobilesubmenuresp.length));
 
-                            for (int j = 0; j < objclassarr_Class_SubMenu.length; j++) {
+                            for (int j = 0; j < arrayObj_class_getMobilesubmenuresp.length; j++) {
                                 Log.e("entered 2nd for loop", "def");
 
                                 GetMobileSubMenuResponseList innerObj_Class = new GetMobileSubMenuResponseList();
-                                innerObj_Class.setMenuID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID());
-                                innerObj_Class.setMenuName(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
-                                innerObj_Class.setMenuLink(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
-                                innerObj_Class.setParentID(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID());
-                                arrayObj_class_getMobilesubmenuresp[i] = innerObj_Class;
+                                innerObj_Class.setMenuID(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuID());
+                                innerObj_Class.setMenuName(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName());
+                                innerObj_Class.setMenuLink(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
+                                innerObj_Class.setParentID(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getParentID());
+                               // Log.e("abcd", String.valueOf(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName()));
 
-                                if (class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID().equals(class_loginresponse.getObjMenu().get(i).getMenuID())) {
+                                arrayObj_class_getMobilesubmenuresp[j] = innerObj_Class;
+//                                Log.e("parentid", String.valueOf(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getParentID()));
+//                                Log.e("menuID", String.valueOf(class_loginresponse.getObjMenu().get(i).getMenuID()));
+
+                                if (class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getParentID().equals(class_loginresponse.getObjMenu().get(i).getMenuID())) {
 //                                    child.setMenu_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuID()));
 //                                    child.setMenu_Name(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName());
 //                                    //   Log.e("inside",soap_Menu_Name_submenu.toString());
 //                                    child.setMenu_Link(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
 //                                    child.setParent_ID(String.valueOf(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getParentID()));
+//                                    Log.e("menuname",class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName());
+//                                    Log.e("menulink",class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
 
-                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuName(), false, false, class_loginresponse.getObjMenu().get(j).getSubMenu().get(j).getMenuLink());
+                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName(), false, false, class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
                                     childModelsList.add(childModel);
 
 

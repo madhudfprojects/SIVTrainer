@@ -18,6 +18,9 @@ public class Class_SaveSharedPreference {
     static final String PREF_USER_MAILID= "user_mailID";
     static final String PREF_Flag_For_CustomGallery= "customgallery_flag";
 
+    static final String PREF_RoleName= "user_roleName";
+
+
     static SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
@@ -100,4 +103,16 @@ public class Class_SaveSharedPreference {
         return getSharedPreferences(ctx).getString(PREF_Flag_For_CustomGallery, " ");
     }
 
+
+    public static String getPREF_RoleName(Context ctx) {
+        return getSharedPreferences(ctx).getString(PREF_RoleName, " ");
+    }
+
+    
+    public static void setPREF_RoleName(Context ctx, String user_roleName)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(ctx).edit();
+        editor.putString(PREF_RoleName, user_roleName);
+        editor.apply();
+    }
 }

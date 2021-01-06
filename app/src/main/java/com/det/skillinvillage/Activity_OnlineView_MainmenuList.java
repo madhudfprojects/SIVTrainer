@@ -268,7 +268,7 @@ public class Activity_OnlineView_MainmenuList extends AppCompatActivity implemen
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }

@@ -689,6 +689,10 @@ public class MainActivity2 extends AppCompatActivity {
 
                         if (str_save_marks_status.equals("Active")) {
                             Toast.makeText(getApplicationContext(), "Marks entered are saved successfully..", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity2.this, Activity_AssessmentList.class);
+                            startActivity(intent);
+                            finish();
+
                             //finish();
                         } else {
                             Toast.makeText(getApplicationContext(), "Marks entered are not saved....", Toast.LENGTH_SHORT).show();
@@ -1013,7 +1017,7 @@ public class MainActivity2 extends AppCompatActivity {
 
             // Inflate menu items
             getMenuInflater().inflate(R.menu.menu_register, menu);
-            menu.findItem(R.id.Sync)
+            menu.findItem(R.id.addnewstudent_menu_id)
                     .setVisible(false);
             return super.onCreateOptionsMenu(menu);
         }

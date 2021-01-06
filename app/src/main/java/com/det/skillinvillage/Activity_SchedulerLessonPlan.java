@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.det.skillinvillage.adapter.LessonPlanAdapter;
 import com.det.skillinvillage.model.Class_GetStudentPaymentResponseList;
 import com.det.skillinvillage.model.Class_PostSavePaymentResponseList;
 import com.det.skillinvillage.model.DefaultResponse;
@@ -35,24 +38,31 @@ import com.det.skillinvillage.model.Post_Save_PaymentResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
+import static com.det.skillinvillage.MainActivity.key_userimage;
+import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_SchedulerLessonPlan extends AppCompatActivity {
     Spinner status_scheduler_Spinner;
     String[] status_scheduler_SpinnerArray={"Yes","No","Partially"};
 
-    ListView lv_questions_list;
+    NonScrollListView lv_questions_list;
     Boolean isInternetPresent = false;
     Class_InternetDectector internetDectector;
-    LessonQuestion Objclass_feesSubmissionList_new;
-    LessonQuestion[] ArrayObjclass_lessonquestion=null;
+    static LessonQuestion Objclass_feesSubmissionList_new;
+    static LessonQuestion[] ArrayObjclass_lessonquestion=null;
     Interface_userservice userService1;
     GetScheduleLessonPlanResponseList[] arrayObj_class_studentpaymentresp;
     TextView Institutename_Scheduler_TV;
@@ -60,22 +70,66 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
     TextView date_Scheduler_TV;
     TextView topic_Scheduler_TV;
     TextView lessonplan_Scheduler_TV;
-    String selected_status="",str_lp_answer="",str_loginuserID="",str_date="",str_inst="",str_level="",str_topic="",str_scheduleid="",str_lessonplan="",lessonQuestionID="",lessonQuestionname="",lessonQuestionorder="",lessonScheduleID="",scheduleLessonAnswer="",createdBy="";
+    String selected_status="";
+    static String str_lp_answer="";
+    String str_loginuserID="";
+    String str_date="";
+    String str_inst="";
+    String str_level="";
+    String str_topic="";
+    String str_scheduleid="";
+    String str_lessonplan="";
+    String lessonQuestionID="";
+    String lessonQuestionname="";
+    String lessonQuestionorder="";
+    String lessonScheduleID="";
+    String scheduleLessonAnswer="";
+    String createdBy="",str_ScheduleId_received="";
     EditText Remarks_ET;
     Button Submit_lessonplan_BT;
     SharedPreferences sharedpreferencebook_usercredential_Obj;
+    String  QuestionID_List="\"" ;
+    String  Ans_list="\"" ;
+
+    private ArrayList<String> arrLst_QuestionIds = new ArrayList<String>();
+    private ArrayList<String> arrLst_answer = new ArrayList<String>();
+
+    JSONArray jsonArray_schedulelessonAnswer;
+    JSONArray jsonArray_lessonquestionID;
+    LessonPlanAdapter adapter;
+    public ArrayList<LessonQuestion> lessonQuestionArrayList;
+    public ArrayList<LessonQuestion> LessonQuestion_arraylist2;
+    int j=0,j1=0;
+    public static ArrayList<String> checkAnsArrayList;
+ //   String str_checkempty="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__scheduler_lesson_plan);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Lesson Plan");
+
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
         userService1 = Class_ApiUtils.getUserService();
         sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
         str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+		/*    	Event_Discription = extras.getString("EventDiscription");
+		    	Event_Id = extras.getString("EventId");
+		    	Event_date = extras.getString("EventDate");
+				FellowshipName = extras.getString("FellowshipName");*/
 
-        status_scheduler_Spinner=(Spinner)findViewById(R.id.status_scheduler_Spinner);
-        lv_questions_list=(ListView)findViewById(R.id.lv_questions_list);
+            //Commented and added by shivaleela on june 27th 2019
+            //str_ScheduleId = extras.getString("ScheduleId");
+            str_ScheduleId_received = extras.getString("ScheduleId");
+            Log.e("Tag", "str_ScheduleId_received=" + str_ScheduleId_received);
+        }
+            status_scheduler_Spinner=(Spinner)findViewById(R.id.status_scheduler_Spinner);
+        lv_questions_list=(NonScrollListView)findViewById(R.id.lv_questions_list);
         Institutename_Scheduler_TV=(TextView)findViewById(R.id.Institutename_Scheduler_TV);
         Levelname_Scheduler_TV=(TextView)findViewById(R.id.Levelname_Scheduler_TV);
         date_Scheduler_TV=(TextView)findViewById(R.id.date_Scheduler_TV);
@@ -91,7 +145,7 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
         status_scheduler_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                 selected_status = status_scheduler_Spinner.getSelectedItem().toString();
+                selected_status = status_scheduler_Spinner.getSelectedItem().toString();
                 if(selected_status.equals("No")){
                     lv_questions_list.setVisibility(View.GONE);
                 }else{
@@ -110,94 +164,246 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
         Submit_lessonplan_BT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String str_Remarks=Remarks_ET.getText().toString();
-               // str_scheduleid,str_loginuserID,lessonQuestionID,str_lp_answer,ScheduleLesson_Answer,LessonQuestion_ID
-                PostScheduleLessonUpdate();
+                if(Remarks_ET.getText().toString().length()==0){
+                    Toast.makeText(getApplicationContext(), "Kindly enter remarks", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    PostScheduleLessonUpdate();
+                }
             }
 
         });
         GetScheduleLessonPlan();
     }//end of oncreate
+
+
+
     public void PostScheduleLessonUpdate() {
+        checkAnsArrayList=new ArrayList<>();
+        Log.e("submitsize", String.valueOf(LessonPlanAdapter.lessonQuestionArrayList.size()));
+        for (int i = 0; i <LessonPlanAdapter.lessonQuestionArrayList.size(); i++) {
+            String questionId = LessonPlanAdapter.lessonQuestionArrayList.get(i).getLessonQuestionID();
+            if (questionId != null) {
+                arrLst_QuestionIds.add(questionId);
+                QuestionID_List+=questionId+"$";
+            }
+            String str_lessonanswer = LessonPlanAdapter.lessonQuestionArrayList.get(i).getScheduleLessonAnswer();
+            Log.e("tag", "present_studentId==" + str_lessonanswer);
 
-        PostScheduleLessonUpdateRequest request = new PostScheduleLessonUpdateRequest();
-        request.setUserID(String.valueOf(str_loginuserID));//String.valueOf(str_stuID)
-        request.setScheduleID(str_scheduleid);
-        request.setLessonQuestionID(lessonQuestionID);
-        request.setLessonRemarks(Remarks_ET.getText().toString());
-        request.setLessonStatus(selected_status);
-        request.setScheduleLessonAnswer(str_lp_answer);
+            if(str_lessonanswer.equals("null")||str_lessonanswer.equals("") || str_lessonanswer == null){
+               String str_checkempty="Empty";
+                checkAnsArrayList.add(str_checkempty);
 
-        Call<PostScheduleLessonUpdateResponse> call = userService1.PostScheduleLessonUpdate(request);
-        // Set up progress before call
-        final ProgressDialog progressDoalog;
-        progressDoalog = new ProgressDialog(Activity_SchedulerLessonPlan.this);
-        progressDoalog.setTitle("Please wait....");
-        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        // show it
-        progressDoalog.show();
+            }else{
+                String str_checkempty="Full";
+                checkAnsArrayList.add(str_checkempty);
+               // if (str_lessonanswer != null) {
+                arrLst_answer.add(str_lessonanswer);
+                Ans_list+=str_lessonanswer+"$";
+              //  }
 
-        call.enqueue(new Callback<PostScheduleLessonUpdateResponse>() {
-            @Override
-            public void onResponse(Call<PostScheduleLessonUpdateResponse> call, Response<PostScheduleLessonUpdateResponse> response) {
-                Log.e("Entered resp", "PostScheduleLessonUpdate");
+            }
 
-                if (response.isSuccessful()) {
-                    progressDoalog.dismiss();
-                    PostScheduleLessonUpdateResponse class_loginresponse = response.body();
-                    if (class_loginresponse.getStatus()) {
+        }
+        Log.e("tag", "QuestionID_List==" + QuestionID_List+"\"");
+        Log.e("tag", "Ans_list==" + Ans_list+"\"");
+        Log.e("arrays",Arrays.toString(new ArrayList[]{checkAnsArrayList}));
 
-                        Toast.makeText(Activity_SchedulerLessonPlan.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        Intent i=new Intent(Activity_SchedulerLessonPlan.this,EventListActivity.class);
-                        startActivity(i);
-                        finish();
 
-                    } else {
-                        progressDoalog.dismiss();
-                    }
-                } else {
-                    progressDoalog.dismiss();
-                    Log.e("Entered resp else", "");
-                    DefaultResponse error = ErrorUtils.parseError(response);
-                    // … and use it to show error information
+        if(selected_status.equals("No")){
+//            if(checkAnsArrayList.contains("Empty")){
+//                Log.e("checkAnsArrayList", "empty");
+//                Toast.makeText(Activity_SchedulerLessonPlan.this,"Please Enter all required data",Toast.LENGTH_SHORT).show();
+//
+//            }else {
 
-                    // … or just log the issue like we’re doing :)
-                    Log.e("error message", error.getMsg());
+                Log.e("checkAnsArrayList", "full");
+                //  Toast.makeText(Activity_SchedulerLessonPlan.this,"full",Toast.LENGTH_SHORT).show();
 
-                    if (error.getMsg() != null) {
 
-                        Log.e("error message", error.getMsg());
+                PostScheduleLessonUpdateRequest request = new PostScheduleLessonUpdateRequest();
+                request.setUserID(String.valueOf(str_loginuserID));//String.valueOf(str_stuID)
+                request.setScheduleID(str_scheduleid);
+//        request.setLessonQuestionID(lessonQuestionID);
+                request.setLessonQuestionID("");//QuestionID_List
+                request.setLessonRemarks(Remarks_ET.getText().toString());
+                request.setLessonStatus(selected_status);
+//        request.setScheduleLessonAnswer(str_lp_answer);
+                request.setScheduleLessonAnswer("");//Ans_list
+
+                Log.e("posting.usrid.", str_loginuserID);
+                Log.e("posting.scheduleid.", str_scheduleid);
+                Log.e("posting.qustid.", "");
+                Log.e("posting.ans.", "");
+                Log.e("posting.remarks.", Remarks_ET.getText().toString());
+
+                Call<PostScheduleLessonUpdateResponse> call = userService1.PostScheduleLessonUpdate(request);
+                // Set up progress before call
+                final ProgressDialog progressDoalog;
+                progressDoalog = new ProgressDialog(Activity_SchedulerLessonPlan.this);
+                progressDoalog.setTitle("Please wait....");
+                progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                // show it
+                progressDoalog.show();
+
+                call.enqueue(new Callback<PostScheduleLessonUpdateResponse>() {
+                    @Override
+                    public void onResponse(Call<PostScheduleLessonUpdateResponse> call, Response<PostScheduleLessonUpdateResponse> response) {
+                        Log.e("Entered resp", "PostScheduleLessonUpdate");
+
+                        if (response.isSuccessful()) {
+                            progressDoalog.dismiss();
+                            PostScheduleLessonUpdateResponse class_loginresponse = response.body();
+                            if (class_loginresponse.getStatus()) {
+                                Submit_lessonplan_BT.setVisibility(View.GONE);
+                                Toast.makeText(Activity_SchedulerLessonPlan.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Activity_SchedulerLessonPlan.this, Activity_HomeScreen.class);
+                                startActivity(i);
+                                finish();
+
+                            } else {
+                                Submit_lessonplan_BT.setVisibility(View.VISIBLE);
+                                progressDoalog.dismiss();
+                            }
+                        } else {
+                            progressDoalog.dismiss();
+                            Log.e("Entered resp else", "");
+                            DefaultResponse error = ErrorUtils.parseError(response);
+                            // … and use it to show error information
+
+                            // … or just log the issue like we’re doing :)
+                            Log.e("error message", error.getMsg());
+
+                            if (error.getMsg() != null) {
+
+                                Log.e("error message", error.getMsg());
 //                        str_getmonthsummary_errormsg = error.getMsg();
 //                        alerts_dialog_getexlistviewError();
 
-                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(Activity_SchedulerLessonPlan.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_SchedulerLessonPlan.this, error.getMsg(), Toast.LENGTH_SHORT).show();
 
-                    }else{
-                        //  Toast.makeText(Activity_SchedulerLessonPlan.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                //  Toast.makeText(Activity_SchedulerLessonPlan.this,error.getMsg(), Toast.LENGTH_SHORT).show();
 
+                            }
+
+                        }
                     }
 
-                }
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-                progressDoalog.dismiss();
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        progressDoalog.dismiss();
 //                str_getmonthsummary_errormsg = t.getMessage();
 //                alerts_dialog_getexlistviewError();
 
-                Toast.makeText(Activity_SchedulerLessonPlan.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_SchedulerLessonPlan.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });// end of call
+
+          //  }
+
+        }else{
+
+            if(checkAnsArrayList.contains("Empty")){
+                Log.e("checkAnsArrayList", "empty");
+                Toast.makeText(Activity_SchedulerLessonPlan.this,"Please Enter all required data",Toast.LENGTH_SHORT).show();
+
+            }else {
+                Log.e("checkAnsArrayList", "full");
+                //  Toast.makeText(Activity_SchedulerLessonPlan.this,"full",Toast.LENGTH_SHORT).show();
+
+
+                PostScheduleLessonUpdateRequest request = new PostScheduleLessonUpdateRequest();
+                request.setUserID(String.valueOf(str_loginuserID));//String.valueOf(str_stuID)
+                request.setScheduleID(str_scheduleid);
+//        request.setLessonQuestionID(lessonQuestionID);
+                request.setLessonQuestionID(QuestionID_List);
+                request.setLessonRemarks(Remarks_ET.getText().toString());
+                request.setLessonStatus(selected_status);
+//        request.setScheduleLessonAnswer(str_lp_answer);
+                request.setScheduleLessonAnswer(Ans_list);
+
+                Log.e("posting.usrid.", str_loginuserID);
+                Log.e("posting.scheduleid.", str_scheduleid);
+                Log.e("posting.qustid.", QuestionID_List);
+                Log.e("posting.ans.", Ans_list);
+                Log.e("posting.remarks.", Remarks_ET.getText().toString());
+
+                Call<PostScheduleLessonUpdateResponse> call = userService1.PostScheduleLessonUpdate(request);
+                // Set up progress before call
+                final ProgressDialog progressDoalog;
+                progressDoalog = new ProgressDialog(Activity_SchedulerLessonPlan.this);
+                progressDoalog.setTitle("Please wait....");
+                progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                // show it
+                progressDoalog.show();
+
+                call.enqueue(new Callback<PostScheduleLessonUpdateResponse>() {
+                    @Override
+                    public void onResponse(Call<PostScheduleLessonUpdateResponse> call, Response<PostScheduleLessonUpdateResponse> response) {
+                        Log.e("Entered resp", "PostScheduleLessonUpdate");
+
+                        if (response.isSuccessful()) {
+                            progressDoalog.dismiss();
+                            PostScheduleLessonUpdateResponse class_loginresponse = response.body();
+                            if (class_loginresponse.getStatus()) {
+                                Submit_lessonplan_BT.setVisibility(View.GONE);
+                                Toast.makeText(Activity_SchedulerLessonPlan.this, class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(Activity_SchedulerLessonPlan.this, Activity_HomeScreen.class);
+                                startActivity(i);
+                                finish();
+
+                            } else {
+                                Submit_lessonplan_BT.setVisibility(View.VISIBLE);
+                                progressDoalog.dismiss();
+                            }
+                        } else {
+                            progressDoalog.dismiss();
+                            Log.e("Entered resp else", "");
+                            DefaultResponse error = ErrorUtils.parseError(response);
+                            // … and use it to show error information
+
+                            // … or just log the issue like we’re doing :)
+                            Log.e("error message", error.getMsg());
+
+                            if (error.getMsg() != null) {
+
+                                Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                                //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_SchedulerLessonPlan.this, error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                //  Toast.makeText(Activity_SchedulerLessonPlan.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+                        progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                        Toast.makeText(Activity_SchedulerLessonPlan.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });// end of call
+
             }
-        });// end of call
 
 
+        }
 
     }
 
     public void GetScheduleLessonPlan() {
 
-        Call<GetScheduleLessonPlanResponse> call = userService1.GetScheduleLessonPlan("56");//String.valueOf(str_stuID)
+        Call<GetScheduleLessonPlanResponse> call = userService1.GetScheduleLessonPlan(str_ScheduleId_received);//String.valueOf(str_stuID)
 
         // Set up progress before call
         final ProgressDialog progressDoalog;
@@ -222,6 +428,8 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
                         List<GetScheduleLessonPlanResponseList> monthContents_list = response.body().getLst1();
                         GetScheduleLessonPlanResponseList []  arrayObj_Class_monthcontents = new GetScheduleLessonPlanResponseList[monthContents_list.size()];
                         arrayObj_class_studentpaymentresp = new GetScheduleLessonPlanResponseList[arrayObj_Class_monthcontents.length];
+                     //   lessonQuestionArrayList.clear();
+                      //  LessonQuestion_arraylist2.clear();
 
                         for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
                             Log.e("GetScheduleLessonPlan", String.valueOf(class_loginresponse.getStatus()));
@@ -253,7 +461,7 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
                             Log.e("LessonQuestion_list", String.valueOf(LessonQuestion_list.size()));
                             Log.e("arrayObj_LessonQuestion", String.valueOf(arrayObj_LessonQuestion.length));
 
-
+                            LessonQuestion_arraylist2 = new ArrayList<>();
                             for (int j = 0; j < sizeCount; j++) {
                                 lessonQuestionID = class_loginresponse.getLst1().get(i).getLessonQuestion().get(j).getLessonQuestionID();
                                  lessonQuestionname = class_loginresponse.getLst1().get(i).getLessonQuestion().get(j).getQuestionName();
@@ -270,10 +478,14 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
                                 innerObj_Class.setScheduleLessonAnswer(scheduleLessonAnswer);
                                 innerObj_Class.setCreatedBy(createdBy);
                                 ArrayObjclass_lessonquestion[j] = innerObj_Class;
-
+                                LessonQuestion_arraylist2.add(innerObj_Class);
                             }
-                            CustomAdapter adapter = new CustomAdapter();
+                          //  CustomAdapter adapter = new CustomAdapter();
+                         //   lv_questions_list.setAdapter(adapter);
+                            lessonQuestionArrayList = LessonQuestion_arraylist2;
+                            adapter = new LessonPlanAdapter(getApplicationContext(), lessonQuestionArrayList);
                             lv_questions_list.setAdapter(adapter);
+
 
                         }//for loop end
 
@@ -327,101 +539,148 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
-
-
-
-
-    private class Holder {
-        TextView LP_Question_TV;
-        EditText LP_Answer_ET;
-        TextView LP_Question_ID_TV;
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        menu.findItem(R.id.logout_menu)
+                .setVisible(false);
+        return super.onCreateOptionsMenu(menu);
     }
 
-    public class CustomAdapter extends BaseAdapter {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        public CustomAdapter() {
+        // Show toast when menu items selected
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
 
-            super();
-            Log.d("Inside cfeessubmit()", "Inside CustomAdapter_feessubmit()");
-        }
-
-        @Override
-        public int getCount() {
-
-            String x = Integer.toString(ArrayObjclass_lessonquestion.length);
-            Log.d("Arrayclass.length", x);
-            return ArrayObjclass_lessonquestion.length;
+                break;
 
         }
-
-        @Override
-        public Object getItem(int position) {
-            String x = Integer.toString(position);
-
-            Log.d("getItem position", "x");
-            return ArrayObjclass_lessonquestion[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            String x = Integer.toString(position);
-            Log.d("getItemId position", x);
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            final Holder holder;
-
-            Log.d("CustomAdapter", "position: " + position);
-
-            if (convertView == null) {
-                holder = new Holder();
-                convertView = LayoutInflater.from(Activity_SchedulerLessonPlan.this).inflate(R.layout.child_lessonplan_layout, parent, false);
-
-
-                holder.LP_Question_TV = (TextView) convertView.findViewById(R.id.LP_Question_TV);
-                holder.LP_Answer_ET = (EditText) convertView.findViewById(R.id.LP_Answer_ET);
-                holder.LP_Question_ID_TV = (TextView) convertView.findViewById(R.id.LP_Question_ID_TV);
-
-                Log.d("Inside If convertView", "Inside If convertView");
-
-                convertView.setTag(holder);
-            } else {
-                holder = (Holder) convertView.getTag();
-                Log.d("Inside else convertView", "Inside else convertView");
-            }
-
-            Objclass_feesSubmissionList_new = (LessonQuestion) getItem(position);
-
-            if(isInternetPresent) {
-//                if (loadPendingPaymentCount == 0) {
-//                    PendingAmtstudentlist_LL.setVisibility(android.view.View.GONE);
-//                    NoRecords_studentlist_LL.setVisibility(android.view.View.VISIBLE);
-//                } else {
-
-//                    PendingAmtstudentlist_LL.setVisibility(android.view.View.VISIBLE);
-//                    NoRecords_studentlist_LL.setVisibility(android.view.View.GONE);
-
-                    if (Objclass_feesSubmissionList_new != null) {
-                         str_lp_answer=holder.LP_Answer_ET.getText().toString();
-                        holder.LP_Question_TV.setText(Objclass_feesSubmissionList_new.getQuestionName());
-                        holder.LP_Answer_ET.setText(holder.LP_Answer_ET.getText().toString());
-                        holder.LP_Question_ID_TV.setText(Objclass_feesSubmissionList_new.getLessonQuestionID());
-
-                    }// end of if
-                }else{
-                holder.LP_Question_TV.setVisibility(View.GONE);
-                holder.LP_Answer_ET.setVisibility(View.GONE);
-            }
-
-            return convertView;
-        }
-
-
-
+        return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+//    private static class Holder {
+//        TextView LP_Question_TV;
+//        EditText LP_Answer_ET;
+//        TextView LP_Question_ID_TV;
+//    }
+
+//    public static class CustomAdapter extends BaseAdapter {
+//        private Context context;
+//        public static ArrayList<LessonQuestion> lessonQuestionArrayList;
+//
+//        public CustomAdapter() {
+//
+//            super();
+//            Log.d("Inside cfeessubmit()", "Inside CustomAdapter_feessubmit()");
+//        }
+//
+//        public CustomAdapter(Context context, ArrayList<LessonQuestion> lessonQuestionArrayList) {
+//
+//            this.context = context;
+//            lessonQuestionArrayList = lessonQuestionArrayList;
+//        }
+////        @Override
+////        public int getCount() {
+////
+////            String x = Integer.toString(lessonQuestionArrayList.size());
+////            Log.d("Arrayclass.length", x);
+////            return lessonQuestionArrayList.size();
+////
+////        }
+//
+//        @Override
+//        public int getCount() {
+//            return lessonQuestionArrayList.size();
+//        }
+//
+//        @Override
+//        public int getItemViewType(int position) {
+//
+//            return position;
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            String x = Integer.toString(position);
+//
+//            Log.d("getItem position", "x");
+//            return lessonQuestionArrayList.get(position);
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+////            String x = Integer.toString(position);
+////            Log.d("getItemId position", x);
+////            return position;
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(final int position, View convertView, ViewGroup parent) {
+//
+//            final Holder holder;
+//
+//            Log.d("CustomAdapter", "position: " + position);
+//
+//            if (convertView == null) {
+//                holder = new Holder();
+//                convertView = LayoutInflater.from(context).inflate(R.layout.child_lessonplan_layout, parent, false);
+//
+//
+//                holder.LP_Question_TV = (TextView) convertView.findViewById(R.id.LP_Question_TV);
+//                holder.LP_Answer_ET = (EditText) convertView.findViewById(R.id.LP_Answer_ET);
+//                holder.LP_Question_ID_TV = (TextView) convertView.findViewById(R.id.LP_Question_ID_TV);
+//
+//                Log.d("Inside If convertView", "Inside If convertView");
+//
+//                convertView.setTag(holder);
+//            } else {
+//                holder = (Holder) convertView.getTag();
+//                Log.d("Inside else convertView", "Inside else convertView");
+//            }
+//
+//            Objclass_feesSubmissionList_new = (LessonQuestion) getItem(position);
+//
+//         //   if(isInternetPresent) {
+////                if (loadPendingPaymentCount == 0) {
+////                    PendingAmtstudentlist_LL.setVisibility(android.view.View.GONE);
+////                    NoRecords_studentlist_LL.setVisibility(android.view.View.VISIBLE);
+////                } else {
+//
+////                    PendingAmtstudentlist_LL.setVisibility(android.view.View.VISIBLE);
+////                    NoRecords_studentlist_LL.setVisibility(android.view.View.GONE);
+//
+//                    if (Objclass_feesSubmissionList_new != null) {
+//                         str_lp_answer=holder.LP_Answer_ET.getText().toString();
+////                        holder.LP_Question_TV.setText(Objclass_feesSubmissionList_new.getQuestionName());
+////                        holder.LP_Answer_ET.setText(holder.LP_Answer_ET.getText().toString());
+////                        holder.LP_Question_ID_TV.setText(Objclass_feesSubmissionList_new.getLessonQuestionID());
+//                        holder.LP_Question_TV.setText(lessonQuestionArrayList.get(position).getQuestionName());
+//                        holder.LP_Answer_ET.setText(holder.LP_Answer_ET.getText().toString());
+//                        holder.LP_Question_ID_TV.setText(lessonQuestionArrayList.get(position).getLessonQuestionID());
+//
+//
+//                    }// end of if
+////                }else{
+////                holder.LP_Question_TV.setVisibility(View.GONE);
+////                holder.LP_Answer_ET.setVisibility(View.GONE);
+////            }
+//
+//            return convertView;
+//        }
+//
+//
+//
+//    }
 
 }

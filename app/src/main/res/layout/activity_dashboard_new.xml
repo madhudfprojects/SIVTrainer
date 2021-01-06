@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:weightSum="2"
+    android:layout_gravity="center"
+    >
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        card_view:cardCornerRadius="14dp"
+        card_view:cardElevation="8dp"
+        card_view:contentPadding="5dp"
+        tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_weight="0.6"
+        >
+
+
+
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        >
+        <RelativeLayout
+            android:id="@+id/rel_sandboxlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:layout_below="@+id/mainlinearlayout_ll"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_layout"
+                android:orientation="horizontal"
+                >
+
+
+
+                <Spinner
+                    android:id="@+id/loadSandbox_SP"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:popupBackground="@drawable/shadow_new"
+                    android:textColor="#5C5757"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="-4dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Sandbox"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_marginTop="15dp"
+        android:id="@+id/scorecardlayout1_LL">
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/villagecount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Villages"
+                    android:textColor="@color/blackColor"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background1">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        android:background="#8BC34A"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/schoolcount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Schools"
+                    android:textColor="@color/blackColor"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background2">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        android:background="#FFC107"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/studentcount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:gravity="center"
+                    android:text="Students"
+                    android:textColor="@color/blackColor"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:id="@+id/scorecardlayout2_LL"
+        android:visibility="visible">
+
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background3">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        android:background="#E2908A"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/malecount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Boy"
+                    android:textColor="@color/blackColor"
+                    android:textSize="14sp" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background4">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        android:background="@color/blue"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/scorecard_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/femalecount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Girl"
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/dashboard_background5">
+
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="100dp"-->
+            <!--                    android:layout_height="100dp"-->
+            <!--                    android:gravity="center_horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:layout_width="100dp"-->
+            <!--                        android:layout_height="50dp"-->
+            <!--                        android:background="#E66A94"-->
+            <!--                        />-->
+            <!--                </LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dropoutscount_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Dropouts"
+                    android:textColor="@color/blackColor"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/calendar_back2" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/stdntccount_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/stuntc1count_TV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:visibility="gone"
+        android:background="@drawable/layout_background" />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        card_view:cardCornerRadius="14dp"
+        card_view:cardElevation="8dp"
+        card_view:contentPadding="5dp"
+        tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1.4"
+        android:layout_marginTop="10dp">
+
+
+
+        <TextView
+        android:id="@+id/feesummarheading_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fees Summary"
+        android:textColor="#454242"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:fontFamily="serif"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:weightSum="1"
+        >
+        <RelativeLayout
+            android:id="@+id/rel_centerslayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_layout"
+                android:orientation="horizontal"
+                >
+
+                <Spinner
+                    android:id="@+id/loadcenters_SP"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:popupBackground="@drawable/shadow_new"
+                    android:textColor="#5C5757"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="-4dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Institute"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_gravity="center">
+
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            android:layout_gravity="center"/>
+
+
+    </FrameLayout>
+
+    </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

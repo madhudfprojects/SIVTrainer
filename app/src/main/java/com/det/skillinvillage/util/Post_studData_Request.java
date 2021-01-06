@@ -45,6 +45,18 @@ public class Post_studData_Request {
     @Expose
     private String Subject_ID;
 
+    @SerializedName("ClassRoom_Value")
+    @Expose
+    private String classRoom_Value;
+
+    public String getClassRoom_Value() {
+        return classRoom_Value;
+    }
+
+    public void setClassRoom_Value(String classRoom_Value) {
+        this.classRoom_Value = classRoom_Value;
+    }
+
     public String getSubject_ID() {
         return Subject_ID;
     }

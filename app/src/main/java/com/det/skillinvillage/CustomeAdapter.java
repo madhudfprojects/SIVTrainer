@@ -68,7 +68,7 @@ public class CustomeAdapter extends BaseAdapter {
             holder.viewholder_studentname_tv = convertView.findViewById(R.id.studentname_tv);
             holder.viewholder_studentpresent_tv = convertView.findViewById(R.id.studentpresent_tv);
             holder.viewholder_studentabsent_tv = convertView.findViewById(R.id.studentabsent_tv);
-
+           // holder.viewholder_editText.requestFocus();
             convertView.setTag(holder);
         } else {
             // the getTag returns the viewHolder object set as a tag to the view

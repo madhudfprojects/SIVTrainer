@@ -132,13 +132,22 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         if(statusStr.equals("Taken") || statusStr.equals("Not Taken")){
             //holder.btUpdate.
             holder.btUpdate1.setVisibility(View.GONE);
-            holder.lessonplan_IV.setVisibility(View.VISIBLE);
+            holder.lessonplan_IV.setVisibility(View.GONE);
         }else {
 
-            holder.btUpdate1.setVisibility(View.GONE);
-            holder.lessonplan_IV.setVisibility(View.GONE);
+            holder.btUpdate1.setVisibility(View.VISIBLE);
+           // holder.lessonplan_IV.setVisibility(View.GONE);
         }
 
+
+        if(statusStr.equals("Lesson Pending")){
+            //holder.btUpdate.
+            holder.lessonplan_IV.setVisibility(View.VISIBLE);
+            holder.btUpdate1.setVisibility(View.GONE);
+        }else {
+          //  holder.btUpdate1.setVisibility(View.VISIBLE);
+            holder.lessonplan_IV.setVisibility(View.GONE);
+        }
         //holder.tvClassRoom.setText(model.getStrClassroom());
       //  holder.tvModule.setText(model.getStrModule());
 
@@ -318,7 +327,10 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         holder.lessonplan_IV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                scheduleid_holder=holder.tv_scheduleId.getText().toString();
+
                 Intent i=new Intent(getContext(), Activity_SchedulerLessonPlan.class);
+                i.putExtra("ScheduleId",scheduleid_holder);
                 context1.startActivity(i);
 
                 //Display the table

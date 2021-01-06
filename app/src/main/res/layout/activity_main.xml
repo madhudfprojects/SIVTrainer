@@ -48,8 +48,8 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp">
                 <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="80dp"
+                    android:layout_width="150dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/deshpandeskilling" />
@@ -58,10 +58,10 @@
                     style="@style/headerText"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:textSize="24dp"
                     android:text="Skill In Village"
                     android:layout_marginTop="20dp"
-                    android:fontFamily="serif"/>
+                    android:fontFamily="serif"
+                    android:textSize="35sp"/>
 
                 <include
                     layout="@layout/layout_login"/>

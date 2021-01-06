@@ -1122,10 +1122,13 @@ public class Remarks extends AppCompatActivity {
         request.setZoom_Value(Zoom_list+"]");
         request.setFaceToFace_Value(Face_list+"]");
         request.setConferance_Value(ConCall_list+"]");
+        request.setClassRoom_Value("");
         Log.e("tag","request=="+request);
 
 
         {
+            Log.e("request_userschd", "request_userschd: " + new Gson().toJson(request));
+
             Call call = userService.post_ActionScheduleAttendance(request);
 
             call.enqueue(new Callback<StudentData_Response>()
@@ -1144,10 +1147,10 @@ public class Remarks extends AppCompatActivity {
 
 
                         StudentData_Response class_addfarmponddetailsresponse = response.body();
-                       // result_of_response= class_addfarmponddetailsresponse.getLst().getAttendanceStatus();
-                        result_of_response= "Taken"; //
+                        result_of_response= class_addfarmponddetailsresponse.getLst().getAttendanceStatus();
+                        //result_of_response= "Taken"; //
                         Log.e("tag", "result_of_response=="+result_of_response);
-                        if (class_addfarmponddetailsresponse.getStatus().equals("true"))
+                       /* if (class_addfarmponddetailsresponse.getStatus().equals("true"))
                         {
                             StudentData_ResponseList studentData_responseLists = response.body().getLst();
                             result_of_response=studentData_responseLists.getAttendanceStatus().toString();
@@ -1157,19 +1160,8 @@ public class Remarks extends AppCompatActivity {
                             //     progressDoalog.dismiss();
                             Toast.makeText(Remarks.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
                         }
+*/
 
-                        if (result_of_response != null && result_of_response.equalsIgnoreCase("Taken") || result_of_response.equalsIgnoreCase("Not Taken")) {
-                            Toast.makeText(Remarks.this, "Successfull Submission", Toast.LENGTH_LONG).show();
-                            Date date = new Date();
-                            Log.i("Tag_time", "date1=" + date);
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            String PresentDayStr = sdf.format(date);
-                            Log.i("Tag_time", "PresentDayStr=" + PresentDayStr);
-
-                            cal_adapter1.getPositionList(PresentDayStr, Remarks.this);
-                        } else {
-                            Toast.makeText(Remarks.this, "Error while saving", Toast.LENGTH_LONG).show();
-                        }
                     } else {
                         //   progressDoalog.dismiss();
                         DefaultResponse error = ErrorUtils.parseError(response);
@@ -1177,6 +1169,7 @@ public class Remarks extends AppCompatActivity {
                         Toast.makeText(Remarks.this, error.getMsg(), Toast.LENGTH_SHORT).show();
 
                     }
+                    get_User_Schedule(result_of_response);
 
                 }
 
@@ -1189,17 +1182,17 @@ public class Remarks extends AppCompatActivity {
 
         }
     }
-    private void Update_studentData()
+    /*private void Update_studentData()
     {
         Interface_userservice userService;
         userService = Class_ApiUtils.getUserService();
 
         final ProgressDialog login_progressDoalog;
-       /* login_progressDoalog = new ProgressDialog(Remarks.this);
+       *//* login_progressDoalog = new ProgressDialog(Remarks.this);
         login_progressDoalog.setMessage("Loading....");
         login_progressDoalog.setTitle("Please wait....");
         login_progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        login_progressDoalog.show();*/
+        login_progressDoalog.show();*//*
 
         JSONArray jsArrayAb = new JSONArray();
         JSONArray jsArrayPre = new JSONArray();
@@ -1301,6 +1294,7 @@ public class Remarks extends AppCompatActivity {
         request.setZoom_Value(Zoom_list+"\"");
         request.setFaceToFace_Value(Face_list+"\"");
         request.setConferance_Value(ConCall_list+"\"");
+        request.setClassRoom_Value(null);
         Log.e("tag","request=="+request);
         Call call = userService.post_ActionScheduleAttendance(request);
 
@@ -1320,7 +1314,7 @@ public class Remarks extends AppCompatActivity {
 
 
                  //   Class_devicedetails class_addfarmponddetailsresponse = response.body();
-/*
+*//*
                     if (class_addfarmponddetailsresponse.getStatus().equals("true"))
                     {
                         Log.e("devicedetails", "devicedetails_Added");
@@ -1331,7 +1325,7 @@ public class Remarks extends AppCompatActivity {
                         //     progressDoalog.dismiss();
                         Toast.makeText(Activity_HomeScreen.this, class_addfarmponddetailsresponse.getMessage(), Toast.LENGTH_SHORT).show();
                         gethelp();
-                    }*/
+                    }*//*
                 } else {
                     //   progressDoalog.dismiss();
                     DefaultResponse error = ErrorUtils.parseError(response);
@@ -1354,7 +1348,7 @@ public class Remarks extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
     private int getIndex_remarks(Spinner spinner, String myString) {
         for (int i = 0; i < spinner.getCount(); i++) {
 
@@ -1408,7 +1402,7 @@ public class Remarks extends AppCompatActivity {
             UpdateStudentData();
 //            Log.e("result_of_response1", result_of_response);
            // fetch_all_info1(u1);
-            get_User_Schedule();
+//            get_User_Schedule();
           //  Log.e("result_of_response2", result_of_response);
 				/*}
 			}*/
@@ -1447,9 +1441,9 @@ public class Remarks extends AppCompatActivity {
         }
     }
 
-    public void get_User_Schedule(){
+    public void get_User_Schedule(String response){
 
-
+        result_of_response=response;
         Interface_userservice userService;
         userService = Class_ApiUtils.getUserService();
 
@@ -1552,6 +1546,18 @@ public class Remarks extends AppCompatActivity {
                     }
                     // Log.e("response.body", response.body().size);
 
+                }
+                if (result_of_response != null && result_of_response.equalsIgnoreCase("Taken") || result_of_response.equalsIgnoreCase("Not Taken")) {
+                    Toast.makeText(Remarks.this, "Successfull Submission", Toast.LENGTH_LONG).show();
+                    Date date = new Date();
+                    Log.i("Tag_time", "date1=" + date);
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String PresentDayStr = sdf.format(date);
+                    Log.i("Tag_time", "PresentDayStr=" + PresentDayStr);
+
+                    cal_adapter1.getPositionList(PresentDayStr, Remarks.this);
+                } else {
+                    Toast.makeText(Remarks.this, "Error while saving", Toast.LENGTH_LONG).show();
                 }
 
 
@@ -1944,7 +1950,7 @@ public class Remarks extends AppCompatActivity {
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }

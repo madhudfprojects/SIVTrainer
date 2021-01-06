@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -112,13 +113,13 @@ public class Activity_Dashboard extends AppCompatActivity {
 
 
     //Added on Nov 9th 2020
-    LinearLayout dashboard_LL,feessummary_LL,viewmaps_LL;
+   // LinearLayout dashboard_LL,feessummary_LL,viewmaps_LL;
     ImageView dashboard_downarrow_IV,dashboard_uparrow_IV,feessummary_IV,feessummary_uparrow_IV,viewmaps_downarrow_IV,viewmaps_uparrow_IV;
-
+   // CardView cardview_dashboard,cardview_Feessummary,cardview_Maps;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__dashboard);
+        setContentView(R.layout.activity_dashboard_new);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Dashboard");
         internetDectector = new Class_InternetDectector(getApplicationContext());
@@ -136,7 +137,7 @@ public class Activity_Dashboard extends AppCompatActivity {
         studentcount_TV = findViewById(R.id.studentcount_TV);
         schoolcount_TV = findViewById(R.id.schoolcount_TV);
         villagecount_TV = findViewById(R.id.villagecount_TV);
-        viewmaps_TV = findViewById(R.id.viewmaps_TV);
+       // viewmaps_TV = findViewById(R.id.viewmaps_TV);
 //        barChart = (barChart) findViewById(R.id.barChart);
 //        barChart.setUsePercentValues(true);
         barChart = findViewById(R.id.barchart);
@@ -144,131 +145,199 @@ public class Activity_Dashboard extends AppCompatActivity {
         loadSandbox_SP= findViewById(R.id.loadSandbox_SP);
         scorecardlayout1_LL= findViewById(R.id.scorecardlayout1_LL);
         scorecardlayout2_LL= findViewById(R.id.scorecardlayout2_LL);
-        feesummarheading_TV= findViewById(R.id.feesummarheading_TV);
+      //  feesummarheading_TV= findViewById(R.id.feesummarheading_TV);
 
 
         //Added by shivaleela on 9th NOv 2020
-        dashboard_LL=(LinearLayout)findViewById(R.id.dashboard_LL);
-        feessummary_LL=(LinearLayout)findViewById(R.id.feessummary_LL);
-        viewmaps_LL=(LinearLayout)findViewById(R.id.viewmaps_LL);
-        dashboard_downarrow_IV=(ImageView)findViewById(R.id.dashboard_downarrow_IV);
-        dashboard_uparrow_IV=(ImageView)findViewById(R.id.dashboard_uparrow_IV);
-        feessummary_IV=(ImageView)findViewById(R.id.feessummary_IV);
-        feessummary_uparrow_IV=(ImageView)findViewById(R.id.feessummary_uparrow_IV);
-        viewmaps_downarrow_IV=(ImageView)findViewById(R.id.viewmaps_downarrow_IV);
-        viewmaps_uparrow_IV=(ImageView)findViewById(R.id.viewmaps_uparrow_IV);
+//        dashboard_LL=(LinearLayout)findViewById(R.id.dashboard_LL);
+//        feessummary_LL=(LinearLayout)findViewById(R.id.feessummary_LL);
+//        viewmaps_LL=(LinearLayout)findViewById(R.id.viewmaps_LL);
+//        dashboard_downarrow_IV=(ImageView)findViewById(R.id.dashboard_downarrow_IV);
+//        dashboard_uparrow_IV=(ImageView)findViewById(R.id.dashboard_uparrow_IV);
+//        feessummary_IV=(ImageView)findViewById(R.id.feessummary_IV);
+//        feessummary_uparrow_IV=(ImageView)findViewById(R.id.feessummary_uparrow_IV);
+//        viewmaps_downarrow_IV=(ImageView)findViewById(R.id.viewmaps_downarrow_IV);
+//        viewmaps_uparrow_IV=(ImageView)findViewById(R.id.viewmaps_uparrow_IV);
 
-        dashboard_downarrow_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.VISIBLE);
-                feessummary_LL.setVisibility(View.GONE);
-                viewmaps_LL.setVisibility(View.GONE);
+//        cardview_dashboard=(CardView) findViewById(R.id.cardview_dashboard);
+//        cardview_Feessummary=(CardView)findViewById(R.id.cardview_Feessummary);
+//        cardview_Maps=(CardView)findViewById(R.id.cardview_Maps);
 
-                dashboard_uparrow_IV.setVisibility(View.VISIBLE);
-                dashboard_downarrow_IV.setVisibility(View.GONE);
-
-                feessummary_uparrow_IV.setVisibility(View.GONE);
-                feessummary_IV.setVisibility(View.VISIBLE);
-
-
-                viewmaps_uparrow_IV.setVisibility(View.GONE);
-                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
-
-        dashboard_uparrow_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.GONE);
-                feessummary_LL.setVisibility(View.GONE);
-                viewmaps_LL.setVisibility(View.GONE);
-
-                dashboard_uparrow_IV.setVisibility(View.GONE);
-                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//        cardview_dashboard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.VISIBLE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.VISIBLE);
+//                dashboard_downarrow_IV.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.GONE);
+//                feessummary_IV.setVisibility(View.VISIBLE);
+//
+//
+//                viewmaps_uparrow_IV.setVisibility(View.GONE);
+//                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//            }
+//        });
 
 
-            }
-        });
-
-        feessummary_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.GONE);
-                feessummary_LL.setVisibility(View.VISIBLE);
-                viewmaps_LL.setVisibility(View.GONE);
-
-                feessummary_uparrow_IV.setVisibility(View.VISIBLE);
-                feessummary_IV.setVisibility(View.GONE);
-
-                dashboard_uparrow_IV.setVisibility(View.GONE);
-                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
-
-                viewmaps_uparrow_IV.setVisibility(View.GONE);
-                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
-
-
-
-
-            }
-        });
+//        dashboard_downarrow_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.VISIBLE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.VISIBLE);
+//                dashboard_downarrow_IV.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.GONE);
+//                feessummary_IV.setVisibility(View.VISIBLE);
+//
+//
+//                viewmaps_uparrow_IV.setVisibility(View.GONE);
+//                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//            }
+//        });
 
 
-        feessummary_uparrow_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.GONE);
-                viewmaps_LL.setVisibility(View.GONE);
+//        dashboard_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.GONE);
+//                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//            }
+//        });
 
-                feessummary_uparrow_IV.setVisibility(View.GONE);
-                feessummary_IV.setVisibility(View.VISIBLE);
-                feessummary_LL.setVisibility(View.GONE);
+//        cardview_Feessummary.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                feessummary_LL.setVisibility(View.VISIBLE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.VISIBLE);
+//                feessummary_IV.setVisibility(View.GONE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.GONE);
+//                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//                viewmaps_uparrow_IV.setVisibility(View.GONE);
+//                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//
+//
+//            }
+//        });
 
-            }
-        });
+//        feessummary_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                dashboard_LL.setVisibility(View.GONE);
+////                feessummary_LL.setVisibility(View.VISIBLE);
+////                viewmaps_LL.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.VISIBLE);
+//                feessummary_IV.setVisibility(View.GONE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.GONE);
+//                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//                viewmaps_uparrow_IV.setVisibility(View.GONE);
+//                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//
+//
+//            }
+//        });
+
+
+//        feessummary_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.GONE);
+//                feessummary_IV.setVisibility(View.VISIBLE);
+//                feessummary_LL.setVisibility(View.GONE);
+//
+//            }
+//        });
 
 
 
+//        cardview_Maps.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.VISIBLE);
+//
+//                viewmaps_uparrow_IV.setVisibility(View.VISIBLE);
+//                viewmaps_downarrow_IV.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.GONE);
+//                feessummary_IV.setVisibility(View.VISIBLE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.GONE);
+//                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//
+//            }
+//        });
 
-        viewmaps_downarrow_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.GONE);
-                feessummary_LL.setVisibility(View.GONE);
-                viewmaps_LL.setVisibility(View.VISIBLE);
-
-                viewmaps_uparrow_IV.setVisibility(View.VISIBLE);
-                viewmaps_downarrow_IV.setVisibility(View.GONE);
-
-                feessummary_uparrow_IV.setVisibility(View.GONE);
-                feessummary_IV.setVisibility(View.VISIBLE);
-
-                dashboard_uparrow_IV.setVisibility(View.GONE);
-                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
-
-
-
-            }
-        });
-
-
-        viewmaps_uparrow_IV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dashboard_LL.setVisibility(View.GONE);
-                feessummary_LL.setVisibility(View.GONE);
-                viewmaps_LL.setVisibility(View.GONE);
+//        viewmaps_downarrow_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.VISIBLE);
+//
+//                viewmaps_uparrow_IV.setVisibility(View.VISIBLE);
+//                viewmaps_downarrow_IV.setVisibility(View.GONE);
+//
+//                feessummary_uparrow_IV.setVisibility(View.GONE);
+//                feessummary_IV.setVisibility(View.VISIBLE);
+//
+//                dashboard_uparrow_IV.setVisibility(View.GONE);
+//                dashboard_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//
+//            }
+//        });
 
 
-                viewmaps_uparrow_IV.setVisibility(View.GONE);
-                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
-
-
-            }
-        });
+//        viewmaps_uparrow_IV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dashboard_LL.setVisibility(View.GONE);
+//                feessummary_LL.setVisibility(View.GONE);
+//                viewmaps_LL.setVisibility(View.GONE);
+//
+//
+//                viewmaps_uparrow_IV.setVisibility(View.GONE);
+//                viewmaps_downarrow_IV.setVisibility(View.VISIBLE);
+//
+//
+//            }
+//        });
 
 
 //=====================================================================
@@ -312,13 +381,13 @@ public class Activity_Dashboard extends AppCompatActivity {
             }
         });
 
-        viewmaps_TV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Activity_Dashboard.this, Activity_MarkerGoogleMaps.class);
-                startActivity(i);
-            }
-        });
+//        viewmaps_TV.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(Activity_Dashboard.this, Activity_MarkerGoogleMaps.class);
+//                startActivity(i);
+//            }
+//        });
         getdashboarddata();
         getbarchartdata();
         // getVillagelat_long();
@@ -1410,7 +1479,7 @@ public class Activity_Dashboard extends AppCompatActivity {
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }

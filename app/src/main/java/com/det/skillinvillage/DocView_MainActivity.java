@@ -70,7 +70,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
     //added by shivaleela on Nov 4th 2020
     ArrayList<Class_ListVersion> Array_ClassListVersion;
     Interface_userservice userService1;
-    String str_actualdocPath = null, str_DocumentPath = null, str_docID, str_DocumentDate, str_DocumentName, str_DocumentType, str_DocumentStatus, str_DocumentTime;
+    String str_actualdocPath = null, str_DocumentPath = null, str_docID, str_DocumentDate, str_DocumentName, str_DocumentType, str_DocumentStatus, str_DocumentTime,str_doc_verification="";
     Class_ListVersion[] arrayObj_Class_monthcontents;
     SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
@@ -319,15 +319,15 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
 
 
                         //     DocView_Module docView_module=new DocView_Module(str_Document_ID,str_Document_Date,str_Document_Time,str_Document_Name,str_actualdocPath,str_Document_Type,str_Document_Status);
-                        DocView_Module.listview_arr.add(new DocView_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status));
+                        DocView_Module.listview_arr.add(new DocView_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
 
                         if (str_Document_Type.equalsIgnoreCase("Question Paper")) {
                             if (str_Document_Status.equalsIgnoreCase("Active")) {
-                                QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status));
+                                QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
                             }
                         } else if (str_Document_Type.equalsIgnoreCase("Lesson Plan")) {
                             if (str_Document_Status.equalsIgnoreCase("Active")) {
-                                LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status));
+                                LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
                             }
                         }
                     }
@@ -453,6 +453,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             innerObj_Class_SandboxList.setDocumentPath(class_loginresponse.getClass_ListVersion().get(i).getDocumentPath());
                             innerObj_Class_SandboxList.setDocumentType(class_loginresponse.getClass_ListVersion().get(i).getDocumentType());
                             innerObj_Class_SandboxList.setDocumentStatus(class_loginresponse.getClass_ListVersion().get(i).getDocumentStatus());
+                            innerObj_Class_SandboxList.setDocumentVerification(class_loginresponse.getClass_ListVersion().get(i).getDocumentVerification());
 
                             arrayObj_Class_monthcontents[i] = innerObj_Class_SandboxList;
                             Log.e("spinner", arrayObj_Class_monthcontents[i].getDocumentName());
@@ -466,6 +467,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             str_DocumentName = class_loginresponse.getClass_ListVersion().get(i).getDocumentName();
                             str_DocumentType = class_loginresponse.getClass_ListVersion().get(i).getDocumentType();
                             str_DocumentStatus = class_loginresponse.getClass_ListVersion().get(i).getDocumentStatus();
+                             str_doc_verification=class_loginresponse.getClass_ListVersion().get(i).getDocumentVerification();
 
                             str_DocumentPath = class_loginresponse.getClass_ListVersion().get(i).getDocumentPath();
                             if (str_DocumentPath != null) {
@@ -496,15 +498,15 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             }
 
 
-                            DocView_Module.listview_arr.add(new DocView_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus));
+                            DocView_Module.listview_arr.add(new DocView_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
 
                             if (str_DocumentType.equalsIgnoreCase("Question Paper")) {
                                 if (str_DocumentStatus.equalsIgnoreCase("Active")) {
-                                    QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus));
+                                    QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
                                 }
                             } else if (str_DocumentType.equalsIgnoreCase("Lesson Plan")) {
                                 if (str_DocumentStatus.equalsIgnoreCase("Active")) {
-                                    LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus));
+                                    LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
                                 }
                             }
                             //  }

@@ -211,7 +211,7 @@ public interface Interface_userservice {
 
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("Authentication/Post_Schedule_Lesson_Update")
-    Call<PostScheduleLessonUpdateResponse> PostScheduleLessonUpdate(@Body PostScheduleLessonUpdateRequest request);
+    Call<PostScheduleLessonUpdateResponse>PostScheduleLessonUpdate(@Body PostScheduleLessonUpdateRequest request);
 
 }
 

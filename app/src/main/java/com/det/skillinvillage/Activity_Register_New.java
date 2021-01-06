@@ -16,6 +16,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
@@ -166,6 +167,7 @@ public class Activity_Register_New extends AppCompatActivity {
     EditText admissionfee_et;
     static TextView paymentdate_tv;
     String[] educationArray = {"Select", "4th Standard", "5th Standard", "6th Standard", "7th Standard", "8th Standard", "9th Standard"};
+    @SuppressLint("StaticFieldLeak")
     public static ImageView photo_iv;
     Button uploadimg_Btn;
     ProgressBar progressbar;
@@ -332,7 +334,7 @@ public class Activity_Register_New extends AppCompatActivity {
         spinnerslayout_ll = findViewById(R.id.spinnerslayout_LL);
         mainRegistration_ll = findViewById(R.id.mainRegistration_LL);
         school_sp = findViewById(R.id.school_SP);
-        photo_iv = findViewById(R.id.photo_IV);
+        photo_iv = (ImageView)findViewById(R.id.photo_IV);
         uploadimg_Btn = findViewById(R.id.UploadImgBtn);
         maxfees_tv = findViewById(R.id.maxfees_TV);
         receipt_no_et = findViewById(R.id.receipt_ET);
@@ -714,7 +716,7 @@ public class Activity_Register_New extends AppCompatActivity {
 
                         admissionfee_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", selected_levelAdmissionFee)});
                         maxfees_tv.setText(getResources().getString(R.string.Rs) + "" + selected_levelAdmissionFee);
-                        admissionfee_et.setText(selected_levelAdmissionFee);
+                       // admissionfee_et.setText(selected_levelAdmissionFee);
 
                         ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
                         dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
@@ -973,7 +975,7 @@ public class Activity_Register_New extends AppCompatActivity {
 
                             admissionfee_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", selected_levelAdmissionFee)});
                             maxfees_tv.setText(getResources().getString(R.string.Rs) + "" + selected_levelAdmissionFee);
-                            admissionfee_et.setText(selected_levelAdmissionFee);
+                           // admissionfee_et.setText(selected_levelAdmissionFee);
 
 
                         } else {
@@ -1034,7 +1036,7 @@ public class Activity_Register_New extends AppCompatActivity {
                 Log.e("fee_create", selected_levelAdmissionFee);
                 admissionfee_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", selected_levelAdmissionFee)});
                 maxfees_tv.setText(getResources().getString(R.string.Rs) + "" + selected_levelAdmissionFee);
-                admissionfee_et.setText(selected_levelAdmissionFee);
+                //admissionfee_et.setText(selected_levelAdmissionFee);
 
                 ArrayAdapter dataAdapter_status21 = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
                 dataAdapter_status21.setDropDownViewResource(R.layout.spinnercenterstyle);
@@ -1954,43 +1956,13 @@ public class Activity_Register_New extends AppCompatActivity {
         db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
 
         String str_stumarks4 = "", str_stumarks5 = "", str_stumarks6 = "", str_stumarks7 = "", str_stumarks8 = "";
-//        selected_sandboxID_int = Integer.parseInt(sp_strsand_ID);
-//        selected_academicID_int = Integer.parseInt(sp_straca_ID);
-//        selected_clusterID_int = Integer.parseInt(sp_strClust_ID);
-//        selected_instituteID_int = Integer.parseInt(sp_strInst_ID);
-//        selected_levelID_int = Integer.parseInt(sp_strLev_ID);
-//        selected_schoolID_int = Integer.parseInt(sp_strschool_ID);
-//        str_ForSavingData_studentname = studentname_et.getText().toString();
-//        str_ForSavingData_mobileno = mobileno_et.getText().toString();
-//        str_ForSavingData_fathername = fathername_et.getText().toString();
-//        str_ForSavingData_mothername = mothername_et.getText().toString();
-//        str_ForSavingData_aadar = aadar_et.getText().toString();
-//        selected_admissionfee = admissionfee_et.getText().toString();
-//        str_receipt_no = receipt_no_et.getText().toString();
-//        if (marks_et.getVisibility() == View.VISIBLE) {
-//
-//            str_marks = marks_et.getText().toString();
-//        }
         Date c = Calendar.getInstance().getTime();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         createddate = df.format(c);
-        createdby = "12";
+        createdby = str_loginuserID;
 
 
-//        int_val_sandboxID = class_farmponddetails_offline_obj.getSandboxID();
-//        int_val_academicid = class_farmponddetails_offline_obj.getAcademicID();
-//        int_val_clusterid = class_farmponddetails_offline_obj.getClusterID();
-//        int_val_instituteid = class_farmponddetails_offline_obj.getInstituteID();
-//        int_val_schoolid = class_farmponddetails_offline_obj.getSchoolID();
-//        int_val_levelid = class_farmponddetails_offline_obj.getLevelID();
-////System.currentTimeMillis()
-//
-//
-//        Date c = Calendar.getInstance().getTime();
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//        String createddate = df.format(c);
-//        //  String createdby = str_stuID;
 
 
         Calendar c1 = Calendar.getInstance();
@@ -2000,17 +1972,7 @@ public class Activity_Register_New extends AppCompatActivity {
         String str_TemporaryID = "temp" + String.valueOf(System.currentTimeMillis()) + str_ddmmyyyy;
         Log.e("str_TemporaryID", str_TemporaryID);
 
-//        String str_stuname =studentName_edit_et.getText().toString();
-//        String str_stufathername = fathername_edit_et.getText().toString();
-//        String  str_stumothername = mothername_edit_et.getText().toString();
-//        String  str_mobno= mobileno_edit_et.getText().toString();
-//        String  stu_aadharno= aadhaarno_edit_et.getText().toString();
-//        String str_dob=dateofbirth_edit_tv.getText().toString();
-//        String str_gen_new=str_gender;
-//        String  str_edu=class_farmponddetails_offline_obj.getEducation();
 
-        //  String  str_stustatus=class_farmponddetails_offline_obj.getStudentStatus();
-//        String  str_stumarks4=class_farmponddetails_offline_obj.getMarks4();
         if (selected_edu.equals("4th Standard")) {
             // education__edit_Sp.setSelection(1);
         }
@@ -2030,103 +1992,102 @@ public class Activity_Register_New extends AppCompatActivity {
             str_stumarks8 = marks_et.getText().toString();
         }
 
-        //  String  str_stumarks5=class_farmponddetails_offline_obj.getMarks5();
-        // String  str_stumarks6=class_farmponddetails_offline_obj.getMarks6();
-        //  String  str_stumarks7=class_farmponddetails_offline_obj.getMarks7();
-        //  String  str_stumarks8=class_farmponddetails_offline_obj.getMarks8();
-        //  String  str_admissionfee=class_farmponddetails_offline_obj.getAdmissionFee();
-        //   String  str_paymentdate=paymentdate_tv.getText().toString();
-        //   String  str_receiptno=receipt_no_et.getText().toString();
-        // String  str_stuphoto=class_farmponddetails_offline_obj.getStudentPhoto();
-        //String  str_stuApplno=class_farmponddetails_offline_obj.getApplicationNo();
+        //checking duplicates
 
-//        try {
-//            ContentValues cv = new ContentValues();
-//            cv.put("SandboxID", "1");
-//            cv.put("AcademicID", "2020");//int_val_academicid
-//            cv.put("ClusterID", "1");
-//            cv.put("InstituteID", "128");
-//            cv.put("SchoolID", "129");
-//            cv.put("LevelID", "861");
-//            cv.put("Stud_TempId", str_TemporaryID);
-//            cv.put("StudentName", studentname_et.getText().toString());
-//            cv.put("FatherName", fathername_et.getText().toString());
-//            cv.put("MotherName", mothername_et.getText().toString());
-//            cv.put("Mobile", mobileno_et.getText().toString());//pond_startdate
-//            cv.put("StudentAadhar", aadar_et.getText().toString());
-//            cv.put("BirthDate", birthdate_TV.getText().toString());
-//            cv.put("Gender", gender);//pond_enddate
-//            cv.put("Education", str_edu);
-//            cv.put("StudentStatus", selected_studentstatus);
-//            cv.put("Marks4", str_stumarks4);
-//            Log.e("str_stumarks4..adding", str_stumarks4);
-//            cv.put("Marks5", str_stumarks5);
-//            cv.put("Marks6", str_stumarks6);
-//
-//
-//            cv.put("Marks7", str_stumarks7);
-//            cv.put("Marks8",str_stumarks8);
-//            cv.put("AdmissionFee", admissionfee_et.getText().toString());
-//            ///cv.put("Reading_End", str_paymentdate);
-//            cv.put("ReceiptNo", str_receiptno);
-//            cv.put("StudentPhoto",str_img);//str_stuphoto
-//            cv.put("Base64image",str_img);
-//            Log.e("str_imgfile..submiting", str_img);
-//            cv.put("ApplicationNo","");
-//            cv.put("StudentID",str_TemporaryID);//str_TemporaryID addonly wen new student is added
-//            cv.put("CreatedDate",createddate);
-//
-//
-//
-//            db1.update("StudentDetailsRest", cv, "StudentID = ?", new String[]{String.valueOf(str_stuID)});
-//            db1.close();
+        int duplicatecount = checkduplicate_farmerdetails_into_ViewFarmerList();
 
-        try {
+        if (duplicatecount > 0) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Already Student Details Exists", Toast.LENGTH_LONG);
+            TextView toastMessage = (TextView) toast.getView().findViewById(android.R.id.message);
+            toastMessage.setTextColor(Color.RED);
+            toast.show();
+        } else {
+//            insert_farmerdetails_into_ViewFarmerList();
+//        }
 
-            Log.e("inserting..stateid", sp_strstate_ID);
-            Log.e("inserting..stateName", selected_stateName);
-            Log.e("inserting..distid", sp_strdistrict_ID);
-            Log.e("inserting..DIST", selected_district);
-            Log.e("inserting..TALUKid", sp_strTaluk_ID);
-            Log.e("inserting..villageid", sp_strVillage_ID);
+///////////////////Inserting/////////////////////////////////
+            try {
 
-            String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID,AcademicName,AdmissionFee," +
-                    "ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus, Base64image, Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
-                    " VALUES ('" + sp_straca_ID + "','" + selected_academicname + "','" + admissionfee_et.getText().toString() + "','" + "" + "','" + "0" + "','" + yyyyMMdd_birthdate + "','" + sp_strClust_ID + "'," +
-                    "'" + selected_clusterName + "','" + createddate + "','" + selected_edu + "','" + fathername_et.getText().toString() + "','" + gender + "','" + selected_instituteName + "'," +
-                    "'" + sp_strInst_ID + "','" + sp_strLev_ID + "','" + selected_levelName + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "'," +
-                    "'" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','" + mobileno_et.getText().toString() + "','" + mothername_et.getText().toString() + "','" + admissionfee_et.getText().toString() + "','" + receipt_no_et.getText().toString() + "','" + sp_strsand_ID + "','" + selected_sandboxName + "'," +
-                    "'" + sp_strschool_ID + "','" + selected_schoolName + "','" + aadar_et.getText().toString() + "','" + str_TemporaryID + "'," +
-                    "'" + studentname_et.getText().toString() + "','" + str_img + "','" + selected_studentstatus + "','" + str_img + "','" + str_TemporaryID + "','" + "offline" + "','" + selected_learnOption + "','" + sp_strstate_ID + "','" + selected_stateName + "','" + sp_strdistrict_ID + "','" + selected_district + "','" + sp_strTaluk_ID + "','" + selected_taluk + "','" + sp_strVillage_ID + "','" + selected_village + "','" + Studentaddress_ET.getText().toString() + "');";
+                Log.e("inserting..stateid", sp_strstate_ID);
+                Log.e("inserting..stateName", selected_stateName);
+                Log.e("inserting..distid", sp_strdistrict_ID);
+                Log.e("inserting..DIST", selected_district);
+                Log.e("inserting..TALUKid", sp_strTaluk_ID);
+                Log.e("inserting..villageid", sp_strVillage_ID);
 
-            Log.e("admissionfee.", admissionfee_et.getText().toString());
+                String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID,AcademicName,AdmissionFee," +
+                        "ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus, Base64image, Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
+                        " VALUES ('" + sp_straca_ID + "','" + selected_academicname + "','" + selected_levelAdmissionFee + "','" + "" + "','" + "0" + "','" + yyyyMMdd_birthdate + "','" + sp_strClust_ID + "'," +
+                        "'" + selected_clusterName + "','" + createddate + "','" + selected_edu + "','" + fathername_et.getText().toString() + "','" + gender + "','" + selected_instituteName + "'," +
+                        "'" + sp_strInst_ID + "','" + sp_strLev_ID + "','" + selected_levelName + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "'," +
+                        "'" + marks_et.getText().toString() + "','" + marks_et.getText().toString() + "','" + mobileno_et.getText().toString() + "','" + mothername_et.getText().toString() + "','" + admissionfee_et.getText().toString() + "','" + receipt_no_et.getText().toString() + "','" + sp_strsand_ID + "','" + selected_sandboxName + "'," +
+                        "'" + sp_strschool_ID + "','" + selected_schoolName + "','" + aadar_et.getText().toString() + "','" + str_TemporaryID + "'," +
+                        "'" + studentname_et.getText().toString() + "','" + str_img + "','" + selected_studentstatus + "','" + str_img + "','" + str_TemporaryID + "','" + "offline" + "','" + selected_learnOption + "','" + sp_strstate_ID + "','" + selected_stateName + "','" + sp_strdistrict_ID + "','" + selected_district + "','" + sp_strTaluk_ID + "','" + selected_taluk + "','" + sp_strVillage_ID + "','" + selected_village + "','" + Studentaddress_ET.getText().toString() + "');";
 
-            db1.execSQL(SQLiteQuery);
-            db1.close();
+                Log.e("admissionfee.", admissionfee_et.getText().toString());
+
+                db1.execSQL(SQLiteQuery);
+                db1.close();
 
 
-            internetDectector = new Class_InternetDectector(getApplicationContext());
-            isInternetPresent = internetDectector.isConnectingToInternet();
+                internetDectector = new Class_InternetDectector(getApplicationContext());
+                isInternetPresent = internetDectector.isConnectingToInternet();
 
-            if (isInternetPresent) {
-                fetch_DB_farmerprofile_offline_data(str_TemporaryID);
+                if (isInternetPresent) {
+                    fetch_DB_farmerprofile_offline_data(str_TemporaryID);
 
-                //fetch_DB_edited_offline_data();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Submitted Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Activity_Register_New.this, Activity_ViewStudentList_new.class);
+                    startActivity(intent);
+                    finish();
+                }
 
 
-            } else {
-                Toast.makeText(getApplicationContext(), "Added new data Successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Activity_Register_New.this, Activity_ViewStudentList_new.class);
-                startActivity(intent);
-                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "error" + e.toString(), Toast.LENGTH_SHORT).show();
             }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "error" + e.toString(), Toast.LENGTH_SHORT).show();
         }
 
+///////////////////End of Insert//////////////////////////////////
+
+    }
+
+    public int checkduplicate_farmerdetails_into_ViewFarmerList() {
+
+        String str_Fname = studentname_et.getText().toString().trim();
+       // String str_Mname = farmermiddlename_et.getText().toString().trim();
+       // String str_Lname = farmerlastname_et.getText().toString().trim();
+        String str_cellno = mobileno_et.getText().toString().trim();
+
+//        SQLiteDatabase db_viewfarmerlist = this.openOrCreateDatabase("FarmPond_db", Context.MODE_PRIVATE, null);
+//        db_viewfarmerlist.execSQL("CREATE TABLE IF NOT EXISTS ViewFarmerListRest(MTempId INTEGER PRIMARY KEY,DispFarmerTable_YearID VARCHAR,DispFarmerTable_StateID VARCHAR," +
+//                "DispFarmerTable_DistrictID VARCHAR,DispFarmerTable_TalukID VARCHAR,DispFarmerTable_VillageID VARCHAR," +
+//                "DispFarmerTable_GrampanchayatID VARCHAR,DispFarmerTable_FarmerID VARCHAR,DispFarmerTable_Farmer_Code VARCHAR," +
+//                "DispFarmerTable_FarmerName VARCHAR,FarmerMName_DB VARCHAR,FarmerLName_DB VARCHAR,Farmerage_DB VARCHAR," +
+//                "Farmercellno_DB VARCHAR,FIncome_DB VARCHAR,Ffamilymember_DB VARCHAR,FIDprooftype_DB VARCHAR,FIDProofNo_DB VARCHAR,UploadedStatusFarmerprofile_DB VARCHAR," +
+//                "FarmerImageB64str_DB VARCHAR,DispFarmerTable_FarmerImage VARCHAR," +
+//                "LocalFarmerImg BLOB,Farmpondcount VARCHAR,Submitted_Date VARCHAR,Created_By VARCHAR,Created_Date VARCHAR,Created_User VARCHAR,Response VARCHAR,Response_Action VARCHAR,Farmer_Gender VARCHAR);");
+        SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR,ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR,Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+
+        // Cursor cursor1 = db_viewfarmerlist.rawQuery("SELECT DISTINCT * FROM ViewFarmerList  WHERE DispFarmerTable_FarmerName='" + str_yearid + "' AND FarmerMName_DB='" + str_stateid + "' AND FarmerLName_DB='" + str_distid + "'  AND Farmercellno_DB='" + str_talukid + "'", null);
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest  WHERE StudentName='" + str_Fname + "' COLLATE NOCASE AND " +
+                               "Mobile='" + str_cellno + "'", null);
+
+        //  Cursor cursor1 = db_viewfarmerlist.rawQuery("SELECT * FROM ViewFarmerList WHERE UploadedStatusFarmerprofile='" + 9 + "'", null);
+        int x = cursor1.getCount();
+
+        Log.e("duplicatecount", String.valueOf(x));
+
+        //Toast.makeText(getApplicationContext(),"Already Farmer Details Present",Toast.LENGTH_LONG).show();
+        /*Toast toast = Toast.makeText(getApplicationContext(),"Already Farmer Details Present",Toast.LENGTH_LONG);
+        View view = toast.getView();
+        view.setBackgroundColor(Color.RED);
+        toast.show();*/
+
+        return x;
 
     }
 
@@ -2273,7 +2234,7 @@ public class Activity_Register_New extends AppCompatActivity {
             request.setMarks(class_farmerprofileoffline_array_obj[j].getMarks8());
 
         }
-        request.setAdmissionFee(class_farmerprofileoffline_array_obj[j].getAdmissionFee());
+        request.setAdmissionFee(class_farmerprofileoffline_array_obj[j].getPaidFee());
         request.setStudentStatus(class_farmerprofileoffline_array_obj[j].getStudentStatus());
 //        request.setStudentID(String.valueOf(class_farmerprofileoffline_array_obj[j].getStudentID()));
         request.setStudentID(StudentID);
@@ -2323,7 +2284,12 @@ public class Activity_Register_New extends AppCompatActivity {
 
                         String str_response_student_id = String.valueOf(addFarmerResList.get(i).getStudentID());
                         String str_response_tempId = String.valueOf(addFarmerResList.get(i).getTemp_ID());
-//                    Log.e("tag", "getMobileTempID=" + addFarmerResList.getMobileTempID());
+                        String str_response_applnNo = String.valueOf(addFarmerResList.get(i).getApplicationNo());
+                        //String str_response_photo = String.valueOf(addFarmerResList.get(i).getFileName());
+
+                        Log.e("tag", "str_response_applnNo=" +str_response_applnNo);
+
+                        //                    Log.e("tag", "getMobileTempID=" + addFarmerResList.getMobileTempID());
 //                    Log.e("tag", "getFarmerCode=" + addFarmerResList.getFarmerCode());
 //                    Log.e("tag", "getFarmerID=" + addFarmerResList.getFarmerID());
 
@@ -2336,7 +2302,9 @@ public class Activity_Register_New extends AppCompatActivity {
                         ContentValues cv = new ContentValues();
                         cv.put("StudentID", str_response_student_id);
                         cv.put("Stud_TempId", str_response_tempId);
-                        cv.put("UpadateOff_Online", "online");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                cv.put("UpadateOff_Online", "online");
+                        cv.put("ApplicationNo", str_response_applnNo);
+                      //  cv.put("StudentPhoto", str_response_photo);
 
                         db1.update("StudentDetailsRest", cv, "Stud_TempId = ?", new String[]{str_response_tempId});
                         db1.close();
@@ -2449,9 +2417,8 @@ public class Activity_Register_New extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        // Inflate menu items
-        getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        menu.findItem(R.id.logout_menu)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -2461,55 +2428,6 @@ public class Activity_Register_New extends AppCompatActivity {
 
         // Show toast when menu items selected
         switch (item.getItemId()) {
-
-            case R.id.share:
-
-                internetDectector = new Class_InternetDectector(getApplicationContext());
-                isInternetPresent = internetDectector.isConnectingToInternet();
-
-                if (isInternetPresent) {
-
-                    Class_SaveSharedPreference.setUserName(getApplicationContext(), "");
-
-                    LogoutCountAsynctask logoutCountAsynctask = new LogoutCountAsynctask(Activity_Register_New.this);
-                    logoutCountAsynctask.execute();
-
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    i.putExtra("logout_key1", "yes");
-                    startActivity(i);
-                    finish();
-
-//                    Intent i = new Intent(getApplicationContext(), NormalLogin.class);
-//                    i.putExtra("logout_key1", "yes");
-//                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(i);
-                    //finish();
-
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-                }
-            case R.id.Sync:
-
-                if (isInternetPresent) {
-//                    deleteSandBoxTable_B4insertion();
-//                    deleteAcademicTable_B4insertion();
-//                    deleteClusterTable_B4insertion();
-//                    deleteInstituteTable_B4insertion();
-//                    deleteSchoolTable_B4insertion();
-//                    deleteLevelTable_B4insertion();
-//                    deleteLearningOptionTable_B4insertion();
-//
-//                    getacademiclist_Asynctask();
-
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-                }
-
-
-                break;
 
             case android.R.id.home:
 
@@ -2849,6 +2767,8 @@ public class Activity_Register_New extends AppCompatActivity {
 //
 //    }//End of leaveDetail method
 
+
+
     private Bitmap checkRotationFromCamera(Bitmap bitmap, String pathToFile, int rotate) {
         Matrix matrix = new Matrix();
         matrix.postRotate(rotate);
@@ -2906,7 +2826,6 @@ public class Activity_Register_New extends AppCompatActivity {
             signimageinbytesArray = null;
         }
         if (validation()) {
-
             Submit_StudentDetails_DB();
         } else {
             Toast.makeText(getApplicationContext(), "Please Enter all the Required data", Toast.LENGTH_LONG).show();
@@ -3117,6 +3036,16 @@ public class Activity_Register_New extends AppCompatActivity {
         StudentStatus_sp.setSelection(0);
         rb_female.setChecked(false);
         rb_male.setChecked(true);
+        sandbox_sp.setSelection(0);
+        cluster_sp.setSelection(0);
+        institute_sp.setSelection(0);
+        level_sp.setSelection(0);
+        school_sp.setSelection(0);
+        state_new_SP.setSelection(0);
+        district_new_SP.setSelection(0);
+        taluk_new_SP.setSelection(0);
+        village_new_SP.setSelection(0);
+        Studentaddress_ET.getText().clear();
 
         if (paymentdate_tv.getVisibility() == View.VISIBLE) {
             setcurrentdate();
@@ -3223,12 +3152,35 @@ public class Activity_Register_New extends AppCompatActivity {
     public boolean validation() {
 
 
-        Boolean bname = true, bedu = true, bbirthdate = true, bcellnumber = true, bphoto = true;
+        Boolean bname = true, bedu = true, bbirthdate = true, bcellnumber = true, bphoto = true,b_year, b_state, b_district, b_taluk, b_grampanchayat, b_village;
         Boolean brecno = true, bmothername = true, baadar = true, baadar_length = true, bpaymentdate = true, bfee = true, bmarks = true;
 
+        b_year= b_state= b_district= b_taluk= b_grampanchayat= b_village=true;
 
         boolean flags = true;
         //For Student Name
+
+        if (sp_straca_ID.equalsIgnoreCase("-1") || sp_strstate_ID.equalsIgnoreCase("-1")
+                || sp_strdistrict_ID.equalsIgnoreCase("-1") || sp_strTaluk_ID.equalsIgnoreCase("-1") ||
+                sp_strInst_ID.equalsIgnoreCase("-1") || sp_strVillage_ID.equalsIgnoreCase("-1") ) {
+            Toast.makeText(getApplicationContext(), "Select the dropdown", Toast.LENGTH_LONG).show();
+
+            b_year = b_state = b_district = b_taluk = b_grampanchayat = b_village = false;
+        }
+
+        if (sp_straca_ID.equalsIgnoreCase("0") || sp_strstate_ID.equalsIgnoreCase("0")
+                || sp_strdistrict_ID.equalsIgnoreCase("0") || sp_strTaluk_ID.equalsIgnoreCase("0") ||
+                sp_strInst_ID.equalsIgnoreCase("0") || sp_strVillage_ID.equalsIgnoreCase("0") ) {
+            Toast.makeText(getApplicationContext(), "Select the dropdown", Toast.LENGTH_LONG).show();
+            b_year = b_state = b_district = b_taluk = b_grampanchayat = b_village = false;
+        }
+//        if(sp_strLev_ID.equalsIgnoreCase("-1")||sp_strLev_ID.equalsIgnoreCase("0")){
+//            b_level = false;
+//            TextView errorText = (TextView)level_sp.getSelectedView();
+//            errorText.setError("Please select proper birthdate");
+//            errorText.setTextColor(Color.RED);//just to highlight that this is an error
+//// errorText.setText("Select bisthdate");
+//        }
 
         if ((studentname_et.getText().toString().length() == 0) || (studentname_et.getText().toString().length() <= 2)) {
             studentname_et.setError("InValid  Name");
@@ -3344,10 +3296,10 @@ public class Activity_Register_New extends AppCompatActivity {
 //        }
 
         if (paymentdate_tv.getVisibility() == View.VISIBLE) {
-            return bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee && brecno;
+            return bname && bcellnumber && bpaymentdate && bedu && bbirthdate && bfee  && b_year && b_state && b_district && b_taluk && b_grampanchayat &&  b_village && brecno;
 
         } else {
-            return bname && bcellnumber && bedu && bbirthdate && bfee;
+            return bname && bcellnumber && bedu && bbirthdate && bfee  && b_year && b_state && b_district && b_taluk && b_grampanchayat &&  b_village;
 
         }
 
@@ -4436,11 +4388,12 @@ public class Activity_Register_New extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
 
-//                    Intent intentPhotoCapture = new Intent(Activity_Register_New.this, CameraPhotoCapture.class);
-//                    startActivity(intentPhotoCapture);
-//                    Toast.makeText(getApplicationContext(), "choosen  take photo ",
-//                            Toast.LENGTH_SHORT).show();
-//                    digitalcamerabuttonpressed = true;
+                    Intent intentPhotoCapture = new Intent(Activity_Register_New.this, CameraPhotoCapture.class);
+                   // startActivity(intentPhotoCapture);
+                    startActivityForResult(intentPhotoCapture,25);
+                    Toast.makeText(getApplicationContext(), "choosen  take photo ",
+                            Toast.LENGTH_SHORT).show();
+                    digitalcamerabuttonpressed = true;
 
 
                 } else if (options[item].equals("Choose from Gallery")) {
@@ -4489,7 +4442,40 @@ public class Activity_Register_New extends AppCompatActivity {
 
                 }
             }
-        } else if (requestCode == 2) {
+        } else if (requestCode == 25) {
+
+            if (resultCode == RESULT_OK) {
+                Uri imageUri = Uri.parse(mCurrentPhotoPath);
+                if (imageUri.getPath() != null) {
+                    File file = new File(imageUri.getPath());
+
+                    try {
+                        InputStream ims = new FileInputStream(file);
+                        bitmap = BitmapFactory.decodeStream(ims);
+                        rotatemethod(file.toString());
+                        BitMapToString(bitmap);
+
+                        photo_iv.setImageBitmap(bitmap);
+                    } catch (FileNotFoundException e) {
+                        return;
+                    }
+
+
+                } else if (resultCode == RESULT_CANCELED) {
+
+                    Toast.makeText(this, " Picture was not taken ", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(this, " Picture was not taken ", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }else{
+                Log.e("CameraDemo", "else Pic saved");
+
+            }
+
+            }else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
 
                 Uri selectedImage = data.getData();

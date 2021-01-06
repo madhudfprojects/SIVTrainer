@@ -1,6 +1,7 @@
 package com.det.skillinvillage;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -55,7 +56,7 @@ public class DocView_DownloadAdapter extends RecyclerView.Adapter<DocView_Downlo
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
+    public void onBindViewHolder(final MyViewHolder holder, @SuppressLint("RecyclerView") final int listPosition) {
 
         TextView tv_docName = holder.tv_docName;
         TextView tv_docdate = holder.tv_docdate;

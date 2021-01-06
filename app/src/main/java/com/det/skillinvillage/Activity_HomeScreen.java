@@ -28,11 +28,14 @@ import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,7 +46,9 @@ import com.bumptech.glide.Glide;
 import com.det.skillinvillage.adapter.CalendarAdapter;
 import com.det.skillinvillage.model.AutoSyncVersion;
 import com.det.skillinvillage.model.AutoSyncVersionList;
+import com.det.skillinvillage.model.Class_dashboardList;
 import com.det.skillinvillage.model.Class_devicedetails;
+import com.det.skillinvillage.model.Class_getUserDashboardResponse;
 import com.det.skillinvillage.model.Class_getdemo_Response;
 import com.det.skillinvillage.model.Class_getdemo_resplist;
 import com.det.skillinvillage.model.Class_gethelp_Response;
@@ -93,6 +98,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.det.skillinvillage.MainActivity.KeyValue_employeeRoleName;
 import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.key_userimage;
@@ -107,7 +113,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     Interface_userservice userService1;
     Class_InternetDectector internetDectector, internetDectector2, internetDectector3;
     Boolean isInternetPresent = false;
-  //  String str_employee_id;
+    //  String str_employee_id;
     private String versioncode;
 
     TelephonyManager tm1 = null;
@@ -128,7 +134,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     int sel_yearsp = 0, sel_statesp = 0, sel_districtsp = 0, sel_taluksp = 0, sel_villagesp = 0, sel_grampanchayatsp = 0;
 
     public static final String sharedpreferenc_selectedspinner = "sharedpreferenc_selectedspinner";
-//    public static final String Key_sel_yearsp = "sel_yearsp";
+    //    public static final String Key_sel_yearsp = "sel_yearsp";
 //    public static final String Key_sel_statesp = "sel_statesp";
 //    public static final String Key_sel_districtsp = "sel_districtsp";
 //    public static final String Key_sel_taluksp = "sel_taluksp";
@@ -156,11 +162,11 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     SharedPreferences sharedpref_loginuserid_Obj;
 
-    ImageView dashboard_iv, stu_reg_iv, scheduler_iv, usermanual_iv, docview_iv, mark_attendance_iv, assessment_iv, onlineview_iv;
+    LinearLayout dashboard_iv, stu_reg_iv, scheduler_iv, usermanual_iv, docview_iv, mark_attendance_iv, assessment_iv, onlineview_iv;
     public CalendarAdapter cal_adapter1;
     public GregorianCalendar cal_month, cal_month_copy;
 
-    TextView dislay_UserName_tv;
+    TextView dislay_UserName_tv,school_countTV,applicant_countTV,admissioncount_TV;
     ImageView displ_Userimg_iv;
 
 
@@ -169,26 +175,37 @@ public class Activity_HomeScreen extends AppCompatActivity {
     String str_feedback = "";
 
     SharedPreferences sharedpref_feedback;
-    public static final String MyPREFERENCES_Feedback = "MyPrefsFeedback" ;
+    public static final String MyPREFERENCES_Feedback = "MyPrefsFeedback";
     public static final String FeedBack = "feedBack";
     SharedPreferences sharedpref_flag_Obj;
 
 
-    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name="",Lavel_Name,Cluster_Name,Institute_Name;
+    String Schedule_Status, Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Subject_Name, Leason_Name = "", Lavel_Name, Cluster_Name, Institute_Name;
     ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
     UserInfoListRest[] userInfosarr;
     GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
     GetMobileSubMenuResponseList[] arrayObj_class_getMobilesubmenuresp;
     Class_SubMenu[] objclassarr_Class_SubMenu;
-    ArrayList<ExpandListGroup>mainmenulist;
-    ArrayList<Class_SubMenu>submenuList;
+    ArrayList<ExpandListGroup> mainmenulist;
+    ArrayList<Class_SubMenu> submenuList;
     List<MenuModel> headerList = new ArrayList<>();
     HashMap<MenuModel, List<MenuModel>> childList = new HashMap<>();
     ExpandListGroup[] objclassarr_expandedlistgroup;
+    String Employee_Role="";
+    ImageView seeAll_iv,googlemaps_iv;
+    TextView designation_TV;
+    String str_dashboard_status = "", str_no_of_villages, str_no_of_students, str_no_of_schools, str_no_of_male, str_no_of_female, str_no_of_dropouts, str_dashboard_status_barchart = "";
+    Class_Scorecards_CenterSelection[] arrayObjclass_Scorecards_CenterSelection,arrayObjclass_Scorecards_CenterSelection2;
+    Class_Dashboard_SandBox[] arrayObjclass_dashboard_sandBoxes,arrayObjclass_dashboard_sandBoxes2;
+
+    String applicant_Count="",admission_Count="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fstpage);
+//        setContentView(R.layout.activity_fstpage);
+        setContentView(R.layout.activity__home_screen_early);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setTitle("Skill In Village");
 
         userService1 = Class_ApiUtils.getUserService();
 
@@ -204,15 +221,15 @@ public class Activity_HomeScreen extends AppCompatActivity {
             e.printStackTrace();
         }
 
-     //   sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
-        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        //   sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+        sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
 
         str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
         Log.e("homepage", "str_loginuserID=" + str_loginuserID);
 
-      //  sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
-      //  str_employee_id = sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeid, "").trim();
-       // Log.e("tag", "str_employee_id=" + str_employee_id);
+        //  sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        //  str_employee_id = sharedpreferencebook_usercredential_Obj.getString(KeyValue_employeeid, "").trim();
+        // Log.e("tag", "str_employee_id=" + str_employee_id);
 
 
         sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
@@ -225,7 +242,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         sharedpref_userimage_Obj = getSharedPreferences(sharedpreferenc_userimage, Context.MODE_PRIVATE);
         str_Googlelogin_UserImg = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
 
-        sharedpref_flag_Obj=getSharedPreferences(sharedpreferenc_flag, Context.MODE_PRIVATE);
+        sharedpref_flag_Obj = getSharedPreferences(sharedpreferenc_flag, Context.MODE_PRIVATE);
         str_flag = sharedpref_flag_Obj.getString(key_flag, "").trim();
 
         sharedpref_feedback = getSharedPreferences(MyPREFERENCES_Feedback, Context.MODE_PRIVATE);
@@ -233,6 +250,9 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
         Log.e("tag", "sel_districtsp=" + sel_districtsp + "sel_statesp=" + sel_statesp);
 
+       // Employee_Role=sharedpref_loginuserid_Obj.getString(KeyValue_employeeRoleName, "").trim();
+        Employee_Role=Class_SaveSharedPreference.getPREF_RoleName(Activity_HomeScreen.this);
+        Log.e("tag","home Employee_Role="+Employee_Role);
 
         LinearLayout homepagelayout_LL = findViewById(R.id.homepagelayout_ll);
         homepagelayout_LL.setVisibility(LinearLayout.VISIBLE);
@@ -252,15 +272,37 @@ public class Activity_HomeScreen extends AppCompatActivity {
         //mark_attendance_iv=(ImageView)findViewById(R.id.mark_attendance_iv);
         assessment_iv = findViewById(R.id.assessment_iv);
         onlineview_iv = findViewById(R.id.onlineview_iv);
+        seeAll_iv=findViewById(R.id.seeall_iv);
+        designation_TV=(TextView)findViewById(R.id.designation_TV);
+        school_countTV=(TextView)findViewById(R.id.school_countTV);
+        applicant_countTV=(TextView)findViewById(R.id.applicant_countTV);
+        admissioncount_TV=(TextView)findViewById(R.id.admissioncount_TV);
+        googlemaps_iv=(ImageView)findViewById(R.id.googlemaps_iv);
         //   onlineview_iv.setVisibility(View.GONE);
         if (str_flag.equals("1")) {
             dislay_UserName_tv.setText("");
         } else {
-            dislay_UserName_tv.setText(str_Googlelogin_Username);
+//            dislay_UserName_tv.setText(str_Googlelogin_Username);
+//            try {
+//                Glide.with(this).load(str_Googlelogin_UserImg).into(displ_Userimg_iv);
+//            } catch (NullPointerException e) {
+//                // Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
+//            }
+
+
+            dislay_UserName_tv.setText(Class_SaveSharedPreference.getUserName(Activity_HomeScreen.this).toString());
+            designation_TV.setText(Employee_Role);
+
             try {
-                Glide.with(this).load(str_Googlelogin_UserImg).into(displ_Userimg_iv);
+                Log.e("tag","str_Googlelogin_UserImg="+str_Googlelogin_UserImg);
+                if(str_Googlelogin_UserImg.equalsIgnoreCase("")||str_Googlelogin_UserImg==null){
+                    displ_Userimg_iv.setImageResource(R.drawable.profileimg);
+                }else {
+                    Glide.with(this).load(str_Googlelogin_UserImg).into(displ_Userimg_iv);
+                }
+
             } catch (NullPointerException e) {
-                // Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
+// Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
             }
         }
         if (isInternetPresent) {
@@ -271,8 +313,8 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
 //            OnlineView_Feedback task1 = new OnlineView_Feedback(Activity_HomeScreen.this);
 //            task1.execute();
-         //   Add_setGCM1();
-         ///   GetAppVersionCheck();
+            //   Add_setGCM1();
+            ///   GetAppVersionCheck();
 //            delete_CountDetailsRestTable_B4insertion();
 //            deleteStateRestTable_B4insertion();
 //            deleteDistrictRestTable_B4insertion();
@@ -302,14 +344,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                RelativeLayout stuRegistration_relativeLayout = findViewById(R.id.student_registration_RL);
-                stuRegistration_relativeLayout.setVisibility(LinearLayout.VISIBLE);
-                @SuppressLint("ResourceType") Animation stuRegistration_animation = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
-                stuRegistration_animation.setDuration(1500);
-                stuRegistration_relativeLayout.setAnimation(stuRegistration_animation);
-                stuRegistration_relativeLayout.setAnimation(stuRegistration_animation);
-                stuRegistration_relativeLayout.animate();
-                stuRegistration_animation.start();
+//                RelativeLayout stuRegistration_relativeLayout = findViewById(R.id.student_registration_RL);
+//                stuRegistration_relativeLayout.setVisibility(LinearLayout.VISIBLE);
+//                @SuppressLint("ResourceType") Animation stuRegistration_animation = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
+//                stuRegistration_animation.setDuration(1500);
+//                stuRegistration_relativeLayout.setAnimation(stuRegistration_animation);
+//                stuRegistration_relativeLayout.setAnimation(stuRegistration_animation);
+//                stuRegistration_relativeLayout.animate();
+//                stuRegistration_animation.start();
 
                 stu_reg_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -325,11 +367,17 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 dashboard_iv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                        isInternetPresent = internetDectector2.isConnectingToInternet();
+                        if (isInternetPresent) {
 
-                        Intent i = new Intent(Activity_HomeScreen.this, Activity_Dashboard.class);
-                        startActivity(i);
-                        overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                            Intent i = new Intent(Activity_HomeScreen.this, Activity_Dashboard.class);
+                            startActivity(i);
+                            overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
 
+                        }
                     }
                 });
 
@@ -359,14 +407,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             }
                         });*/
 
-                        RelativeLayout scheduler_relativelayout = findViewById(R.id.scheduler_RL);
-                        scheduler_relativelayout.setVisibility(LinearLayout.VISIBLE);
-                        @SuppressLint("ResourceType")
-                        Animation animation_scheduler = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
-                        animation_scheduler.setDuration(1500);
-                        scheduler_relativelayout.setAnimation(animation_scheduler);
-                        scheduler_relativelayout.animate();
-                        animation_scheduler.start();
+//                        RelativeLayout scheduler_relativelayout = findViewById(R.id.scheduler_RL);
+//                        scheduler_relativelayout.setVisibility(LinearLayout.VISIBLE);
+//                        @SuppressLint("ResourceType")
+//                        Animation animation_scheduler = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
+//                        animation_scheduler.setDuration(1500);
+//                        scheduler_relativelayout.setAnimation(animation_scheduler);
+//                        scheduler_relativelayout.animate();
+//                        animation_scheduler.start();
 
                         scheduler_iv.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -402,20 +450,36 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
                             }
                         });
+                        googlemaps_iv.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                                isInternetPresent = internetDectector2.isConnectingToInternet();
+                                if (isInternetPresent) {
+
+                                    Intent i = new Intent(Activity_HomeScreen.this, Activity_MarkerGoogleMaps.class);
+                                    startActivity(i);
+                                }else{
+                                    Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+
+                                }
+
+                            }
+                        });
 
                         final Handler handler2 = new Handler();
                         handler2.postDelayed(new Runnable() {
                             @Override
                             public void run() {
 
-                                RelativeLayout documentUpload_relativelayout = findViewById(R.id.docView_RL);
-                                documentUpload_relativelayout.setVisibility(LinearLayout.VISIBLE);
-                                @SuppressLint("ResourceType")
-                                Animation animation_docupload = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
-                                animation_docupload.setDuration(1500);
-                                documentUpload_relativelayout.setAnimation(animation_docupload);
-                                documentUpload_relativelayout.animate();
-                                animation_docupload.start();
+//                                RelativeLayout documentUpload_relativelayout = findViewById(R.id.docView_RL);
+//                                documentUpload_relativelayout.setVisibility(LinearLayout.VISIBLE);
+//                                @SuppressLint("ResourceType")
+//                                Animation animation_docupload = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
+//                                animation_docupload.setDuration(1500);
+//                                documentUpload_relativelayout.setAnimation(animation_docupload);
+//                                documentUpload_relativelayout.animate();
+//                                animation_docupload.start();
 
                                 docview_iv.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -433,22 +497,29 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                     @Override
                                     public void run() {
 
-                                        RelativeLayout documentUpload_relativelayout = findViewById(R.id.feedback_RL);
-                                        documentUpload_relativelayout.setVisibility(LinearLayout.VISIBLE);
-                                        @SuppressLint("ResourceType")
-                                        Animation animation_docupload = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
-                                        animation_docupload.setDuration(1500);
-                                        documentUpload_relativelayout.setAnimation(animation_docupload);
-                                        documentUpload_relativelayout.animate();
-                                        animation_docupload.start();
+//                                        RelativeLayout documentUpload_relativelayout = findViewById(R.id.feedback_RL);
+//                                        documentUpload_relativelayout.setVisibility(LinearLayout.VISIBLE);
+//                                        @SuppressLint("ResourceType")
+//                                        Animation animation_docupload = AnimationUtils.loadAnimation(Activity_HomeScreen.this, R.anim.right_slide);
+//                                        animation_docupload.setDuration(1500);
+//                                        documentUpload_relativelayout.setAnimation(animation_docupload);
+//                                        documentUpload_relativelayout.animate();
+//                                        animation_docupload.start();
 
                                         onlineview_iv.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
-                                                startActivity(i);
-                                                overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                                                internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                                                isInternetPresent = internetDectector2.isConnectingToInternet();
+                                                if (isInternetPresent) {
 
+                                                    Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
+                                                    startActivity(i);
+                                                    overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+
+                                                }
 //                                                if (str_feedback.equalsIgnoreCase("Visible")) {
 //                                                    Intent i = new Intent(Activity_HomeScreen.this, Onlineview_Navigation.class);
 //                                                    startActivity(i);
@@ -483,13 +554,36 @@ public class Activity_HomeScreen extends AppCompatActivity {
 //            }
 //        });
 
+        seeAll_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                isInternetPresent = internetDectector2.isConnectingToInternet();
+                if (isInternetPresent) {
+
+
+                    Intent i = new Intent(Activity_HomeScreen.this, Activity_Dashboard.class);
+                    startActivity(i);
+                    overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                }else {
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         assessment_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Activity_HomeScreen.this, Activity_AssessmentList.class);
-                startActivity(i);
-                overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                internetDectector2 = new Class_InternetDectector(getApplicationContext());
+                isInternetPresent = internetDectector2.isConnectingToInternet();
+                if (isInternetPresent) {
 
+                    Intent i = new Intent(Activity_HomeScreen.this, Activity_AssessmentList.class);
+                    startActivity(i);
+                    overridePendingTransition(R.animator.slide_right, R.animator.slide_right);
+                }else{
+                    Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -513,8 +607,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
             Add_setGCM1();
             GetAutoSyncVersion();
             GetAppVersionCheck();
+            getdashboarddata();
+
             // GetDropdownValuesRestData();
             //GetStudentValuesRestData();
+        }else{
+//            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+
+            school_countTV.setText("");
         }
 
 
@@ -569,18 +669,367 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
             }
         }
+
+        UserStudentDataCountCheckList();
+    }//end of oncreate
+
+    public void getdashboarddata() {
+        deleteSandBoxDrodownTable_B4insertion();
+        deleteSandBoxTable_B4insertion();
+        if (isInternetPresent) {
+            getdashboardinfo_new();
+        } else {
+            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    public void getdashboardinfo_new() {
+
+        Call<Class_getUserDashboardResponse> call = userService1.getdashboardDetails(str_loginuserID);
+        // Set up progress before call
+        final ProgressDialog progressDoalog;
+        progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
+        //  progressDoalog.setMax(100);
+        //  progressDoalog.setMessage("Loading....");
+        progressDoalog.setTitle("Please wait....");
+        progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDoalog.show();
+
+        call.enqueue(new Callback<Class_getUserDashboardResponse>() {
+            @Override
+            public void onResponse(Call<Class_getUserDashboardResponse> call, Response<Class_getUserDashboardResponse> response) {
+                Log.e("Entered resp", "getdashboardDetails");
+
+                if (response.isSuccessful()) {
+                    progressDoalog.dismiss();
+                    Class_getUserDashboardResponse class_loginresponse = response.body();
+                    if (class_loginresponse.getStatus()) {
+                        List<Class_dashboardList> monthContents_list = response.body().getListVersion();
+
+                        Class_dashboardList []  arrayObj_Class_monthcontents = new Class_dashboardList[monthContents_list.size()];
+                        arrayObjclass_Scorecards_CenterSelection=new Class_Scorecards_CenterSelection[monthContents_list.size()];
+                        arrayObjclass_dashboard_sandBoxes=new Class_Dashboard_SandBox[monthContents_list.size()];
+
+                        for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
+
+
+                            Log.e("getdashboard", String.valueOf(class_loginresponse.getStatus()));
+                            Log.e("getdashboard", class_loginresponse.getMessage());
+//                            {
+//                                "Dashboard_ID": 0,
+//                                    "Sandbox_ID": "0",
+//                                    "Sandbox_Name": "ALL",
+//                                    "Count_Institute": "59",
+//                                    "Count_Village": "53",
+//                                    "Count_Applicant": "3822",
+//                                    "Count_Admission": "3822",
+//                                    "Count_Male": "0",
+//                                    "Count_Female": "0",
+//                                    "Count_Dropout": "525",
+//                                    "Count_Student": "3804",
+//                                    "Dashboard_Status": "Active"
+//                            }
+                            Class_dashboardList innerObj_Class_SandboxList = new Class_dashboardList();
+                            innerObj_Class_SandboxList.setDashboardID(class_loginresponse.getListVersion().get(i).getDashboardID());
+                            innerObj_Class_SandboxList.setSandboxID(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            innerObj_Class_SandboxList.setSandboxName(class_loginresponse.getListVersion().get(i).getSandboxName());
+                            innerObj_Class_SandboxList.setCountInstitute(class_loginresponse.getListVersion().get(i).getCountInstitute());
+                            innerObj_Class_SandboxList.setCountVillage(class_loginresponse.getListVersion().get(i).getCountVillage());
+                            innerObj_Class_SandboxList.setCountApplicant(class_loginresponse.getListVersion().get(i).getCountApplicant());
+                            innerObj_Class_SandboxList.setCountAdmission(class_loginresponse.getListVersion().get(i).getCountAdmission());
+                            innerObj_Class_SandboxList.setCountMale(class_loginresponse.getListVersion().get(i).getCountMale());
+                            innerObj_Class_SandboxList.setCountFemale(class_loginresponse.getListVersion().get(i).getCountFemale());
+                            innerObj_Class_SandboxList.setCountDropout(class_loginresponse.getListVersion().get(i).getCountDropout());
+                            innerObj_Class_SandboxList.setCountStudent(class_loginresponse.getListVersion().get(i).getCountStudent());
+                            innerObj_Class_SandboxList.setDashboardStatus(class_loginresponse.getListVersion().get(i).getDashboardStatus());
+                            arrayObj_Class_monthcontents[i]=innerObj_Class_SandboxList;
+
+
+
+                            //////////////////////////////////////////////////////
+                            Class_Scorecards_CenterSelection innerObj_class_Scorecards_CenterSelection = new Class_Scorecards_CenterSelection();
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxID(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_SandboxName(class_loginresponse.getListVersion().get(i).getSandboxName());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_villages(class_loginresponse.getListVersion().get(i).getCountVillage());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_schools(class_loginresponse.getListVersion().get(i).getCountInstitute());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_students(class_loginresponse.getListVersion().get(i).getCountStudent());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_male(class_loginresponse.getListVersion().get(i).getCountMale());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_female(class_loginresponse.getListVersion().get(i).getCountFemale());
+                            innerObj_class_Scorecards_CenterSelection.setScorecards_dropouts(class_loginresponse.getListVersion().get(i).getCountDropout());
+
+                            Class_Dashboard_SandBox class_dashboard_sandBox = new Class_Dashboard_SandBox();
+                            class_dashboard_sandBox.setDashboard_sand_id(class_loginresponse.getListVersion().get(i).getSandboxID());
+                            class_dashboard_sandBox.setDashboard_sand_name(class_loginresponse.getListVersion().get(i).getSandboxName());
+
+                            str_no_of_villages = class_loginresponse.getListVersion().get(i).getCountVillage();
+                            str_no_of_students = class_loginresponse.getListVersion().get(i).getCountStudent();
+                            str_no_of_schools = class_loginresponse.getListVersion().get(i).getCountInstitute();
+                            str_no_of_male = class_loginresponse.getListVersion().get(i).getCountMale();
+                            str_no_of_female = class_loginresponse.getListVersion().get(i).getCountFemale();
+                            str_no_of_dropouts = class_loginresponse.getListVersion().get(i).getCountDropout();
+                            Log.e("str_no_of_villages",str_no_of_villages);
+
+                         String  str_dashboard_sandid = class_loginresponse.getListVersion().get(i).getSandboxID();
+                            String str_dashboard_sandname = class_loginresponse.getListVersion().get(i).getSandboxName();
+                            arrayObjclass_Scorecards_CenterSelection[i]=innerObj_class_Scorecards_CenterSelection;
+                            arrayObjclass_dashboard_sandBoxes[i]=class_dashboard_sandBox;
+
+                            ///////////////////////////////////////////////////////
+                            runOnUiThread(new Runnable() {
+
+                                @Override
+                                public void run() {
+
+                                    // Stuff that updates the UI
+
+                                   // setvalues();
+                                }
+                            });
+
+//                            Log.e("str_dashboard_sandid",str_dashboard_sandid);
+//                            Log.e("str_dashboard_sandname",str_dashboard_sandname);
+
+                            DBCreate_dash_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname);
+                            DBCreate_SandBoxdetails_insert_2SQLiteDB(str_dashboard_sandid, str_dashboard_sandname,str_no_of_villages,str_no_of_schools,str_no_of_students,str_no_of_male,str_no_of_female,str_no_of_dropouts);
+                        }//for loop end
+                        uploadSandboxDropdownfromDB_list();
+                        uploadSandboxfromDB_list();
+                        Update_id_sandbox("0");
+//                        RecyclerView.Adapter adapter1 = new Emp_monthcontents_RecyclerViewAdapter(Array_ClassListVersion);
+//
+//                        recyclerview.setAdapter(adapter1);
+
+
+                    } else {
+                        progressDoalog.dismiss();
+//                        str_getmonthsummary_errormsg = class_loginresponse.getMessage();
+//                        alerts_dialog_getmonthsummaryError();
+
+                        // Toast.makeText(getContext(), class_loginresponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    progressDoalog.dismiss();
+                    Log.e("Entered resp else", "");
+                    DefaultResponse error = ErrorUtils.parseError(response);
+                    // … and use it to show error information
+
+                    // … or just log the issue like we’re doing :)
+//                    Log.e("error message", error.getMsg());
+//                    str_getmonthsummary_errormsg = error.getMsg();
+//                    alerts_dialog_getexlistviewError();
+
+                    //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+
+                    if (error.getMsg() != null) {
+
+                        Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+                        //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(Activity_HomeScreen.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+                // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });// end of call
+
     }
 
 
-    public class AsyncCallWS2_Login extends AsyncTask<String, Void, Void>
-    {
+    public void Update_id_sandbox(String str_sandid) {
+
+        SQLiteDatabase db_feessummary_idupdate = this.openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db_feessummary_idupdate.execSQL("CREATE TABLE IF NOT EXISTS SandBoxList(SandBox_DashboardID VARCHAR,SandBox_DashboardName VARCHAR,SandBox_DashboardVillages VARCHAR,SandBox_DashboardSchools VARCHAR,SandBox_DashboardStudents VARCHAR,SandBox_DashboardMale VARCHAR,SandBox_DashboardFemale VARCHAR,SandBox_DashboardDropouts VARCHAR);");
+        Cursor cursor1 = db_feessummary_idupdate.rawQuery("SELECT DISTINCT * FROM SandBoxList WHERE SandBox_DashboardID='" + str_sandid + "'", null);
+        int x = cursor1.getCount();
+        Log.d("cursor Dcount", Integer.toString(x));
+
+        int i = 0;
+        arrayObjclass_Scorecards_CenterSelection2 = new Class_Scorecards_CenterSelection[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Class_Scorecards_CenterSelection innerObj_Class_SandboxList = new Class_Scorecards_CenterSelection();
+                innerObj_Class_SandboxList.setScorecards_SandboxID(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardID")));
+                innerObj_Class_SandboxList.setScorecards_SandboxName(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardName")));
+                innerObj_Class_SandboxList.setScorecards_villages(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardVillages")));
+                innerObj_Class_SandboxList.setScorecards_schools(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardSchools")));
+                innerObj_Class_SandboxList.setScorecards_students(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardStudents")));
+                innerObj_Class_SandboxList.setScorecards_male(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardMale")));
+                innerObj_Class_SandboxList.setScorecards_female(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardFemale")));
+                innerObj_Class_SandboxList.setScorecards_dropouts(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardDropouts")));
+
+                arrayObjclass_Scorecards_CenterSelection2[i] = innerObj_Class_SandboxList;
+                str_no_of_villages=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_villages();
+                str_no_of_schools=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_schools();
+                str_no_of_students=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_students();
+                str_no_of_male=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_male();
+                str_no_of_female=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_female();
+                str_no_of_dropouts=arrayObjclass_Scorecards_CenterSelection2[i].getScorecards_dropouts();
+                school_countTV.setText(str_no_of_schools);
+
+               // setvalues();
+                i++;
+
+            } while (cursor1.moveToNext());
+        }//if ends
+
+
+        db_feessummary_idupdate.close();
+        if (x > 0) {
+            school_countTV.setText(str_no_of_schools);
+
+        }
+
+    }
+
+    public void DBCreate_dash_SandBoxdetails_insert_2SQLiteDB(String str_sandboxID, String str_sandboxname) {
+        SQLiteDatabase db_sandbox = this.openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db_sandbox.execSQL("CREATE TABLE IF NOT EXISTS DropSandBoxList(SandBox_ID VARCHAR,SandBox_Name VARCHAR);");
+        String SQLiteQuery = "INSERT INTO DropSandBoxList(SandBox_ID,SandBox_Name)" +
+                " VALUES ('" + str_sandboxID + "','" + str_sandboxname +"');";
+        db_sandbox.execSQL(SQLiteQuery);
+        Log.e("inset DB", str_sandboxID);
+        Log.e("insert DB", str_sandboxname);
+        db_sandbox.close();
+    }
+    public void DBCreate_SandBoxdetails_insert_2SQLiteDB(String str_sandID, String str_sandname,String str_village,String str_school,String str_students,String str_male,String str_no_of_female,String str_no_of_dropouts) {
+        SQLiteDatabase db_sandbox = this.openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db_sandbox.execSQL("CREATE TABLE IF NOT EXISTS SandBoxList(SandBox_DashboardID VARCHAR,SandBox_DashboardName VARCHAR,SandBox_DashboardVillages VARCHAR,SandBox_DashboardSchools VARCHAR,SandBox_DashboardStudents VARCHAR,SandBox_DashboardMale VARCHAR,SandBox_DashboardFemale VARCHAR,SandBox_DashboardDropouts VARCHAR);");
+
+
+        String SQLiteQuery = "INSERT INTO SandBoxList(SandBox_DashboardID,SandBox_DashboardName,SandBox_DashboardVillages,SandBox_DashboardSchools,SandBox_DashboardStudents,SandBox_DashboardMale,SandBox_DashboardFemale,SandBox_DashboardDropouts)" +
+                " VALUES ('" + str_sandID + "','" + str_sandname +  "','" + str_village + "','" + str_school + "','" + str_students + "','" + str_male + "','" + str_no_of_female + "','" + str_no_of_dropouts +"');";
+        db_sandbox.execSQL(SQLiteQuery);
+        Log.e("str_sandID DB", str_sandID);
+        Log.e("str_sandname DB", str_sandname);
+        db_sandbox.close();
+    }
+    public void uploadSandboxDropdownfromDB_list() {
+
+        SQLiteDatabase db_centers = this.openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db_centers.execSQL("CREATE TABLE IF NOT EXISTS DropSandBoxList(SandBox_ID VARCHAR,SandBox_Name VARCHAR);");
+        Cursor cursor1 = db_centers.rawQuery("SELECT DISTINCT * FROM DropSandBoxList", null);
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObjclass_dashboard_sandBoxes2 = new Class_Dashboard_SandBox[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Class_Dashboard_SandBox innerObj_Class_SandboxList = new Class_Dashboard_SandBox();
+                innerObj_Class_SandboxList.setDashboard_sand_id(cursor1.getString(cursor1.getColumnIndex("SandBox_ID")));
+                innerObj_Class_SandboxList.setDashboard_sand_name(cursor1.getString(cursor1.getColumnIndex("SandBox_Name")));
+
+                arrayObjclass_dashboard_sandBoxes2[i] = innerObj_Class_SandboxList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db_centers.close();
+        if (x > 0) {
+
+//            ArrayAdapter<Class_Dashboard_SandBox> dataAdapter = new ArrayAdapter<Class_Dashboard_SandBox>(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_dashboard_sandBoxes2);
+//            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+//            loadSandbox_SP.setAdapter(dataAdapter);
+        }
+
+    }
+    public void uploadSandboxfromDB_list() {
+
+        SQLiteDatabase db_centers = this.openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db_centers.execSQL("CREATE TABLE IF NOT EXISTS SandBoxList(SandBox_DashboardID VARCHAR,SandBox_DashboardName VARCHAR,SandBox_DashboardVillages VARCHAR,SandBox_DashboardSchools VARCHAR,SandBox_DashboardStudents VARCHAR,SandBox_DashboardMale VARCHAR,SandBox_DashboardFemale VARCHAR,SandBox_DashboardDropouts VARCHAR);");
+        Cursor cursor1 = db_centers.rawQuery("SELECT DISTINCT * FROM SandBoxList", null);
+        int x = cursor1.getCount();
+        Log.d("cursor count", Integer.toString(x));
+
+        int i = 0;
+        arrayObjclass_Scorecards_CenterSelection2 = new Class_Scorecards_CenterSelection[x];
+        if (cursor1.moveToFirst()) {
+
+            do {
+                Class_Scorecards_CenterSelection innerObj_Class_SandboxList = new Class_Scorecards_CenterSelection();
+                innerObj_Class_SandboxList.setScorecards_SandboxID(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardID")));
+                innerObj_Class_SandboxList.setScorecards_SandboxName(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardName")));
+                innerObj_Class_SandboxList.setScorecards_villages(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardVillages")));
+                innerObj_Class_SandboxList.setScorecards_schools(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardSchools")));
+                innerObj_Class_SandboxList.setScorecards_students(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardStudents")));
+                innerObj_Class_SandboxList.setScorecards_male(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardMale")));
+                innerObj_Class_SandboxList.setScorecards_female(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardFemale")));
+                innerObj_Class_SandboxList.setScorecards_dropouts(cursor1.getString(cursor1.getColumnIndex("SandBox_DashboardDropouts")));
+
+                arrayObjclass_Scorecards_CenterSelection2[i] = innerObj_Class_SandboxList;
+                i++;
+
+            } while (cursor1.moveToNext());
+
+
+        }//if ends
+
+        db_centers.close();
+        if (x > 0) {
+
+//            ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayObjclass_Scorecards_CenterSelection2);
+//            dataAdapter.setDropDownViewResource(R.layout.spinnercenterstyle);
+//            loadSandbox_SP.setAdapter(dataAdapter);
+        }
+
+    }
+
+    public void deleteSandBoxTable_B4insertion() {
+
+        SQLiteDatabase db1 = openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS SandBoxList(SandBox_DashboardID VARCHAR,SandBox_DashboardName VARCHAR,SandBox_DashboardVillages VARCHAR,SandBox_DashboardSchools VARCHAR,SandBox_DashboardStudents VARCHAR,SandBox_DashboardMale VARCHAR,SandBox_DashboardFemale VARCHAR,SandBox_DashboardDropouts VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM SandBoxList", null);
+        int x = cursor1.getCount();
+
+        if (x > 0) {
+            db1.delete("SandBoxList", null, null);
+
+        }
+        db1.close();
+    }
+
+
+    public void deleteSandBoxDrodownTable_B4insertion() {
+
+        SQLiteDatabase db1 = openOrCreateDatabase("dashboard_db", Context.MODE_PRIVATE, null);
+        db1.execSQL("CREATE TABLE IF NOT EXISTS DropSandBoxList(SandBox_ID VARCHAR,SandBox_Name VARCHAR);");
+        Cursor cursor1 = db1.rawQuery("SELECT * FROM DropSandBoxList", null);
+        int x = cursor1.getCount();
+
+        if (x > 0) {
+            db1.delete("DropSandBoxList", null, null);
+
+        }
+        db1.close();
+    }
+
+    public class AsyncCallWS2_Login extends AsyncTask<String, Void, Void> {
         // ProgressDialog dialog;
         ProgressDialog progressDoalog;
         Context context;
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             Log.i("tag", "onPreExecute---tab2");
             /*dialog.setMessage("Please wait..");
             dialog.setCanceledOnTouchOutside(false);
@@ -595,18 +1044,17 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values)
-        {
+        protected void onProgressUpdate(Void... values) {
             Log.i("tag", "onProgressUpdate---tab2");
         }
 
         public AsyncCallWS2_Login(Activity_HomeScreen activity) {
-            context =  activity;
+            context = activity;
             //  dialog = new ProgressDialog(activity);
         }
+
         @Override
-        protected Void doInBackground(String... params)
-        {
+        protected Void doInBackground(String... params) {
             Log.i("tag", "doInBackground");
 
             //  fetch_all_info("");
@@ -624,8 +1072,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Void result)
-        {
+        protected void onPostExecute(Void result) {
             //  dialog.dismiss();
             progressDoalog.dismiss();
             cal_month = (GregorianCalendar) GregorianCalendar.getInstance();
@@ -642,7 +1089,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
     }
 
-    public void get_User_Schedule(){
+    public void get_User_Schedule() {
 
 
 //        Interface_userservice userService;
@@ -660,23 +1107,19 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 gethelp_response_obj = (Class_gethelp_Response) response.body();*/
 
 
-
-                if(response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     UserInfoRest userInfoRest = response.body();
                     Log.e("response.user schedule", response.body().getListVersion().toString());
 
 
-                    if (userInfoRest.getStatus().equals(true))
-                    {
+                    if (userInfoRest.getStatus().equals(true)) {
 
                         List<UserInfoListRest> usershedulelist = response.body().getListVersion();
                         Log.e("length", String.valueOf(usershedulelist.size()));
-                        int int_usercount=usershedulelist.size();
+                        int int_usercount = usershedulelist.size();
 
-                        for(int i=0;i<int_usercount;i++)
-                        {
-                            Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+                        for (int i = 0; i < int_usercount; i++) {
+                            Log.e("clus name", usershedulelist.get(i).getClusterName().toString());
 
                             Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
 
@@ -687,17 +1130,17 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Start_Time = usershedulelist.get(i).getStartTime().toString();
                             Subject_Name = usershedulelist.get(i).getSubjectName().toString();
                             Schedule_Session = usershedulelist.get(i).getScheduleSession().toString();
-                           if(usershedulelist.get(i).getLeasonName()==null || usershedulelist.get(i).getLeasonName().equals("")){
-                               Leason_Name="";
-                           }else {
-                               Leason_Name = usershedulelist.get(i).getLeasonName().toString();
-                           }
+                            if (usershedulelist.get(i).getLeasonName() == null || usershedulelist.get(i).getLeasonName().equals("")) {
+                                Leason_Name = "";
+                            } else {
+                                Leason_Name = usershedulelist.get(i).getLeasonName().toString();
+                            }
                             Lavel_Name = usershedulelist.get(i).getLavelName().toString();
                             Institute_Name = usershedulelist.get(i).getInstituteName().toString();
                             Cluster_Name = usershedulelist.get(i).getClusterName().toString();
 
                             //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name);
                             arrayList.add(userInfo);
 
                         }
@@ -748,7 +1191,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     // Log.e("response.body", response.body().size);
 
                 }
-
 
 
             }
@@ -850,25 +1292,25 @@ public class Activity_HomeScreen extends AppCompatActivity {
             School_x = School_x - 1;
 
             Log.e("State_x", String.valueOf(State_x));
-            Log.e("StateCount",StateCount);
+            Log.e("StateCount", StateCount);
             Log.e("District_x", String.valueOf(District_x));
-            Log.e("DistrictCount",DistrictCount);
+            Log.e("DistrictCount", DistrictCount);
             Log.e("Taluk_x", String.valueOf(Taluk_x));
-            Log.e("TalukaCount",TalukaCount);
+            Log.e("TalukaCount", TalukaCount);
             Log.e("village_x", String.valueOf(village_x));
-            Log.e("VillageCount",VillageCount);
+            Log.e("VillageCount", VillageCount);
             Log.e("Year_x", String.valueOf(Year_x));
-            Log.e("YearCount",YearCount);
+            Log.e("YearCount", YearCount);
             Log.e("cluster_x", String.valueOf(cluster_x));
-            Log.e("ClusterCount",ClusterCount);
+            Log.e("ClusterCount", ClusterCount);
             Log.e("Institute_x", String.valueOf(Institute_x));
-            Log.e("InstituteCount",InstituteCount);
+            Log.e("InstituteCount", InstituteCount);
             Log.e("Level_x", String.valueOf(Level_x));
-            Log.e("LevelCount",LevelCount);
+            Log.e("LevelCount", LevelCount);
             Log.e("School_x", String.valueOf(School_x));
-            Log.e("SchoolCount",SchoolCount);
+            Log.e("SchoolCount", SchoolCount);
             Log.e("studentDetails_x", String.valueOf(studentDetails_x));
-            Log.e("Student_Count",Student_Count);
+            Log.e("Student_Count", Student_Count);
             if (State_x == Integer.valueOf(StateCount) && District_x == Integer.valueOf(DistrictCount) && Taluk_x == Integer.valueOf(TalukaCount) && village_x == Integer.valueOf(VillageCount) && Year_x == Integer.valueOf(YearCount)
                     && cluster_x == Integer.valueOf(ClusterCount) && Institute_x == Integer.valueOf(InstituteCount) && Level_x == Integer.valueOf(LevelCount) && Sandbox_x == Integer.valueOf(SandboxCount) && School_x == Integer.valueOf(SchoolCount)) {
 
@@ -894,6 +1336,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
             } else if (studentDetails_x < Integer.valueOf(Student_Count)) {
                 deleteStudentdetailsRestTable_B4insertion();
                 GetStudentValuesRestData();
+
             }
             //AddFarmerDetailsNew();
         }
@@ -942,7 +1385,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void UserStudentDataCountCheckList() {
         SQLiteDatabase db_userdataCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR,Applicant_Count VARCHAR,Admission_Count VARCHAR);");
         Cursor cursor1 = db_userdataCount.rawQuery("SELECT DISTINCT * FROM StudDataCountListRest", null);
 
         int x = cursor1.getCount();
@@ -953,9 +1396,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
             do {
                 Student_Count = cursor1.getString(cursor1.getColumnIndex("Student_Count"));
+                applicant_Count = cursor1.getString(cursor1.getColumnIndex("Applicant_Count"));
+                admission_Count = cursor1.getString(cursor1.getColumnIndex("Admission_Count"));
+
                 i++;
             } while (cursor1.moveToNext());
             Log.e("tag", "Student_Count=" + Student_Count);
+            applicant_countTV.setText(applicant_Count);
+            admissioncount_TV.setText(admission_Count);
 
             if (Student_Count == null || Student_Count.equalsIgnoreCase("")) {
                 Student_Count = "0";
@@ -968,7 +1416,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     public void GetDropdownValuesRestData() {
         Log.e("Entered ", "GetAppVersionCheck");
         Log.e("getLocationData", "str_loginuserID=" + str_loginuserID);
-        Call<Location_Data> call = userService1.getLocationData(str_loginuserID,"SIV");
+        Call<Location_Data> call = userService1.getLocationData(str_loginuserID, "SIV");
         //  Call<Location_Data> call = userService1.getLocationData("90");
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
@@ -1075,7 +1523,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String YearName = class_locaitonData.getLst().get(i).getYear().get(j).getAcademicName();
                                 String YearId = class_locaitonData.getLst().get(i).getYear().get(j).getAcademicID();
                                 String Sandbox_ID = class_locaitonData.getLst().get(i).getYear().get(j).getSandbox_ID();
-                                DBCreate_YeardetailsRest_insert_2SQLiteDB(YearId, YearName,Sandbox_ID, j);
+                                DBCreate_YeardetailsRest_insert_2SQLiteDB(YearId, YearName, Sandbox_ID, j);
                             }
                             int sizeSandbox = class_locaitonData.getLst().get(i).getSandbox().size();
                             for (int j = 0; j < sizeSandbox; j++) {
@@ -1112,6 +1560,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             }
                             int sizeLevel = class_locaitonData.getLst().get(i).getLevel().size();
                             for (int j = 0; j < sizeLevel; j++) {
+                                Log.e("tag", "Level ID==" + class_locaitonData.getLst().get(i).getLevel().get(j).getLevelID());
                                 Log.e("tag", "Level name==" + class_locaitonData.getLst().get(i).getLevel().get(j).getLevelName());
                                 String LevelName = class_locaitonData.getLst().get(i).getLevel().get(j).getLevelName();
                                 String LevelID = class_locaitonData.getLst().get(i).getLevel().get(j).getLevelID();
@@ -1120,14 +1569,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String Level_ClusterID = class_locaitonData.getLst().get(i).getLevel().get(j).getClusterID();
                                 String Level_AdmissionFee = class_locaitonData.getLst().get(i).getLevel().get(j).getAdmissionFee();
 
-                              //  String Level_AdmissionFee = "0";
+                                //  String Level_AdmissionFee = "0";
 
-                                DBCreate_LeveldetailsRest_insert_2SQLiteDB(LevelName,LevelID,Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee,j);
-
-
+                                DBCreate_LeveldetailsRest_insert_2SQLiteDB(LevelName, LevelID, Level_InstituteID, Level_AcademicID, Level_ClusterID, Level_AdmissionFee, j);
 
 
-                                }
+                            }
 
                             int sizeAssessment = class_locaitonData.getLst().get(i).getAssessment().size();
                             for (int j = 0; j < sizeAssessment; j++) {
@@ -1135,7 +1582,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String Assessment_Name = class_locaitonData.getLst().get(i).getAssessment().get(j).getAssessment_Name();
                                 String Assessment_ID = class_locaitonData.getLst().get(i).getAssessment().get(j).getAssessment_ID();
                                 //  String OptionID = class_locaitonData.getLst().get(i).getAssessment().get(j).g();
-                                DBCreate_AssementRest_insert_2SQLiteDB(Assessment_Name, Assessment_ID,j);
+                                DBCreate_AssementRest_insert_2SQLiteDB(Assessment_Name, Assessment_ID, j);
                             }
                             int sizeLearningMode = class_locaitonData.getLst().get(i).getLearningMode().size();
                             for (int j = 0; j < sizeLearningMode; j++) {
@@ -1143,7 +1590,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String LearningMode_Name = class_locaitonData.getLst().get(i).getLearningMode().get(j).getLearningMode_Name();
                                 String LearningMode_ID = class_locaitonData.getLst().get(i).getLearningMode().get(j).getLearningMode_ID();
 
-                                DBCreate_LearningModeRest_insert_2SQLiteDB(LearningMode_ID,LearningMode_Name,j);
+                                DBCreate_LearningModeRest_insert_2SQLiteDB(LearningMode_ID, LearningMode_Name, j);
                             }
                             int sizeEducation = class_locaitonData.getLst().get(i).getEducation().size();
                             for (int j = 0; j < sizeEducation; j++) {
@@ -1151,11 +1598,11 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String Education_Name = class_locaitonData.getLst().get(i).getEducation().get(j).getEducation_Name();
                                 String Education_ID = class_locaitonData.getLst().get(i).getEducation().get(j).getEducation_ID();
 
-                                DBCreate_EducationRest_insert_2SQLiteDB(Education_ID,Education_Name,j);
+                                DBCreate_EducationRest_insert_2SQLiteDB(Education_ID, Education_Name, j);
                             }
 
 
-                    }
+                        }
 
                         /*uploadfromDB_Yearlist();
                         uploadfromDB_Statelist();
@@ -1232,7 +1679,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             }
                             for (int j = 0; j < sizeCount; j++) {
                                 String Student_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getStudentCount();
-                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count);
+                                 applicant_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getApplicantCount();
+                                 admission_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getAdmissionCount();
+                                Log.e("applicant_Count", String.valueOf(applicant_Count));
+                                Log.e("admission_Count", String.valueOf(admission_Count));
+
+                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count,applicant_Count,admission_Count);
                             }
                             int sizeStudList = 0;
                             if (class_studentData.getLstCount1().get(i1).getStudents() != null) {
@@ -1326,7 +1778,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                         Log.e("tag", "byteArray img=" + b);
 
                                         //  str_base64image1 = str_base64image;
-                                    }catch(Exception e){
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
 
@@ -1334,7 +1786,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
                                 DBCreate_StudentdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID,
                                         ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8,
-                                        Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId,"online",Learning_Mode,str_stateid,str_statename,str_distid,str_distname,str_talukid,str_talukname,str_villageid,str_villagename,str_address);
+                                        Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename, str_address);
 
 
                           /*  class_StudentList.setAcademicID((class_studentData.getLst().get(i).getAcademicID()));
@@ -1712,7 +2164,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     private void gethelp_api() {
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
-        progressDoalog.setMessage("Fetching Helpdetails....");
+        progressDoalog.setMessage("Loading....");
         progressDoalog.setTitle("Please wait....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
@@ -1792,7 +2244,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     private void getdemo_api() {
         final ProgressDialog progressDoalog;
         progressDoalog = new ProgressDialog(Activity_HomeScreen.this);
-        progressDoalog.setMessage("Fetching Demodetails....");
+        progressDoalog.setMessage("Loading....");
         progressDoalog.setTitle("Please wait....");
         progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDoalog.show();
@@ -2053,8 +2505,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     }
 
-    public  void alerts_dialog_AutoSyncVersion()
-    {
+    public void alerts_dialog_AutoSyncVersion() {
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_HomeScreen.this);
         dialog.setCancelable(false);
@@ -2063,10 +2514,9 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
         dialog.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id)
-            {
+            public void onClick(DialogInterface dialog, int id) {
 
-                if(VersionStatus.equalsIgnoreCase("true")){
+                if (VersionStatus.equalsIgnoreCase("true")) {
                     internetDectector2 = new Class_InternetDectector(getApplicationContext());
                     isInternetPresent = internetDectector2.isConnectingToInternet();
                     if (isInternetPresent) {
@@ -2090,11 +2540,11 @@ public class Activity_HomeScreen extends AppCompatActivity {
                         GetStudentValuesResyncRestData();
 
                         String Sync_IDNew = shared_syncId.getString(SyncId, "");
-                        Log.e("tag","Sync_IDNew="+Sync_IDNew);
+                        Log.e("tag", "Sync_IDNew=" + Sync_IDNew);
                     } else {
                         Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
 
                     internetDectector2 = new Class_InternetDectector(getApplicationContext());
                     isInternetPresent = internetDectector2.isConnectingToInternet();
@@ -2132,7 +2582,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
 
         final AlertDialog alert = dialog.create();
-        alert.setOnShowListener( new DialogInterface.OnShowListener() {
+        alert.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface arg0) {
                 alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
@@ -2224,12 +2674,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
         db_locationCount.close();
     }
 
-    public void DBCreate_StudDataCountListRest_insert_2SQLiteDB(String str_StudentCount) {
+    public void DBCreate_StudDataCountListRest_insert_2SQLiteDB(String str_StudentCount,String str_ApplicantCount,String str_AdmissionCount) {
         SQLiteDatabase db_userdataCount = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR,Applicant_Count VARCHAR,Admission_Count VARCHAR);");
 
-        String SQLiteQuery = "INSERT INTO StudDataCountListRest (Student_Count)" +
-                " VALUES ('" + str_StudentCount + "');";
+        String SQLiteQuery = "INSERT INTO StudDataCountListRest (Student_Count,Applicant_Count,Admission_Count)" +
+                " VALUES ('" + str_StudentCount +  "','" +str_ApplicantCount + "','" +str_AdmissionCount +"');";
         db_userdataCount.execSQL(SQLiteQuery);
 
         Log.e("str_StudentCount DB", str_StudentCount);
@@ -2240,7 +2690,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     public void delete_StudDataCountListRestTable_B4insertion() {
 
         SQLiteDatabase db_userdataCount = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR);");
+        db_userdataCount.execSQL("CREATE TABLE IF NOT EXISTS StudDataCountListRest(Student_Count VARCHAR,Applicant_Count VARCHAR,Admission_Count VARCHAR);");
         Cursor cursor = db_userdataCount.rawQuery("SELECT * FROM StudDataCountListRest", null);
         int x = cursor.getCount();
 
@@ -2394,18 +2844,18 @@ public class Activity_HomeScreen extends AppCompatActivity {
         db_villagelist_delete.close();
     }
 
-    public void DBCreate_YeardetailsRest_insert_2SQLiteDB(String str_yearID, String str_yearname,String Sandbox_ID, int i) {
+    public void DBCreate_YeardetailsRest_insert_2SQLiteDB(String str_yearID, String str_yearname, String Sandbox_ID, int i) {
         SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS YearListRest(YearID VARCHAR,YearName VARCHAR,Sandbox_ID VARCHAR);");
 
         if (i == 0) {
             String SQLiteQuery = "INSERT INTO YearListRest (YearID,YearName,Sandbox_ID)" +
-                    " VALUES ('" + "0" + "','" + "Select"  + "','" + "0" + "');";
+                    " VALUES ('" + "0" + "','" + "Select" + "','" + "0" + "');";
             db_yearlist.execSQL(SQLiteQuery);
         }
 
         String SQLiteQuery = "INSERT INTO YearListRest (YearID, YearName,Sandbox_ID)" +
-                " VALUES ('" + str_yearID + "','" + str_yearname +"','" + Sandbox_ID+ "');";
+                " VALUES ('" + str_yearID + "','" + str_yearname + "','" + Sandbox_ID + "');";
         db_yearlist.execSQL(SQLiteQuery);
 
         Log.e("str_yearname DB", str_yearname);
@@ -2476,10 +2926,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
         //else {
 
 
-            String SQLiteQuery = "INSERT INTO InstituteListRest (InstituteName, InstituteID, Inst_AcademicID,Inst_ClusterID)" +
-                    " VALUES ('" + InstituteName + "','" + InstituteID + "','" + Inst_AcademicID + "','" + Inst_ClusterID + "');";
-            db_Institutelist.execSQL(SQLiteQuery);
-       // }
+        String SQLiteQuery = "INSERT INTO InstituteListRest (InstituteName, InstituteID, Inst_AcademicID,Inst_ClusterID)" +
+                " VALUES ('" + InstituteName + "','" + InstituteID + "','" + Inst_AcademicID + "','" + Inst_ClusterID + "');";
+        db_Institutelist.execSQL(SQLiteQuery);
+        // }
         Log.e("InstituteName DB", InstituteName);
         db_Institutelist.close();
     }
@@ -2509,10 +2959,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
 
         //else {
-            String SQLiteQuery = "INSERT INTO LevelListRest (LevelName, LevelID, Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
-                    " VALUES ('" + LevelName + "','" + LevelID + "','" + Level_InstituteID + "','" + Level_AcademicID + "','" + Level_ClusterID + "','" + Level_AdmissionFee + "');";
-            db_Levellist.execSQL(SQLiteQuery);
-       // }
+        String SQLiteQuery = "INSERT INTO LevelListRest (LevelName, LevelID, Level_InstituteID,Level_AcademicID,Level_ClusterID,Level_AdmissionFee)" +
+                " VALUES ('" + LevelName + "','" + LevelID + "','" + Level_InstituteID + "','" + Level_AcademicID + "','" + Level_ClusterID + "','" + Level_AdmissionFee + "');";
+        db_Levellist.execSQL(SQLiteQuery);
+        // }
         Log.e("Level_AdmissionFee DB", Level_AdmissionFee);
         db_Levellist.close();
     }
@@ -2542,6 +2992,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         // Log.e("str_Assementname DB", str_Assementname);
         db_yearlist.close();
     }
+
     public void deleteAssementRestTable_B4insertion() {
 
         SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -2581,6 +3032,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
         db_yearlist_delete.close();
     }
+
     public void DBCreate_EducationRest_insert_2SQLiteDB(String str_EducationID, String str_Educationname, int i) {
         SQLiteDatabase db_yearlist = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_yearlist.execSQL("CREATE TABLE IF NOT EXISTS EducationListRest(EducationID VARCHAR,EducationName VARCHAR);");
@@ -2606,7 +3058,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
         }
         db_yearlist_delete.close();
     }
-
 
 
     public void DBCreate_SandboxdetailsRest_insert_2SQLiteDB(String SandboxName, String SandboxID, int i) {
@@ -2655,10 +3106,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
             db_Schoollist.execSQL(SQLiteQuery);
         }
         //else {
-            String SQLiteQuery = "INSERT INTO SchoolListRest (SchoolName, SchoolID, School_InstituteID)" +
-                    " VALUES ('" + SchoolName + "','" + SchoolID + "','" + School_InstituteID + "');";
-            db_Schoollist.execSQL(SQLiteQuery);
-       // }
+        String SQLiteQuery = "INSERT INTO SchoolListRest (SchoolName, SchoolID, School_InstituteID)" +
+                " VALUES ('" + SchoolName + "','" + SchoolID + "','" + School_InstituteID + "');";
+        db_Schoollist.execSQL(SQLiteQuery);
+        // }
         Log.e("SchoolName DB", SchoolName);
         db_Schoollist.close();
     }
@@ -2679,7 +3130,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void DBCreate_StudentdetailsRest_insert_2SQLiteDB(String AcademicID, String AcademicName, String AdmissionFee, String ApplicationNo, String BalanceFee, String BirthDate, String ClusterID,
                                                              String ClusterName, String CreatedDate, String Education, String FatherName, String Gender, String InstituteName, String InstituteID, String LevelID, String LevelName, String Marks4, String Marks5, String Marks6, String Marks7, String Marks8,
-                                                             String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId,String str_online,String str_learningmode,String str_stateid,String str_statename,String str_districtid,String str_districtname,String str_talukid,String str_talukname,String str_villageid,String str_villagename,String str_stuaddress) {
+                                                             String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online, String str_learningmode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress) {
         SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                 "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
@@ -2690,10 +3141,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
                 " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
                 ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
-                Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname +"','" + str_talukid +  "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress +"');";
+                Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress + "');";
         db_studentDetails.execSQL(SQLiteQuery);
 
-         // Log.e("ApplicationNo DB", ApplicationNo);
+        // Log.e("ApplicationNo DB", ApplicationNo);
         Log.e("StudentName DB", StudentName);
         Log.e("SandboxName DB", SandboxName);
 //
@@ -2713,7 +3164,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         if (x > 0) {
             db_studentDetails.delete("StudentDetailsRest", null, null);
 
-            Log.e("StudentDetailsRest","deleted table successfully");
+            Log.e("StudentDetailsRest", "deleted table successfully");
         }
         db_studentDetails.close();
         Log.e("deleted", "deleteStudentdetailsRestTable_B4insertion");
@@ -2726,6 +3177,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public class OnlineView_Feedback extends AsyncTask<String, Void, Void> {
         Context context;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -2745,15 +3197,15 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void s) {
-            if (str_feedback.toString().equalsIgnoreCase("")|| str_feedback.toString().equalsIgnoreCase("anyType{}")  || str_feedback.toString().equalsIgnoreCase(null)) {
+            if (str_feedback.toString().equalsIgnoreCase("") || str_feedback.toString().equalsIgnoreCase("anyType{}") || str_feedback.toString().equalsIgnoreCase(null)) {
                 onlineview_iv.setVisibility(View.GONE);
-                Log.e("tag","API-Gone");
+                Log.e("tag", "API-Gone");
                 SharedPreferences.Editor editor = sharedpref_feedback.edit();
                 editor.putString(FeedBack, "Gone");
                 editor.commit();
-            }else {
+            } else {
                 onlineview_iv.setVisibility(View.VISIBLE);
-                Log.e("tag","API-Visible");
+                Log.e("tag", "API-Visible");
                 SharedPreferences.Editor editor = sharedpref_feedback.edit();
                 editor.putString(FeedBack, "Visible");
                 editor.commit();
@@ -2768,7 +3220,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void list_detaile() {
         Vector<SoapObject> result1 = null;
-        String url ="http://mis.detedu.org:8089/SIVService.asmx?WSDL";
+        String url = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
         String METHOD_NAME = "LoadMobileMenu";
         String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadMobileMenu";
 
@@ -2793,7 +3245,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
                 Log.i("value at response", response.toString());
                 if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-                    str_feedback="";
+                    str_feedback = "";
                 }
                 /*if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
                     onlineview_iv.setVisibility(View.GONE);
@@ -2809,7 +3261,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     editor.commit();
                 }*/
 
-            }catch(Throwable t){
+            } catch (Throwable t) {
                 Log.e("requestload fail", "> " + t.getMessage());
             }
 
@@ -2838,13 +3290,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 Log.e("Entered resp", response.message());
                 //     Log.e("Entered resp", response.body().getMessage());
                 AddStudentDetailsNew();
-                if (response.isSuccessful())
-                {
+                if (response.isSuccessful()) {
                     Student class_studentData = response.body();
                     Log.e("response.body", response.body().getLstCount1().toString());
                     if (class_studentData.getStatus().equals(true)) {
                         List<StudCountList> studentcountLists = response.body().getLstCount1();
-                        Log.e("tag","studentlist.size()="+ String.valueOf(studentcountLists.size()));
+                        Log.e("tag", "studentlist.size()=" + String.valueOf(studentcountLists.size()));
 
                         studCountLists = new StudCountList[studentcountLists.size()];
                         for (int i1 = 0; i1 < studCountLists.length; i1++) {
@@ -2860,7 +3311,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             }
                             for (int j = 0; j < sizeCount; j++) {
                                 String Student_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getStudentCount();
-                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count);
+                                 applicant_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getApplicantCount();
+                                 admission_Count = class_studentData.getLstCount1().get(i1).getCount().get(j).getAdmissionCount();
+                                Log.e("applicant_Count", String.valueOf(applicant_Count));
+                                Log.e("admission_Count", String.valueOf(admission_Count));
+
+                                DBCreate_StudDataCountListRest_insert_2SQLiteDB(Student_Count,applicant_Count,admission_Count);
                             }
                             int sizeStudList = 0;
                             if (class_studentData.getLstCount1().get(i1).getStudents() != null) {
@@ -2955,11 +3411,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                     //  str_base64image1 = str_base64image;
                                 }
 
-                                DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(AcademicID,AcademicName,AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID,ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8,Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,str_base64image,Stud_TempId,"online",Learning_Mode,str_stateid,str_statename,str_distid,str_distname,str_talukid,str_talukname,str_villageid,str_villagename,str_address);
+                                DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID, ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8, Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename, str_address);
 
 
                             }
                         }
+
                         /*uploadfromDB_Yearlist();
                         uploadfromDB_Statelist();
                         uploadfromDB_Districtlist();
@@ -2970,7 +3427,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                         Toast.makeText(Activity_HomeScreen.this, class_studentData.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     progressDoalog.dismiss();
-                    Log.e("tag","working");
+                    Log.e("tag", "working");
                 } else {
                     progressDoalog.dismiss();
                     Log.e("Entered resp else", "");
@@ -2987,42 +3444,42 @@ public class Activity_HomeScreen extends AppCompatActivity {
             @Override
             public void onFailure(Call call, Throwable t) {
 
-                Log.e("tag",t.getMessage());
+                Log.e("tag", t.getMessage());
                 Toast.makeText(Activity_HomeScreen.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });// end of call
 
     }
+
     private void AddStudentDetailsNew() {
 
-        Log.e("tag","Location_Response2="+class_location_dataList.getResponse());
+        Log.e("tag", "Location_Response2=" + class_location_dataList.getResponse());
         //  Log.e("tag","UserData_Response2="+class_userDatalist.getResponse());
-        String locationData = null,userData = null;
-        if(class_location_dataList.getResponse()!=null) {
+        String locationData = null, userData = null;
+        if (class_location_dataList.getResponse() != null) {
             if (class_location_dataList.getResponse().equalsIgnoreCase("Success")) {
                 locationData = "Success";
-            }else{
+            } else {
                 locationData = "Error";
             }
         }
-        if(class_studCountLists.getResponse()!=null) {
+        if (class_studCountLists.getResponse() != null) {
 
             if (class_studCountLists.getResponse().equalsIgnoreCase("Success")) {
                 userData = "Success";
-            }
-            else{
+            } else {
                 userData = "Error";
             }
         }
-        Log.e("tag","Location_Response3="+locationData);
-        Log.e("tag","UserData_Response3="+userData);
+        Log.e("tag", "Location_Response3=" + locationData);
+        Log.e("tag", "UserData_Response3=" + userData);
 
         String Sync_IDNew = shared_syncId.getString(SyncId, "");
-        Log.e("tag","Sync_IDNew="+Sync_IDNew);
+        Log.e("tag", "Sync_IDNew=" + Sync_IDNew);
 
         sharedpref_spinner_Obj = getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
         String Sync_IDNew1 = sharedpref_spinner_Obj.getString(Key_syncId, "").trim();
-        Log.e("tag","Sync_IDNew1="+Sync_IDNew1);
+        Log.e("tag", "Sync_IDNew1=" + Sync_IDNew1);
 
         ValidateSyncRequest request = new ValidateSyncRequest();
         request.setSyncID(Sync_IDNew);
@@ -3031,7 +3488,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         /*request.setSyncID("1129");
         request.setSyncVersion("8");
         request.setSyncStatus("Success");*/
-        Log.e("tag","Sync_ID="+Sync_IDNew+"versioncode="+versioncode+"SyncStatus=Success");
+        Log.e("tag", "Sync_ID=" + Sync_IDNew + "versioncode=" + versioncode + "SyncStatus=Success");
         Call<ValidateSyncResponse> call = userService1.Post_ValidateSync(request);
 
         Log.e("TAG", "Post_ValidateSync Request: " + new Gson().toJson(call.request()));
@@ -3050,7 +3507,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
             public void onResponse(Call<ValidateSyncResponse> call, Response<ValidateSyncResponse> response) {
                 Log.e("response", response.toString());
                 Log.e("TAG", "ValidateSyncResponse : " + new Gson().toJson(response));
-                Log.e("tag","ValidateSyncResponse body"+ String.valueOf(response.body()));
+                Log.e("tag", "ValidateSyncResponse body" + String.valueOf(response.body()));
                 //   DefaultResponse error1 = ErrorUtils.parseError(response);
                    /* Log.e("response new:",error1.getMsg());
                     Log.e("response new status:", String.valueOf(error1.getstatus()));*/
@@ -3093,16 +3550,16 @@ public class Activity_HomeScreen extends AppCompatActivity {
         });// end of call
     }
 
-    public void DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(String AcademicID,String AcademicName,String AdmissionFee,String ApplicationNo,String BalanceFee,String BirthDate,String ClusterID,
-                                                                   String ClusterName,String CreatedDate,String Education,String FatherName,String Gender,String InstituteName,String InstituteID,String LevelID,String LevelName,String Marks4,String Marks5,String Marks6,String Marks7,String Marks8,
-                                                                   String Mobile,String MotherName,String PaidFee,String ReceiptNo,String SandboxID,String SandboxName,String SchoolID,String SchoolName,String StudentAadhar,String StudentID,String StudentName,String StudentPhoto,String StudentStatus, String str_base64image, String Stud_TempId,String str_online_offline,String Learning_Mode,String str_stateid,String str_statename,String str_districtid,String str_districtname,String str_talukid,String str_talukname,String str_villageid,String str_villagename,String str_stuaddress) {
+    public void DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(String AcademicID, String AcademicName, String AdmissionFee, String ApplicationNo, String BalanceFee, String BirthDate, String ClusterID,
+                                                                   String ClusterName, String CreatedDate, String Education, String FatherName, String Gender, String InstituteName, String InstituteID, String LevelID, String LevelName, String Marks4, String Marks5, String Marks6, String Marks7, String Marks8,
+                                                                   String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online_offline, String Learning_Mode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress) {
         SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
         @SuppressLint("Recycle")
         Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='" + StudentID + "'", null);
         int x = cursor.getCount();
 
-        if(x>0) {
+        if (x > 0) {
             db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                     "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
                     "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
@@ -3142,22 +3599,22 @@ public class Activity_HomeScreen extends AppCompatActivity {
             cv_studentlistupdate.put("StudentStatus", StudentStatus);
             cv_studentlistupdate.put("Base64image", str_base64image);
             cv_studentlistupdate.put("Stud_TempId", Stud_TempId);
-            cv_studentlistupdate.put("UpadateOff_Online",str_online_offline);
-            cv_studentlistupdate.put("Learning_Mode",Learning_Mode);
-            cv_studentlistupdate.put("stateid",str_stateid);
-            cv_studentlistupdate.put("statename",str_statename);
-            cv_studentlistupdate.put("districtid",str_districtid);
-            cv_studentlistupdate.put("districtname",str_districtname);
-            cv_studentlistupdate.put("talukid",str_talukid);
-            cv_studentlistupdate.put("talukname",str_talukname);
-            cv_studentlistupdate.put("villageid",str_villageid);
-            cv_studentlistupdate.put("villagename",str_villagename);
-            cv_studentlistupdate.put("student_address",str_stuaddress);
+            cv_studentlistupdate.put("UpadateOff_Online", str_online_offline);
+            cv_studentlistupdate.put("Learning_Mode", Learning_Mode);
+            cv_studentlistupdate.put("stateid", str_stateid);
+            cv_studentlistupdate.put("statename", str_statename);
+            cv_studentlistupdate.put("districtid", str_districtid);
+            cv_studentlistupdate.put("districtname", str_districtname);
+            cv_studentlistupdate.put("talukid", str_talukid);
+            cv_studentlistupdate.put("talukname", str_talukname);
+            cv_studentlistupdate.put("villageid", str_villageid);
+            cv_studentlistupdate.put("villagename", str_villagename);
+            cv_studentlistupdate.put("student_address", str_stuaddress);
 
-         //   Log.e("ApplicationNo..updating..",ApplicationNo);
+            //   Log.e("ApplicationNo..updating..",ApplicationNo);
             db_studentDetails.update("StudentDetailsRest", cv_studentlistupdate, "StudentID = ?", new String[]{StudentID});
             db_studentDetails.close();
-        }else {
+        } else {
             db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                     "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
                     "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
@@ -3167,19 +3624,16 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
                     " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
                     ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
-                    Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname +"','" + str_talukid +  "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress +"');";
+                    Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress + "');";
             db_studentDetails.execSQL(SQLiteQuery);
 
-             // Log.e("ApplicationNoinserting", ApplicationNo);
+            // Log.e("ApplicationNoinserting", ApplicationNo);
             Log.e("StudentName DB", StudentName);
             Log.e("SandboxName DB", SandboxName);
 
             db_studentDetails.close();
         }
     }
-
-
-
 
 
     public void GetMobileMenu() {
@@ -3206,10 +3660,10 @@ public class Activity_HomeScreen extends AppCompatActivity {
                     if (class_loginresponse.getStatus()) {
 
                         List<GetMobileMenuResponseList> monthContents_list = response.body().getObjMenu();
-                        int loadPendingPaymentCount=monthContents_list.size();
+                        int loadPendingPaymentCount = monthContents_list.size();
                         Log.e("count", String.valueOf(loadPendingPaymentCount));
 
-                        GetMobileMenuResponseList []  arrayObj_Class_monthcontents = new GetMobileMenuResponseList[monthContents_list.size()];
+                        GetMobileMenuResponseList[] arrayObj_Class_monthcontents = new GetMobileMenuResponseList[monthContents_list.size()];
                         arrayObj_class_getpaymentpendingresp = new GetMobileMenuResponseList[arrayObj_Class_monthcontents.length];
                         objclassarr_expandedlistgroup = new ExpandListGroup[arrayObj_class_getpaymentpendingresp.length];
                         mainmenulist = new ArrayList<ExpandListGroup>();
@@ -3230,9 +3684,9 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             //  GetMobileSubMenuResponseList []  arrayObj_Class_submenu= new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
 
                             objclassarr_Class_SubMenu = new Class_SubMenu[monthContents_list_submenu.size()];
-                           // submenuList = new ArrayList<Class_SubMenu>();
+                            // submenuList = new ArrayList<Class_SubMenu>();
                             Log.e("soap_SubMenulength()", String.valueOf(monthContents_list_submenu.size()));
-                            arrayObj_class_getMobilesubmenuresp=new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
+                            arrayObj_class_getMobilesubmenuresp = new GetMobileSubMenuResponseList[monthContents_list_submenu.size()];
                             Class_SubMenu child = new Class_SubMenu();
                             MenuModel menuModel = null;
                             List<MenuModel> childModelsList = new ArrayList<>();
@@ -3262,7 +3716,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 } else {
 
                                 }
-                              //  submenuList.add(child);
+                                //  submenuList.add(child);
 
 
                             }
@@ -3284,29 +3738,28 @@ public class Activity_HomeScreen extends AppCompatActivity {
 //
 
 
-
                         }//for loop end
                         Log.e("arrayObjclassndingresp", String.valueOf(arrayObj_class_getpaymentpendingresp.length));
 
-                        if (arrayObj_class_getpaymentpendingresp.length==0) {
-                            str_feedback="";
-                        }else{
-                            str_feedback="1";
+                        if (arrayObj_class_getpaymentpendingresp.length == 0) {
+                            str_feedback = "";
+                        } else {
+                            str_feedback = "1";
                         }
                         if (str_feedback.equals("")) {
                             onlineview_iv.setVisibility(View.GONE);
-                            Log.e("tag","API-Gone");
+                            Log.e("tag", "API-Gone");
                             SharedPreferences.Editor editor = sharedpref_feedback.edit();
                             editor.putString(FeedBack, "Gone");
                             editor.apply();
-                        }else {
+                        } else {
                             onlineview_iv.setVisibility(View.VISIBLE);
-                            Log.e("tag","API-Visible");
+                            Log.e("tag", "API-Visible");
                             SharedPreferences.Editor editor = sharedpref_feedback.edit();
                             editor.putString(FeedBack, "Visible");
                             editor.apply();
                         }
-                       // populateExpandableList();
+                        // populateExpandableList();
                     } else {
                         progressDoalog.dismiss();
                     }
@@ -3326,8 +3779,8 @@ public class Activity_HomeScreen extends AppCompatActivity {
 //                        alerts_dialog_getexlistviewError();
 
                         //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(Activity_HomeScreen.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Activity_HomeScreen.this, "Kindly restart your application", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -3348,5 +3801,71 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
 
     //////////////////////////////////////////////////////////////////////////////////////////
+
+
+    @Override
+    public void onBackPressed() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Show toast when menu items selected
+        switch (item.getItemId()) {
+            case R.id.logout_menu:
+                Class_SaveSharedPreference.setUserName(getApplicationContext(), "");
+                Class_SaveSharedPreference.setPREF_MENU_link(getApplicationContext(), "");
+                Class_SaveSharedPreference.setPrefFlagUsermanual(getApplicationContext(), "");
+                Class_SaveSharedPreference.setSupportEmail(getApplicationContext(), "");
+                Class_SaveSharedPreference.setUserMailID(getApplicationContext(), "");
+                Class_SaveSharedPreference.setSupportPhone(getApplicationContext(), "");
+
+                SharedPreferences.Editor myprefs_UserImg = sharedpref_userimage_Obj.edit();
+                myprefs_UserImg.putString(key_userimage, "");
+                myprefs_UserImg.apply();
+                SharedPreferences.Editor myprefs_Username = sharedpref_username_Obj.edit();
+                myprefs_Username.putString(Key_username, "");
+                myprefs_Username.apply();
+
+
+                deleteStateRestTable_B4insertion();
+                deleteDistrictRestTable_B4insertion();
+                deleteTalukRestTable_B4insertion();
+                deleteVillageRestTable_B4insertion();
+                deleteYearRestTable_B4insertion();
+                deleteSchoolRestTable_B4insertion();
+                deleteSandboxRestTable_B4insertion();
+                deleteInstituteRestTable_B4insertion();
+                deleteLevelRestTable_B4insertion();
+                deleteClusterRestTable_B4insertion();
+
+                Intent i = new Intent(Activity_HomeScreen.this, MainActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
+
+            case android.R.id.home:
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

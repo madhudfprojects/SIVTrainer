@@ -4,6 +4,7 @@ package com.det.skillinvillage;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -27,7 +28,7 @@ public class DocView_QunPaperActivity extends AppCompatActivity {
     private String docName;
     private URL downloadUrl;
     File outputFile = null;
-
+    TabLayout tabs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,16 +45,24 @@ public class DocView_QunPaperActivity extends AppCompatActivity {
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(docQunPaperTabAdapter);
 
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+         tabs = findViewById(R.id.tabs);
+       // tabs.setupWithViewPager(viewPager);
+        tabselect(viewPager);
+
     }
 
+    public void tabselect(ViewPager view){
+        tabs.setupWithViewPager(view);
+        tabs.setSelectedTabIndicatorColor(Color.parseColor("#FF0000"));
+        tabs.setSelectedTabIndicatorHeight((int) (5 * getResources().getDisplayMetrics().density));
+        tabs.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#ffffff"));
+
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         // Show toast when menu items selected
         switch (item.getItemId()) {
-
 
             case android.R.id.home:
                 Intent i=new Intent(DocView_QunPaperActivity.this,DocView_MainActivity.class);

@@ -49,6 +49,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
@@ -93,8 +94,10 @@ public class Activity_FeesPayment extends AppCompatActivity {
     Spinner paymentType_SP, paymentMode_SP;
     Button Submit_Feessubmit_bt;
     String[] paymentModeArray = {"Cash","Online"};
-    String selected_paymentMode, selected_paymentType;
-    String[] paymentTypeArray = {"Payment", "Concession"};
+    String selected_paymentMode="", selected_paymentType="";
+//    String[] paymentTypeArray = {"Payment", "Concession"};
+String[] paymentTypeArray = {"Payment"};
+
     LinearLayout paymentmode_LL;
     Boolean isInternetPresent = false;
     Class_InternetDectector internetDectector;
@@ -118,7 +121,7 @@ public class Activity_FeesPayment extends AppCompatActivity {
     SharedPreferences sharedpref_loginuserid_Obj;
     SharedPreferences sharedpref_stuid_pay_Obj;
 
-    int str_stuID=0;
+    String str_stuID="";
     SharedPreferences sharedpref_stuid_Obj;
     Interface_userservice userService1;
     int payment_count;
@@ -157,9 +160,21 @@ public class Activity_FeesPayment extends AppCompatActivity {
        // str_studentID_myprefs = sharedpref_stuid_pay_Obj.getString(key_studentid_pay, "").trim();
 
         sharedpref_stuid_Obj=getSharedPreferences(sharedpreferenc_selectedspinner, Context.MODE_PRIVATE);
-        str_stuID = sharedpref_stuid_Obj.getInt(key_studentid, 0);
-        Log.e("str_stuID.oncreate..", String.valueOf(str_stuID));
+       // str_stuID = sharedpref_stuid_Obj.getString(key_studentid, "");
+       // Log.e("str_stuID.oncreate..", String.valueOf(str_stuID));
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+		/*    	Event_Discription = extras.getString("EventDiscription");
+		    	Event_Id = extras.getString("EventId");
+		    	Event_date = extras.getString("EventDate");
+				FellowshipName = extras.getString("FellowshipName");*/
+
+            //Commented and added by shivaleela on june 27th 2019
+            //str_ScheduleId = extras.getString("ScheduleId");
+            str_stuID = extras.getString("StudentID");
+            Log.e("Tag", "str_StudentID_received=" + str_stuID);
+        }
 
 
         amount_et = findViewById(R.id.amount_ET);
@@ -391,9 +406,11 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
 
     public void GetLoadStudentpayment() {
+        Log.e("Entered ", "GetLoadStudentpayment");
+        Log.e("str_stuID", str_stuID);
 
 //        Call<GetStudentPaymentResponse> call = userService1.getStudentPayment(String.valueOf(str_stuID));//String.valueOf(str_stuID)
-        Call<GetStudentPaymentResponse> call = userService1.getStudentPayment("1463");//String.valueOf(str_stuID)
+        Call<GetStudentPaymentResponse> call = userService1.getStudentPayment(str_stuID);//String.valueOf(str_stuID)
 
         // Set up progress before call
         final ProgressDialog progressDoalog;
@@ -653,14 +670,15 @@ public class Activity_FeesPayment extends AppCompatActivity {
         receivable_tv.setText(str_receiveAble);
         received_tv.setText(str_received);
         balance_tv.setText(str_receive_balance);
-        if(selected_paymentType.equals(paymentTypeArray[1])){
-            receipt_feepayment_et.setVisibility(View.GONE);
-            receiptlabel_feepayment_TV.setVisibility(View.GONE);
-        }else
-        {
-            receipt_feepayment_et.setVisibility(View.VISIBLE);
-            receiptlabel_feepayment_TV.setVisibility(View.VISIBLE);
-        }
+      //  if(!selected_paymentType.equals("")) {
+//            if (selected_paymentType.equals(paymentTypeArray[1])) {
+//                receipt_feepayment_et.setVisibility(View.GONE);
+//                receiptlabel_feepayment_TV.setVisibility(View.GONE);
+//            } else {
+//                receipt_feepayment_et.setVisibility(View.VISIBLE);
+//                receiptlabel_feepayment_TV.setVisibility(View.VISIBLE);
+//            }
+      //  }
 
     }
 
@@ -677,7 +695,7 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
         // Inflate menu items
         getMenuInflater().inflate(R.menu.menu_register, menu);
-        menu.findItem(R.id.Sync)
+        menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
@@ -759,7 +777,7 @@ public class Activity_FeesPayment extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
 //        }
         PostSavePaymentRequest request = new PostSavePaymentRequest();
-        request.setStudentID(String.valueOf(str_stuID));//String.valueOf(str_stuID)
+        request.setStudentID(str_stuID);//String.valueOf(str_stuID)
         request.setPaymentAmount(amount_et.getText().toString());
         request.setCreatedBy(str_loginuserID);
         request.setPaymentDate(str_receiveddate);
@@ -771,7 +789,9 @@ public class Activity_FeesPayment extends AppCompatActivity {
 
         Call<Post_Save_PaymentResponse> call = userService1.PostSavePayment(request);
             // Set up progress before call
-            final ProgressDialog progressDoalog;
+        Log.e("Post_Save_Payment", "Request 33: " + new Gson().toJson(request));
+
+        final ProgressDialog progressDoalog;
             progressDoalog = new ProgressDialog(Activity_FeesPayment.this);
             //  progressDoalog.setMax(100);
             //  progressDoalog.setMessage("Loading....");
