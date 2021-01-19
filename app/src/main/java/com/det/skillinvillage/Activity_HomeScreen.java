@@ -199,6 +199,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     Class_Dashboard_SandBox[] arrayObjclass_dashboard_sandBoxes,arrayObjclass_dashboard_sandBoxes2;
 
     String applicant_Count="",admission_Count="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1274,7 +1275,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
             SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
             db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                     "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
             Cursor cursor14 = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
             int studentDetails_x = cursor14.getCount();
             Log.e("tag", "studentDetails_x=" + studentDetails_x);
@@ -1745,6 +1746,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String str_villageid = class_studentData.getLstCount1().get(i1).getStudents().get(i).getVillage_ID();
                                 String str_villagename = class_studentData.getLstCount1().get(i1).getStudents().get(i).getVillage_Name();
                                 String str_address = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAddress();
+                                String str_alternatemobno= class_studentData.getLstCount1().get(i1).getStudents().get(i).getAlternate_Mobile();
 
                                 Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "ApplicationNo=" + ApplicationNo);
 
@@ -1786,7 +1788,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
                                 DBCreate_StudentdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID,
                                         ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8,
-                                        Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename, str_address);
+                                        Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename, str_address,str_alternatemobno);
 
 
                           /*  class_StudentList.setAcademicID((class_studentData.getLst().get(i).getAcademicID()));
@@ -3130,18 +3132,18 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void DBCreate_StudentdetailsRest_insert_2SQLiteDB(String AcademicID, String AcademicName, String AdmissionFee, String ApplicationNo, String BalanceFee, String BirthDate, String ClusterID,
                                                              String ClusterName, String CreatedDate, String Education, String FatherName, String Gender, String InstituteName, String InstituteID, String LevelID, String LevelName, String Marks4, String Marks5, String Marks6, String Marks7, String Marks8,
-                                                             String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online, String str_learningmode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress) {
+                                                             String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online, String str_learningmode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress,String str_alternatemobno) {
         SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                 "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
 
         String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID, AcademicName, AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID," +
                 "ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8," +
-                "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
+                "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address,alternate_mobile,admission_date,admission_remarks)" +
                 " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
                 ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
-                Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress + "');";
+                Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + str_online + "','" + str_learningmode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress + "','" + str_alternatemobno + "','" + "" + "','" + "" +  "');";
         db_studentDetails.execSQL(SQLiteQuery);
 
         // Log.e("ApplicationNo DB", ApplicationNo);
@@ -3156,7 +3158,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR,AcademicName VARCHAR,AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                 "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
         @SuppressLint("Recycle")
         Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
         int x = cursor.getCount();
@@ -3377,7 +3379,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String str_villageid = class_studentData.getLstCount1().get(i1).getStudents().get(i).getVillage_ID();
                                 String str_villagename = class_studentData.getLstCount1().get(i1).getStudents().get(i).getVillage_Name();
                                 String str_address = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAddress();
-
+                                String str_alternatemobno = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAlternate_Mobile();
                                 Log.e("tag", "StudentName=" + StudentName + "StudentStatus=" + StudentStatus + "AcademicName=" + AcademicName);
 
                                 String str_imageurl = StudentPhoto;
@@ -3411,7 +3413,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                     //  str_base64image1 = str_base64image;
                                 }
 
-                                DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(AcademicID, AcademicName, AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID, ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8, Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename, str_address);
+                                DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(AcademicID,AcademicName,AdmissionFee, ApplicationNo, BalanceFee, BirthDate, ClusterID, ClusterName, CreatedDate, Education, FatherName, Gender, InstituteName, InstituteID, LevelID, LevelName, Marks4, Marks5, Marks6, Marks7, Marks8, Mobile, MotherName, PaidFee, ReceiptNo, SandboxID, SandboxName, SchoolID, SchoolName, StudentAadhar, StudentID, StudentName, StudentPhoto, StudentStatus, str_base64image, Stud_TempId, "online", Learning_Mode, str_stateid, str_statename, str_distid, str_distname, str_talukid, str_talukname, str_villageid, str_villagename,str_address,str_alternatemobno);
 
 
                             }
@@ -3552,7 +3554,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
 
     public void DBCreate_StudentResyncdetailsRest_insert_2SQLiteDB(String AcademicID, String AcademicName, String AdmissionFee, String ApplicationNo, String BalanceFee, String BirthDate, String ClusterID,
                                                                    String ClusterName, String CreatedDate, String Education, String FatherName, String Gender, String InstituteName, String InstituteID, String LevelID, String LevelName, String Marks4, String Marks5, String Marks6, String Marks7, String Marks8,
-                                                                   String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online_offline, String Learning_Mode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress) {
+                                                                   String Mobile, String MotherName, String PaidFee, String ReceiptNo, String SandboxID, String SandboxName, String SchoolID, String SchoolName, String StudentAadhar, String StudentID, String StudentName, String StudentPhoto, String StudentStatus, String str_base64image, String Stud_TempId, String str_online_offline, String Learning_Mode, String str_stateid, String str_statename, String str_districtid, String str_districtname, String str_talukid, String str_talukname, String str_villageid, String str_villagename, String str_stuaddress,String str_alternatemobileno) {
         SQLiteDatabase db_studentDetails = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
         @SuppressLint("Recycle")
@@ -3562,7 +3564,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         if (x > 0) {
             db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                     "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
 
             ContentValues cv_studentlistupdate = new ContentValues();
             cv_studentlistupdate.put("AcademicID", AcademicID);
@@ -3610,6 +3612,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
             cv_studentlistupdate.put("villageid", str_villageid);
             cv_studentlistupdate.put("villagename", str_villagename);
             cv_studentlistupdate.put("student_address", str_stuaddress);
+//alternate_mobile VARCHAR
+          //  admission_date VARCHAR,admission_remarks VARCHAR
+            cv_studentlistupdate.put("admission_date", "");
+            cv_studentlistupdate.put("admission_remarks", "");
+
+            cv_studentlistupdate.put("alternate_mobile", str_alternatemobileno);
 
             //   Log.e("ApplicationNo..updating..",ApplicationNo);
             db_studentDetails.update("StudentDetailsRest", cv_studentlistupdate, "StudentID = ?", new String[]{StudentID});
@@ -3617,14 +3625,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
         } else {
             db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                     "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                    "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
 
             String SQLiteQuery = "INSERT INTO StudentDetailsRest (AcademicID, AcademicName, AdmissionFee,ApplicationNo,BalanceFee,BirthDate,ClusterID," +
                     "ClusterName,CreatedDate,Education,FatherName,Gender,InstituteName,InstituteID,LevelID,LevelName,Marks4,Marks5,Marks6,Marks7,Marks8," +
-                    "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address)" +
+                    "Mobile,MotherName,PaidFee,ReceiptNo,SandboxID,SandboxName,SchoolID,SchoolName,StudentAadhar,StudentID,StudentName,StudentPhoto,StudentStatus,Base64image,Stud_TempId,UpadateOff_Online,Learning_Mode,stateid,statename,districtid,districtname,talukid,talukname,villageid,villagename,student_address,alternate_mobile,admission_date,admission_remarks)" +
                     " VALUES ('" + AcademicID + "','" + AcademicName + "','" + AdmissionFee + "','" + ApplicationNo + "','" + BalanceFee + "','" + BirthDate + "','" + ClusterID + "','" +
                     ClusterName + "','" + CreatedDate + "','" + Education + "','" + FatherName + "','" + Gender + "','" + InstituteName + "','" + InstituteID + "','" + LevelID + "','" + LevelName + "','" + Marks4 + "','" + Marks5 + "','" + Marks6 + "','" + Marks7 + "','" + Marks8 + "','" +
-                    Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress + "');";
+                    Mobile + "','" + MotherName + "','" + PaidFee + "','" + ReceiptNo + "','" + SandboxID + "','" + SandboxName + "','" + SchoolID + "','" + SchoolName + "','" + StudentAadhar + "','" + StudentID + "','" + StudentName + "','" + StudentPhoto + "','" + StudentStatus + "','" + str_base64image + "','" + Stud_TempId + "','" + "online" + "','" + Learning_Mode + "','" + str_stateid + "','" + str_statename + "','" + str_districtid + "','" + str_districtname + "','" + str_talukid + "','" + str_talukname + "','" + str_villageid + "','" + str_villagename + "','" + str_stuaddress +  "','" + str_alternatemobileno + "','" + "" + "','" + "" +"');";
             db_studentDetails.execSQL(SQLiteQuery);
 
             // Log.e("ApplicationNoinserting", ApplicationNo);

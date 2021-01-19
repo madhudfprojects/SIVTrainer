@@ -731,10 +731,24 @@
             android:maxLength="10"
             android:paddingLeft="5dp"
             android:textColor="#5C5757"
-            
             android:hint="Contact Number"
             android:layout_marginTop="10dp"/>
 
+
+
+        <EditText
+            android:id="@+id/alternatemobile_ET"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shadow_new"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingLeft="5dp"
+            android:textColor="#5C5757"
+            android:hint="Alternate Contact Number"
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -744,7 +758,6 @@
             android:gravity="center"
             android:text="Aadhaar Number(Optional)"
             android:textColor="#5C5757"
-            
             android:visibility="gone"/>
 
         <EditText

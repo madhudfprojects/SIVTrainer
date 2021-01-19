@@ -161,6 +161,39 @@ public class StudentList {
     @Expose
     private String Division_Name;
 
+
+    @SerializedName("Alternate_Mobile")
+    @Expose
+    private String Alternate_Mobile;
+
+    private String Admission_date;
+    private String Admission_remarks;
+
+
+    public String getAlternate_Mobile() {
+        return Alternate_Mobile;
+    }
+
+    public void setAlternate_Mobile(String alternate_Mobile) {
+        Alternate_Mobile = alternate_Mobile;
+    }
+
+    public String getAdmission_date() {
+        return Admission_date;
+    }
+
+    public void setAdmission_date(String admission_date) {
+        Admission_date = admission_date;
+    }
+
+    public String getAdmission_remarks() {
+        return Admission_remarks;
+    }
+
+    public void setAdmission_remarks(String admission_remarks) {
+        Admission_remarks = admission_remarks;
+    }
+
     public String getDivision_ID() {
         return Division_ID;
     }

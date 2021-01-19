@@ -111,11 +111,11 @@ String[] paymentTypeArray = {"Payment"};
     String str_receive_studentname;
     String str_receiveAble;
     String str_received;
-    String str_receive_balance, str_receive_studentstatus,save_receive_studentstatus;
+    String str_receive_receiptno="",str_receive_balance, str_receive_studentstatus,save_receive_studentstatus;
     static String yyyyMMdd_receiveddate = "";
     static String str_receiveddate_display;
     LinearLayout fees_submit_ll;
-    EditText receipt_feepayment_et;
+    TextView receipt_feepayment_et;
     TextView receiptlabel_feepayment_TV;
 
     SharedPreferences sharedpref_loginuserid_Obj;
@@ -453,6 +453,7 @@ String[] paymentTypeArray = {"Payment"};
                             innerObj_Class_academic.setPaymentReceivable(class_loginresponse.getLst().get(i).getPaymentReceivable());
                             innerObj_Class_academic.setPaymentReceived(class_loginresponse.getLst().get(i).getPaymentReceived());
                             innerObj_Class_academic.setPaymentBalance(class_loginresponse.getLst().get(i).getPaymentBalance());
+                            innerObj_Class_academic.setReceipt_No(class_loginresponse.getLst().get(i).getReceipt_No());
                             arrayObj_class_studentpaymentresp[i] = innerObj_Class_academic;
                             str_receive_studentstatus = class_loginresponse.getLst().get(i).getStudentStatus();
                             Log.e("receive_studentstatus", str_receive_studentstatus);
@@ -469,7 +470,9 @@ String[] paymentTypeArray = {"Payment"};
                                 str_receiveAble = class_loginresponse.getLst().get(i).getPaymentReceivable();
                                 str_received = class_loginresponse.getLst().get(i).getPaymentReceived();
                                 str_receive_balance = class_loginresponse.getLst().get(i).getPaymentBalance();
-                               // str_receive_balance="500";
+                                str_receive_receiptno= class_loginresponse.getLst().get(i).getReceipt_No();
+
+                                // str_receive_balance="500";
                                 Log.e("str_receive_studentid", str_receive_studentid);
                             } else if (str_receive_studentstatus.equals("No Result")) {
                                 Log.e("recstudentstatus else", str_receive_studentstatus);
@@ -670,6 +673,12 @@ String[] paymentTypeArray = {"Payment"};
         receivable_tv.setText(str_receiveAble);
         received_tv.setText(str_received);
         balance_tv.setText(str_receive_balance);
+        if(str_receive_receiptno.equals("null") || str_receive_receiptno.equals("") ){
+            receipt_feepayment_et.setText("No Receipt number");
+        }else {
+            receipt_feepayment_et.setText(str_receive_receiptno);
+        }
+        //str_receive_receiptno
       //  if(!selected_paymentType.equals("")) {
 //            if (selected_paymentType.equals(paymentTypeArray[1])) {
 //                receipt_feepayment_et.setVisibility(View.GONE);

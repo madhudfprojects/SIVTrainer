@@ -3,6 +3,7 @@ package com.det.skillinvillage;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.det.skillinvillage.model.DefaultResponse;
+import com.det.skillinvillage.model.ErrorUtils;
+import com.det.skillinvillage.model.PostTopicDownloadUpdateRequest;
+import com.det.skillinvillage.model.PostTopicDownloadUpdateResponseList;
+import com.det.skillinvillage.model.Post_Topic_Download_UpdateResponse;
+import com.det.skillinvillage.remote.Class_ApiUtils;
+import com.det.skillinvillage.remote.Interface_userservice;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -31,8 +40,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static com.det.skillinvillage.MainActivity.key_loginuserid;
+import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Doc_QunPaperDownloadFragment extends Fragment {
 
@@ -51,7 +67,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
   private static ProgressBar progressBar;
   static File outputFile = null;
   public static String docName;
-  public static String docName1;
+  public static String docName1,doc_topiclevelid = "";
   public static String docName2;
   public static URL downloadUrl;
 
@@ -59,6 +75,10 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
   Boolean isInternetPresent = false;
 
   String str_Document_ID,str_Document_Date,str_Document_Time,str_Document_Name,wordDocPath,str_Document_Type,str_Document_Status;
+  static Interface_userservice userService1;
+  static PostTopicDownloadUpdateResponseList[] arrayObj_class_studentpaymentresp;
+  SharedPreferences sharedpreferencebook_usercredential_Obj;
+  static String str_loginuserID = "",str_resp_msg="";
 
   public Doc_QunPaperDownloadFragment() {
     // Required empty public constructor
@@ -86,8 +106,13 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
     // Inflate the layout for this fragment
     View root = inflater.inflate(R.layout.fragment_downloadpdf, container, false);
     //final TextView textView = root.findViewById(R.id.section_label);
+    sharedpreferencebook_usercredential_Obj = getActivity().getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+    str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
+
+
     progressBar = root.findViewById(R.id.progressBar);
     TextView no_internet= root.findViewById(R.id.no_internet);
+    userService1 = Class_ApiUtils.getUserService();
     internetDectector = new ConnectionDetector(getContext());
     isInternetPresent = internetDectector.isConnectingToInternet();
 
@@ -191,6 +216,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
 
       String doc_path = params[0];
       docName1= params[1];
+      doc_topiclevelid = params[2];
       try {
         downloadUrl = new URL(doc_path);
       } catch (MalformedURLException e) {
@@ -352,6 +378,13 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
           } catch (IOException e) {
             e.printStackTrace();
           }
+
+          //call downloadapi here
+
+          //   PostTopicDownloadUpdate();
+          DownloadAPI loadDocument = new DownloadAPI(context);
+          loadDocument.execute();
+
         } else {
 
           new Handler().postDelayed(new Runnable() {
@@ -384,6 +417,137 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
       progressBar.setVisibility(GONE);
     }
   }
+
+  public static class DownloadAPI extends AsyncTask<String, Void, Void> {
+    //    private ProgressDialog progressDialog;
+    private Context context;
+
+
+    private String downloadFileName = "";
+    private static final String TAG = "Download Task";
+    File apkStorage = null;
+
+
+    DownloadAPI(Context context) {
+      this.context = context;
+      //      progressDialog = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+
+      progressBar.setVisibility(View.VISIBLE);
+//            progressDialog=new ProgressDialog(context);
+
+    /*        progressDialog.setMessage("Downloading...");
+            progressDialog.show();*/
+
+           /* progressDialog.setMessage("Loading");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.show();*/
+    }
+
+    @Override
+    protected Void doInBackground(String... params) {
+      PostTopicDownloadUpdate();
+      return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void string) {
+      if(str_resp_msg.equals("Downloaded")) {
+        Intent i = new Intent(context, DocView_MainActivity.class);
+        context.startActivity(i);
+      }else{
+
+      }
+      progressBar.setVisibility(GONE);
+    }
+  }
+
+  public static void PostTopicDownloadUpdate() {
+    PostTopicDownloadUpdateRequest request = new PostTopicDownloadUpdateRequest();
+    request.setCreatedBy(String.valueOf(str_loginuserID));//String.valueOf(str_stuID)
+    request.setTopicLevel_ID(doc_topiclevelid);
+    request.setDocument_Type("Question");
+    Log.e("doc_topiclevelid", doc_topiclevelid);
+
+    Call<Post_Topic_Download_UpdateResponse> call = userService1.PostTopicDownloadUpdate(request);
+    // Set up progress before call
+//      final ProgressDialog progressDoalog;
+//      progressDoalog = new ProgressDialog(getActivity());
+//      progressDoalog.setTitle("Please wait....");
+//      progressDoalog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//      // show it
+//      progressDoalog.show();
+
+    call.enqueue(new Callback<Post_Topic_Download_UpdateResponse>() {
+      @Override
+      public void onResponse(Call<Post_Topic_Download_UpdateResponse> call, Response<Post_Topic_Download_UpdateResponse> response) {
+        Log.e("Entered resp", "Post_Topic_Download_Update");
+
+        if (response.isSuccessful()) {
+          //  progressDoalog.dismiss();
+          Post_Topic_Download_UpdateResponse class_loginresponse = response.body();
+          if (class_loginresponse.getStatus()) {
+            List<PostTopicDownloadUpdateResponseList> monthContents_list = response.body().getListVersion();
+            PostTopicDownloadUpdateResponseList []  arrayObj_Class_monthcontents = new PostTopicDownloadUpdateResponseList[monthContents_list.size()];
+            arrayObj_class_studentpaymentresp = new PostTopicDownloadUpdateResponseList[arrayObj_Class_monthcontents.length];
+
+            for(int i=0;i<arrayObj_Class_monthcontents.length;i++) {
+              str_resp_msg = class_loginresponse.getListVersion().get(i).getDocumentVerification();
+              PostTopicDownloadUpdateResponseList innerObj_Class_academic = new PostTopicDownloadUpdateResponseList();
+              innerObj_Class_academic.setDocumentVerification(class_loginresponse.getListVersion().get(i).getDocumentVerification());
+              arrayObj_class_studentpaymentresp[i] = innerObj_Class_academic;
+
+
+            }
+
+          } else {
+            // Submit_lessonplan_BT.setVisibility(View.VISIBLE);
+            // progressDoalog.dismiss();
+          }
+        } else {
+          // progressDoalog.dismiss();
+          Log.e("Entered resp else", "");
+          DefaultResponse error = ErrorUtils.parseError(response);
+          // … and use it to show error information
+
+          // … or just log the issue like we’re doing :)
+          Log.e("error message", error.getMsg());
+
+          if (error.getMsg() != null) {
+
+            Log.e("error message", error.getMsg());
+//                        str_getmonthsummary_errormsg = error.getMsg();
+//                        alerts_dialog_getexlistviewError();
+
+            //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getContext(), error.getMsg(), Toast.LENGTH_SHORT).show();
+
+          } else {
+            //  Toast.makeText(Activity_SchedulerLessonPlan.this,error.getMsg(), Toast.LENGTH_SHORT).show();
+
+          }
+
+        }
+      }
+
+      @Override
+      public void onFailure(Call call, Throwable t) {
+        // progressDoalog.dismiss();
+//                str_getmonthsummary_errormsg = t.getMessage();
+//                alerts_dialog_getexlistviewError();
+
+        // Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+      }
+    });// end of call
+
+    //  }
+
+
+  }
+
 
   public static class FileOpen {
 

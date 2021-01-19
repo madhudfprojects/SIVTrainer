@@ -4,87 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="com.det.skillinvillage.DocView_MainActivity">
+    tools:context=".DocView_MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:weightSum="2"
         android:orientation="vertical">
-    <RelativeLayout
-        android:id="@+id/scheduler_RL"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="30dp">
-
-        <ImageView
-            android:id="@+id/iv_qun"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/qestion" />
-        <!--                android:paddingBottom="20dp"
-        -->
-        <TextView
-            android:id="@+id/myImageViewText3"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/myImageView3"
-            android:layout_alignTop="@+id/myImageView3"
-            android:layout_alignRight="@+id/myImageView3"
-            android:layout_alignBottom="@+id/myImageView3"
-            android:layout_marginLeft="10dp"
-            android:gravity="bottom"
-            android:paddingTop="15dp"
-            android:text="Scheduler"
-            android:textColor="#000000"
-            android:textStyle="bold|italic"
-            android:fontFamily="serif"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp"
-            tools:ignore="UnknownId" />
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="14dp"
+                card_view:cardElevation="8dp"
+                card_view:contentPadding="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/blue"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                tools:ignore="MissingConstraints">
+                <LinearLayout
+                    android:id="@+id/scheduler_RL"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="@drawable/layout_background" />
+                    <ImageView
+                        android:id="@+id/iv_qun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/questionpaper" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Question Paper"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+                    <!--                android:paddingBottom="20dp"
+                    -->
+                    <TextView
+                        android:id="@+id/myImageViewText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/myImageView3"
+                        android:layout_alignTop="@+id/myImageView3"
+                        android:layout_alignRight="@+id/myImageView3"
+                        android:layout_alignBottom="@+id/myImageView3"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:paddingTop="15dp"
+                        android:text="Scheduler"
+                        android:textColor="#000000"
+                        android:textStyle="bold|italic"
+                        android:fontFamily="serif"
+                        android:visibility="gone"
+                        android:layout_marginBottom="10dp"
+                        tools:ignore="UnknownId" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/layout_background" />
 
-    <RelativeLayout
-        android:id="@+id/docView_RL"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginTop="30dp">
-
-        <ImageView
-            android:id="@+id/iv_lessenplan"
-            android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/lession" />
-        <!--                android:paddingBottom="20dp"
-        -->
-        <TextView
-            android:id="@+id/myImageViewText4"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/myImageView4"
-            android:layout_alignTop="@+id/myImageView4"
-            android:layout_alignRight="@+id/myImageView4"
-            android:layout_alignBottom="@+id/myImageView4"
-            android:layout_marginLeft="10dp"
-            android:gravity="bottom"
-            android:paddingTop="15dp"
-            android:text="Scheduler"
-            android:textColor="#000000"
-            android:textStyle="bold|italic"
-            android:fontFamily="serif"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp"
-            tools:ignore="UnknownId" />
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="14dp"
+                card_view:cardElevation="8dp"
+                card_view:contentPadding="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/blue"
+                android:orientation="vertical"
+                tools:ignore="MissingConstraints">
+                <LinearLayout
+                    android:id="@+id/docView_RL"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+
+                    <ImageView
+                        android:id="@+id/iv_lessenplan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/doc_lessonplan" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Lesson Plan"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16dp"
+                        android:textStyle="bold" />
+
+
+                    <!--                android:paddingBottom="20dp"
+                    -->
+                    <TextView
+                        android:id="@+id/myImageViewText4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/myImageView4"
+                        android:layout_alignTop="@+id/myImageView4"
+                        android:layout_alignRight="@+id/myImageView4"
+                        android:layout_alignBottom="@+id/myImageView4"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:paddingTop="15dp"
+                        android:text="Scheduler"
+                        android:textColor="#000000"
+                        android:textStyle="bold|italic"
+                        android:fontFamily="serif"
+                        android:visibility="gone"
+                        android:layout_marginBottom="10dp"
+                        tools:ignore="UnknownId" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
     <ProgressBar
         android:visibility="gone"

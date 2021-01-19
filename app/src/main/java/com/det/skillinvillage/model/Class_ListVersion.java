@@ -30,6 +30,20 @@ public class Class_ListVersion {
     @Expose
     private String DocumentVerification;
 
+
+    @SerializedName("TopicLevel_ID")
+    @Expose
+    private String TopicLevel_ID;
+
+
+    public String getTopicLevel_ID() {
+        return TopicLevel_ID;
+    }
+
+    public void setTopicLevel_ID(String topicLevel_ID) {
+        TopicLevel_ID = topicLevel_ID;
+    }
+
     public String getDocumentVerification() {
         return DocumentVerification;
     }

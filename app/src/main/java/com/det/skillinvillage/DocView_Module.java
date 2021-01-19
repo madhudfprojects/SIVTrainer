@@ -11,7 +11,8 @@ public class DocView_Module {
     public String Document_Type;
     public String Document_Status;
     public String Document_Verification;
-    public DocView_Module(String document_ID, String document_Date, String document_Time, String document_Name, String document_Path, String document_Type, String document_Status,String document_verification) {
+    public String TopicLevelID;
+    public DocView_Module(String document_ID, String document_Date, String document_Time, String document_Name, String document_Path, String document_Type, String document_Status,String document_verification,String str_topiclevelid) {
         Document_ID = document_ID;
         Document_Date = document_Date;
         Document_Time = document_Time;
@@ -20,6 +21,8 @@ public class DocView_Module {
         Document_Type = document_Type;
         Document_Status = document_Status;
         Document_Verification=document_verification;
+        TopicLevelID=str_topiclevelid;
+
     }
     public static ArrayList<DocView_Module> listview_arr=new ArrayList<DocView_Module>();
     public String getDocument_Verification() {
@@ -30,6 +33,13 @@ public class DocView_Module {
         Document_Verification = document_Verification;
     }
 
+    public String getTopicLevelID() {
+        return TopicLevelID;
+    }
+
+    public void setTopicLevelID(String topicLevelID) {
+        TopicLevelID = topicLevelID;
+    }
 
     public String getDocument_ID() {
         return Document_ID;

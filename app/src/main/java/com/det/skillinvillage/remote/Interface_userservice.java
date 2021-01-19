@@ -3,6 +3,7 @@ import com.det.skillinvillage.model.AddStudentDetailsRequest;
 import com.det.skillinvillage.model.AddStudentDetailsResponse;
 import com.det.skillinvillage.model.AutoSyncVersion;
 import com.det.skillinvillage.model.Class_AssessmentData;
+import com.det.skillinvillage.model.Class_Get_Topic_Review_LoadResponse;
 import com.det.skillinvillage.model.Class_Get_User_DocumentResponse;
 import com.det.skillinvillage.model.Class_PostUpdateStudentAssessmentRequest;
 import com.det.skillinvillage.model.Class_PostUpdateStudentAssessmentResponse;
@@ -27,7 +28,11 @@ import com.det.skillinvillage.model.NormalLogin_Response;
 import com.det.skillinvillage.model.PostSavePaymentRequest;
 import com.det.skillinvillage.model.PostScheduleLessonUpdateRequest;
 import com.det.skillinvillage.model.PostScheduleLessonUpdateResponse;
+import com.det.skillinvillage.model.PostTopicDownloadUpdateRequest;
+import com.det.skillinvillage.model.PostTopicReviewUpdateRequest;
+import com.det.skillinvillage.model.PostTopicReviewUpdateResponse;
 import com.det.skillinvillage.model.Post_Save_PaymentResponse;
+import com.det.skillinvillage.model.Post_Topic_Download_UpdateResponse;
 import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.ValidateSyncRequest;
 import com.det.skillinvillage.model.ValidateSyncResponse;
@@ -150,7 +155,7 @@ public interface Interface_userservice {
 
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("Authentication/Post_ActionStudent")
-    Call<AddStudentDetailsResponse> Post_ActionStudent(@Body AddStudentDetailsRequest request);
+    Call<AddStudentDetailsResponse>Post_ActionStudent(@Body AddStudentDetailsRequest request);
 
 
 
@@ -212,6 +217,26 @@ public interface Interface_userservice {
     @Headers({ "Content-Type: application/json;charset=UTF-8"})
     @POST("Authentication/Post_Schedule_Lesson_Update")
     Call<PostScheduleLessonUpdateResponse>PostScheduleLessonUpdate(@Body PostScheduleLessonUpdateRequest request);
+
+
+    @Headers("Content-Type: application/json;charset=utf-8")
+    @GET("Authentication/Get_Topic_Review_Load")
+    Call<Class_Get_Topic_Review_LoadResponse>GetTopicReviewLoad(@Query("Topic_ID") String Topic_ID,@Query("TopicLevel_ID") String TopicLevel_ID,@Query("Document_Type") String documenttype);
+
+//    @SerializedName("TopicLevel_ID")
+//    @Expose
+//    private String TopicLevel_ID;
+    //http://mis.detedu.org:8090/api/Authentication/Post_Topic_Download_Update
+
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_Topic_Download_Update")
+    Call<Post_Topic_Download_UpdateResponse>PostTopicDownloadUpdate(@Body PostTopicDownloadUpdateRequest request);
+
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @POST("Authentication/Post_Topic_Review_Update")
+    Call<PostTopicReviewUpdateResponse>PostTopicReviewUpdate(@Body PostTopicReviewUpdateRequest request);
 
 }
 

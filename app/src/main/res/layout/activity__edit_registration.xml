@@ -377,7 +377,17 @@
                         android:background="@drawable/spinner_layout"
                         android:orientation="horizontal">
 
-                        <TextView
+<!--                        <TextView-->
+<!--                            android:id="@+id/school_edit_TV"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:background="@drawable/shadow_new"-->
+<!--                            android:gravity="center"-->
+<!--                            android:popupBackground="@drawable/layout_background"-->
+<!--                            android:text=""-->
+<!--                            android:textColor="#5C5757" />-->
+
+                        <Spinner
                             android:id="@+id/school_edit_TV"
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
@@ -746,6 +756,21 @@
             android:paddingLeft="5dp"
             android:textColor="#5C5757" />
 
+
+
+        <EditText
+            android:id="@+id/alternatemobile_edit_ET"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/shadow_new"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingLeft="5dp"
+            android:textColor="#5C5757"
+            android:hint="Alternate Contact Number"
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -1213,7 +1238,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/admissionfees_LL"
@@ -1762,7 +1787,6 @@
             </RelativeLayout>
         </LinearLayout>
 
-
         <!--        <TableRow-->
         <!--            android:id="@+id/tableR_state_label"-->
         <!--            android:layout_width="fill_parent"-->
@@ -2014,6 +2038,117 @@
             </RelativeLayout>
 
 
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dropoutlayout_LL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:id="@+id/rel_datelayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_layout"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/DropoutDate_ET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Select  Date"
+                            android:inputType="textMultiLine"
+                            android:textColor="#5C5757"
+                            android:textSize="15sp" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/DropoutDatelabel_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="-4dp"
+                        android:background="#FFFFFF"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:text="Dropout Date"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:id="@+id/rel_dropoutReasonlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/spinner_layout"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/dropout_reason_ET"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Reason"
+                            android:inputType="textMultiLine"
+                            android:textColor="#5C5757"
+                            android:textSize="15sp" />
+
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/DropoutReasonlabel_TV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="-4dp"
+                        android:background="#FFFFFF"
+                        android:paddingLeft="3dp"
+                        android:paddingRight="3dp"
+                        android:text="Dropout Reason"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="10sp" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

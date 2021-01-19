@@ -126,15 +126,15 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 //        Log.e("str_stuID.1oncreate..", String.valueOf(str_stuID));
 
 
-        student_registrationform_ib = findViewById(R.id.student_registrationform_IB);
-        student_referfriend_ib = findViewById(R.id.student_referfriend_IB);
+        //student_registrationform_ib = findViewById(R.id.student_registrationform_IB);
+       // student_referfriend_ib = findViewById(R.id.student_referfriend_IB);
         applicationdetails_ib = findViewById(R.id.applicationdetails_IB);
         feessubmit_ib = findViewById(R.id.feessubmit_IB);
-        college_addmission_history_IB = findViewById(R.id.college_addmission_history_IB);
+       // college_addmission_history_IB = findViewById(R.id.college_addmission_history_IB);
 
-        Notuploadedcount_tv = findViewById(R.id.Notuploadedcount_TV);
-        Notuploadedcount_addnew_TV=(TextView)findViewById(R.id.Notuploadedcount_addnew_TV);
-        notupload_ib = findViewById(R.id.notupload_IB);
+      //  Notuploadedcount_tv = findViewById(R.id.Notuploadedcount_TV);
+       // Notuploadedcount_addnew_TV=(TextView)findViewById(R.id.Notuploadedcount_addnew_TV);
+      //  notupload_ib = findViewById(R.id.notupload_IB);
         // Set upon the actionbar
 //        setSupportActionBar(toolbar);
         // Now use actionbar methods to show navigation icon and title
@@ -145,13 +145,13 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         //////////////Added by shivaleela on sept 3rd 2019
 
 
-        @SuppressLint("ResourceType")
-        Animation animation_stuRegistration = AnimationUtils.loadAnimation(this, R.anim.translate);
-        // animation1.setDuration(2100);
-        animation_stuRegistration.setDuration(1100);
-        student_registrationform_ib.setAnimation(animation_stuRegistration);
-        student_registrationform_ib.animate();
-        animation_stuRegistration.start();
+//        @SuppressLint("ResourceType")
+//        Animation animation_stuRegistration = AnimationUtils.loadAnimation(this, R.anim.translate);
+//        // animation1.setDuration(2100);
+//        animation_stuRegistration.setDuration(1100);
+//        student_registrationform_ib.setAnimation(animation_stuRegistration);
+//        student_registrationform_ib.animate();
+//        animation_stuRegistration.start();
 
 
         @SuppressLint("ResourceType")
@@ -171,57 +171,57 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         feessubmit_ib.animate();
         animation_feessubmit.start();
 
-        @SuppressLint("ResourceType")
-        Animation animation_notuploadedcount = AnimationUtils.loadAnimation(this, R.anim.translate);
-//        animation4.setDuration(2100);
-        animation_notuploadedcount.setDuration(1100);
-        notupload_ib.setAnimation(animation_notuploadedcount);
-        notupload_ib.animate();
-        animation_notuploadedcount.start();
+//        @SuppressLint("ResourceType")
+//        Animation animation_notuploadedcount = AnimationUtils.loadAnimation(this, R.anim.translate);
+////        animation4.setDuration(2100);
+//        animation_notuploadedcount.setDuration(1100);
+//        notupload_ib.setAnimation(animation_notuploadedcount);
+//        notupload_ib.animate();
+//        animation_notuploadedcount.start();
 
         //////////////////////////////////////////////
 
         gps_object = new Class_GPSTracker(Activity_MarketingHomeScreen.this);
 
-        student_registrationform_ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        student_registrationform_ib.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                // if(gps_object.canGetLocation()) {
+//                //Commented and added by shivaleela on june 27th 2019
+//
+////                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register.class);
+////                    startActivity(i);
+////                    finish();
+//
+//                Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register_New.class);
+//                startActivity(i);
+//                finish();
+//
+//                //  }
+////                else
+////                {gps_object.showSettingsAlert();}
+//
+//            }
+//        });
 
-                // if(gps_object.canGetLocation()) {
-                //Commented and added by shivaleela on june 27th 2019
-
-//                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register.class);
-//                    startActivity(i);
-//                    finish();
-
-                Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Register_New.class);
-                startActivity(i);
-                finish();
-
-                //  }
-//                else
-//                {gps_object.showSettingsAlert();}
-
-            }
-        });
-
-        student_referfriend_ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (gps_object.canGetLocation()) {
-                    Toast.makeText(getApplicationContext(), "Currently Disabled", Toast.LENGTH_LONG).show();
-
-
-//                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Refer.class);
-//                    startActivity(i);
-//                    finish();
-                } else {
-                    gps_object.showSettingsAlert();
-                }
-
-            }
-        });
+//        student_referfriend_ib.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                if (gps_object.canGetLocation()) {
+//                    Toast.makeText(getApplicationContext(), "Currently Disabled", Toast.LENGTH_LONG).show();
+//
+//
+////                    Intent i = new Intent(Activity_MarketingHomeScreen.this, Activity_Refer.class);
+////                    startActivity(i);
+////                    finish();
+//                } else {
+//                    gps_object.showSettingsAlert();
+//                }
+//
+//            }
+//        });
 
 
         applicationdetails_ib.setOnClickListener(new View.OnClickListener() {
@@ -302,7 +302,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
     public void fetch_DB_farmerprofile_offline_data_new_add() {
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
        // Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'" + "newtemp%" + "'", null);
            Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offline"  + "'", null);
         int x = cursor1.getCount();
@@ -310,14 +310,14 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         int i = 0;
         class_farmerprofileoffline_array_obj = new StudentList[x];
         if (x > 0) {
-            Notuploadedcount_addnew_TV.setText("Not uploaded: " + x);
+         //   Notuploadedcount_addnew_TV.setText("Not uploaded: " + x);
         }
         db1.close();
     }
 
     public void fetch_DB_farmerprofile_offline_data_new_edit() {
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
      //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'" + "edittemp%" + "'", null);
         //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='"+ stuid  + "'", null);
         Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offlineedit"  + "'", null);
@@ -326,7 +326,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         int i = 0;
         class_farmerprofileoffline_array_obj = new StudentList[x];
         if (x > 0) {
-            Notuploadedcount_tv.setText("Not Uploaded: " + x);
+          //  Notuploadedcount_tv.setText("Not Uploaded: " + x);
         }
         db1.close();
     }
@@ -334,7 +334,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
     public void fetch_DB_farmerprofile_offline_data_edit()
     {
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
       //  Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "edittemp%" + "'", null);
         //   Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE StudentID='"+ stuid  + "'", null);
         Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offlineedit"  + "'", null);
@@ -398,6 +398,9 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                     innerObj_Class_SandboxList.setVillage_ID(cursor1.getString(cursor1.getColumnIndex("villageid")));
                     innerObj_Class_SandboxList.setVillage_Name(cursor1.getString(cursor1.getColumnIndex("villagename")));
                     innerObj_Class_SandboxList.setAddress(cursor1.getString(cursor1.getColumnIndex("student_address")));
+                    innerObj_Class_SandboxList.setAlternate_Mobile(cursor1.getString(cursor1.getColumnIndex("alternate_mobile")));
+                    innerObj_Class_SandboxList.setAdmission_date(cursor1.getString(cursor1.getColumnIndex("admission_date")));
+                    innerObj_Class_SandboxList.setAdmission_remarks(cursor1.getString(cursor1.getColumnIndex("admission_remarks")));
 
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
@@ -492,6 +495,9 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
         request.setApplication_Type("SIV");
         request.setDivision_ID(null);
+        request.setAlternate_Mobile(class_farmerprofileoffline_array_obj[j].getAlternate_Mobile());
+        request.setAdmission_Date(class_farmerprofileoffline_array_obj[j].getAdmission_date());
+        request.setAdmission_Remarks(class_farmerprofileoffline_array_obj[j].getAdmission_remarks());
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -520,7 +526,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
                         Log.e("tag", "addstudentresponse ID=" + addFarmerResList.get(i).getStudentID());
 
-
+                        String str_response_stustatus= String.valueOf(addFarmerResList.get(i).getStudentStatus());
                         String str_response_student_id = String.valueOf(addFarmerResList.get(i).getStudentID());
                         String str_response_tempId = String.valueOf(addFarmerResList.get(i).getTemp_ID());
                         String str_response_applnNo=addFarmerResList.get(i).getApplicationNo();
@@ -530,7 +536,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
                         SQLiteDatabase db1 = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
-                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
 
 
                         ContentValues cv = new ContentValues();
@@ -538,7 +544,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                         cv.put("Stud_TempId", str_response_tempId);
                         cv.put("UpadateOff_Online", "onlineedit");
                         cv.put("ApplicationNo", str_response_applnNo);
-
+                        cv.put("StudentStatus", str_response_stustatus);
                         //   cv.put("UploadedStatusFarmerprofile", 10);
 
                         db1.update("StudentDetailsRest", cv, "Stud_TempId = ?", new String[]{str_response_tempId});
@@ -605,7 +611,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
     public void fetch_DB_farmerprofile_offline_data_add()
     {
         SQLiteDatabase db1 = this.openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
-        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
       //  Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE Stud_TempId LIKE'"+ "newtemp%" + "'", null);
            Cursor cursor1 = db1.rawQuery("SELECT * FROM StudentDetailsRest WHERE UpadateOff_Online='"+ "offline"  + "'", null);
 
@@ -667,6 +673,9 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                     innerObj_Class_SandboxList.setVillage_ID(cursor1.getString(cursor1.getColumnIndex("villageid")));
                     innerObj_Class_SandboxList.setVillage_Name(cursor1.getString(cursor1.getColumnIndex("villagename")));
                     innerObj_Class_SandboxList.setAddress(cursor1.getString(cursor1.getColumnIndex("student_address")));
+                    innerObj_Class_SandboxList.setAlternate_Mobile(cursor1.getString(cursor1.getColumnIndex("alternate_mobile")));
+                    innerObj_Class_SandboxList.setAdmission_date(cursor1.getString(cursor1.getColumnIndex("admission_date")));
+                    innerObj_Class_SandboxList.setAdmission_remarks(cursor1.getString(cursor1.getColumnIndex("admission_remarks")));
 
                     class_farmerprofileoffline_array_obj[i] = innerObj_Class_SandboxList;
                     Log.e("fetch_DB_offline_data",cursor1.getString(cursor1.getColumnIndex("StudentName")));
@@ -762,7 +771,9 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         request.setLearningMode(class_farmerprofileoffline_array_obj[j].getLearningMode());
         request.setApplication_Type("SIV");
         request.setDivision_ID(null);
-
+        request.setAlternate_Mobile(class_farmerprofileoffline_array_obj[j].getAlternate_Mobile());
+        request.setAdmission_Date(class_farmerprofileoffline_array_obj[j].getAdmission_date());
+        request.setAdmission_Remarks(class_farmerprofileoffline_array_obj[j].getAdmission_remarks());
         Call<AddStudentDetailsResponse> call = userService1.Post_ActionStudent(request);
 
         Log.e("TAG", "Request 33: " + new Gson().toJson(request));
@@ -795,6 +806,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                         String str_response_student_id = String.valueOf(addFarmerResList.get(i).getStudentID());
                         String str_response_tempId = String.valueOf(addFarmerResList.get(i).getTemp_ID());
                         String str_response_applnNo = String.valueOf(addFarmerResList.get(i).getApplicationNo());
+                        String str_response_stustatus= String.valueOf(addFarmerResList.get(i).getStudentStatus());
 
 
                         //                    Log.e("tag", "getMobileTempID=" + addFarmerResList.getMobileTempID());
@@ -803,7 +815,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
 
                         SQLiteDatabase db1 = getApplication().openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
 
-                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                        db1.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR, AcademicName VARCHAR, AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR, ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR, Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR, Base64image VARCHAR, Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
 
 
                         ContentValues cv = new ContentValues();
@@ -811,6 +823,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
                         cv.put("Stud_TempId", str_response_tempId);
                         cv.put("UpadateOff_Online", "online");
                         cv.put("ApplicationNo", str_response_applnNo);
+                        cv.put("StudentStatus", str_response_stustatus);
 
                         db1.update("StudentDetailsRest", cv, "Stud_TempId = ?", new String[]{str_response_tempId});
                         db1.close();
@@ -974,7 +987,7 @@ public class Activity_MarketingHomeScreen extends AppCompatActivity {
         SQLiteDatabase db_studentDetails = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
         db_studentDetails.execSQL("CREATE TABLE IF NOT EXISTS StudentDetailsRest(SlNo INTEGER PRIMARY KEY AUTOINCREMENT,AcademicID VARCHAR,AcademicName VARCHAR,AdmissionFee VARCHAR,ApplicationNo VARCHAR,BalanceFee VARCHAR,BirthDate VARCHAR,ClusterID VARCHAR," +
                 "ClusterName VARCHAR,CreatedDate VARCHAR,Education VARCHAR,FatherName VARCHAR,Gender VARCHAR,InstituteName VARCHAR,InstituteID VARCHAR,LevelID VARCHAR,LevelName VARCHAR,Marks4 VARCHAR,Marks5 VARCHAR,Marks6 VARCHAR,Marks7 VARCHAR,Marks8 VARCHAR," +
-                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR);");
+                "Mobile VARCHAR,MotherName VARCHAR,PaidFee VARCHAR,ReceiptNo VARCHAR,SandboxID VARCHAR,SandboxName VARCHAR,SchoolID VARCHAR,SchoolName VARCHAR,StudentAadhar VARCHAR,StudentID VARCHAR,StudentName VARCHAR,StudentPhoto VARCHAR,StudentStatus VARCHAR,Base64image VARCHAR,Stud_TempId VARCHAR,UpadateOff_Online VARCHAR,Learning_Mode VARCHAR,stateid VARCHAR,statename VARCHAR,districtid VARCHAR,districtname VARCHAR,talukid VARCHAR,talukname VARCHAR,villageid VARCHAR,villagename VARCHAR,student_address VARCHAR,alternate_mobile VARCHAR,admission_date VARCHAR,admission_remarks VARCHAR);");
         @SuppressLint("Recycle")
         Cursor cursor = db_studentDetails.rawQuery("SELECT * FROM StudentDetailsRest", null);
         int x = cursor.getCount();

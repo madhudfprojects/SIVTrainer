@@ -11,8 +11,8 @@ public class QunPaperDoc_Module {
     public String Document_Type;
     public String Document_Status;
     public String Document_Verification;
-
-    public QunPaperDoc_Module(String document_ID, String document_Date, String document_Time, String document_Name, String document_Path, String document_Type, String document_Status,String document_verification) {
+    public String TopicLevelID;
+    public QunPaperDoc_Module(String document_ID, String document_Date, String document_Time, String document_Name, String document_Path, String document_Type, String document_Status,String document_verification,String str_topiclevelid) {
         Document_ID = document_ID;
         Document_Date = document_Date;
         Document_Time = document_Time;
@@ -21,8 +21,18 @@ public class QunPaperDoc_Module {
         Document_Type = document_Type;
         Document_Status = document_Status;
         Document_Verification=document_verification;
+        TopicLevelID=str_topiclevelid;
+
     }
     public static ArrayList<QunPaperDoc_Module> listview_arr=new ArrayList<QunPaperDoc_Module>();
+
+    public String getTopicLevelID() {
+        return TopicLevelID;
+    }
+
+    public void setTopicLevelID(String topicLevelID) {
+        TopicLevelID = topicLevelID;
+    }
 
     public String getDocument_Verification() {
         return Document_Verification;

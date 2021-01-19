@@ -59,7 +59,7 @@ public Doc_PDFAdapter(Context context, ArrayList<File> al_pdf) {
             viewHolder = new ViewHolder();
             viewHolder.tv_filename = view.findViewById(R.id.tv_name);
             viewHolder.iv_img = view.findViewById(R.id.iv_image);
-            viewHolder.view_lp_bt= view.findViewById(R.id.view_lp_bt);
+            //viewHolder.view_lp_bt= view.findViewById(R.id.view_lp_bt);
 
             view.setTag(viewHolder);
         } else {
@@ -79,15 +79,15 @@ public Doc_PDFAdapter(Context context, ArrayList<File> al_pdf) {
         }
 
 
-        viewHolder.view_lp_bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i=new Intent(getContext(),Activity_LessonVerification.class);
-                context.startActivity(i);
-
-
-            }
-        });
+//        viewHolder.view_lp_bt.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i=new Intent(getContext(),Activity_LessonVerification.class);
+//                context.startActivity(i);
+//
+//
+//            }
+//        });
         return view;
 
     }

@@ -88,7 +88,8 @@ public class Remarks extends AppCompatActivity {
     Switch status;
     TableLayout tl;
     LinearLayout ll_listview1;
-    TextView student_header;
+//    TextView student_header;
+LinearLayout student_header;
     StudentInfoListRest[] absentSudentList;
     StudentInfoListRest[] presentSudentList;
     StudentInfoListRest[] ConferencecallOptionList;
@@ -224,8 +225,8 @@ public class Remarks extends AppCompatActivity {
         mDesc.setText(str_Subject_Name + " | " + str_Lavel_Name + " | " + str_Leason_Name + " | " + str_Cluster_Name + " | " + str_Institute_Name);
         ConnectionDetector cd = new ConnectionDetector(getApplicationContext());
         isInternetPresent = cd.isConnectingToInternet();
-     //   AsyncCallWS_learningMode task=new AsyncCallWS_learningMode(Remarks.this);
-     //   task.execute();
+        //   AsyncCallWS_learningMode task=new AsyncCallWS_learningMode(Remarks.this);
+        //   task.execute();
         uploadfromDB_LearningOptionlist();
         Get_Schedule_Subject();
         AsyncCallWS2 task2 = new AsyncCallWS2();
@@ -241,7 +242,7 @@ public class Remarks extends AppCompatActivity {
                     Log.e("tag", "engage_status==" + engage_status);
                     ll_listview1.setVisibility(View.VISIBLE);
                     student_header.setVisibility(View.VISIBLE);
-                    student_header.setText("Student List");
+                    //student_header.setText("Student List");
 
                 } else {
                     // The toggle is disabled
@@ -338,7 +339,7 @@ public class Remarks extends AppCompatActivity {
 
                 Obj_subjectList = (SubjectList) subjectlist_SP.getSelectedItem();
                 sp_subject_ID = Obj_subjectList.getSubjectID();
-               // selected_academicname = subjectlist_SP.getSelectedItem().toString();
+                // selected_academicname = subjectlist_SP.getSelectedItem().toString();
             }
 
             @Override
@@ -423,7 +424,7 @@ public class Remarks extends AppCompatActivity {
                 even_match = "yes";
                 if (Attandence.equals("1")) {
 
-                  //  fetchStudentNew();
+                    //  fetchStudentNew();
                     Get_User_Schedule_Students();
                 }
 
@@ -447,41 +448,41 @@ public class Remarks extends AppCompatActivity {
         }
     }
 
-   /* private class AsyncCallWS_learningMode extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
+    /* private class AsyncCallWS_learningMode extends AsyncTask<String, Void, Void> {
+         ProgressDialog dialog;
 
-        Context context;
+         Context context;
 
-        protected void onPreExecute() {
+         protected void onPreExecute() {
 
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-        }
+             dialog.setMessage("Please wait..");
+             dialog.setCanceledOnTouchOutside(false);
+             dialog.show();
+         }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
+         @Override
+         protected void onProgressUpdate(Void... values) {
+         }
 
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
+         @Override
+         protected Void doInBackground(String... params) {
+             Log.i("list", "doInBackground");
 
-            list_detaile();  // call of details
-            return null;
-        }
+             list_detaile();  // call of details
+             return null;
+         }
 
-        public AsyncCallWS_learningMode(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
+         public AsyncCallWS_learningMode(Context context1) {
+             context = context1;
+             dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
+         }
 
-        @Override
-        protected void onPostExecute(Void result) {
+         @Override
+         protected void onPostExecute(Void result) {
 
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-               *//* ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
+             if ((dialog != null) && dialog.isShowing()) {
+                 dialog.dismiss();
+                *//* ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
                         android.R.layout.simple_spinner_dropdown_item, Arrayclass_learningOption);
                 learningOption_sp.setAdapter(spinnerArrayAdapter);*//*
             }
@@ -575,7 +576,7 @@ public class Remarks extends AppCompatActivity {
                 LearningMode innerObj_Class_levelList = new LearningMode();
                 innerObj_Class_levelList.setLearningMode_ID(cursor1.getString(cursor1.getColumnIndex("LearningModeID")));
                 innerObj_Class_levelList.setLearningMode_Name(cursor1.getString(cursor1.getColumnIndex("LearningModeName")));
-               // arrayObj_Class_learningmodeDetails2[i] = innerObj_Class_levelList;
+                // arrayObj_Class_learningmodeDetails2[i] = innerObj_Class_levelList;
                 Arrayclass_learningOption[i] = innerObj_Class_levelList;
                 i++;
 
@@ -737,7 +738,7 @@ public class Remarks extends AppCompatActivity {
                             Log.e("tag", "Subject_ID=" + Onestudent.getSubjectID());
                             Onestudent.setSubjectName(subjectLists.get(i).getSubjectName().toString());
 
-                           if(subjectLists.get(i).getSubjectID()==null||subjectLists.get(i).getSubjectID().equals("")){
+                            if(subjectLists.get(i).getSubjectID()==null||subjectLists.get(i).getSubjectID().equals("")){
                                 Onestudent.setSubjectID("");
                             }else {
                                 Onestudent.setSubjectID(subjectLists.get(i).getSubjectID().toString());
@@ -747,7 +748,7 @@ public class Remarks extends AppCompatActivity {
                             }else {
                                 Onestudent.setSubjectName(subjectLists.get(i).getSubjectName().toString());
                             }
-                                //	Toast.makeText(Remarks.this,even_match,Toast.LENGTH_LONG).show();
+                            //	Toast.makeText(Remarks.this,even_match,Toast.LENGTH_LONG).show();
                             subjectList_array[i]=Onestudent;
                         }
                         ArrayAdapter dataAdapter = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, subjectList_array);
@@ -814,7 +815,7 @@ public class Remarks extends AppCompatActivity {
                             Onestudent.setAttendanceStatus(studentInfoList.get(i).getAttendanceStatus().toString());
                             Onestudent.setStudentName(studentInfoList.get(i).getStudentName().toString());
                             Onestudent.setStudentEmail(studentInfoList.get(i).getStudentEmail().toString());
-                          //  Onestudent.setSubject_Name(studentInfoList.get(i).getSubject_Name().toString());
+                            //  Onestudent.setSubject_Name(studentInfoList.get(i).getSubject_Name().toString());
 
                             if(studentInfoList.get(i).getApplicationNo()==null||studentInfoList.get(i).getApplicationNo().equals("")){
                                 Onestudent.setApplicationNo("");
@@ -866,138 +867,139 @@ public class Remarks extends AppCompatActivity {
                                     ConferencecallOptionList = new  StudentInfo[studentCount];
                                     ConferencecallOptionList = new  StudentInfo[studentCount];*/
 
-                                                 //   for (int i = 0; i < studentCount; i++) {
+                                                    //   for (int i = 0; i < studentCount; i++) {
 
-                                                        String date = "hello";// get the first variable
-                                                        String weight_kg = "hi";// get the second variable
-                                                        // Create the table row
-                                                        tr = new TableRow(Remarks.this);
-                                                        //  tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT,1f));
-                                                        // tr.setBackgroundResource(R.drawable.row_change);
-                                                        tr.setId(i);
+                                                    String date = "hello";// get the first variable
+                                                    String weight_kg = "hi";// get the second variable
+                                                    // Create the table row
+                                                    tr = new TableRow(Remarks.this);
+                                                    //  tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT,1f));
+                                                    // tr.setBackgroundResource(R.drawable.row_change);
+                                                    tr.setId(i);
 //                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
-                                                        tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
+                                                    tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1f));
 
-                                                        //Create two columns to add as table data
-                                                        // Create a TextView to add date
-                                                        learningOption_sp = new Spinner(Remarks.this);
-                                                        //  learningOption_sp .setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+                                                    //Create two columns to add as table data
+                                                    // Create a TextView to add date
+                                                    learningOption_sp = new Spinner(Remarks.this);
+                                                    //  learningOption_sp .setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
 
-                                                        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(Remarks.this,
-                                                                android.R.layout.simple_spinner_dropdown_item, Arrayclass_learningOption);
-                                                        learningOption_sp.setAdapter(spinnerArrayAdapter);
+                                                    ArrayAdapter<LearningMode> spinnerArrayAdapter = new ArrayAdapter<LearningMode>(Remarks.this,
+                                                            R.layout.spinnercenterstyle, Arrayclass_learningOption);
+                                                    learningOption_sp.setAdapter(spinnerArrayAdapter);
 
-                                                        // learningOption_sp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                                                        //ArrayAdapter arrayAdapter = new ArrayAdapter(Remarks.this, android.R.layout.simple_spinner_item, personNames);
-                                                        //learningOption_sp.setAdapter(arrayAdapter);
-                                                        learningOption_sp.setId(i);
-                                                        String str_learningOpt=studentlist[i].getLearningMode();
-                                                        Log.e("str_learningOpt","str_learningOpt");
-                                                        Log.e("str_learningOpt",str_learningOpt);
+                                                    // learningOption_sp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                                                    //ArrayAdapter arrayAdapter = new ArrayAdapter(Remarks.this, android.R.layout.simple_spinner_item, personNames);
+                                                    //learningOption_sp.setAdapter(arrayAdapter);
+                                                    learningOption_sp.setId(i);
+                                                    String str_learningOpt=studentlist[i].getLearningMode();
+                                                    Log.e("str_learningOpt","str_learningOpt");
+                                                    Log.e("str_learningOpt",str_learningOpt);
 
-                                                        learningOption_sp.setSelection(getIndex_remarks(learningOption_sp, str_learningOpt));
-
-                                                        attendence = new Switch(Remarks.this);
-                                                        attendence.setId(i);
-                                                        attendence.setTextOn("A");
-                                                        attendence.setTextOff("P");
-                                                        //attendence.getThumbDrawable().setColorFilter(checked ? Color.BLACK : Color.WHITE, PorterDuff.Mode.MULTIPLY);
+                                                    learningOption_sp.setSelection(getIndex_remarks(learningOption_sp, str_learningOpt));
+                                                    attendence = new Switch(Remarks.this);
+                                                    attendence.setId(i);
+                                                    attendence.setTextOn("A");
+                                                    attendence.setTextOff("P");
+                                                    //attendence.getThumbDrawable().setColorFilter(checked ? Color.BLACK : Color.WHITE, PorterDuff.Mode.MULTIPLY);
 									/*
 									        android:thumbTint="@color/blue"
         android:trackTint="@color/white"
 									 */
-                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                                            attendence.setShowText(true);
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                                        attendence.setShowText(true);
+                                                    }
+
+                                                    // TextView labelDATE = new TextView(Remarks.this);
+                                                    //  labelDATE.setId(i);
+                                                    //  labelDATE.setWidth(50);
+
+                                                    //  labelDATE.setText(studentlist[i].getStudentID());
+                                                    //  labelDATE.setTextColor(Color.YELLOW);
+                                                    // labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                                                    // tr.addView(labelDATE);
+                                                    TextView labelWEIGHT = new TextView(Remarks.this);
+                                                    //  labelWEIGHT.setBackgroundColor(R.drawable.button_change);
+                                                    labelWEIGHT.setId(i);
+//                                                    labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                                    labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags());
+
+                                                    labelWEIGHT.setText(studentlist[i].getStudentName());
+                                                    labelWEIGHT.setWidth(500);
+
+
+                                                    //   labelWEIGHT.setGravity(0x00800005);
+                                                    labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                                                    tr.addView(labelWEIGHT);//student name
+                                                    tr.addView(attendence);// persent or absent
+                                                    tr.addView(learningOption_sp);// spinner learning option
+
+
+                                                    final int finalI = i;
+                                                    learningOption_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                        @Override
+                                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                            String sel_option=Arrayclass_learningOption[position].toString();
+                                                            studentlist[finalI].setLearningMode(sel_option);
+                                                            //  Toast.makeText(Remarks.this, "Selected item:" + " " + Arrayclass_learningOption[position], Toast.LENGTH_SHORT).show();
                                                         }
 
-                                                       // TextView labelDATE = new TextView(Remarks.this);
-                                                      //  labelDATE.setId(i);
-                                                        //  labelDATE.setWidth(50);
+                                                        @Override
+                                                        public void onNothingSelected(AdapterView<?> parent) {
+                                                        }
+                                                    });
 
-                                                      //  labelDATE.setText(studentlist[i].getStudentID());
-                                                        //  labelDATE.setTextColor(Color.YELLOW);
-                                                       // labelDATE.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                                                       // tr.addView(labelDATE);
-                                                        TextView labelWEIGHT = new TextView(Remarks.this);
-                                                        //  labelWEIGHT.setBackgroundColor(R.drawable.button_change);
-                                                        labelWEIGHT.setId(i);
-                                                        labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                                                        labelWEIGHT.setText(studentlist[i].getStudentName());
-                                                        labelWEIGHT.setWidth(150);
+                                                    attendence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                                        @Override
+                                                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                            Log.v("Switch State=", "" + isChecked);
 
+                                                            //	Toast.makeText(Remarks.this,"Id: "+attendence.getId(), Toast.LENGTH_SHORT).show();
+                                                            //	Toast.makeText(Remarks.this,"studentlist[finalI].getStudentname(): "+studentlist[finalI].getStudentname(), Toast.LENGTH_SHORT).show();
 
-                                                        //   labelWEIGHT.setGravity(0x00800005);
-                                                        labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                                                        tr.addView(labelWEIGHT);//student name
-                                                        tr.addView(attendence);// persent or absent
-                                                        tr.addView(learningOption_sp);// spinner learning option
-                                                        //
+                                                            //  Toast.makeText(getApplicationContext(),""+isChecked, Toast.LENGTH_SHORT).show();
+                                                            String value = "" + isChecked;
+                                                            if (isChecked) {
+                                                                studentlist[finalI].setPre_Ab("A");
+                                                                //StudentInfo studentInfoObj=new StudentInfo();
 
-                                                        final int finalI = i;
-                                                        learningOption_sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                            @Override
-                                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                                String sel_option=Arrayclass_learningOption[position].toString();
-                                                                studentlist[finalI].setLearningMode(sel_option);
-                                                                //  Toast.makeText(Remarks.this, "Selected item:" + " " + Arrayclass_learningOption[position], Toast.LENGTH_SHORT).show();
-                                                            }
-
-                                                            @Override
-                                                            public void onNothingSelected(AdapterView<?> parent) {
-                                                            }
-                                                        });
-
-                                                        attendence.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                                            @Override
-                                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                                Log.v("Switch State=", "" + isChecked);
-
-                                                                //	Toast.makeText(Remarks.this,"Id: "+attendence.getId(), Toast.LENGTH_SHORT).show();
-                                                                //	Toast.makeText(Remarks.this,"studentlist[finalI].getStudentname(): "+studentlist[finalI].getStudentname(), Toast.LENGTH_SHORT).show();
-
-                                                                //  Toast.makeText(getApplicationContext(),""+isChecked, Toast.LENGTH_SHORT).show();
-                                                                String value = "" + isChecked;
-                                                                if (isChecked) {
-                                                                    studentlist[finalI].setPre_Ab("A");
-                                                                    //StudentInfo studentInfoObj=new StudentInfo();
-
-                                                                    Log.i("tag", "studentlist=" + studentlist[finalI].getPre_Ab());
-                                                                    //	absentList.set(j++).setID(absentList.get(finalI));
-                                                                    //	absentSudentList[j++] = studentlist[finalI];
-                                                                    Log.i("tag", "absentSudentList=" + absentSudentList.toString());
+                                                                Log.i("tag", "studentlist=" + studentlist[finalI].getPre_Ab());
+                                                                //	absentList.set(j++).setID(absentList.get(finalI));
+                                                                //	absentSudentList[j++] = studentlist[finalI];
+                                                                Log.i("tag", "absentSudentList=" + absentSudentList.toString());
 											/*	for(int t=0;t<absentList.size();t++) {
 													Log.e("tag", "absentList1=" + absentList.get(t).getStudentname());
 												}*/
-                                                                }
-                                                                if (!isChecked) {
-                                                                    studentlist[finalI].setPre_Ab("P");
-
-                                                                }
+                                                            }
+                                                            if (!isChecked) {
+                                                                studentlist[finalI].setPre_Ab("P");
 
                                                             }
 
-                                                        });
+                                                        }
+
+                                                    });
 
 
-                                                        tr.setOnClickListener(new View.OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
+                                                    tr.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
 
-                                                                TableRow t = (TableRow) v;
-                                                                TextView firstTextView = (TextView) t.getChildAt(0);
-                                                                TextView secondTextView = (TextView) t.getChildAt(1);
-                                                                String firstText = firstTextView.getText().toString();
-                                                                String secondText = secondTextView.getText().toString();
-                                                                //  Toast.makeText(getApplicationContext(),"first Text ="+firstText, Toast.LENGTH_SHORT).show();
-                                                                //   Toast.makeText(getApplicationContext(),"second Text ="+secondText, Toast.LENGTH_SHORT).show();
+                                                            TableRow t = (TableRow) v;
+                                                            TextView firstTextView = (TextView) t.getChildAt(0);
+                                                            TextView secondTextView = (TextView) t.getChildAt(1);
+                                                            String firstText = firstTextView.getText().toString();
+                                                            String secondText = secondTextView.getText().toString();
+                                                            //  Toast.makeText(getApplicationContext(),"first Text ="+firstText, Toast.LENGTH_SHORT).show();
+                                                            //   Toast.makeText(getApplicationContext(),"second Text ="+secondText, Toast.LENGTH_SHORT).show();
 
 
-                                                            }
-                                                        });
+                                                        }
+                                                    });
 
-                                                        tl.addView(tr, new TableLayout.LayoutParams(
-                                                                LayoutParams.WRAP_CONTENT,
-                                                                LayoutParams.WRAP_CONTENT, 1f));
+                                                    tl.addView(tr, new TableLayout.LayoutParams(
+                                                            LayoutParams.WRAP_CONTENT,
+                                                            LayoutParams.WRAP_CONTENT, 1f));
 
                                                     //} for loop
                                                 }
@@ -1134,11 +1136,11 @@ public class Remarks extends AppCompatActivity {
             call.enqueue(new Callback<StudentData_Response>()
             {
                 @Override
-              //  public void onResponse(retrofit2.Call<StudentData_Response> call, Response<StudentData_Response> response) {
-                 public void onResponse(Call<StudentData_Response> call, Response<StudentData_Response> response) {
+                //  public void onResponse(retrofit2.Call<StudentData_Response> call, Response<StudentData_Response> response) {
+                public void onResponse(Call<StudentData_Response> call, Response<StudentData_Response> response) {
 
 
-                        Log.e("response", response.toString());
+                    Log.e("response", response.toString());
                     Log.e("response_body", String.valueOf(response.body()));
 
                     if (response.isSuccessful())
@@ -1391,19 +1393,19 @@ public class Remarks extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... params) {
             Log.i("madhu", "doInBackground");
-	
+
 			/*submit_status();
 			fetch_all_info1(u1);
 			if(engage_status.equals("Yes"))
 			{
 				if(Attandence.equals("1")){
 			*/
-           // StorestudentData();
+            // StorestudentData();
             UpdateStudentData();
 //            Log.e("result_of_response1", result_of_response);
-           // fetch_all_info1(u1);
+            // fetch_all_info1(u1);
 //            get_User_Schedule();
-          //  Log.e("result_of_response2", result_of_response);
+            //  Log.e("result_of_response2", result_of_response);
 				/*}
 			}*/
 
@@ -1432,7 +1434,7 @@ public class Remarks extends AppCompatActivity {
             }*/
 
 			/* Intent i  = new Intent (getApplicationContext(),EventListActivity.class);
-			 				
+
 			    startActivity(i);
 			    finish(); */
 
@@ -1573,7 +1575,7 @@ public class Remarks extends AppCompatActivity {
         });
     }
     /*public void fetch_all_info1(String email) {
-	*//*	Log.e("result fetch",result_of_submit);
+     *//*	Log.e("result fetch",result_of_submit);
 		result_of_response=result_of_submit;*//*
 
         String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";

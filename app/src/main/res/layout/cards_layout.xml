@@ -19,8 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
 
 
@@ -72,6 +71,30 @@
                     android:layout_marginTop="2dp"
                     android:text="Android Version"
                     android:textSize="13dp"/>
+
+
+
+                    <TextView
+                        android:id="@+id/tv_docid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tv_docstatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tv_doctopiclevelid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="gone"/>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -85,6 +108,23 @@
                 android:layout_gravity="center"
                 android:tint="@color/blue"
                 android:src="@android:drawable/stat_sys_download"/>
+
+
+            <ImageView
+                android:id="@+id/view_lp_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_baseline_verified_24"
+                android:visibility="visible"
+                android:layout_toRightOf="@+id/tv_name"
+                android:layout_toEndOf="@+id/tv_name"
+                android:layout_marginLeft="10dp"
+                android:layout_alignBaseline="@+id/tv_name"
+                android:contentDescription="@null" />
+
+
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

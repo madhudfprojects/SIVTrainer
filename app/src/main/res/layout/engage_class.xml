@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
@@ -6,19 +7,19 @@
 
 
     <LinearLayout
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
             android:lineSpacingExtra="2dp"
-            android:text="Event"
+            android:text="Session"
             android:textColor="#5C5757"
             android:textSize="16dp"
             android:textStyle="bold"
@@ -49,8 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:theme="@style/SCBSwitch"
             android:text="Engaged class?      "
             android:showText="true"
@@ -86,117 +86,119 @@
             android:layout_height="wrap_content"
          />-->
 
-<!--        <TextView-->
-<!--            android:id="@id/text1"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginLeft="12dp"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:lineSpacingExtra="2dp"-->
-<!--            android:text="Subject"-->
-<!--            android:textColor="#5C5757"-->
-<!--            android:textSize="16dp"-->
-<!--            android:textStyle="bold"/>-->
-<!--        <Spinner-->
-<!--            android:id="@+id/subjectlist_SP"-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_marginLeft="8dp"-->
-<!--            android:background="@drawable/spinnerarrow2"-->
-<!--            android:paddingLeft="5dp"-->
-<!--            android:popupBackground="@drawable/layout_background"-->
-<!--            android:textColor="#5C5757"-->
-<!--            />-->
+        <!--        <TextView-->
+        <!--            android:id="@id/text1"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginLeft="12dp"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:lineSpacingExtra="2dp"-->
+        <!--            android:text="Subject"-->
+        <!--            android:textColor="#5C5757"-->
+        <!--            android:textSize="16dp"-->
+        <!--            android:textStyle="bold"/>-->
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:weightSum="2">
-            <RelativeLayout
-                android:id="@+id/rel_edulayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/spinner_layout"
-                    android:orientation="horizontal"
-                    >
-
-                    <Spinner
-                        android:id="@+id/subjectlist_SP"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:popupBackground="@drawable/layout_background"
-                        android:dropDownWidth="200dp"
-                        android:dropDownVerticalOffset="32dp"
-                        android:textColor="#5C5757"
-                        />
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="-4dp"
-                    android:background="#FFFFFF"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:text="Subject"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="10sp" />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@id/text1"
+        <RelativeLayout
+            android:id="@+id/rel_taluklayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="20dp"
-            android:lineSpacingExtra="2dp"
-            android:text="Remarks"
-            android:textColor="#5C5757"
-            android:textSize="16dp"
-            
-            android:textStyle="bold"/>
-        <!--  <View 
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_layout"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/subjectlist_SP"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:dropDownVerticalOffset="35dp"
+                    android:spinnerMode="dropdown" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="-4dp"
+                android:background="#FFFFFF"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="Subject"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <!--  <Spinner
+              android:id="@+id/subjectlist_SP"
+              android:layout_width="150dp"
+              android:layout_height="40dp"
+              android:layout_marginLeft="8dp"
+              android:background="@drawable/spinnerarrow2"
+              android:paddingLeft="5dp"
+              android:popupBackground="@drawable/layout_background"
+              android:textColor="#5C5757"
+              />-->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/remarks"
+                android:backgroundTint="@color/colorPrimary"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:hint="Remarks"
+                android:textSize="14dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:lineSpacingExtra="2dp"
+                android:inputType="textAutoCorrect"
+                android:singleLine="true"
+                />
+        </android.support.design.widget.TextInputLayout>
+        <!-- <TextView
+             android:id="@id/text1"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="12dp"
+             android:layout_marginTop="20dp"
+             android:lineSpacingExtra="2dp"
+             android:text="Remarks"
+             android:textColor="#5C5757"
+             android:textSize="16dp"
+             android:textStyle="bold"/>-->
+        <!--  <View
 			   android:layout_width="fill_parent"
-			   android:layout_height="0.5dp"       
-			   android:background="#000000" 
+			   android:layout_height="0.5dp"
+			   android:background="#000000"
 			    android:layout_marginLeft="8dp"/>   -->
 
 
-        <EditText
-            android:id="@+id/remarks"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#000000"
-            android:inputType="textMultiLine"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
-            />
-        <!--  <View 
+        <!-- <EditText
+             android:id="@+id/remarks"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textColor="#000000"
+             />-->
+        <!--  <View
 			   android:layout_width="fill_parent"
-			   android:layout_height="0.5dp"       
-			   android:background="#000000" 
+			   android:layout_height="0.5dp"
+			   android:background="#000000"
 			    android:layout_marginLeft="8dp"/> -->
 
         <Button
             android:id="@+id/button1"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/layout_background"
             android:text="Update"
@@ -219,44 +221,52 @@
             android:visibility="gone" />
 
     </LinearLayout>
-
-    <TextView
+    <LinearLayout
         android:id="@+id/student_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:background="@drawable/layout_background"
-        
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:layout_margin="1dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:padding="5dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Student List"
+            android:visibility="visible" />
+        <!--<View
+            android:layout_width="150dp"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"/>-->
+    </LinearLayout>
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"
-        android:layout_margin="20dp">
+        android:layout_margin="5dp">
 
 
         <LinearLayout
             android:id="@+id/ll_listview1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/shadow_new">
+            android:orientation="vertical">
 
-        <TableLayout
-            android:id="@+id/studentlist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/searchString"
-            android:layout_alignParentLeft="true"
-            android:stretchColumns="*"
-            android:padding="5dp"/>
+            <TableLayout
+                android:id="@+id/studentlist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/searchString"
+                android:layout_alignParentLeft="true"
+                android:stretchColumns="*"
+                android:padding="5dp"/>
         </LinearLayout>
     </ScrollView>
 

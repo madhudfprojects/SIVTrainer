@@ -86,6 +86,18 @@ public class Class_GetStudentPaymentResponseList {
     @Expose
     private Object receiptManual;
 
+    @SerializedName("Receipt_No")
+    @Expose
+    private String Receipt_No;
+
+    public String getReceipt_No() {
+        return Receipt_No;
+    }
+
+    public void setReceipt_No(String receipt_No) {
+        Receipt_No = receipt_No;
+    }
+
     public Integer getStudentID() {
         return studentID;
     }

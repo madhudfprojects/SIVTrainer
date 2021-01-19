@@ -185,6 +185,21 @@ public class Class_Response_AddStudentDetailsList {
     @Expose
     private String Village_Name;
 
+
+    @SerializedName("Alternate_Mobile")
+    @Expose
+    private String Alternate_Mobile;
+
+
+    public String getAlternate_Mobile() {
+        return Alternate_Mobile;
+    }
+
+    public void setAlternate_Mobile(String alternate_Mobile) {
+        Alternate_Mobile = alternate_Mobile;
+    }
+
+
     public String getAddress() {
         return Address;
     }

@@ -70,7 +70,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
     //added by shivaleela on Nov 4th 2020
     ArrayList<Class_ListVersion> Array_ClassListVersion;
     Interface_userservice userService1;
-    String str_actualdocPath = null, str_DocumentPath = null, str_docID, str_DocumentDate, str_DocumentName, str_DocumentType, str_DocumentStatus, str_DocumentTime,str_doc_verification="";
+    String str_actualdocPath = null, str_DocumentPath = null, str_docID, str_DocumentDate, str_DocumentName, str_DocumentType, str_DocumentStatus, str_DocumentTime,str_doc_verification="",str_doc_TopicLevelID="";
     Class_ListVersion[] arrayObj_Class_monthcontents;
     SharedPreferences sharedpreferencebook_usercredential_Obj;
     @Override
@@ -174,240 +174,240 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
 
     }
 
-    public class GetDocList extends AsyncTask<Void, Void, SoapObject> {
+//    public class GetDocList extends AsyncTask<Void, Void, SoapObject> {
+//
+//        AlertDialog alertDialog;
+//        private ProgressBar progressBar;
+//        //   private ProgressDialog progressDialog;
+//
+//        GetDocList(Context ctx) {
+//            context = ctx;
+//            //  progressDialog = new ProgressDialog(context);
+//        }
+//
+//
+//        @Override
+//        protected SoapObject doInBackground(Void... params) {
+//            //String versionCode = (String) params[2];
+//
+//            SoapObject response = getDocList();
+//
+//            //       Log.d("Soap response issssss",response.toString());
+//
+//            return response;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+//            progressBar = findViewById(R.id.progressBar);
+//            progressBar.setVisibility(View.VISIBLE);
+//
+//            /*progressDialog.setMessage("Loading");
+//            progressDialog.setCanceledOnTouchOutside(false);
+//            progressDialog.show();*/
+//
+//        }
+//
+//        @Override
+//        protected void onPostExecute(SoapObject result) {
+//
+//            if (result != null) {
+//
+//                //-----------------------------------
+//
+//                SoapObject soapObj = result;//(SoapObject) result.getProperty("vmDocument");
+//                DocView_Module.listview_arr.clear();
+//                QunPaperDoc_Module.listview_arr.clear();
+//                LessionPlanDoc_Module.listview_arr.clear();
+//                if (!soapObj.toString().equals("anyType{}") && !soapObj.toString().equals(null)) {
+//
+//                    SoapPrimitive S_DocumentPath, S_Document_ID, S_Document_Date, S_Document_Time, S_Document_Name, S_Document_Type, S_Document_Status;
+//                    Object O_DocumentPath, O_Document_ID, O_Document_Date, O_Document_Time, O_Document_Name, O_Document_Type, O_Document_Status;
+//                    String str_DocumentPath, str_actualdocPath = null, str_Document_ID = null, str_Document_Date = null, str_Document_Time = null, str_Document_Name = null, str_Document_Type = null, str_Document_Status = null;
+//                    //count2 = soapObj.getPropertyCount();
+//
+//                    for (count1 = 0; count1 < soapObj.getPropertyCount(); count1++) {
+//                        SoapObject doclist = (SoapObject) soapObj.getProperty(count1);
+//                        Log.d("doclist", doclist.toString());
+//
+//                        O_Document_ID = doclist.getProperty("Document_ID");
+//                        if (!O_Document_ID.toString().equals("anyType{}") && !O_Document_ID.toString().equals(null)) {
+//                            S_Document_ID = (SoapPrimitive) doclist.getProperty("Document_ID");
+//                            str_Document_ID = S_Document_ID.toString();
+//                        }
+//                        O_Document_Date = doclist.getProperty("Document_Date");
+//                        if (!O_Document_Date.toString().equals("anyType{}") && !O_Document_Date.toString().equals(null)) {
+//                            S_Document_Date = (SoapPrimitive) doclist.getProperty("Document_Date");
+//                            str_Document_Date = S_Document_Date.toString();
+//                        }
+//                        O_Document_Time = doclist.getProperty("Document_Time");
+//                        if (!O_Document_Time.toString().equals("anyType{}") && !O_Document_Time.toString().equals(null)) {
+//                            S_Document_Time = (SoapPrimitive) doclist.getProperty("Document_Time");
+//                            str_Document_Time = S_Document_Time.toString();
+//                        }
+//                        O_Document_Name = doclist.getProperty("Document_Name");
+//                        if (!O_Document_Name.toString().equals("anyType{}") && !O_Document_Name.toString().equals(null)) {
+//                            S_Document_Name = (SoapPrimitive) doclist.getProperty("Document_Name");
+//                            str_Document_Name = S_Document_Name.toString();
+//                        }
+//                        O_Document_Type = doclist.getProperty("Document_Type");
+//                        if (!O_Document_Type.toString().equals("anyType{}") && !O_Document_Type.toString().equals(null)) {
+//                            S_Document_Type = (SoapPrimitive) doclist.getProperty("Document_Type");
+//                            str_Document_Type = S_Document_Type.toString();
+//                        }
+//                        O_Document_Status = doclist.getProperty("Document_Status");
+//                        if (!O_Document_Status.toString().equals("anyType{}") && !O_Document_Status.toString().equals(null)) {
+//                            S_Document_Status = (SoapPrimitive) doclist.getProperty("Document_Status");
+//                            str_Document_Status = S_Document_Status.toString();
+//                        }
+//                        O_DocumentPath = doclist.getProperty("Document_Path");
+//                        if (!O_DocumentPath.toString().equals("anyType{}") && !O_DocumentPath.toString().equals(null)) {
+//                            S_DocumentPath = (SoapPrimitive) doclist.getProperty("Document_Path");
+//                            str_DocumentPath = S_DocumentPath.toString();
+//
+//
+//                            //Log.d("F")
+//
+//                            str_actualdocPath = serverPath + str_DocumentPath.substring(2);
+//                            //Log.d("Documentsssssss",str_actualdocPath);
+//
+//
+//                            //       if(str_actualdocPath.endsWith("jpg") || str_actualdocPath.endsWith("jpeg") || str_actualdocPath.endsWith("png")){
+//
+//                             /*   if (str_actualdocPath.endsWith("jpg") || str_actualdocPath.endsWith("jpeg") || str_actualdocPath.endsWith("png") || str_actualdocPath.endsWith("gif") || str_actualdocPath.endsWith("psd")) {
+//                                    count2++;
+//
+//                                    str_actualdocPath = str_actualdocPath.replace(" ", "%20");
+//                                    //Log.d("str_actualdocPath", str_actualdocPath);
+//
+//                                    //if(!str_actualdocPath.contains("(1)")) {
+//                                    try {
+//                                        url = new URL(str_actualdocPath);
+//                                        urllist.add(url);
+//                                        Log.d("Urlsssss", url.toString());
+//                                    } catch (MalformedURLException e) {
+//                                        e.printStackTrace();
+//                                    }
+//
+//                                    imagePathList.add(str_actualdocPath);
+//*//*
+//                                LoadGalleryImage loadGalleryImg = new LoadGalleryImage(context);
+//                                loadGalleryImg.execute();*//*
+//                                }*/
+//
+//                            if (str_actualdocPath.endsWith("docx") || str_actualdocPath.endsWith("doc") || str_actualdocPath.endsWith("pdf")) {
+//                                wordDocPath = str_actualdocPath;
+//                                wordDocPath = wordDocPath.replace(" ", "%20");
+//
+//                                Log.d("wordDocPath", wordDocPath);
+//                                Log.d("downloadUrl", String.valueOf(downloadUrl));
+//                                String[] docNameArray = wordDocPath.split("/");
+//                                docName = docNameArray[4];
+//                                Log.d("doclengthisss", String.valueOf(docNameArray.length));
+//                                Log.d("Docnameesssss", docName);
+//
+//
+//                                try {
+//                                    downloadUrl = new URL(wordDocPath);
+//                                } catch (MalformedURLException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                        }
+//
+//
+//                        //     DocView_Module docView_module=new DocView_Module(str_Document_ID,str_Document_Date,str_Document_Time,str_Document_Name,str_actualdocPath,str_Document_Type,str_Document_Status);
+//                        DocView_Module.listview_arr.add(new DocView_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
+//
+//                        if (str_Document_Type.equalsIgnoreCase("Question Paper")) {
+//                            if (str_Document_Status.equalsIgnoreCase("Active")) {
+//                                QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
+//                            }
+//                        } else if (str_Document_Type.equalsIgnoreCase("Lesson Plan")) {
+//                            if (str_Document_Status.equalsIgnoreCase("Active")) {
+//                                LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
+//                            }
+//                        }
+//                    }
+//                    Log.e("tag", "list size==" + DocView_Module.listview_arr.size());
+//
+//                }
+//
+//                //  }
+//
+//
+//                progressBar.setVisibility(GONE);
+//
+//                //progressDialog.dismiss();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... values) {
+//            super.onProgressUpdate(values);
+//        }
+//    }
 
-        AlertDialog alertDialog;
-        private ProgressBar progressBar;
-        //   private ProgressDialog progressDialog;
-
-        GetDocList(Context ctx) {
-            context = ctx;
-            //  progressDialog = new ProgressDialog(context);
-        }
-
-
-        @Override
-        protected SoapObject doInBackground(Void... params) {
-            //String versionCode = (String) params[2];
-
-            SoapObject response = getDocList();
-
-            //       Log.d("Soap response issssss",response.toString());
-
-            return response;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressBar = findViewById(R.id.progressBar);
-            progressBar.setVisibility(View.VISIBLE);
-
-            /*progressDialog.setMessage("Loading");
-            progressDialog.setCanceledOnTouchOutside(false);
-            progressDialog.show();*/
-
-        }
-
-        @Override
-        protected void onPostExecute(SoapObject result) {
-
-            if (result != null) {
-
-                //-----------------------------------
-
-                SoapObject soapObj = result;//(SoapObject) result.getProperty("vmDocument");
-                DocView_Module.listview_arr.clear();
-                QunPaperDoc_Module.listview_arr.clear();
-                LessionPlanDoc_Module.listview_arr.clear();
-                if (!soapObj.toString().equals("anyType{}") && !soapObj.toString().equals(null)) {
-
-                    SoapPrimitive S_DocumentPath, S_Document_ID, S_Document_Date, S_Document_Time, S_Document_Name, S_Document_Type, S_Document_Status;
-                    Object O_DocumentPath, O_Document_ID, O_Document_Date, O_Document_Time, O_Document_Name, O_Document_Type, O_Document_Status;
-                    String str_DocumentPath, str_actualdocPath = null, str_Document_ID = null, str_Document_Date = null, str_Document_Time = null, str_Document_Name = null, str_Document_Type = null, str_Document_Status = null;
-                    //count2 = soapObj.getPropertyCount();
-
-                    for (count1 = 0; count1 < soapObj.getPropertyCount(); count1++) {
-                        SoapObject doclist = (SoapObject) soapObj.getProperty(count1);
-                        Log.d("doclist", doclist.toString());
-
-                        O_Document_ID = doclist.getProperty("Document_ID");
-                        if (!O_Document_ID.toString().equals("anyType{}") && !O_Document_ID.toString().equals(null)) {
-                            S_Document_ID = (SoapPrimitive) doclist.getProperty("Document_ID");
-                            str_Document_ID = S_Document_ID.toString();
-                        }
-                        O_Document_Date = doclist.getProperty("Document_Date");
-                        if (!O_Document_Date.toString().equals("anyType{}") && !O_Document_Date.toString().equals(null)) {
-                            S_Document_Date = (SoapPrimitive) doclist.getProperty("Document_Date");
-                            str_Document_Date = S_Document_Date.toString();
-                        }
-                        O_Document_Time = doclist.getProperty("Document_Time");
-                        if (!O_Document_Time.toString().equals("anyType{}") && !O_Document_Time.toString().equals(null)) {
-                            S_Document_Time = (SoapPrimitive) doclist.getProperty("Document_Time");
-                            str_Document_Time = S_Document_Time.toString();
-                        }
-                        O_Document_Name = doclist.getProperty("Document_Name");
-                        if (!O_Document_Name.toString().equals("anyType{}") && !O_Document_Name.toString().equals(null)) {
-                            S_Document_Name = (SoapPrimitive) doclist.getProperty("Document_Name");
-                            str_Document_Name = S_Document_Name.toString();
-                        }
-                        O_Document_Type = doclist.getProperty("Document_Type");
-                        if (!O_Document_Type.toString().equals("anyType{}") && !O_Document_Type.toString().equals(null)) {
-                            S_Document_Type = (SoapPrimitive) doclist.getProperty("Document_Type");
-                            str_Document_Type = S_Document_Type.toString();
-                        }
-                        O_Document_Status = doclist.getProperty("Document_Status");
-                        if (!O_Document_Status.toString().equals("anyType{}") && !O_Document_Status.toString().equals(null)) {
-                            S_Document_Status = (SoapPrimitive) doclist.getProperty("Document_Status");
-                            str_Document_Status = S_Document_Status.toString();
-                        }
-                        O_DocumentPath = doclist.getProperty("Document_Path");
-                        if (!O_DocumentPath.toString().equals("anyType{}") && !O_DocumentPath.toString().equals(null)) {
-                            S_DocumentPath = (SoapPrimitive) doclist.getProperty("Document_Path");
-                            str_DocumentPath = S_DocumentPath.toString();
-
-
-                            //Log.d("F")
-
-                            str_actualdocPath = serverPath + str_DocumentPath.substring(2);
-                            //Log.d("Documentsssssss",str_actualdocPath);
-
-
-                            //       if(str_actualdocPath.endsWith("jpg") || str_actualdocPath.endsWith("jpeg") || str_actualdocPath.endsWith("png")){
-
-                             /*   if (str_actualdocPath.endsWith("jpg") || str_actualdocPath.endsWith("jpeg") || str_actualdocPath.endsWith("png") || str_actualdocPath.endsWith("gif") || str_actualdocPath.endsWith("psd")) {
-                                    count2++;
-
-                                    str_actualdocPath = str_actualdocPath.replace(" ", "%20");
-                                    //Log.d("str_actualdocPath", str_actualdocPath);
-
-                                    //if(!str_actualdocPath.contains("(1)")) {
-                                    try {
-                                        url = new URL(str_actualdocPath);
-                                        urllist.add(url);
-                                        Log.d("Urlsssss", url.toString());
-                                    } catch (MalformedURLException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    imagePathList.add(str_actualdocPath);
-*//*
-                                LoadGalleryImage loadGalleryImg = new LoadGalleryImage(context);
-                                loadGalleryImg.execute();*//*
-                                }*/
-
-                            if (str_actualdocPath.endsWith("docx") || str_actualdocPath.endsWith("doc") || str_actualdocPath.endsWith("pdf")) {
-                                wordDocPath = str_actualdocPath;
-                                wordDocPath = wordDocPath.replace(" ", "%20");
-
-                                Log.d("wordDocPath", wordDocPath);
-                                Log.d("downloadUrl", String.valueOf(downloadUrl));
-                                String[] docNameArray = wordDocPath.split("/");
-                                docName = docNameArray[4];
-                                Log.d("doclengthisss", String.valueOf(docNameArray.length));
-                                Log.d("Docnameesssss", docName);
-
-
-                                try {
-                                    downloadUrl = new URL(wordDocPath);
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                        }
-
-
-                        //     DocView_Module docView_module=new DocView_Module(str_Document_ID,str_Document_Date,str_Document_Time,str_Document_Name,str_actualdocPath,str_Document_Type,str_Document_Status);
-                        DocView_Module.listview_arr.add(new DocView_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
-
-                        if (str_Document_Type.equalsIgnoreCase("Question Paper")) {
-                            if (str_Document_Status.equalsIgnoreCase("Active")) {
-                                QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
-                            }
-                        } else if (str_Document_Type.equalsIgnoreCase("Lesson Plan")) {
-                            if (str_Document_Status.equalsIgnoreCase("Active")) {
-                                LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_Document_ID, str_Document_Date, str_Document_Time, str_Document_Name, wordDocPath, str_Document_Type, str_Document_Status,str_doc_verification));
-                            }
-                        }
-                    }
-                    Log.e("tag", "list size==" + DocView_Module.listview_arr.size());
-
-                }
-
-                //  }
-
-
-                progressBar.setVisibility(GONE);
-
-                //progressDialog.dismiss();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-    }
-
-    private SoapObject getDocList() {
-        String METHOD_NAME = "LoadDocument";
-        String SOAP_ACTION1 = "http://mis.detedu.org:8089/LoadDocument";
-        String NAMESPACE = "http://mis.detedu.org:8089/";
-
-        try {
-            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-
-            request.addProperty("User_ID", str_loginuserID);
-
-            Log.e("tag", "User_ID docview:" + str_loginuserID);
-
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            envelope.setOutputSoapObject(request);
-            HttpTransportSE androidHttpTransport = new HttpTransportSE("http://mis.detedu.org:8089/SIVService.asmx?WSDL");
-            try {
-                androidHttpTransport.call(SOAP_ACTION1, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.e("soap docview response:", response.toString());
-                return response;
-
-            } catch (OutOfMemoryError ex) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
-                    }
-                });
-            } catch (Exception t) {
-                Log.e("request fail", "> " + t.getMessage());
-                final String exceptionStr = t.getMessage();
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        } catch (OutOfMemoryError ex) {
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
-                }
-            });
-        } catch (Exception t) {
-            Log.e("exception outside", t.getMessage());
-            final String exceptionStr = t.getMessage();
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        return null;
-
-    }
+//    private SoapObject getDocList() {
+//        String METHOD_NAME = "LoadDocument";
+//        String SOAP_ACTION1 = "http://mis.detedu.org:8089/LoadDocument";
+//        String NAMESPACE = "http://mis.detedu.org:8089/";
+//
+//        try {
+//            SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+//
+//
+//            request.addProperty("User_ID", str_loginuserID);
+//
+//            Log.e("tag", "User_ID docview:" + str_loginuserID);
+//
+//
+//            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+//            envelope.dotNet = true;
+//            envelope.setOutputSoapObject(request);
+//            HttpTransportSE androidHttpTransport = new HttpTransportSE("http://mis.detedu.org:8089/SIVService.asmx?WSDL");
+//            try {
+//                androidHttpTransport.call(SOAP_ACTION1, envelope);
+//
+//                SoapObject response = (SoapObject) envelope.getResponse();
+//                Log.e("soap docview response:", response.toString());
+//                return response;
+//
+//            } catch (OutOfMemoryError ex) {
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            } catch (Exception t) {
+//                Log.e("request fail", "> " + t.getMessage());
+//                final String exceptionStr = t.getMessage();
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            }
+//        } catch (OutOfMemoryError ex) {
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        } catch (Exception t) {
+//            Log.e("exception outside", t.getMessage());
+//            final String exceptionStr = t.getMessage();
+//            runOnUiThread(new Runnable() {
+//                public void run() {
+//                    Toast.makeText(context, "Slow Internet or Internet Dropped", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//        return null;
+//
+//    }
 
     public void getdocumentlist() {
 
@@ -454,6 +454,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             innerObj_Class_SandboxList.setDocumentType(class_loginresponse.getClass_ListVersion().get(i).getDocumentType());
                             innerObj_Class_SandboxList.setDocumentStatus(class_loginresponse.getClass_ListVersion().get(i).getDocumentStatus());
                             innerObj_Class_SandboxList.setDocumentVerification(class_loginresponse.getClass_ListVersion().get(i).getDocumentVerification());
+                            innerObj_Class_SandboxList.setTopicLevel_ID(class_loginresponse.getClass_ListVersion().get(i).getTopicLevel_ID());
 
                             arrayObj_Class_monthcontents[i] = innerObj_Class_SandboxList;
                             Log.e("spinner", arrayObj_Class_monthcontents[i].getDocumentName());
@@ -467,8 +468,8 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             str_DocumentName = class_loginresponse.getClass_ListVersion().get(i).getDocumentName();
                             str_DocumentType = class_loginresponse.getClass_ListVersion().get(i).getDocumentType();
                             str_DocumentStatus = class_loginresponse.getClass_ListVersion().get(i).getDocumentStatus();
-                             str_doc_verification=class_loginresponse.getClass_ListVersion().get(i).getDocumentVerification();
-
+                            str_doc_verification=class_loginresponse.getClass_ListVersion().get(i).getDocumentVerification();
+                            str_doc_TopicLevelID=class_loginresponse.getClass_ListVersion().get(i).getTopicLevel_ID();
                             str_DocumentPath = class_loginresponse.getClass_ListVersion().get(i).getDocumentPath();
                             if (str_DocumentPath != null) {
 
@@ -498,15 +499,15 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                             }
 
 
-                            DocView_Module.listview_arr.add(new DocView_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
+                            DocView_Module.listview_arr.add(new DocView_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification,str_doc_TopicLevelID));
 
                             if (str_DocumentType.equalsIgnoreCase("Question Paper")) {
                                 if (str_DocumentStatus.equalsIgnoreCase("Active")) {
-                                    QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
+                                    QunPaperDoc_Module.listview_arr.add(new QunPaperDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification,str_doc_TopicLevelID));
                                 }
                             } else if (str_DocumentType.equalsIgnoreCase("Lesson Plan")) {
                                 if (str_DocumentStatus.equalsIgnoreCase("Active")) {
-                                    LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification));
+                                    LessionPlanDoc_Module.listview_arr.add(new LessionPlanDoc_Module(str_docID, str_DocumentDate, str_DocumentTime, str_DocumentName, wordDocPath, str_DocumentType, str_DocumentStatus,str_doc_verification,str_doc_TopicLevelID));
                                 }
                             }
                             //  }

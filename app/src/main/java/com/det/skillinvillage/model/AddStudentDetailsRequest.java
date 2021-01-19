@@ -115,9 +115,6 @@ public class AddStudentDetailsRequest {
     private String address;
 
 
-
-
-
     @SerializedName("Application_Type")
     @Expose
     private String Application_Type;
@@ -125,6 +122,46 @@ public class AddStudentDetailsRequest {
     @SerializedName("Division_ID")
     @Expose
     private String Division_ID;
+
+
+    @SerializedName("Alternate_Mobile")
+    @Expose
+    private String Alternate_Mobile;
+
+
+
+  //  Admission_Date,Admission_Remarks
+  @SerializedName("Admission_Date")
+  @Expose
+  private String Admission_Date;
+
+    @SerializedName("Admission_Remarks")
+    @Expose
+    private String Admission_Remarks;
+
+    public String getAdmission_Date() {
+        return Admission_Date;
+    }
+
+    public void setAdmission_Date(String admission_Date) {
+        Admission_Date = admission_Date;
+    }
+
+    public String getAdmission_Remarks() {
+        return Admission_Remarks;
+    }
+
+    public void setAdmission_Remarks(String admission_Remarks) {
+        Admission_Remarks = admission_Remarks;
+    }
+
+    public String getAlternate_Mobile() {
+        return Alternate_Mobile;
+    }
+
+    public void setAlternate_Mobile(String alternate_Mobile) {
+        Alternate_Mobile = alternate_Mobile;
+    }
 
     public String getDivision_ID() {
         return Division_ID;

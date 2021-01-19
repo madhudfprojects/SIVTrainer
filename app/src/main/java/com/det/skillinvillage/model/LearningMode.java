@@ -1,5 +1,7 @@
 package com.det.skillinvillage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,6 +29,7 @@ public class LearningMode {
         this.learningMode_Name = learningMode_Name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return learningMode_Name;
