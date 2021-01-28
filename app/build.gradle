@@ -5,7 +5,7 @@ android {
     //buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "com.det.skillinvillage"
-       // applicationId "com.example.dftest"
+        // applicationId "com.example.dftest"
         //  applicationId "com.example.googlesignin"
 
         //  applicationId "com.det.appsts"
@@ -24,7 +24,7 @@ android {
                 abortOnError false
             }
             minifyEnabled false
-           proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 //        release {
 //            minifyEnabled false

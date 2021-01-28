@@ -49,7 +49,7 @@ public class Activity_UserManual_OpenPDF extends AppCompatActivity implements On
 
         sharedpref_usermanualpdf_Obj=getSharedPreferences(sharedpreferenc_usermanual, Context.MODE_PRIVATE);
         str_fileurl = sharedpref_usermanualpdf_Obj.getString(key_usermanualpdfurl, "").trim();
-
+      //  str_fileurl="http://mis.detedu.org:8090/Document/Help/SIV_User_manual_1.0.pdf";
         context = getApplicationContext();
         progressDialog = new ProgressDialog(Activity_UserManual_OpenPDF.this);
         if (adapter == null) {
@@ -161,7 +161,7 @@ public class Activity_UserManual_OpenPDF extends AppCompatActivity implements On
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Activity_UserManual_OpenPDF.this, Activity_UserManual_DownloadPDF.class);
+        Intent i = new Intent(Activity_UserManual_OpenPDF.this, ContactUs_Activity.class);
         startActivity(i);
         finish();
     }
@@ -173,6 +173,9 @@ public class Activity_UserManual_OpenPDF extends AppCompatActivity implements On
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -184,7 +187,7 @@ public class Activity_UserManual_OpenPDF extends AppCompatActivity implements On
 
 
             case android.R.id.home:
-                Intent i = new Intent(Activity_UserManual_OpenPDF.this, Activity_UserManual_DownloadPDF.class);
+                Intent i = new Intent(Activity_UserManual_OpenPDF.this, ContactUs_Activity.class);
                 startActivity(i);
                 finish();
 
@@ -193,6 +196,7 @@ public class Activity_UserManual_OpenPDF extends AppCompatActivity implements On
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

@@ -258,15 +258,19 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
             if(Employee_Role.equalsIgnoreCase("Cluster Head")) {
-                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
-                startActivity(i);
-                finish();
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
             }
 
             if(Employee_Role.equalsIgnoreCase("Administrator")) {
-                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
-                startActivity(i);
-                finish();
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
             }
             // Stay at the current activity.
         }
@@ -625,8 +629,29 @@ public class MainActivity extends AppCompatActivity
 
                 if (user_object.getStatus().toString().equalsIgnoreCase("true"))
                 {
-                    Intent intent = new Intent(MainActivity.this, Activity_HomeScreen.class);
-                    startActivity(intent);
+                   // Log.e("response userdata:",);
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Trainer")) {
+                        Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+                        startActivity(i);
+                        finish();
+                    }
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Cluster Head")) {
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                        Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Administrator")) {
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                        Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
+                    }
+//                    Intent intent = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                    startActivity(intent);
 
 
 
@@ -645,7 +670,7 @@ public class MainActivity extends AppCompatActivity
                         editor_obj.putString(KeyValue_employeeRoleName, user_object.getLst1().get(i).getUserRole().get(i).getRoleName());
                         editor_obj.putString(KeyValue_employeeRoleId, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
                         editor_obj.putString(key_loginuserid, user_object.getLst1().get(i).getUserRole().get(i).getRoleID());
-
+                        //Employee_Role=user_object.getLst1().get(i).getUserRole().get(i).getRoleName();
                     }
 
                     Class_SaveSharedPreference.setPREF_RoleName(MainActivity.this, user_object.getLst1().get(0).getUserRole().get(0).getRoleName());
@@ -770,8 +795,29 @@ public class MainActivity extends AppCompatActivity
                 if (user_object.getStatus().toString().equalsIgnoreCase("true"))
                 {
 
-                    Intent intent = new Intent(MainActivity.this, Activity_HomeScreen.class);
-                    startActivity(intent);
+//                    Intent intent = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                    startActivity(intent);
+
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Trainer")) {
+                        Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+                        startActivity(i);
+                        finish();
+                    }
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Cluster Head")) {
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                        Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    if(user_object.getLst1().get(0).getUserRole().get(0).getRoleName().equalsIgnoreCase("Administrator")) {
+//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+//                startActivity(i);
+//                finish();
+                        Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+
+                    }
                     Log.e("response", user_object.getStatus().toString());
 
 
@@ -904,9 +950,9 @@ public class MainActivity extends AppCompatActivity
                 TextView tv = (TextView) v;
                 tv.setText(buttonText);
                 // tv.setBackgroundColor(Color.CYAN);
-                tv.setBackgroundDrawable(
-                        new ColorDrawable(Color.parseColor(COLOR)));
-                tv.setTextColor(Color.WHITE);
+//                tv.setBackgroundDrawable(
+//                        new ColorDrawable(Color.parseColor(COLOR)));
+//                tv.setTextColor(Color.WHITE);
               //  tv.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/laouibold.ttf"));
                 return;
             }

@@ -93,22 +93,26 @@ public class DocView_DownloadAdapter extends RecyclerView.Adapter<DocView_Downlo
         Log.e("tag","name=="+dataSet.get(listPosition).getDocument_Name());
         //imageView.setImageResource(dataSet.get(listPosition).getDocument_Path());
 
-        if(dataSet.get(listPosition).getDocument_Verification().equals("") ||dataSet.get(listPosition).getDocument_Verification().equals("null")||dataSet.get(listPosition).getDocument_Verification().equals(null)){
+        try {
+            if (dataSet.get(listPosition).getDocument_Verification().equals("") || dataSet.get(listPosition).getDocument_Verification().equals("null") || dataSet.get(listPosition).getDocument_Verification().equals(null)) {
 
-        }else {
-            if (dataSet.get(listPosition).getDocument_Verification().equals("Pending")) {
-                holder.imageViewIcon.setVisibility(View.GONE);
-                holder.view_lp_bt.setVisibility(View.GONE);
-            } else if (dataSet.get(listPosition).getDocument_Verification().equals("Active")) {
-                holder.imageViewIcon.setVisibility(View.VISIBLE);
-                holder.view_lp_bt.setVisibility(View.GONE);
-            } else if (dataSet.get(listPosition).getDocument_Verification().equals("Downloaded")) {
-                holder.imageViewIcon.setVisibility(View.GONE);
-                holder.view_lp_bt.setVisibility(View.VISIBLE);
-            } else if (dataSet.get(listPosition).getDocument_Verification().equals("Verified")) {
-                holder.imageViewIcon.setVisibility(View.GONE);
-                holder.view_lp_bt.setVisibility(View.VISIBLE);
+            } else {
+                if (dataSet.get(listPosition).getDocument_Verification().equals("Pending")) {
+                    holder.imageViewIcon.setVisibility(View.GONE);
+                    holder.view_lp_bt.setVisibility(View.GONE);
+                } else if (dataSet.get(listPosition).getDocument_Verification().equals("Active")) {
+                    holder.imageViewIcon.setVisibility(View.VISIBLE);
+                    holder.view_lp_bt.setVisibility(View.GONE);
+                } else if (dataSet.get(listPosition).getDocument_Verification().equals("Downloaded")) {
+                    holder.imageViewIcon.setVisibility(View.GONE);
+                    holder.view_lp_bt.setVisibility(View.VISIBLE);
+                } else if (dataSet.get(listPosition).getDocument_Verification().equals("Verified")) {
+                    holder.imageViewIcon.setVisibility(View.GONE);
+                    holder.view_lp_bt.setVisibility(View.VISIBLE);
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 

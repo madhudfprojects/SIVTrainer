@@ -64,38 +64,37 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
     SharedPreferences sharedpref_loginuserid_Obj;
     SharedPreferences sharedpreferencebook_usercredential_Obj;
     String str_loginuserID = "";
-    Class_Assessments_List[] userInfosarr,arrayObj_Class_ViewlistStudentData2,userInfosarr2;
+    Class_Assessments_List[] userInfosarr, arrayObj_Class_ViewlistStudentData2, userInfosarr2;
     ArrayList<Class_Assessments_List> assessment_array_List = new ArrayList<Class_Assessments_List>();
-    String str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_ID="",str_Institute_Name;
+    String str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_ID = "", str_Institute_Name;
     ListView lv_eventlist;
-   // AssessmentCardsAdapter adapter;
+    // AssessmentCardsAdapter adapter;
     //AssessmentCardsAdapter_new adapter2;
     Boolean isInternetPresent = false;
     Class_InternetDectector internetDectector;
 
 
-    Spinner institute_assessment_SP,level_assessment_SP,Status_assessment_SP;
+    Spinner institute_assessment_SP, level_assessment_SP, Status_assessment_SP;
     Class_Assessment_Institute obj_Class_Assessment_institute;
-    Class_Assessment_Institute[] arrayobjClass_Assessment_institute,arrayobjClass_Assessment_institute2;
-    String selected_assessment_instituteName="",sp_strAssessment_Inst_ID="";
+    Class_Assessment_Institute[] arrayobjClass_Assessment_institute, arrayobjClass_Assessment_institute2;
+    String selected_assessment_instituteName = "", sp_strAssessment_Inst_ID = "";
     Class_Assessment_Level obj_Class_Assessment_level;
-    Class_Assessment_Level[] arrayobjClass_Assessment_level,arrayobjClass_Assessment_level2;
-    String str_save="",str_maxmarks="",str_totalcount="",str_presentcount="",selected_assessment_status="",str_level_ID="",selected_assessment_levelName="",sp_strAssessment_level_ID="";
+    Class_Assessment_Level[] arrayobjClass_Assessment_level, arrayobjClass_Assessment_level2;
+    String str_save = "", str_maxmarks = "", str_totalcount = "", str_presentcount = "", selected_assessment_status = "", str_level_ID = "", selected_assessment_levelName = "", sp_strAssessment_level_ID = "";
     Class_Assessment_Status obj_Class_Assessment_status;
-    Class_Assessment_Status[] arrayobjClass_Assessment_status,arrayobjClass_Assessment_status3;
-    String[] arrayobjClass_Assessment_status2={"All","Completed","Active"};
-
+    Class_Assessment_Status[] arrayobjClass_Assessment_status, arrayobjClass_Assessment_status3;
+    String[] arrayobjClass_Assessment_status2 = {"All", "Completed", "Active"};
 
 
     Class_ViewAssessmentListview obj_class_ViewAssessmentListview;
-    Class_ViewAssessmentListview[] arrayobjclass_ViewAssessmentListview,arrayobjclass_ViewAssessmentListview2;
+    Class_ViewAssessmentListview[] arrayobjclass_ViewAssessmentListview, arrayobjclass_ViewAssessmentListview2;
 
 
     Interface_userservice userService1;
-    Class_AssementList []  arrayObj_Class_monthcontents;
+    Class_AssementList[] arrayObj_Class_monthcontents;
     SharedPreferences sharedpref_username_Obj;
     SharedPreferences sharedpref_userimage_Obj;
-    String str_Googlelogin_Username="",str_Googlelogin_UserImg="";
+    String str_Googlelogin_Username = "", str_Googlelogin_UserImg = "";
 
 
     @Override
@@ -108,9 +107,9 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
         internetDectector = new Class_InternetDectector(getApplicationContext());
         isInternetPresent = internetDectector.isConnectingToInternet();
-       // sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
+        // sharedpref_loginuserid_Obj = getSharedPreferences(sharedpreferenc_loginuserid, Context.MODE_PRIVATE);
 
-        sharedpreferencebook_usercredential_Obj=getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
+        sharedpreferencebook_usercredential_Obj = getSharedPreferences(sharedpreferencebook_usercredential, Context.MODE_PRIVATE);
         str_loginuserID = sharedpreferencebook_usercredential_Obj.getString(key_loginuserid, "").trim();
         sharedpref_username_Obj = getSharedPreferences(sharedpreferenc_username, Context.MODE_PRIVATE);
         str_Googlelogin_Username = sharedpref_username_Obj.getString(Key_username, "").trim();
@@ -119,21 +118,20 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         str_Googlelogin_UserImg = sharedpref_userimage_Obj.getString(key_userimage, "").trim();
 
 
-
         swipeLayout = findViewById(R.id.swipe_container_assessment);
         swipeLayout.setOnRefreshListener(this);
         lv_eventlist = findViewById(R.id.lv_assessmentlist);
 
 
-        institute_assessment_SP= findViewById(R.id.institute_assessment_SP);
-        level_assessment_SP= findViewById(R.id.level_assessment_SP);
-        Status_assessment_SP= findViewById(R.id.Status_assessment_SP);
+        institute_assessment_SP = findViewById(R.id.institute_assessment_SP);
+        level_assessment_SP = findViewById(R.id.level_assessment_SP);
+        Status_assessment_SP = findViewById(R.id.Status_assessment_SP);
 //        ArrayAdapter dataAdapter_status = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, arrayobjClass_Assessment_status2);
 //        dataAdapter_status.setDropDownViewResource(R.layout.spinnercenterstyle);
 //        Status_assessment_SP.setAdapter(dataAdapter_status);
 
-      //  adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
-       // adapter2 = new AssessmentCardsAdapter_new(this, Class_Assessments_List.assesmentlistview_info_arr_new);
+        //  adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
+        // adapter2 = new AssessmentCardsAdapter_new(this, Class_Assessments_List.assesmentlistview_info_arr_new);
 
         if (isInternetPresent) {
             deleteVIewlistTable_B4insertion();
@@ -147,8 +145,6 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         } else {
             Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
         }
-
-
 
 
         institute_assessment_SP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -181,7 +177,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                 selected_assessment_levelName = obj_Class_Assessment_level.getLevel_assessmentname();
                 Log.i("selected_levelName", " : " + selected_assessment_levelName);
                 Log.i("selecte_Fee", " : " + sp_strAssessment_level_ID);
-                Update_instidlevelid_InStatus_spinner(sp_strAssessment_Inst_ID,sp_strAssessment_level_ID);
+                Update_instidlevelid_InStatus_spinner(sp_strAssessment_Inst_ID, sp_strAssessment_level_ID);
             }
 
             @Override
@@ -196,7 +192,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                                        long id) {
                 selected_assessment_status = Status_assessment_SP.getSelectedItem().toString();
 
-                Update_ViewListID_spinner(sp_strAssessment_Inst_ID,sp_strAssessment_level_ID,selected_assessment_status);
+                Update_ViewListID_spinner(sp_strAssessment_Inst_ID, sp_strAssessment_level_ID, selected_assessment_status);
             }
 
             @Override
@@ -209,7 +205,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
     @Override
     public void onRefresh() {
-     //   adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
+        //   adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
 
         if (isInternetPresent) {
             deleteVIewlistTable_B4insertion();
@@ -260,10 +256,10 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         protected void onPostExecute(Void result) {
             dialog.dismiss();
             Log.i("tag", "onPostExecute");
-            if(str_Assesment_Status.equals("No Result")){
+            if (str_Assesment_Status.equals("No Result")) {
                 Toast.makeText(getApplicationContext(), "Sorry..No scheduled assignments", Toast.LENGTH_SHORT).show();
-                 finish();
-            }else{
+                finish();
+            } else {
 
                 //lv_eventlist.setAdapter(adapter);
                 uploadfromDB_INstlist();
@@ -313,7 +309,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                     arrayobjClass_Assessment_institute = new Class_Assessment_Institute[Count];
                     arrayobjClass_Assessment_level = new Class_Assessment_Level[Count];
                     arrayobjClass_Assessment_status = new Class_Assessment_Status[Count];
-                    arrayobjclass_ViewAssessmentListview=new Class_ViewAssessmentListview[Count];
+                    arrayobjclass_ViewAssessmentListview = new Class_ViewAssessmentListview[Count];
 
                     for (int i = 0; i < Count; i++) {
                         SoapObject list = (SoapObject) response.getProperty(i);
@@ -323,17 +319,16 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                         str_Assesment_Status = list.getProperty("Assesment_Status").toString();
                         str_Lavel_Name = list.getProperty("Lavel_Name").toString();
                         str_Institute_Name = list.getProperty("Institute_Name").toString();
-                        str_Institute_ID=list.getProperty("Institute_ID").toString();
-                        str_level_ID=list.getProperty("Level_ID").toString();
-                        str_presentcount=list.getProperty("Present_Count").toString();
-                        str_totalcount=list.getProperty("Total_Count").toString();
-                        str_maxmarks=list.getProperty("Max_Marks").toString();
+                        str_Institute_ID = list.getProperty("Institute_ID").toString();
+                        str_level_ID = list.getProperty("Level_ID").toString();
+                        str_presentcount = list.getProperty("Present_Count").toString();
+                        str_totalcount = list.getProperty("Total_Count").toString();
+                        str_maxmarks = list.getProperty("Max_Marks").toString();
 
-                        str_save=list.getProperty("Save").toString();
+                        str_save = list.getProperty("Save").toString();
 
 
-
-                        Class_Assessments_List userInfo = new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save);
+                        Class_Assessments_List userInfo = new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save);
                         assessment_array_List.add(userInfo);
 
                     }
@@ -355,7 +350,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                         str_presentcount = assessment_array_List.get(i).getAssessment_presentstudentcount();
                         str_totalcount = assessment_array_List.get(i).getAssessment_totalstudentcount();
                         str_maxmarks = assessment_array_List.get(i).getAssessment_maxmarks();
-                        str_save=assessment_array_List.get(i).getAssessment_save();
+                        str_save = assessment_array_List.get(i).getAssessment_save();
 
                         Class_Assessment_Institute innerObj_Class_institute = new Class_Assessment_Institute();
                         innerObj_Class_institute.setInstitute_id(str_Institute_ID);
@@ -373,7 +368,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                         innerObj_Class_status.setAssessment_levelID(str_level_ID);
                         innerObj_Class_status.setStatus(str_Assesment_Status);
 
-                        Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview=new Class_ViewAssessmentListview();
+                        Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview = new Class_ViewAssessmentListview();
                         innerObjClass_ViewAssessmentListview.setAssessment_instituteID(str_Institute_ID);
                         innerObjClass_ViewAssessmentListview.setAssessment_instituteName(str_Institute_Name);
                         innerObjClass_ViewAssessmentListview.setAssessment_levelID(str_level_ID);
@@ -405,20 +400,19 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                         userInfosarr[i] = obj;
                         arrayobjClass_Assessment_institute[i] = innerObj_Class_institute;
                         arrayobjClass_Assessment_level[i] = innerObj_Class_level;
-                        arrayobjClass_Assessment_status[i]=innerObj_Class_status;
-                        arrayobjclass_ViewAssessmentListview[i]=innerObjClass_ViewAssessmentListview;
-
+                        arrayobjClass_Assessment_status[i] = innerObj_Class_status;
+                        arrayobjclass_ViewAssessmentListview[i] = innerObjClass_ViewAssessmentListview;
 
 
                         Log.i("Tag", "items aa=" + assessment_array_List.get(i).getAssessment_levelName());
-                        Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
-                       // adapter.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
+                        Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save));
+                        // adapter.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
 
 
                         DBCreate_INstdetails_insert_2SQLiteDB(str_Institute_ID, str_Institute_Name);
-                        DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Lavel_Name);
-                        DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status);
-                        DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status,str_Assesment_ID,str_Assesment_Name,str_Assesment_Date,str_presentcount,str_totalcount,str_maxmarks,str_Lavel_Name,str_Institute_Name,str_save);
+                        DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Lavel_Name);
+                        DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status);
+                        DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status, str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_presentcount, str_totalcount, str_maxmarks, str_Lavel_Name, str_Institute_Name, str_save);
                     }
 
                     Log.i("Tag", "items=" + items.length);
@@ -458,13 +452,14 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                     Class_getassessmentlistResponse class_loginresponse = response.body();
                     if (class_loginresponse.getStatus()) {
                         List<Class_AssementList> monthContents_list = response.body().getLst();
+                        Log.e("size", String.valueOf(monthContents_list.size()));
 
-                          arrayObj_Class_monthcontents = new Class_AssementList[monthContents_list.size()];
-
+                        arrayObj_Class_monthcontents = new Class_AssementList[monthContents_list.size()];
                         arrayobjClass_Assessment_institute = new Class_Assessment_Institute[arrayObj_Class_monthcontents.length];
                         arrayobjClass_Assessment_level = new Class_Assessment_Level[arrayObj_Class_monthcontents.length];
                         arrayobjClass_Assessment_status = new Class_Assessment_Status[arrayObj_Class_monthcontents.length];
-                        arrayobjclass_ViewAssessmentListview=new Class_ViewAssessmentListview[arrayObj_Class_monthcontents.length];
+                        arrayobjclass_ViewAssessmentListview = new Class_ViewAssessmentListview[arrayObj_Class_monthcontents.length];
+
 
                         for (int i = 0; i < arrayObj_Class_monthcontents.length; i++) {
                             Log.e("getassessmentlist", String.valueOf(class_loginresponse.getStatus()));
@@ -503,7 +498,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                             str_presentcount = assessment_array_List.get(i).getAssessment_presentstudentcount();
                             str_totalcount = assessment_array_List.get(i).getAssessment_totalstudentcount();
                             str_maxmarks = assessment_array_List.get(i).getAssessment_maxmarks();
-                            str_save=assessment_array_List.get(i).getAssessment_save();
+                            str_save = assessment_array_List.get(i).getAssessment_save();
 
                             Class_Assessment_Institute innerObj_Class_institute = new Class_Assessment_Institute();
                             innerObj_Class_institute.setInstitute_id(str_Institute_ID);
@@ -521,7 +516,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                             innerObj_Class_status.setAssessment_levelID(str_level_ID);
                             innerObj_Class_status.setStatus(str_Assesment_Status);
 
-                            Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview=new Class_ViewAssessmentListview();
+                            Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview = new Class_ViewAssessmentListview();
                             innerObjClass_ViewAssessmentListview.setAssessment_instituteID(str_Institute_ID);
                             innerObjClass_ViewAssessmentListview.setAssessment_instituteName(str_Institute_Name);
                             innerObjClass_ViewAssessmentListview.setAssessment_levelID(str_level_ID);
@@ -553,20 +548,19 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                             userInfosarr[i] = obj;
                             arrayobjClass_Assessment_institute[i] = innerObj_Class_institute;
                             arrayobjClass_Assessment_level[i] = innerObj_Class_level;
-                            arrayobjClass_Assessment_status[i]=innerObj_Class_status;
-                            arrayobjclass_ViewAssessmentListview[i]=innerObjClass_ViewAssessmentListview;
-
+                            arrayobjClass_Assessment_status[i] = innerObj_Class_status;
+                            arrayobjclass_ViewAssessmentListview[i] = innerObjClass_ViewAssessmentListview;
 
 
                             Log.i("Tag", "items aa=" + assessment_array_List.get(i).getAssessment_levelName());
-                            Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
+                            Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save));
                             // adapter.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
 
 
                             DBCreate_INstdetails_insert_2SQLiteDB(str_Institute_ID, str_Institute_Name);
-                            DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Lavel_Name);
-                            DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status);
-                            DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID,str_level_ID,str_Assesment_Status,str_Assesment_ID,str_Assesment_Name,str_Assesment_Date,str_presentcount,str_totalcount,str_maxmarks,str_Lavel_Name,str_Institute_Name,str_save);
+                            DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Lavel_Name);
+                            DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status);
+                            DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status, str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_presentcount, str_totalcount, str_maxmarks, str_Lavel_Name, str_Institute_Name, str_save);
                         }
 
                         Log.i("Tag", "items=" + items.length);
@@ -605,8 +599,8 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 //                        alerts_dialog_getexlistviewError();
 
                         //Toast.makeText(getActivity(), error.getMsg(), Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(Activity_AssessmentList.this,"Kindly restart your application", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(Activity_AssessmentList.this, "Kindly restart your application", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -626,7 +620,6 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
     }
 
 
-
     //================================================================
 
 
@@ -641,6 +634,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
         db_sandbox.close();
     }
+
     public void uploadfromDB_INstlist() {
 
         SQLiteDatabase db_sandboxlist = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -676,6 +670,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
 
     }
+
     public void Update_instid_InLeveltable_spinner(String str_insid) {
 
         SQLiteDatabase db_levelid = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -715,14 +710,16 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             e.printStackTrace();
         }
     }
-    public void DBCreate_Leveldetails_insert_2SQLiteDB(String str_insID,String str_levelID, String str_levelname) {
+
+    public void DBCreate_Leveldetails_insert_2SQLiteDB(String str_insID, String str_levelID, String str_levelname) {
         SQLiteDatabase db_sandbox = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db_sandbox.execSQL("CREATE TABLE IF NOT EXISTS Level_Assessment_List(insti_assessmentID VARCHAR,levelID VARCHAR,levelname VARCHAR);");
         String SQLiteQuery = "INSERT INTO Level_Assessment_List (insti_assessmentID, levelID,levelname)" +
-                " VALUES ('" + str_insID + "','"+ str_levelID + "','" + str_levelname + "');";
+                " VALUES ('" + str_insID + "','" + str_levelID + "','" + str_levelname + "');";
         db_sandbox.execSQL(SQLiteQuery);
         db_sandbox.close();
     }
+
     public void uploadfromDB_levellist() {
 
         SQLiteDatabase db_sandboxlist = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -760,14 +757,16 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
 
     }
-    public void DBCreate_Statusdetails_insert_2SQLiteDB(String str_insID,String str_levelID, String str_status) {
+
+    public void DBCreate_Statusdetails_insert_2SQLiteDB(String str_insID, String str_levelID, String str_status) {
         SQLiteDatabase db_sandbox = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db_sandbox.execSQL("CREATE TABLE IF NOT EXISTS Status_Assessment_List(instituteid VARCHAR,levelid VARCHAR,status VARCHAR);");
         String SQLiteQuery = "INSERT INTO Status_Assessment_List (instituteid, levelid,status)" +
-                " VALUES ('" + str_insID + "','"+ str_levelID + "','" + str_status + "');";
+                " VALUES ('" + str_insID + "','" + str_levelID + "','" + str_status + "');";
         db_sandbox.execSQL(SQLiteQuery);
         db_sandbox.close();
     }
+
     public void uploadfromDB_statuslist() {
 
         SQLiteDatabase db_sandboxlist = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -804,7 +803,8 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
 
     }
-    public void Update_instidlevelid_InStatus_spinner(String str_insid,String strlevelid) {
+
+    public void Update_instidlevelid_InStatus_spinner(String str_insid, String strlevelid) {
 
         SQLiteDatabase db_levelid = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db_levelid.execSQL("CREATE TABLE IF NOT EXISTS Status_Assessment_List(instituteid VARCHAR,levelid VARCHAR,status VARCHAR);");
@@ -843,6 +843,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             e.printStackTrace();
         }
     }
+
     public void deleteInstiTable_B4insertion() {
 
         SQLiteDatabase db_sandboxtable_delete = openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -855,6 +856,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_sandboxtable_delete.close();
     }
+
     public void deleteLevelTable_B4insertion() {
 
         SQLiteDatabase db_sandboxtable_delete = openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -867,6 +869,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_sandboxtable_delete.close();
     }
+
     public void deleteStatusTable_B4insertion() {
 
         SQLiteDatabase db_sandboxtable_delete = openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
@@ -879,13 +882,14 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_sandboxtable_delete.close();
     }
-    public void DBCreate_ViewListdetails_insert_2SQLiteDB(String str_insID, String str_levelid,String strstatus,String str_assessmentid,String str_assessmentname,String str_date,String str_presentcount,String str_totalcount,String str_maxmarks,String strlevelname,String strinstname,String strsave) {
+
+    public void DBCreate_ViewListdetails_insert_2SQLiteDB(String str_insID, String str_levelid, String strstatus, String str_assessmentid, String str_assessmentname, String str_date, String str_presentcount, String str_totalcount, String str_maxmarks, String strlevelname, String strinstname, String strsave) {
         SQLiteDatabase db_sandbox = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db_sandbox.execSQL("CREATE TABLE IF NOT EXISTS VIewAssessmentList(view_instiID VARCHAR,view_levelid VARCHAR,view_status VARCHAR,view_assessmentid VARCHAR,view_assessmentname VARCHAR,view_date VARCHAR,view_presentcount VARCHAR,view_totalcount VARCHAR,view_maxmarks VARCHAR,view_levelname VARCHAR,view_instname VARCHAR,view_save VARCHAR);");
 
 
         String SQLiteQuery = "INSERT INTO VIewAssessmentList (view_instiID, view_levelid,view_status,view_assessmentid,view_assessmentname,view_date,view_presentcount,view_totalcount,view_maxmarks,view_levelname,view_instname,view_save)" +
-                " VALUES ('" + str_insID + "','" + str_levelid + "','" + strstatus + "','" + str_assessmentid + "','" + str_assessmentname + "','" + str_date + "','" + str_presentcount + "','" + str_totalcount + "','" + str_maxmarks  + "','" + strlevelname + "','" + strinstname + "','" + strsave + "');";
+                " VALUES ('" + str_insID + "','" + str_levelid + "','" + strstatus + "','" + str_assessmentid + "','" + str_assessmentname + "','" + str_date + "','" + str_presentcount + "','" + str_totalcount + "','" + str_maxmarks + "','" + strlevelname + "','" + strinstname + "','" + strsave + "');";
         db_sandbox.execSQL(SQLiteQuery);
 
         db_sandbox.close();
@@ -907,7 +911,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
     public void Uploadfrom_ViewList_spinner() {
         SQLiteDatabase db1 = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db1.execSQL("CREATE TABLE IF NOT EXISTS VIewAssessmentList(view_instiID VARCHAR,view_levelid VARCHAR,view_status VARCHAR,view_assessmentid VARCHAR,view_assessmentname VARCHAR,view_date VARCHAR,view_presentcount VARCHAR,view_totalcount VARCHAR,view_maxmarks VARCHAR,view_levelname VARCHAR,view_instname VARCHAR,view_save VARCHAR);");
-       // Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VIewAssessmentList WHERE view_instiID='" + str_insID + "' AND view_levelid='" + str_levelid + "'AND view_status='" + strstatus + "'", null);
+        // Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VIewAssessmentList WHERE view_instiID='" + str_insID + "' AND view_levelid='" + str_levelid + "'AND view_status='" + strstatus + "'", null);
         Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VIewAssessmentList", null);
 
         try {
@@ -922,36 +926,36 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                     Log.d("view", "enteredviewlist loop");
                     Class_ViewAssessmentListview innerObj_Class_stuList = new Class_ViewAssessmentListview();
                     innerObj_Class_stuList.setAssessmentID(cursor1.getString(cursor1.getColumnIndex("view_assessmentid")));
-                    String s1=cursor1.getString(cursor1.getColumnIndex("view_assessmentid"));
+                    String s1 = cursor1.getString(cursor1.getColumnIndex("view_assessmentid"));
                     innerObj_Class_stuList.setAssessmentName(cursor1.getString(cursor1.getColumnIndex("view_assessmentname")));
-                    String s2=cursor1.getString(cursor1.getColumnIndex("view_assessmentname"));
+                    String s2 = cursor1.getString(cursor1.getColumnIndex("view_assessmentname"));
 
                     innerObj_Class_stuList.setAssessmentDate(cursor1.getString(cursor1.getColumnIndex("view_date")));
-                    String s3=cursor1.getString(cursor1.getColumnIndex("view_date"));
+                    String s3 = cursor1.getString(cursor1.getColumnIndex("view_date"));
 
                     innerObj_Class_stuList.setAssessment_levelID(cursor1.getString(cursor1.getColumnIndex("view_levelid")));
-                    String s4=cursor1.getString(cursor1.getColumnIndex("view_levelid"));
+                    String s4 = cursor1.getString(cursor1.getColumnIndex("view_levelid"));
 
                     innerObj_Class_stuList.setAssessment_instituteName(cursor1.getString(cursor1.getColumnIndex("view_instname")));
-                    String s5=cursor1.getString(cursor1.getColumnIndex("view_instname"));
+                    String s5 = cursor1.getString(cursor1.getColumnIndex("view_instname"));
 
                     innerObj_Class_stuList.setAssessment_instituteID(cursor1.getString(cursor1.getColumnIndex("view_instiID")));
-                    String s6=cursor1.getString(cursor1.getColumnIndex("view_instiID"));
+                    String s6 = cursor1.getString(cursor1.getColumnIndex("view_instiID"));
 
                     innerObj_Class_stuList.setAssessment_maxmarks(cursor1.getString(cursor1.getColumnIndex("view_maxmarks")));
-                    String s7=cursor1.getString(cursor1.getColumnIndex("view_maxmarks"));
+                    String s7 = cursor1.getString(cursor1.getColumnIndex("view_maxmarks"));
 
                     innerObj_Class_stuList.setAssessment_presentstudentcount(cursor1.getString(cursor1.getColumnIndex("view_presentcount")));
-                    String s8=cursor1.getString(cursor1.getColumnIndex("view_presentcount"));
+                    String s8 = cursor1.getString(cursor1.getColumnIndex("view_presentcount"));
 
                     innerObj_Class_stuList.setAssessment_totalstudentcount(cursor1.getString(cursor1.getColumnIndex("view_totalcount")));
-                    String s9=cursor1.getString(cursor1.getColumnIndex("view_totalcount"));
+                    String s9 = cursor1.getString(cursor1.getColumnIndex("view_totalcount"));
 
                     innerObj_Class_stuList.setAssessmentStatus(cursor1.getString(cursor1.getColumnIndex("view_status")));
-                    String s10=cursor1.getString(cursor1.getColumnIndex("view_status"));
+                    String s10 = cursor1.getString(cursor1.getColumnIndex("view_status"));
 
                     innerObj_Class_stuList.setAssessment_levelName(cursor1.getString(cursor1.getColumnIndex("view_levelname")));
-                    String s11=cursor1.getString(cursor1.getColumnIndex("view_levelname"));
+                    String s11 = cursor1.getString(cursor1.getColumnIndex("view_levelname"));
                     innerObj_Class_stuList.setAssessment_save(cursor1.getString(cursor1.getColumnIndex("view_save")));
 
                     arrayobjclass_ViewAssessmentListview2[i] = innerObj_Class_stuList;
@@ -968,13 +972,12 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             }//if ends
             db1.close();
 
-            if (x > 0)
-            {
-               // adapter2 = new AssessmentCardsAdapter_new(this, Class_Assessments_List.assesmentlistview_info_arr_new);
+            if (x > 0) {
+                // adapter2 = new AssessmentCardsAdapter_new(this, Class_Assessments_List.assesmentlistview_info_arr_new);
                 CustomAdapter adapter = new CustomAdapter();
                 lv_eventlist.setAdapter(adapter);
 
-               // lv_eventlist.setAdapter(adapter2);
+                // lv_eventlist.setAdapter(adapter2);
 
             }
         } catch (Exception e) {
@@ -983,7 +986,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
     }
 
-    public void Update_ViewListID_spinner(String str_insID, String str_levelid,String strstatus) {
+    public void Update_ViewListID_spinner(String str_insID, String str_levelid, String strstatus) {
         SQLiteDatabase db1 = this.openOrCreateDatabase("assessmentdb", Context.MODE_PRIVATE, null);
         db1.execSQL("CREATE TABLE IF NOT EXISTS VIewAssessmentList(view_instiID VARCHAR,view_levelid VARCHAR,view_status VARCHAR,view_assessmentid VARCHAR,view_assessmentname VARCHAR,view_date VARCHAR,view_presentcount VARCHAR,view_totalcount VARCHAR,view_maxmarks VARCHAR,view_levelname VARCHAR,view_instname VARCHAR,view_save VARCHAR);");
         Cursor cursor1 = db1.rawQuery("SELECT DISTINCT * FROM VIewAssessmentList WHERE view_instiID='" + str_insID + "' AND view_levelid='" + str_levelid + "'AND view_status='" + strstatus + "'", null);
@@ -991,8 +994,8 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         try {
             int x = cursor1.getCount();
             int i = 0;
-           // userInfosarr2 = new Class_Assessments_List[x];
-            arrayobjclass_ViewAssessmentListview2=new Class_ViewAssessmentListview[x];
+            // userInfosarr2 = new Class_Assessments_List[x];
+            arrayobjclass_ViewAssessmentListview2 = new Class_ViewAssessmentListview[x];
             if (cursor1.moveToFirst()) {
 
                 do {
@@ -1000,44 +1003,44 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                     Log.d("view", "enteredviewlist loop");
                     Class_ViewAssessmentListview innerObj_Class_stuList = new Class_ViewAssessmentListview();
                     innerObj_Class_stuList.setAssessmentID(cursor1.getString(cursor1.getColumnIndex("view_assessmentid")));
-                    String s1=cursor1.getString(cursor1.getColumnIndex("view_assessmentid"));
+                    String s1 = cursor1.getString(cursor1.getColumnIndex("view_assessmentid"));
                     innerObj_Class_stuList.setAssessmentName(cursor1.getString(cursor1.getColumnIndex("view_assessmentname")));
-                    String s2=cursor1.getString(cursor1.getColumnIndex("view_assessmentname"));
+                    String s2 = cursor1.getString(cursor1.getColumnIndex("view_assessmentname"));
 
                     innerObj_Class_stuList.setAssessmentDate(cursor1.getString(cursor1.getColumnIndex("view_date")));
-                    String s3=cursor1.getString(cursor1.getColumnIndex("view_date"));
+                    String s3 = cursor1.getString(cursor1.getColumnIndex("view_date"));
 
                     innerObj_Class_stuList.setAssessment_levelID(cursor1.getString(cursor1.getColumnIndex("view_levelid")));
-                    String s4=cursor1.getString(cursor1.getColumnIndex("view_levelid"));
+                    String s4 = cursor1.getString(cursor1.getColumnIndex("view_levelid"));
 
                     innerObj_Class_stuList.setAssessment_instituteName(cursor1.getString(cursor1.getColumnIndex("view_instname")));
-                    String s5=cursor1.getString(cursor1.getColumnIndex("view_instname"));
+                    String s5 = cursor1.getString(cursor1.getColumnIndex("view_instname"));
 
                     innerObj_Class_stuList.setAssessment_instituteID(cursor1.getString(cursor1.getColumnIndex("view_instiID")));
-                    String s6=cursor1.getString(cursor1.getColumnIndex("view_instiID"));
+                    String s6 = cursor1.getString(cursor1.getColumnIndex("view_instiID"));
 
                     innerObj_Class_stuList.setAssessment_maxmarks(cursor1.getString(cursor1.getColumnIndex("view_maxmarks")));
-                    String s7=cursor1.getString(cursor1.getColumnIndex("view_maxmarks"));
+                    String s7 = cursor1.getString(cursor1.getColumnIndex("view_maxmarks"));
 
                     innerObj_Class_stuList.setAssessment_presentstudentcount(cursor1.getString(cursor1.getColumnIndex("view_presentcount")));
-                    String s8=cursor1.getString(cursor1.getColumnIndex("view_presentcount"));
+                    String s8 = cursor1.getString(cursor1.getColumnIndex("view_presentcount"));
 
                     innerObj_Class_stuList.setAssessment_totalstudentcount(cursor1.getString(cursor1.getColumnIndex("view_totalcount")));
-                    String s9=cursor1.getString(cursor1.getColumnIndex("view_totalcount"));
+                    String s9 = cursor1.getString(cursor1.getColumnIndex("view_totalcount"));
 
                     innerObj_Class_stuList.setAssessmentStatus(cursor1.getString(cursor1.getColumnIndex("view_status")));
-                    String s10=cursor1.getString(cursor1.getColumnIndex("view_status"));
+                    String s10 = cursor1.getString(cursor1.getColumnIndex("view_status"));
 
                     innerObj_Class_stuList.setAssessment_levelName(cursor1.getString(cursor1.getColumnIndex("view_levelname")));
-                    String s11=cursor1.getString(cursor1.getColumnIndex("view_levelname"));
+                    String s11 = cursor1.getString(cursor1.getColumnIndex("view_levelname"));
 
                     innerObj_Class_stuList.setAssessment_save(cursor1.getString(cursor1.getColumnIndex("view_save")));
 
                     //  userInfosarr2[i] = innerObj_Class_stuList;
                     arrayobjclass_ViewAssessmentListview2[i] = innerObj_Class_stuList;
 
-                   // Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(s1, s2, s3, s10, s11, s5,s6,s4,s8,s9,s7));
-                   // adapter.add(new Class_Assessments_List(s1, s2, s3, s10, s11, s5,s6,s4,s8,s9,s7));
+                    // Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(s1, s2, s3, s10, s11, s5,s6,s4,s8,s9,s7));
+                    // adapter.add(new Class_Assessments_List(s1, s2, s3, s10, s11, s5,s6,s4,s8,s9,s7));
 
                     i++;
 
@@ -1047,10 +1050,9 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             }//if ends
             db1.close();
 
-            if (x > 0)
-            {
-              //  adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
-              //  lv_eventlist.setAdapter(adapter);
+            if (x > 0) {
+                //  adapter = new AssessmentCardsAdapter(this, Class_Assessments_List.assesmentlistview_info_arr);
+                //  lv_eventlist.setAdapter(adapter);
                 CustomAdapter adapter = new CustomAdapter();
                 lv_eventlist.setAdapter(adapter);
 
@@ -1111,7 +1113,6 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                 break;
             case android.R.id.home:
                 Intent intent = new Intent(Activity_AssessmentList.this, Activity_HomeScreen.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
 
@@ -1135,6 +1136,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_statelist_delete.close();
     }
+
     public void deleteDistrictRestTable_B4insertion() {
 
         SQLiteDatabase db_districtlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1148,6 +1150,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_districtlist_delete.close();
     }
+
     public void deleteTalukRestTable_B4insertion() {
 
         SQLiteDatabase db_taluklist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1161,6 +1164,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_taluklist_delete.close();
     }
+
     public void deleteVillageRestTable_B4insertion() {
 
         SQLiteDatabase db_villagelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1175,6 +1179,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_villagelist_delete.close();
     }
+
     public void deleteYearRestTable_B4insertion() {
 
         SQLiteDatabase db_yearlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1188,6 +1193,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_yearlist_delete.close();
     }
+
     public void deleteSchoolRestTable_B4insertion() {
 
         SQLiteDatabase db_Schoollist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1201,6 +1207,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_Schoollist_delete.close();
     }
+
     public void deleteSandboxRestTable_B4insertion() {
 
         SQLiteDatabase db_Sandboxlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1214,6 +1221,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_Sandboxlist_delete.close();
     }
+
     public void deleteInstituteRestTable_B4insertion() {
 
         SQLiteDatabase db_Institutelist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1227,6 +1235,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_Institutelist_delete.close();
     }
+
     public void deleteLevelRestTable_B4insertion() {
 
         SQLiteDatabase db_Levellist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1240,6 +1249,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         }
         db_Levellist_delete.close();
     }
+
     public void deleteClusterRestTable_B4insertion() {
 
         SQLiteDatabase db_Clusterlist_delete = openOrCreateDatabase("SIV_DB", Context.MODE_PRIVATE, null);
@@ -1304,7 +1314,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
     }
 
     public class CustomAdapter extends BaseAdapter {
-        String statusStr,stime,etime,str_assessmentid,str_assessmentdate,str_assessmentname,str_assessmentstatus,str_assessmentlevel;
+        String statusStr, stime, etime, str_assessmentid, str_assessmentdate, str_assessmentname, str_assessmentstatus, str_assessmentlevel;
 
 
         public CustomAdapter() {
@@ -1350,24 +1360,21 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 //                convertView = inflater.inflate(R.layout.assessmentcard_item, parent, false);
 
 
-               holder.level_assessment_TV = convertView.findViewById(R.id.level_assessment_TV);
+                holder.level_assessment_TV = convertView.findViewById(R.id.level_assessment_TV);
                 holder.institute_assessment_TV = convertView.findViewById(R.id.institute_assessment_TV);
                 holder.date_assessment_TV = convertView.findViewById(R.id.date_assessment_TV);
 //            Time1_assessment_TV = (TextView) view.findViewById(R.id.Time1_assessment_TV);
                 holder.Time2_assessment_TV = convertView.findViewById(R.id.Time2_assessment_TV);
                 holder.tv_assessmentId = convertView.findViewById(R.id.tv_assessmentId);
                 holder.tv_assessmentStatus = convertView.findViewById(R.id.tv_assessmentStatus);
-                holder.studentcount_assessment_TV= convertView.findViewById(R.id.studentcount_assessment_TV);
+                holder.studentcount_assessment_TV = convertView.findViewById(R.id.studentcount_assessment_TV);
 
                 holder.edit_assessment_bt = convertView.findViewById(R.id.edit_assessment_bt);
-                holder.view_assessment_bt= convertView.findViewById(R.id.view_assessment_bt);
-                holder.assessmentname_TV= convertView.findViewById(R.id.assessmentname_TV);
-                holder.assessment_maxmarks_TV= convertView.findViewById(R.id.assessment_maxmarks_TV);
+                holder.view_assessment_bt = convertView.findViewById(R.id.view_assessment_bt);
+                holder.assessmentname_TV = convertView.findViewById(R.id.assessmentname_TV);
+                holder.assessment_maxmarks_TV = convertView.findViewById(R.id.assessment_maxmarks_TV);
 
-                holder.card_view_layout= convertView.findViewById(R.id.card_view_layout);
-
-
-
+                holder.card_view_layout = convertView.findViewById(R.id.card_view_layout);
 
 
                 convertView.setTag(holder);
@@ -1378,10 +1385,10 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
             }
             obj_class_ViewAssessmentListview = (Class_ViewAssessmentListview) getItem(position);
 
-          //  Class_Assessments_List model = getItem(position);
+            //  Class_Assessments_List model = getItem(position);
             int mm = getCount();
-            Log.e("abac",obj_class_ViewAssessmentListview.getAssessmentID());
-           // Log.i("TAG", "mm=" + mm + " getItemId(position)=" + getItemId(position) + "getItem=" + getItem(position));
+            Log.e("abac", obj_class_ViewAssessmentListview.getAssessmentID());
+            // Log.i("TAG", "mm=" + mm + " getItemId(position)=" + getItemId(position) + "getItem=" + getItem(position));
             if (obj_class_ViewAssessmentListview != null) {
                 str_assessmentid = obj_class_ViewAssessmentListview.getAssessmentID();
                 str_assessmentdate = obj_class_ViewAssessmentListview.getAssessmentDate();
@@ -1403,7 +1410,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                 //  holder.Time2_assessment_TV.setText(etime);
                 holder.institute_assessment_TV.setText(obj_class_ViewAssessmentListview.getAssessment_instituteName());
                 holder.date_assessment_TV.setText(obj_class_ViewAssessmentListview.getAssessmentDate());
-              //  Log.i("tag", "model.getAssessmentID()=" + obj_class_ViewAssessmentListview.getAssessmentID());
+                //  Log.i("tag", "model.getAssessmentID()=" + obj_class_ViewAssessmentListview.getAssessmentID());
                 holder.tv_assessmentId.setText(obj_class_ViewAssessmentListview.getAssessmentID());
                 holder.tv_assessmentStatus.setText(obj_class_ViewAssessmentListview.getAssessmentStatus());
                 holder.assessmentname_TV.setText(obj_class_ViewAssessmentListview.getAssessmentName());
@@ -1417,17 +1424,17 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                     holder.edit_assessment_bt.setVisibility(View.VISIBLE);
                     holder.view_assessment_bt.setVisibility(View.GONE);
 
-                } else if (str_assessmentstatus.equals("Completed")){
+                } else if (str_assessmentstatus.equals("Completed")) {
                     holder.card_view_layout.setBackgroundResource(R.color.green);
                     holder.edit_assessment_bt.setVisibility(View.GONE);
                     holder.view_assessment_bt.setVisibility(View.VISIBLE);
 
-                }else if (str_assessmentstatus.equals("Started")){
+                } else if (str_assessmentstatus.equals("Started")) {
                     holder.card_view_layout.setBackgroundResource(R.color.yellow);
                     holder.edit_assessment_bt.setVisibility(View.VISIBLE);
                     holder.view_assessment_bt.setVisibility(View.GONE);
 
-                }else if (str_assessmentstatus.equals("Pending Submission")){
+                } else if (str_assessmentstatus.equals("Pending Submission")) {
                     holder.card_view_layout.setBackgroundResource(R.color.yellow);
                     holder.edit_assessment_bt.setVisibility(View.VISIBLE);
                     holder.view_assessment_bt.setVisibility(View.GONE);
@@ -1458,7 +1465,6 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
 
 //                Log.e("save", "save=" + obj_class_ViewAssessmentListview.getAssessment_save());
-
 
 
                 holder.edit_assessment_bt.setOnClickListener(new View.OnClickListener() {
@@ -1502,12 +1508,6 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
 
 
     }//End of CustomAdapter
-
-
-
-
-
-
 
 
 }

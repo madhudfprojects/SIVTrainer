@@ -15,4 +15,12 @@
         app:showAsAction="always" />
 
 
+    <item
+        android:id="@+id/save"
+        android:title="updateStudentAttendence"
+        android:icon="@drawable/ic_save"
+        android:iconTint="@color/colorWhite"
+        app:showAsAction="always" />
+
+
 </menu>

@@ -2063,6 +2063,9 @@ public void uploadfromDB_Academiclist() {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.Sync)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 

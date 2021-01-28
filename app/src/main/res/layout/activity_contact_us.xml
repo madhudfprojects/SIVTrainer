@@ -6,9 +6,9 @@
     android:orientation="vertical"
     android:background="#e0f7fa">
 
-    <include
-        android:id="@+id/toolbar_farmponddetails"
-        layout="@layout/titlebar_custom" />
+<!--    <include-->
+<!--        android:id="@+id/toolbar_farmponddetails"-->
+<!--        layout="@layout/titlebar_custom" />-->
 
 
     <ScrollView
@@ -90,11 +90,16 @@
                          android:gravity="right"
                          android:textColor="@color/light_gray"
                          android:textSize="15dp" />-->
-
-                    <TextView
-                        android:layout_width="0dp"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
+                        android:tint="@android:color/holo_green_dark"
+                        android:gravity="center"
+                        android:src="@android:drawable/ic_menu_call"/>
+                    <TextView
+                        android:id="@+id/phone_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text=" 9706907789"
                         android:textColor="@color/dark_black_red"
@@ -102,26 +107,79 @@
 
 
                 </LinearLayout>
-
-
-
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="5dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/dark_black_red" />
+                    <!-- <TextView
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_margin="5dp"
+                         android:text="Email:"
+                         android:textSize="18sp"
+                         android:textStyle="bold"
+                         android:textColor="#ffffff"/>-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tint="@color/colorPrimary"
+                        android:src="@android:drawable/ic_dialog_email"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text=" techsupport@dfmail.org"
+                        android:id="@+id/email_tv"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:id="@+id/downloadlayout_LL">
+
+                    <ImageView
+                        android:id="@+id/pdficon_IV"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/pdficon"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/usermanual_TV"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:padding="8dp"
+                        android:text="User Manual"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/usermanual_download_iv"
+                        android:tag="image_tag"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="5dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:tint="@color/blue"
+                        android:src="@android:drawable/stat_sys_download"
+                        android:visibility="gone"/>
 
 
+                </LinearLayout>
 
 
                 <LinearLayout
@@ -136,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.54"
                         android:gravity="center_horizontal"
-                        android:text="DF SIV Version"
+                        android:text="Skill in Village Version"
                         android:textColor="@color/dark_black_red"
                         android:textStyle="bold"
                         android:textSize="17dp" />
@@ -157,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:gravity="center"
-                        android:text="3.0"
+                        android:text="1.2"
                         android:textColor="@color/dark_black_red"
                         android:textSize="15dp" />
 

@@ -522,12 +522,15 @@ public class Doc_LessonPlanDownloadFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void string) {
-          if(str_resp_msg.equals("Downloaded")) {
             Intent i = new Intent(context, DocView_MainActivity.class);
             context.startActivity(i);
-          }else{
 
-          }
+//            if(str_resp_msg.equals("Downloaded")) {
+//            Intent i = new Intent(context, DocView_MainActivity.class);
+//            context.startActivity(i);
+//          }else{
+//
+//          }
             progressBar.setVisibility(GONE);
         }
     }

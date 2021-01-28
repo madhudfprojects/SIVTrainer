@@ -6,13 +6,12 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#e0f7fa"
-
     android:id="@+id/main"
     tools:context=".ContactUs_Activity">
 
-    <include
-        android:id="@+id/toolbar_farmponddetails"
-        layout="@layout/titlebar_custom" />
+<!--    <include-->
+<!--        android:id="@+id/toolbar_farmponddetails"-->
+<!--        layout="@layout/titlebar_custom" />-->
 
 
     <ScrollView
@@ -20,12 +19,54 @@
         android:layout_height="match_parent"
         android:background="#fafafa">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:background="@drawable/spinner_border"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:id="@+id/downloadlayout_LL">
+
+                <ImageView
+                    android:id="@+id/pdficon_IV"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/pdficon" />
+
+                <TextView
+                    android:id="@+id/usermanual_TV"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="8dp"
+                    android:text="User Manual"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/usermanual_download_iv"
+                    android:tag="image_tag"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:tint="@color/blue"
+                    android:src="@android:drawable/stat_sys_download"/>
+
+
+            </LinearLayout>
 
 
             <LinearLayout
@@ -33,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-
                 android:id="@+id/help_ll"
                 android:orientation="vertical">
 

@@ -185,7 +185,9 @@ public class Activity_EditRegistration extends AppCompatActivity {
     static String str_paymentDate = "", str_paymentDatedisp = "",str_dropoutdate="",str_dropoutdatedisp="";
     String[] educationArray = {"Select", "4th Std", "5th Std", "6th Std", "7th Std", "8th Std", "9th Std"};
     String[] studentstatusArray = {"Applicant", "Admission","Rejected"};
-    String[] studentstatusArray_admission = {"Admission","Dropout","Rejected"};
+//    String[] studentstatusArray_admission = {"Admission","Dropout","Rejected"};
+    String[] studentstatusArray_admission = {"Admission","Dropout"};
+
     String[] studentstatusArray_rejoin = {"Dropout","Rejoin"};
     String[] studentstatusArray_rejected = {"Rejected"};
 
@@ -1518,15 +1520,15 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
 
 //                    Log.e("Gender.fetching", cursor1.getString(cursor1.getColumnIndex("Gender")));
-                    Log.e("str_fetched_school", cursor1.getString(cursor1.getColumnIndex("SchoolName")));
+//                    Log.e("str_fetched_school", cursor1.getString(cursor1.getColumnIndex("SchoolName")));
 //                    Log.e("str_fetched_distname", cursor1.getString(cursor1.getColumnIndex("districtname")));
 //                    Log.e("str_fetched_talukname", cursor1.getString(cursor1.getColumnIndex("talukname")));
 //                    Log.e("str_fetched_villagename", cursor1.getString(cursor1.getColumnIndex("villagename")));
-//                    Log.e("str_fetched_marks", cursor1.getString(cursor1.getColumnIndex("Marks4")));
+////                    Log.e("str_fetched_marks", cursor1.getString(cursor1.getColumnIndex("Marks4")));
 //                    Log.e("str_fetched_marks", cursor1.getString(cursor1.getColumnIndex("Marks5")));
 //                    Log.e("str_fetched_marks", cursor1.getString(cursor1.getColumnIndex("Marks6")));
 //                    Log.e("str_fetched_marks", cursor1.getString(cursor1.getColumnIndex("Marks7")));
-                    Log.e("fetched_studentstatus", cursor1.getString(cursor1.getColumnIndex("StudentStatus")));
+                   // Log.e("fetched_studentstatus", cursor1.getString(cursor1.getColumnIndex("StudentStatus")));
 //                    Log.e("photo..", cursor1.getString(cursor1.getColumnIndex("StudentPhoto")));
                     //  Log.e("ApplicnNo...editfetch.", cursor1.getString(cursor1.getColumnIndex("ApplicationNo")));
 
@@ -2066,7 +2068,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
         //     str_imgfile=class_farmponddetails_offline_obj.getStudentPhoto();
         try {
             Log.e("StudentID", String.valueOf(class_farmponddetails_offline_obj.getStudentID()));
-            Log.e("str_stuApplno", str_stuApplno);
+         //   Log.e("str_stuApplno", str_stuApplno);
 
             ContentValues cv = new ContentValues();
             cv.put("SandboxID", int_val_sandboxID);
@@ -2942,7 +2944,7 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
         // if (str_edit_birthdate.length() == 0) {
         if (dateofbirth_edit_tv.getText().toString().equals("Select Birth Date")) {
-            //  birthdate_TV.setError("Empty is not allowed");
+            dateofbirth_edit_tv.setError("Empty is not allowed");
             bbirthdate = false;
             Toast.makeText(getApplicationContext(), "Please select birth date", Toast.LENGTH_LONG).show();
 
@@ -2976,28 +2978,30 @@ public class Activity_EditRegistration extends AppCompatActivity {
         }
 
         if (paymentdate_edit_tv.getVisibility() == View.VISIBLE) {
-            Log.e("entered ","paymentdate");
-            if (str_paymentDate.length() == 0) {
-                //paymentdate_tv.setError("Empty is not allowed");
-                bpaymentdate = false;
-                Toast.makeText(getApplicationContext(), "Please select payment date", Toast.LENGTH_LONG).show();
+            if (!str_admissionfee.equals("")) {
+                Log.e("str_admissionfee ", str_admissionfee);
 
-            }
+                Log.e("entered ", "paymentdate");
+                if (str_paymentDate.length() == 0) {
+                    //paymentdate_tv.setError("Empty is not allowed");
+                    bpaymentdate = false;
+                    Toast.makeText(getApplicationContext(), "Please select payment date", Toast.LENGTH_LONG).show();
 
-            if (admissionfees_edit_et.getText().toString().length() == 0) {
-                bfee = false;
-                Toast.makeText(getApplicationContext(), "Please Enter Admission fees", Toast.LENGTH_LONG).show();
+                }
 
-            }
-//            if (admissionfee_et.getText().toString()>selected_admissionfee) {
-//                bfee = false;
-//                Toast.makeText(getApplicationContext(), "Please Enter Valid Admission fees", Toast.LENGTH_LONG).show();
-//
-//            }
+                if (admissionfees_edit_et.getText().toString().length() == 0) {
+                    bfee = false;
+                    Toast.makeText(getApplicationContext(), "Please Enter Admission fees", Toast.LENGTH_LONG).show();
 
-            if (receipt_no_edit_et.getText().toString().length() == 0) {
-                brecno = false;
-                Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_LONG).show();
+                }
+
+
+                if (receipt_no_edit_et.getText().toString().length() == 0) {
+                    brecno = false;
+                    Toast.makeText(getApplicationContext(), "Please Enter Receipt Number", Toast.LENGTH_LONG).show();
+
+                }
+            }else{
 
             }
         }
@@ -3108,6 +3112,9 @@ public class Activity_EditRegistration extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 

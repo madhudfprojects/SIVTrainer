@@ -79,11 +79,12 @@
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/google_signin_bt"
-            android:layout_width="182dp"
-            android:layout_height="54dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:visibility="visible" />
+            android:visibility="visible"
+             />
         <Spinner
             android:id="@+id/userlist_sp"
             android:layout_width="280dp"
@@ -115,7 +116,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="#2D67D8"
-            android:text="Test Version 1.6"
+            android:text="UAT Test Version(28)-1.0"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"

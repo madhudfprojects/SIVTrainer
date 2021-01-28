@@ -357,10 +357,16 @@ public class Activity_LessonVerification extends AppCompatActivity {
         // Show toast when menu items selected
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent i = new Intent(Activity_LessonVerification.this, DocView_LessonPlanActivity.class);
-                startActivity(i);
-                finish();
+                if(str_doctype.equals("Question")){
+                    Intent i = new Intent(Activity_LessonVerification.this, DocView_QunPaperActivity.class);
+                    startActivity(i);
+                    finish();
+                }else{
+                    Intent i = new Intent(Activity_LessonVerification.this, DocView_LessonPlanActivity.class);
+                    startActivity(i);
+                    finish();
 
+                }
                 break;
 
         }
@@ -370,9 +376,17 @@ public class Activity_LessonVerification extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Activity_LessonVerification.this, DocView_LessonPlanActivity.class);
-        startActivity(i);
-        finish();
+        if(str_doctype.equals("Question")){
+            Intent i = new Intent(Activity_LessonVerification.this, DocView_QunPaperActivity.class);
+            startActivity(i);
+            finish();
+
+        }else{
+            Intent i = new Intent(Activity_LessonVerification.this, DocView_LessonPlanActivity.class);
+            startActivity(i);
+            finish();
+
+        }
 
     }
 

@@ -1699,7 +1699,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Log.e("list", class_loginresponse.getList().get(i).getId());
                             Log.e("list", class_loginresponse.getList().get(i).getProgramCode());
                             Log.e("size", String.valueOf(class_loginresponse.getList().size()));*/
-
+                                String Stud_TempId = "";
                                 String AcademicID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicID());
                                 String AcademicName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicName();
                                 String AdmissionFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAdmissionFee();
@@ -1734,7 +1734,16 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String StudentName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentName();
                                 String StudentPhoto = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentPhoto();
                                 String StudentStatus = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentStatus();
-                                String Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                                try {
+                                    if (class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID().equals("null")) {
+                                        Stud_TempId = "";
+
+                                    } else {
+                                        Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                                    }
+                                }catch(Exception e){
+                                    e.printStackTrace();
+                                }
                                 String Learning_Mode = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLearningMode();
 
                                 String str_stateid = class_studentData.getLstCount1().get(i1).getStudents().get(i).getState_ID();
@@ -3332,7 +3341,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Log.e("list", class_loginresponse.getList().get(i).getId());
                             Log.e("list", class_loginresponse.getList().get(i).getProgramCode());
                             Log.e("size", String.valueOf(class_loginresponse.getList().size()));*/
-
+                                String Stud_TempId ="";
                                 String AcademicID = String.valueOf(class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicID());
                                 String AcademicName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAcademicName();
                                 String AdmissionFee = class_studentData.getLstCount1().get(i1).getStudents().get(i).getAdmissionFee();
@@ -3367,7 +3376,18 @@ public class Activity_HomeScreen extends AppCompatActivity {
                                 String StudentName = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentName();
                                 String StudentPhoto = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentPhoto();
                                 String StudentStatus = class_studentData.getLstCount1().get(i1).getStudents().get(i).getStudentStatus();
-                                String Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                              //  String Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+
+                                try{
+                                    if(class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID().equals("null")){
+                                    Stud_TempId = "";
+
+                                }else {
+                                    Stud_TempId = class_studentData.getLstCount1().get(i1).getStudents().get(i).getTempID();
+                                }
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                                 String Learning_Mode = class_studentData.getLstCount1().get(i1).getStudents().get(i).getLearningMode();
 
                                 String str_stateid = class_studentData.getLstCount1().get(i1).getStudents().get(i).getState_ID();

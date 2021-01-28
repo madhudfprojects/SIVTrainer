@@ -30,14 +30,15 @@ public class Doc_LessonPlan_PdfActivity extends AppCompatActivity implements OnP
 
     SharedPreferences sharedpref_usermanualpdf_Obj;
     String str_fileurl="";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
         sharedpref_usermanualpdf_Obj=getSharedPreferences(sharedpreferenc_usermanual, Context.MODE_PRIVATE);
         str_fileurl = sharedpref_usermanualpdf_Obj.getString(key_usermanualpdfurl, "").trim();
-
         init();
+
     }
 
     private void init(){

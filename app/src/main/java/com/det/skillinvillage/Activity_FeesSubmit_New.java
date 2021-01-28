@@ -662,19 +662,26 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
     public void setvalues(){
 
         if(!str_no_of_students_paid_fees.equals("")){
-            no_of_students_paid_fees_tv.setText("No. of students paid fees : "+str_no_of_students_paid_fees);
+         //   no_of_students_paid_fees_tv.setText("No. of students paid fees : "+str_no_of_students_paid_fees);
+            no_of_students_paid_fees_tv.setText(" : "+str_no_of_students_paid_fees);
+
         }
 
         if(!str_fees_payment.equals("")){
-            feespayment_tv.setText("Fees payment : "+getResources().getString(R.string.Rs)+""+str_fees_payment);
+//            feespayment_tv.setText("Fees payment : "+getResources().getString(R.string.Rs)+""+str_fees_payment);
+            feespayment_tv.setText(" : "+getResources().getString(R.string.Rs)+""+str_fees_payment);
 
         }
         if(!str_amt_received_by_accountant.equals("")){
-            amt_received_by_accountant_tv.setText("Amount Received by the accountant : "+getResources().getString(R.string.Rs)+""+str_amt_received_by_accountant);
+         //   amt_received_by_accountant_tv.setText("Amount Received by the accountant : "+getResources().getString(R.string.Rs)+""+str_amt_received_by_accountant);
+            amt_received_by_accountant_tv.setText(" : "+getResources().getString(R.string.Rs)+""+str_amt_received_by_accountant);
 
         }
         if(!str_balance_not_submitted_to_accountant.equals("")){
-            balance_not_submitted_to_accountant_tv.setText("Balance Fees not submitted to accountant : "+getResources().getString(R.string.Rs)+""+str_balance_not_submitted_to_accountant);
+          //  balance_not_submitted_to_accountant_tv.setText("Balance Fees not submitted to accountant : "+getResources().getString(R.string.Rs)+""+str_balance_not_submitted_to_accountant);
+
+            balance_not_submitted_to_accountant_tv.setText(" : "+getResources().getString(R.string.Rs)+""+str_balance_not_submitted_to_accountant);
+
             if(str_balance_not_submitted_to_accountant.equals("0")){
             }else{
                 balance_not_submitted_to_accountant_tv.setTextColor(Color.RED);
@@ -871,6 +878,9 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 

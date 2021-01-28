@@ -1481,6 +1481,9 @@ public class Activity_Dashboard extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 

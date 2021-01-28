@@ -2472,6 +2472,9 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(true);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 

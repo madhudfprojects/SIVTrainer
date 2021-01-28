@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
+        android:visibility="visible"
         android:id="@+id/downloadlayout_LL">
 
         <ImageView
@@ -127,7 +128,7 @@
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:id="@+id/viewlayout_LL"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/pdficon_view_IV"

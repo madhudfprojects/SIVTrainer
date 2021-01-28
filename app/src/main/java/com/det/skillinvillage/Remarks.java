@@ -88,8 +88,8 @@ public class Remarks extends AppCompatActivity {
     Switch status;
     TableLayout tl;
     LinearLayout ll_listview1;
-//    TextView student_header;
-LinearLayout student_header;
+    //    TextView student_header;
+    LinearLayout student_header;
     StudentInfoListRest[] absentSudentList;
     StudentInfoListRest[] presentSudentList;
     StudentInfoListRest[] ConferencecallOptionList;
@@ -339,6 +339,7 @@ LinearLayout student_header;
 
                 Obj_subjectList = (SubjectList) subjectlist_SP.getSelectedItem();
                 sp_subject_ID = Obj_subjectList.getSubjectID();
+                Log.e("sp_subject_ID",sp_subject_ID);
                 // selected_academicname = subjectlist_SP.getSelectedItem().toString();
             }
 
@@ -925,11 +926,11 @@ LinearLayout student_header;
                                                     labelWEIGHT.setPaintFlags(labelWEIGHT.getPaintFlags());
 
                                                     labelWEIGHT.setText(studentlist[i].getStudentName());
-                                                    labelWEIGHT.setWidth(500);
+                                                    labelWEIGHT.setWidth(300);
 
 
                                                     //   labelWEIGHT.setGravity(0x00800005);
-                                                    labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+                                                    labelWEIGHT.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
                                                     tr.addView(labelWEIGHT);//student name
                                                     tr.addView(attendence);// persent or absent
                                                     tr.addView(learningOption_sp);// spinner learning option
@@ -1977,6 +1978,65 @@ LinearLayout student_header;
                 cal_adapter1.getPositionList(PresentDayStr, Remarks.this);
                 finish();
                 break;
+
+
+            case R.id.save:
+
+                remarks_info = remark.getText().toString();
+
+                String Str_checkAlphabetic = remark.getText().toString().replaceAll("[^A-Za-z]+", "");
+
+
+                if (remarks_info.length() == 0 || remarks_info == null) {
+                    remark.setError("Empty is not allowed");
+                    Toast.makeText(getApplicationContext(), "Enter the Remarks", Toast.LENGTH_SHORT).show();
+                } else if (Str_checkAlphabetic.trim().length() == 0 || Str_checkAlphabetic.trim().length() <= 4) {
+                    remark.setError("Minimum 5 Alphabetic Character Required");
+
+                } else {
+                    //  Intent i  = new Intent (getApplicationContext(),Slide_MainActivity.class);
+                    //	startActivity(i);
+                    //	finish();
+
+                    if (isInternetPresent) {
+                        if (status.isChecked()) {
+                            engage_status = "Yes";
+                            Log.e("tag", "engage_status==" + engage_status);
+                            ll_listview1.setVisibility(View.VISIBLE);
+                                /*Intent i  = new Intent (getApplicationContext(),Activity_LessonPlan.class);
+                            	startActivity(i);
+                            	finish();*/
+
+                        } else {
+                            engage_status = "No";
+                            Log.e("tag", "engage_status==" + engage_status);
+                            ll_listview1.setVisibility(View.GONE);
+
+                           /* Intent i  = new Intent (getApplicationContext(),Activity_LessonPlan.class);
+                            startActivity(i);
+                            finish();*/
+
+                        }
+
+                        if (engage_status.equals("No")) {
+                            alerts();
+                        } else {
+                            AsyncCallWS3 task3 = new AsyncCallWS3(Remarks.this);
+                            task3.execute();
+                        }
+
+				/*		 Intent i  = new Intent (getApplicationContext(),Slide_MainActivity.class);
+								startActivity(i);
+								finish();*/
+
+                    } else {
+                        NormalUpdate(Remarks.this, "No Internet Connection", "Would you like to  close application.");
+                    }
+                    // TODO Auto-generated method stub
+                }
+
+                break;
+
 
         }
         return super.onOptionsItemSelected(item);

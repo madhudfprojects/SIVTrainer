@@ -75,6 +75,7 @@ public class Onlineview_Navigation extends AppCompatActivity
     GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
     GetMobileSubMenuResponseList[] arrayObj_class_getMobilesubmenuresp;
     Interface_userservice userService1;
+    String str_menulink_userid="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,9 @@ public class Onlineview_Navigation extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_register, menu);
         menu.findItem(R.id.addnewstudent_menu_id)
                 .setVisible(false);
+        menu.findItem(R.id.save)
+                .setVisible(false);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -583,7 +587,9 @@ public class Onlineview_Navigation extends AppCompatActivity
                                 GetMobileSubMenuResponseList innerObj_Class = new GetMobileSubMenuResponseList();
                                 innerObj_Class.setMenuID(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuID());
                                 innerObj_Class.setMenuName(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName());
-                                innerObj_Class.setMenuLink(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
+                                 str_menulink_userid=class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink()+"/id="+str_loginuserID;
+                                Log.e("str_menulink",str_menulink_userid);
+                                innerObj_Class.setMenuLink(str_menulink_userid);
                                 innerObj_Class.setParentID(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getParentID());
                                // Log.e("abcd", String.valueOf(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName()));
 
@@ -600,7 +606,7 @@ public class Onlineview_Navigation extends AppCompatActivity
 //                                    Log.e("menuname",class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName());
 //                                    Log.e("menulink",class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
 
-                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName(), false, false, class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuLink());
+                                    MenuModel childModel = new MenuModel(class_loginresponse.getObjMenu().get(i).getSubMenu().get(j).getMenuName(), false, false, str_menulink_userid);
                                     childModelsList.add(childModel);
 
 

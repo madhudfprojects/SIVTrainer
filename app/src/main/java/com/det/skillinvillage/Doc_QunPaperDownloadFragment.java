@@ -455,12 +455,20 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
 
     @Override
     protected void onPostExecute(Void string) {
-      if(str_resp_msg.equals("Downloaded")) {
-        Intent i = new Intent(context, DocView_MainActivity.class);
-        context.startActivity(i);
-      }else{
+      Log.e("str_resp_msg", str_resp_msg);
+      Intent i = new Intent(context, DocView_MainActivity.class);
+      context.startActivity(i);
 
-      }
+//      if(str_resp_msg.equals("Downloaded")) {
+//
+////        Intent i = new Intent(context, DocView_MainActivity.class);
+////        context.startActivity(i);
+//        Intent i = new Intent(context, DocView_QunPaperActivity.class);
+//        context.startActivity(i);
+//
+//      }else{
+//
+//      }
       progressBar.setVisibility(GONE);
     }
   }
@@ -496,6 +504,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
 
             for(int i=0;i<arrayObj_Class_monthcontents.length;i++) {
               str_resp_msg = class_loginresponse.getListVersion().get(i).getDocumentVerification();
+              Log.e("str_resp_msg", str_resp_msg);
               PostTopicDownloadUpdateResponseList innerObj_Class_academic = new PostTopicDownloadUpdateResponseList();
               innerObj_Class_academic.setDocumentVerification(class_loginresponse.getListVersion().get(i).getDocumentVerification());
               arrayObj_class_studentpaymentresp[i] = innerObj_Class_academic;
@@ -507,6 +516,7 @@ public class Doc_QunPaperDownloadFragment extends Fragment {
             // Submit_lessonplan_BT.setVisibility(View.VISIBLE);
             // progressDoalog.dismiss();
           }
+
         } else {
           // progressDoalog.dismiss();
           Log.e("Entered resp else", "");

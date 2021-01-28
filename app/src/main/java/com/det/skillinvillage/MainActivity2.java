@@ -1019,6 +1019,9 @@ public class MainActivity2 extends AppCompatActivity {
             getMenuInflater().inflate(R.menu.menu_register, menu);
             menu.findItem(R.id.addnewstudent_menu_id)
                     .setVisible(false);
+            menu.findItem(R.id.save)
+                    .setVisible(false);
+
             return super.onCreateOptionsMenu(menu);
         }
 
@@ -1044,6 +1047,7 @@ public class MainActivity2 extends AppCompatActivity {
         public void onBackPressed () {
             super.onBackPressed();
             Intent i = new Intent(MainActivity2.this, Activity_AssessmentList.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             finish();
 

@@ -9,6 +9,7 @@
     android:layout_margin="10dp">
 
 
+
     <LinearLayout
         android:id="@+id/fees_summary_LL"
         android:layout_width="match_parent"
@@ -18,7 +19,8 @@
         android:background="@drawable/layout_background"
         android:layout_margin="6dp"
         android:padding="5dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:weightSum="2">
         <TextView
             android:id="@+id/title_summary"
             android:layout_width="match_parent"
@@ -28,22 +30,37 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:fontFamily="serif"/>
+            android:fontFamily="serif"
+            />
+
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="1dp">
+            android:layout_margin="1dp"
+            android:layout_weight="1">
+
+
+            <TextView
+                android:id="@+id/no_of_students_paid_fees_label_TV"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:text="No. of students paid fees"
+                android:textColor="#FFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
+
 
             <TextView
                 android:id="@+id/no_of_students_paid_fees_TV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="kjhkj"
                 android:textColor="#FFF"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="bold"/>
 
 
@@ -57,13 +74,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="1dp">
+            android:layout_margin="1dp"
+            android:layout_weight="1">
+
+
+            <TextView
+                android:id="@+id/feespayment_label_TV"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:text="Fees payment"
+                android:textColor="#FFF"
+                android:textSize="15dp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/feespayment_TV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="kjkkj"
                 android:textColor="#FFF"
                 android:textSize="15dp"
                 android:textStyle="bold"/>
@@ -75,13 +103,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="1dp">
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:id="@+id/amt_received_by_accountant_label_TV"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:text="Amount Received by the accountant "
+                android:textColor="#FFF"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/amt_received_by_accountant_TV"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="jnnnm"
                 android:textColor="#FFF"
                 android:textSize="15dp"
                 android:textStyle="bold"/>
@@ -95,15 +134,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="1dp">
+            android:layout_margin="1dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/balance_not_submitted_to_accountant_label_TV"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:text="Balance Fees not submitted to accountant"
+                android:textColor="#FFF"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/balance_not_submitted_to_accountant_TV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text=" : bal"
                 android:textColor="#FFF"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:textStyle="bold"/>
 
 
@@ -172,7 +221,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        
         android:stretchColumns="*"
         android:visibility="gone"
         android:background="@drawable/shadow_new">
