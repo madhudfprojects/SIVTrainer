@@ -46,6 +46,18 @@ public class UserInfoListRest {
     @Expose
     public String scheduleStatus;
 
+    @SerializedName("Schedule_Status_Old")
+    @Expose
+    public String schedule_Status_Old;
+
+    public String getSchedule_Status_Old() {
+        return schedule_Status_Old;
+    }
+
+    public void setSchedule_Status_Old(String schedule_Status_Old) {
+        this.schedule_Status_Old = schedule_Status_Old;
+    }
+
     public String getScheduleID() {
         return scheduleID;
     }
@@ -152,7 +164,7 @@ public class UserInfoListRest {
 
     public static ArrayList<UserInfoListRest> user_info_arr=new ArrayList<UserInfoListRest>();
 
-    public UserInfoListRest(String schedule_ID, String lavel_ID, String schedule_Date, String end_Time, String start_Time, String schedule_Session, String schedule_Status, String subject_Name, String lavel_Name, String leason_Name, String cluster_Name, String institute_Name) {
+    public UserInfoListRest(String schedule_ID, String lavel_ID, String schedule_Date, String end_Time, String start_Time, String schedule_Session, String schedule_Status, String subject_Name, String lavel_Name, String leason_Name, String cluster_Name, String institute_Name,String Schedule_Status_Old) {
         scheduleID = schedule_ID;
         lavelID = lavel_ID;
         scheduleDate = schedule_Date;
@@ -165,6 +177,7 @@ public class UserInfoListRest {
         leasonName = leason_Name;
         clusterName = cluster_Name;
         instituteName = institute_Name;
+        schedule_Status_Old=Schedule_Status_Old;
     }
 
     public UserInfoListRest() {

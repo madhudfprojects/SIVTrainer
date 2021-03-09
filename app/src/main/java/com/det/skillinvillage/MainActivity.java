@@ -257,11 +257,13 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
                 finish();
             }
+
+            
             if(Employee_Role.equalsIgnoreCase("Cluster Head")) {
-//                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
-//                startActivity(i);
-//                finish();
-                Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, Activity_HomeScreen.class);
+                startActivity(i);
+                finish();
+          //      Toast.makeText(getApplicationContext(), "Only Trainers are allowed to login ", Toast.LENGTH_SHORT).show();
 
             }
 
@@ -1147,7 +1149,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
+       // startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
     }

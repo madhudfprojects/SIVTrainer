@@ -111,7 +111,7 @@ String[] paymentTypeArray = {"Payment"};
     String str_receive_studentname;
     String str_receiveAble;
     String str_received;
-    String str_receive_receiptno="",str_receive_balance, str_receive_studentstatus,save_receive_studentstatus;
+    String str_receive_levelid="",str_receive_receiptno="",str_receive_balance, str_receive_studentstatus,save_receive_studentstatus;
     static String yyyyMMdd_receiveddate = "";
     static String str_receiveddate_display;
     LinearLayout fees_submit_ll;
@@ -129,6 +129,7 @@ String[] paymentTypeArray = {"Payment"};
     Class_PostSavePaymentResponseList[]  arrayObj_class_postsavepaymentresp;
 
     SharedPreferences sharedpreferencebook_usercredential_Obj;
+    LinearLayout amt_LL;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,7 +177,7 @@ String[] paymentTypeArray = {"Payment"};
             Log.e("Tag", "str_StudentID_received=" + str_stuID);
         }
 
-
+        amt_LL=findViewById(R.id.amt_LL);
         amount_et = findViewById(R.id.amount_ET);
         remarks_et = findViewById(R.id.remarks_ET);
         sandbox_tv = findViewById(R.id.sandbox_TV);
@@ -471,6 +472,7 @@ String[] paymentTypeArray = {"Payment"};
                                 str_received = class_loginresponse.getLst().get(i).getPaymentReceived();
                                 str_receive_balance = class_loginresponse.getLst().get(i).getPaymentBalance();
                                 str_receive_receiptno= class_loginresponse.getLst().get(i).getReceipt_No();
+                                str_receive_levelid= class_loginresponse.getLst().get(i).getLevel_ID();
 
                                 // str_receive_balance="500";
                                 Log.e("str_receive_studentid", str_receive_studentid);
@@ -661,6 +663,12 @@ String[] paymentTypeArray = {"Payment"};
 
 
     private void SetValues() {
+        if(str_receive_balance.equals("0")){
+            amt_LL.setVisibility(View.GONE);
+        }else{
+            amt_LL.setVisibility(View.VISIBLE);
+
+        }
 
         amount_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", str_receive_balance)});
         sandbox_tv.setText(str_receive_sandbox);
@@ -797,6 +805,8 @@ String[] paymentTypeArray = {"Payment"};
         request.setPaymentRemarks(remarks_et.getText().toString());
         request.setPaymentType(selected_paymentType);
         request.setReceiptManual(receipt_feepayment_et.getText().toString());
+        request.setLevel_ID(str_receive_levelid);
+
 
 
         Call<Post_Save_PaymentResponse> call = userService1.PostSavePayment(request);

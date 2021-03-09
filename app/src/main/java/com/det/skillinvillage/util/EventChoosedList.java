@@ -26,7 +26,15 @@ public class EventChoosedList extends Application {
     public String strLavelName;
     public String strLeasonName;
     public String strScheduleId;
+    public String strprevdatestatus;
 
+    public String getStrprevdatestatus() {
+        return strprevdatestatus;
+    }
+
+    public void setStrprevdatestatus(String strprevdatestatus) {
+        this.strprevdatestatus = strprevdatestatus;
+    }
 
     public String getStrInstituteName() {
         return strInstituteName;

@@ -15,7 +15,7 @@
         android:gravity="start"
         android:fontFamily="serif"
         android:layout_margin="5dp"
-        android:textStyle="bold"/>
+        android:textColor="@color/blackColor"/>
     <TextView
         android:id="@+id/LP_Question_ID_TV"
         android:layout_width="80dp"
@@ -35,7 +35,10 @@
         android:layout_margin="5dp"
         android:hint="Enter answer"
         android:gravity="start"
+        android:textColorHint="#5C5757"
+        android:textColor="@color/blackColor"
         android:inputType="textMultiLine"
+        android:textSize="13sp"
         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 "
         />
 

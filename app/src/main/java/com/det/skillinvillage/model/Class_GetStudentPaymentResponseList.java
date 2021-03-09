@@ -90,6 +90,18 @@ public class Class_GetStudentPaymentResponseList {
     @Expose
     private String Receipt_No;
 
+    @SerializedName("Level_ID")
+    @Expose
+    private String Level_ID;
+
+    public String getLevel_ID() {
+        return Level_ID;
+    }
+
+    public void setLevel_ID(String level_ID) {
+        Level_ID = level_ID;
+    }
+
     public String getReceipt_No() {
         return Receipt_No;
     }

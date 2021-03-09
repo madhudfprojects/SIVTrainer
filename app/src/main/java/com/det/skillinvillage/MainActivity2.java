@@ -89,6 +89,7 @@ public class MainActivity2 extends AppCompatActivity {
     Class_PostUpdateAssessmentSubmitList[] arrayObjPostUpdateAssessmentSubmitList;
 
     SharedPreferences sharedpreferencebook_usercredential_Obj;
+    boolean isSubmitted=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +118,7 @@ public class MainActivity2 extends AppCompatActivity {
         intval_flag = intent.getIntExtra("Flag", 0);
         str_Recived_assessmentstatus = intent.getStringExtra("str_assessmentstatus");
 
-        Log.e("Zyx", str_Recived_assessmentstatus);
+        Log.e("Zyx", str_assessmentID);
 
 
         if (isInternetPresent) {
@@ -538,108 +539,6 @@ public class MainActivity2 extends AppCompatActivity {
     //================================================================
 
     /////////Call save
-    private class AsyncCall_save_assessmentview extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
-        Context context;
-
-        @Override
-        protected void onPreExecute() {
-            Log.i("madhu", "onPreExecute---tab2");
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            //	Log.i("madhu", "onProgressUpdate---tab2");
-        }
-
-        public AsyncCall_save_assessmentview(MainActivity2 activity) {
-            context = activity;
-            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("madhu", "doInBackground");
-
-            SaveMarks();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-            if (str_save_marks_status.equals("Active")) {
-                Toast.makeText(getApplicationContext(), "Marks entered are saved successfully..", Toast.LENGTH_SHORT).show();
-                //finish();
-            } else {
-                Toast.makeText(getApplicationContext(), "Marks entered are not saved....", Toast.LENGTH_SHORT).show();
-
-            }
-            Log.i("madhu", "onPostExecute");
-
-        }
-    }
-
-
-    public void SaveMarks() {
-
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "UpdateStudentAssessment";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/UpdateStudentAssessment";
-
-        try {
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", str_loginuserID);
-            request.addProperty("Assesment_ID", str_assessmentID);
-            request.addProperty("Student_ID", jsonArray_Studentid.toString());
-            request.addProperty("Student_Marks", jsonArray_MARKS.toString());
-
-            Log.d("Request List=", request.toString());
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-                Log.e("madhu", "envelope response" + envelope.getResponse().toString());
-
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.e("madhu", "string value at response" + response.toString());
-                saveAssessmentCount = response.getPropertyCount();
-//                SoapObject obj2 =(SoapObject) response.getProperty(0);
-                //   arrayObj_Class_assesmentmodel_Status=new Class_AssessmentModel[response.getPropertyCount()];
-                // for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject obj2 = (SoapObject) response.getProperty(0);
-                SoapPrimitive response_soapobj_marksStatus = (SoapPrimitive) obj2.getProperty("Marks_Status");
-                str_save_marks_status = response_soapobj_marksStatus.toString();
-                Log.i("madhu", "response1 students=" + response.toString());
-
-            } catch (Throwable t) {
-                Log.e("request fail", "> " + t.getMessage());
-
-            }
-
-        } catch (Throwable t) {
-            Log.e("madhu", "UnRegister Receiver Error" + "> " + t.getMessage());
-
-        }
-
-
-    }
 
 
     public void SaveMarks_new() {
@@ -688,10 +587,14 @@ public class MainActivity2 extends AppCompatActivity {
                         }
 
                         if (str_save_marks_status.equals("Active")) {
-                            Toast.makeText(getApplicationContext(), "Marks entered are saved successfully..", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity2.this, Activity_AssessmentList.class);
-                            startActivity(intent);
-                            finish();
+                            if(isSubmitted) {
+                                SubmitMarks_new();
+                            }else {
+                                Toast.makeText(getApplicationContext(), "Marks entered are saved successfully..", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity2.this, Activity_AssessmentList.class);
+                                startActivity(intent);
+                                finish();
+                            }
 
                             //finish();
                         } else {
@@ -739,10 +642,11 @@ public class MainActivity2 extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 if (isInternetPresent) {
+                    isSubmitted=true;
                     Callmethod();
 //                AsyncCall_submit_assessmentview task3 = new AsyncCall_submit_assessmentview(MainActivity2.this);
 //                task3.execute();
-                    SubmitMarks_new();
+//                    SubmitMarks_new();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();

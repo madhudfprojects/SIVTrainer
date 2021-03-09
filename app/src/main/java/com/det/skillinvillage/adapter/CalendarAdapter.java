@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -74,6 +75,7 @@ public class CalendarAdapter extends BaseAdapter {
 
 //	EventChoosedList eventChoosedList=new EventChoosedList();
 
+	Date previousDate;
 	public CalendarAdapter(Context context, GregorianCalendar monthCalendar, ArrayList<UserInfoListRest> userInfo_arr) {
 		this.userInfo_arr=userInfo_arr;
 		CalendarAdapter.day_string = new ArrayList<String>();
@@ -215,49 +217,62 @@ public class CalendarAdapter extends BaseAdapter {
 
 			String event_status = cal_obj.scheduleStatus;
 			//	Log.i("Tag","event_status="+event_status);
-			if (day_string.get(pos).equals(date) && event_status.equals("Taken")){
-				view.setBackgroundResource(R.drawable.rounded_calender_item);
-				dayView.setTextColor(Color.WHITE);
-			/*		if (previousView != null) {
-					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
-					}*/
-			}
-			if (day_string.get(pos).equals(date) && event_status.equals("Not Taken")){
-				view.setBackgroundResource(R.drawable.rounded_calender_item_not_taken);
-				dayView.setTextColor(Color.WHITE);
-			/*		if (previousView != null) {
-					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
-					}*/
-			}
-			if(day_string.get(pos).equals(date)&&event_status.equals("Pending")) {
-				Log.i("Tag","Selected_Date="+Selected_Date+"Current_date="+Current_date);
-				if(Selected_Date.compareTo(Current_date) > 0){
-					view.setBackgroundResource(R.drawable.rounded_calender_todaydate_after);
+			try {
+				if (day_string.get(pos).equals(date) && event_status.equals("Taken")) {
+					view.setBackgroundResource(R.drawable.rounded_calender_item);
 					dayView.setTextColor(Color.WHITE);
-					Log.i("Tag","rounded_calender_todaydate=");
-					//	txt.setTextColor(Color.WHITE);
-				}else {
+			/*		if (previousView != null) {
+					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
+					}*/
+				}
+				if (day_string.get(pos).equals(date) && event_status.equals("Not Taken")) {
+					view.setBackgroundResource(R.drawable.rounded_calender_item_not_taken);
+					dayView.setTextColor(Color.WHITE);
+			/*		if (previousView != null) {
+					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
+					}*/
+				}
+				if (day_string.get(pos).equals(date) && event_status.equals("Pending")) {
+					Log.i("Tag", "Selected_Date=" + Selected_Date + "Current_date=" + Current_date);
+					if (Selected_Date.compareTo(Current_date) > 0) {
+						view.setBackgroundResource(R.drawable.rounded_calender_todaydate_after);
+						dayView.setTextColor(Color.WHITE);
+						Log.i("Tag", "rounded_calender_todaydate=");
+						//	txt.setTextColor(Color.WHITE);
+					} else {
 					/*if (day_string.get(pos).equals(curentDateString)) {
 						view.setBackgroundColor(Color.parseColor("#ffffff"));
 						view.setBackgroundResource(R.drawable.rounded_calender_todaydate);
 						dayView.setTextColor(Color.WHITE);
 					}else {*/
-					view.setBackgroundResource(R.drawable.rounded_calender_notupdated);
-					dayView.setTextColor(Color.WHITE);
-					Log.i("Tag", "rounded_calender_notupdated=");
-					//}
-					//	txt.setTextColor(Color.WHITE);
-				}
-			}
+						view.setBackgroundResource(R.drawable.rounded_calender_notupdated);
+						dayView.setTextColor(Color.WHITE);
+						Log.i("Tag", "rounded_calender_notupdated=");
+						//}
+						//	txt.setTextColor(Color.WHITE);
 
-			if (day_string.get(pos).equals(date) && event_status.equals("Lesson Pending")){
-				view.setBackgroundResource(R.drawable.rounded_calender_lesson_pending);
-				dayView.setTextColor(Color.WHITE);
+//                    Log.e("Selected_Date", String.valueOf(Selected_Date));
+//					decrementDateByOne(Selected_Date);
+//					if(day_string.get(pos).equals(previousDate)){
+//						Log.e("event_status", event_status);
+//					}
+
+
+					}
+				}
+
+				if (day_string.get(pos).equals(date) && event_status.equals("Lesson Pending")) {
+					view.setBackgroundResource(R.drawable.rounded_calender_lesson_pending);
+					dayView.setTextColor(Color.WHITE);
 			/*		if (previousView != null) {
 					previousView.setBackgroundResource(R.drawable.rounded_calender_item);
 					}*/
-			}
+				}
 
+				if (day_string.get(pos).equals(date) && event_status.equalsIgnoreCase("Lesson Not Assigned")) {
+					view.setBackgroundResource(R.drawable.rounded_calender_lesson_not_assigned);
+					dayView.setTextColor(Color.WHITE);
+				}
 
 
 
@@ -267,10 +282,10 @@ public class CalendarAdapter extends BaseAdapter {
 				/*	if (previousView != null) {
 					previousView.setBackgroundResource(R.drawable.rounded_calender_notupdated);
 					}*/
-			//	}
+				//	}
 
-			Log.i("Tag","day_string.get(pos).equals(date)1="+day_string.get(pos).equals(date));
-			Log.i("Tag","day_string.get(pos)="+day_string.get(pos));
+				Log.i("Tag", "day_string.get(pos).equals(date)1=" + day_string.get(pos).equals(date));
+				Log.i("Tag", "day_string.get(pos)=" + day_string.get(pos));
 
 			/*else {
 				view.setBackgroundColor(Color.parseColor("#343434"));
@@ -279,6 +294,10 @@ public class CalendarAdapter extends BaseAdapter {
 					previousView.setBackgroundColor(Color.parseColor("#ffff34"));
 				}
 			}*/
+
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 		int len=day_string.size();
 		if (len>pos) {
@@ -295,6 +314,8 @@ public class CalendarAdapter extends BaseAdapter {
 
 		return view;
 	}
+
+
 
 	public void refreshDays() {
 		// clear items
@@ -385,6 +406,7 @@ public class CalendarAdapter extends BaseAdapter {
 					//v.setBackgroundColor(Color.parseColor("#343434"));
 					v.setBackgroundResource(R.drawable.rounded_calender_item_not_taken);
 					txt.setTextColor(Color.WHITE);
+
 				}
 				if(day_string.get(pos).equals(date)&&event_status.equals("Pending")) {
 					Log.i("Tag","Selected_Date="+Selected_Date+"Current_date="+Current_date);
@@ -402,6 +424,13 @@ public class CalendarAdapter extends BaseAdapter {
 						v.setBackgroundResource(R.drawable.rounded_calender_notupdated);
 						txt.setTextColor(Color.WHITE);
 						//}
+
+//						Log.e("Selected_Date", String.valueOf(Selected_Date));
+//						decrementDateByOne(Selected_Date);
+//						if(day_string.get(pos).equals(previousDate)){
+//							Log.e("event_status", event_status);
+//						}
+
 					}
 				}
 
@@ -411,6 +440,16 @@ public class CalendarAdapter extends BaseAdapter {
 					//	Log.e("event_TF","event_TF="+event_TF);
 					//v.setBackgroundColor(Color.parseColor("#343434"));
 					v.setBackgroundResource(R.drawable.rounded_calender_lesson_pending);
+					txt.setTextColor(Color.WHITE);
+				}
+
+
+				if (day_string.get(pos).equals(date) && event_status.equalsIgnoreCase("Lesson Not Assigned")) {
+					Log.e("event_TF","day_string="+day_string.get(pos));
+					Log.e("event_TF","date="+date);
+					//	Log.e("event_TF","event_TF="+event_TF);
+					//v.setBackgroundColor(Color.parseColor("#343434"));
+					v.setBackgroundResource(R.drawable.rounded_calender_lesson_not_assigned);
 					txt.setTextColor(Color.WHITE);
 				}
 
@@ -440,6 +479,7 @@ public class CalendarAdapter extends BaseAdapter {
 		ArrayList<String> arr_status=new ArrayList<>();
 		ArrayList<String> arr_attandence=new ArrayList<>();
 		ArrayList<String> arr_scheduleId=new ArrayList<>();
+		ArrayList<String> arr_prevdatestatus=new ArrayList<>();
 
 		int size= UserInfoListRest.user_info_arr.size();
 		Log.e("TAG_TIME","size=="+size);
@@ -455,6 +495,7 @@ public class CalendarAdapter extends BaseAdapter {
 		arr_status.clear();
 		arr_attandence.clear();
 		arr_scheduleId.clear();
+		arr_prevdatestatus.clear();
 
 		for (int i = 0; i < size; i++) {
 
@@ -485,6 +526,8 @@ public class CalendarAdapter extends BaseAdapter {
 			String event_leasonName=cal_collection.leasonName;
 			String event_instituteName=cal_collection.instituteName;
 			String event_scheduleId=cal_collection.scheduleID;
+			String event_prevdatestatus=cal_collection.schedule_Status_Old;
+			Log.e("event_prevdatestatus",event_prevdatestatus);
 			if (date.equals(event_date)) {
 
 				event_date1=event_date;
@@ -514,6 +557,9 @@ public class CalendarAdapter extends BaseAdapter {
 
 				eventChoosedList.setStrFacultyName(bookId);
 				eventChoosedList.setStrEventStatus(event_status);
+				String event_prevdatestatus1=event_prevdatestatus;
+				eventChoosedList.setStrprevdatestatus(event_prevdatestatus1);
+
 			//	eventChoosedList.setStrAttandence(event_attandence);
 				arr_date.add(eventChoosedList.getStrDate());
 				arr_stime.add(eventChoosedList.getStrStartTime());
@@ -527,7 +573,7 @@ public class CalendarAdapter extends BaseAdapter {
 				arr_schedSession.add(eventChoosedList.getStrScheduleSession());
 				arr_scheduleId.add(eventChoosedList.getStrScheduleId());
 				//arr_eventUpdate[i]=eventChoosedList.getEventUpdate();
-
+				arr_prevdatestatus.add(eventChoosedList.getStrprevdatestatus());
 
 				intent = new Intent(context, EventListActivity.class);
 				intent.putExtra("arr_date",arr_date);
@@ -543,8 +589,10 @@ public class CalendarAdapter extends BaseAdapter {
 				intent.putExtra("arr_status",arr_status);
 				intent.putExtra("arr_attandence",arr_attandence); //Institute name
 				intent.putExtra("arr_scheduleId",arr_scheduleId);
+				intent.putExtra("arr_prevdatestatus",arr_prevdatestatus);
+
 				//	Log.i("CalendarView","arr_eventUpdate"+arr_eventUpdate);
-				Log.i("CalendarView","arr_stime="+arr_stime);
+				Log.e("CalendarView","arr_prevdatestatus="+arr_prevdatestatus);
 				//	CardsAdapter adapter = new CardsAdapter(context);
 				//	ListView lv_eventlist=(ListView) view.findViewById(R.id.lv_android);
 

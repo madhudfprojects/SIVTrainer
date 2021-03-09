@@ -54,6 +54,7 @@ import retrofit2.http.Query;
 
 public interface Interface_userservice {
 
+
     @POST("Authentication/Post_ValidateLogin")
     @FormUrlEncoded
     Call<NormalLogin_Response> getValidateLoginPostNew(@Field("User_Email") String userEmail);

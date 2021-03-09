@@ -84,7 +84,7 @@ public class CalenderActivity extends AppCompatActivity implements SwipeRefreshL
     //Button logout_bt;
     private Toolbar mTopToolbar;
 
-    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
+    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Schedule_Status_old,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
     ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
     UserInfoListRest[] userInfosarr;
     String str_loginuserID="",str_logout_count_Status;
@@ -475,6 +475,7 @@ public class CalenderActivity extends AppCompatActivity implements SwipeRefreshL
                        for(int i=0;i<int_usercount;i++)
                        {
                            Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+                           Log.e("prevstatus2", usershedulelist.get(i).getSchedule_Status_Old().toString());
 
                            Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
 
@@ -489,9 +490,9 @@ public class CalenderActivity extends AppCompatActivity implements SwipeRefreshL
                            Lavel_Name = usershedulelist.get(i).getLavelName().toString();
                            Institute_Name = usershedulelist.get(i).getInstituteName().toString();
                            Cluster_Name = usershedulelist.get(i).getClusterName().toString();
-
+                           Schedule_Status_old = usershedulelist.get(i).getSchedule_Status_Old().toString();
                            //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                           UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                           UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name,Schedule_Status_old);
                            arrayList.add(userInfo);
 
                        }
@@ -513,6 +514,7 @@ public class CalenderActivity extends AppCompatActivity implements SwipeRefreshL
                            Leason_Name = arrayList.get(i).leasonName;
                            Cluster_Name = arrayList.get(i).clusterName;
                            Institute_Name = arrayList.get(i).instituteName;
+                           Schedule_Status_old = arrayList.get(i).schedule_Status_Old;
 
                            obj.setScheduleID(Schedule_ID);
                            obj.setLavelID(Lavel_ID);
@@ -526,11 +528,12 @@ public class CalenderActivity extends AppCompatActivity implements SwipeRefreshL
                            obj.setLeasonName(Leason_Name);
                            obj.setInstituteName(Institute_Name);
                            obj.setClusterName(Cluster_Name);
+                           obj.setSchedule_Status_Old(Schedule_Status_old);
 
                            userInfosarr[i] = obj;
                            //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
 
-                           UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+                           UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name,Schedule_Status_old));
 
                            Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
                        }

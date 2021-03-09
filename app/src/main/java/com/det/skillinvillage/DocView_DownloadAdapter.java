@@ -151,7 +151,7 @@ public class DocView_DownloadAdapter extends RecyclerView.Adapter<DocView_Downlo
                 Log.e("doc_status",doc_status);
                 Log.e("doc_topiclevelid",doc_topiclevelid);
 
-                Intent i=new Intent(context1,Activity_LessonVerification.class);
+                Intent i=new Intent(context1,Activity_QuestionVerification.class);
                 i.putExtra("doc_ID",doc_ID);
                 i.putExtra("doc_status",doc_status);
                 i.putExtra("doc_topiclevelid",doc_topiclevelid);

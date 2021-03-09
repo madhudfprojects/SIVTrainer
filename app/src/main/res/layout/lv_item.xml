@@ -1,55 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="3dp">
+    android:layout_margin="2dp"
+    android:layout_gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="3">
 
         <TextView
-
             android:id="@+id/studentname_tv"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:textColor="#000"
-            android:text=""/>
+            android:text=""
+            android:layout_weight="1.5"
+            android:textSize="12sp"
+            android:layout_margin="5dp"/>
 
         <EditText
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:id="@+id/editid"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="10dp"
             android:textColor="#000"
             android:hint="Marks"
             android:textColorHighlight="#000"
             android:textColorHint="#B9AFAF"
-            android:inputType="text" />
+            android:inputType="number"
+            tools:ignore="Autofill"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
 
 
         <TextView
             android:id="@+id/studentpresent_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textColor="@color/colorPrimary"
             android:visibility="gone"
-            android:text="Present"
-            android:layout_marginLeft="20dp"/>
+            android:text="P"
+            android:textStyle="bold"
+            android:layout_weight="0.5"
+            android:textSize="13sp"
+            android:layout_margin="2dp"/>
 
         <TextView
             android:id="@+id/studentabsent_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textColor="@color/colorAccent"
             android:visibility="gone"
-            android:text="Absent"/>
+            android:text="A"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:layout_weight="0.5"
+            android:layout_margin="2dp"/>
 
 
     </LinearLayout>
@@ -58,7 +69,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="10dp"
         android:background="@color/colorAccent"/>
 
 </LinearLayout>

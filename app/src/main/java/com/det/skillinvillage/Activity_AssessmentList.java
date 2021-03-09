@@ -1,12 +1,15 @@
 package com.det.skillinvillage;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -1105,11 +1108,45 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
                 deleteLevelRestTable_B4insertion();
                 deleteClusterRestTable_B4insertion();
 
-                Intent i = new Intent(Activity_AssessmentList.this, MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_AssessmentList.this);
+                dialog.setCancelable(false);
+                dialog.setTitle(R.string.alert);
+                dialog.setMessage("Are you sure want to Logout?");
 
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+
+                        //   SaveSharedPreference.setUserName(Activity_HomeScreen.this, "");
+                        Class_SaveSharedPreference.setUserName(getApplicationContext(),"");
+
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        i.putExtra("logout_key1", "yes");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+
+
+                    }
+                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Action for "Cancel".
+                                dialog.dismiss();
+                            }
+                        });
+
+                final AlertDialog alert = dialog.create();
+                alert.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface arg0) {
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
+                    }
+                });
+                alert.show();
                 break;
             case android.R.id.home:
                 Intent intent = new Intent(Activity_AssessmentList.this, Activity_HomeScreen.class);

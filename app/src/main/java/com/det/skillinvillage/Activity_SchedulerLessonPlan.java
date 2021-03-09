@@ -56,7 +56,7 @@ import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercrede
 
 public class Activity_SchedulerLessonPlan extends AppCompatActivity {
     Spinner status_scheduler_Spinner;
-    String[] status_scheduler_SpinnerArray={"Yes","No","Partially"};
+    String[] status_scheduler_SpinnerArray={"Select","Yes","No","Partially"};
 
     NonScrollListView lv_questions_list;
     Boolean isInternetPresent = false;
@@ -166,6 +166,9 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
             public void onClick(View view) {
                 if(Remarks_ET.getText().toString().length()==0){
                     Toast.makeText(getApplicationContext(), "Kindly enter remarks", Toast.LENGTH_SHORT).show();
+
+                }else if (selected_status.equals("Select")){
+                    Toast.makeText(getApplicationContext(), "Kindly select the status", Toast.LENGTH_SHORT).show();
 
                 }else{
                     PostScheduleLessonUpdate();

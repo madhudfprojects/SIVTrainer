@@ -19,12 +19,13 @@ public class ListviewEvents {
  //   public boolean eventUpdate;
     public String strstatus;
     public String strAttandence;
+    public String prev_date_status;
 
     public ListviewEvents() {
     }
     public static ArrayList<ListviewEvents> listview_info_arr=new ArrayList<ListviewEvents>();
 
-    public ListviewEvents(String strScheduleId,String strDate, String strStartTime, String strEndTime, String strFacultyName, String strCohort, String strClassroom, String strModule, String strFellowship, String strstatus,String strAttandence) {
+    public ListviewEvents(String strScheduleId,String strDate, String strStartTime, String strEndTime, String strFacultyName, String strCohort, String strClassroom, String strModule, String strFellowship, String strstatus,String strAttandence,String prev_date_status) {
         this.strScheduleId = strScheduleId;
         this.strDate = strDate;
         this.strStartTime = strStartTime;
@@ -36,6 +37,15 @@ public class ListviewEvents {
         this.strFellowship = strFellowship;
         this.strstatus=strstatus;
         this.strAttandence=strAttandence;
+        this.prev_date_status=prev_date_status;
+    }
+
+    public String getPrev_date_status() {
+        return prev_date_status;
+    }
+
+    public void setPrev_date_status(String prev_date_status) {
+        this.prev_date_status = prev_date_status;
     }
 
     public String getStrScheduleId() {

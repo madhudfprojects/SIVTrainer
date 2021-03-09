@@ -1,5 +1,6 @@
 package com.det.skillinvillage.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -31,11 +33,12 @@ import java.util.Date;
 
 public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
     private Context context1;
-    String schedule_id,datestr,stime,etime,cohortstr,classroomstr,modulestr,bookIdstr,fellowershipsrt,statusStr;
+    String schedule_id,datestr,stime,etime,cohortstr,classroomstr,modulestr,bookIdstr,fellowershipsrt,statusStr,previousDatestatus="";
     String scheduleid_holder,book_holder,startTime_holder,endTime_holder,date_holder,cohort_holder,fellowership_holder,module_holder,attandence_holder;
     private Date date;
     private Date dateCompareOne;
     private Date dateCompareTwo;
+    Date previousDate;
 
     public  ArrayList<ListviewEvents> listview_info_arr=new ArrayList<>();
 
@@ -45,6 +48,15 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         super(context, R.layout.card_item);
         this.context1=context;
         this.listview_info_arr=listview_info_arr;
+//        for(int i=0;i<listview_info_arr.size();i++){
+//            Log.e("getStrDate()",listview_info_arr.get(i).getStrDate());
+//           // Log.e("previusDate", String.valueOf(previousDate));
+////            if(listview_info_arr.get(i).getStrDate().equals(previousDate)){
+////                String pri_status=listview_info_arr.get(i).getStrstatus();
+////                Log.e("pri_status",pri_status);
+////
+////            }
+//        }
     }
 
     @NonNull
@@ -78,6 +90,8 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
         fellowershipsrt=model.getStrFellowship();
         modulestr=model.getStrModule();
         statusStr=model.getStrstatus();
+        previousDatestatus=model.getPrev_date_status();
+     //   Log.e("previousDatestatus",previousDatestatus);
         listview_info_arr.get(position);
 
        // datestr_arr=listview_info_arr.get(position);
@@ -148,6 +162,16 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
           //  holder.btUpdate1.setVisibility(View.VISIBLE);
             holder.lessonplan_IV.setVisibility(View.GONE);
         }
+
+        if(statusStr.equals("Lesson Not Assigned")){
+            //holder.btUpdate.
+            holder.lessonplan_IV.setVisibility(View.GONE);
+            holder.btUpdate1.setVisibility(View.GONE);
+        }else {
+//            holder.btUpdate1.setVisibility(View.GONE);
+//            holder.lessonplan_IV.setVisibility(View.GONE);
+        }
+
         //holder.tvClassRoom.setText(model.getStrClassroom());
       //  holder.tvModule.setText(model.getStrModule());
 
@@ -206,7 +230,7 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
                attandence_holder=holder.tv_attandence.getText().toString();
                scheduleid_holder=holder.tv_scheduleId.getText().toString();
 
-              Log.i("Tag","book="+book_holder);
+                Log.i("Tag","book="+book_holder);
                 Log.i("Tag","startTime="+startTime_holder);
                 Log.i("Tag","endTime="+endTime_holder);
                 Log.i("Tag","date="+date_holder);
@@ -255,6 +279,13 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
 
                     Log.i("Tag_time","PresentTime="+PresentTime);
                     Calendar calendar1 = Calendar.getInstance();
+//                    //added by shivaleela on 4th feb 2021
+//                    Calendar calendar2 = Calendar.getInstance();
+//                    calendar2.add(Calendar.DATE, -1); //Goes to previous day
+//                    Date mEventEnd1=calendar2.getTime();
+//                   // Date EventEnddate1 = new Date(mEventEnd1);
+//                    Log.e("mEventEnd1", String.valueOf(mEventEnd1));
+
                     calendar1.setTimeInMillis(System.currentTimeMillis());
                     calendar1.set(Calendar.HOUR_OF_DAY, 23);
                     calendar1.set(Calendar.MINUTE, 00);
@@ -279,6 +310,19 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
                     Log.i("Madhu","d2=="+d2);
                     Log.i("Tag_time","EndTimeFinal=="+EndTimeFinal);
                     Log.i("Tag_time","StartTimeToCompare=="+StartTimeToCompare);
+
+
+                    decrementDateByOne(SelectedDat);
+
+
+
+                    SimpleDateFormat prv_date = new SimpleDateFormat("yyyy-MM-dd");
+                    String formattedTime_prev= prv_date.format(previousDate);
+                    Log.e("formattedTime_prev", formattedTime_prev);
+
+
+
+
                     if(SelectedDat.compareTo(date1) > 0 )
                     //  if(SelectedDat.compareTo(date1)>0)
                     //if(SelectedDat.compareTo(eventTime) > 0 )
@@ -287,7 +331,18 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
                       //     holder.btUpdate.setEnabled(false);
                         // System.out.println("StartTimeToCompare is Greater than my date1");
                         Toast.makeText(context1, "Update after the class time", Toast.LENGTH_SHORT).show();
+                    } else if(previousDatestatus.equals("Pending") || previousDatestatus.equals("Lesson Pending"))
+                    {
+                        Log.i("Tag_time","Inside if ");
+                        Toast.makeText(context1, "Please Update previous date attendance", Toast.LENGTH_SHORT).show();
                     }
+//                    else if(SelectedDat.compareTo(previousDate) > 0 )
+//                    {
+//                        Log.i("Tag_time","Inside if ");
+//                        Toast.makeText(context1, "Please Update previous date", Toast.LENGTH_SHORT).show();
+//                    }
+
+
                 //    else if(d2.compareTo(d1)>0 || PresentTime.compareTo(StartTimeToCompare)<0){
 
 
@@ -315,7 +370,7 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
                 context1.startActivity(i);
                     }
                     // Log.i("Tag_time","dateCompareTwo="+dateCompareTwo);
-                } catch (ParseException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -338,6 +393,15 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
             }
         });
                 return convertView;
+    }
+
+    public Date decrementDateByOne(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.DATE, -1);
+         previousDate = c.getTime();
+        Log.e("previousDate", String.valueOf(previousDate));
+        return previousDate;
     }
 
     static class ViewHolder {

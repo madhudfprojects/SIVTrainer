@@ -59,12 +59,12 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
     ArrayList<Eventlist> eventlists;
     Eventlist eventlist;
     private static EventlistAdapter adapter;
-    String scheduleId,datestr,stime,etime,cohortstr,classroomstr,modulestr,bookIdstr,fellowershipsrt,statusStr,attandenceStr;
+    String scheduleId,datestr,stime,etime,cohortstr,classroomstr,modulestr,bookIdstr,fellowershipsrt,statusStr,attandenceStr,prevdateattendancestatus;
     //  Boolean eventUpdate;
     private SwipeRefreshLayout swipeLayout;
     public CalendarAdapter cal_adapter1;
     String bookid, cohartName, fellowshipName, eventdate, start_time, userId, status, end_time, module_name, attendance;
-    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
+    String Schedule_Status,Schedule_ID,Lavel_ID,Schedule_Date,End_Time,Start_Time,Schedule_Session,Schedule_Status_old,Subject_Name,Leason_Name,Lavel_Name,Cluster_Name,Institute_Name;
 
     ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
 
@@ -137,6 +137,8 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
         List<String> arr_schedSession = intent.getStringArrayListExtra("arr_schedSession");
         List<String> arr_status = intent.getStringArrayListExtra("arr_status");
         List<String> arr_attandence=intent.getStringArrayListExtra("arr_attandence");
+        List<String> arr_prevdatestatus=intent.getStringArrayListExtra("arr_prevdatestatus");
+
 
         // boolean[] arr_eventUpdate = intent.getBooleanArrayExtra("arr_eventUpdate");
 
@@ -166,11 +168,13 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
             //     eventUpdate = arr_eventUpdate[i];
             statusStr = arr_status.get(i);
             attandenceStr=arr_attandence.get(i);
+            prevdateattendancestatus=arr_prevdatestatus.get(i);
+            Log.e("prevdandancestatus",prevdateattendancestatus);
 
             // eventUpdate=arr_eventUpdate[i];
 
-            ListviewEvents.listview_info_arr.add(new ListviewEvents(scheduleId,datestr, stime,etime, bookIdstr, cohortstr, classroomstr, modulestr, fellowershipsrt,statusStr,attandenceStr));
-            adapter.add(new ListviewEvents(scheduleId,datestr, stime,etime, bookIdstr, cohortstr, classroomstr, modulestr, fellowershipsrt,statusStr,attandenceStr));
+            ListviewEvents.listview_info_arr.add(new ListviewEvents(scheduleId,datestr, stime,etime, bookIdstr, cohortstr, classroomstr, modulestr, fellowershipsrt,statusStr,attandenceStr,prevdateattendancestatus));
+            adapter.add(new ListviewEvents(scheduleId,datestr, stime,etime, bookIdstr, cohortstr, classroomstr, modulestr, fellowershipsrt,statusStr,attandenceStr,prevdateattendancestatus));
 
             //    Log.i("Tag", "eventUpdate" + arr_eventUpdate.length);
             Log.i("Tag", "arr_stime.get(i).length()" + arr_stime.get(i).length());
@@ -212,6 +216,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
         arr_schedSession.clear();
         arr_status.clear();
         arr_attandence.clear();
+        arr_prevdatestatus.clear();
         Log.i("Tag","arr_stime1="+arr_stime);
      /*   lv_eventlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -398,6 +403,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                         for(int i=0;i<int_usercount;i++)
                         {
                             Log.e("clus name",usershedulelist.get(i).getClusterName().toString());
+                            Log.e("prevstatus3", usershedulelist.get(i).getSchedule_Status_Old().toString());
 
                             Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
 
@@ -412,9 +418,10 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                             Lavel_Name = usershedulelist.get(i).getLavelName().toString();
                             Institute_Name = usershedulelist.get(i).getInstituteName().toString();
                             Cluster_Name = usershedulelist.get(i).getClusterName().toString();
+                            Schedule_Status_old = usershedulelist.get(i).getSchedule_Status_Old().toString();
 
                             //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name);
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status,Subject_Name,Lavel_Name,Leason_Name,Cluster_Name,Institute_Name,Schedule_Status_old);
                             arrayList.add(userInfo);
 
                         }
@@ -436,6 +443,7 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                             Leason_Name = arrayList.get(i).leasonName;
                             Cluster_Name = arrayList.get(i).clusterName;
                             Institute_Name = arrayList.get(i).instituteName;
+                            Schedule_Status_old = arrayList.get(i).schedule_Status_Old;
 
                             obj.setScheduleID(Schedule_ID);
                             obj.setLavelID(Lavel_ID);
@@ -449,11 +457,12 @@ public class EventListActivity extends AppCompatActivity implements SwipeRefresh
                             obj.setLeasonName(Leason_Name);
                             obj.setInstituteName(Institute_Name);
                             obj.setClusterName(Cluster_Name);
+                            obj.setSchedule_Status_Old(Schedule_Status_old);
 
                             userInfosarr[i] = obj;
                             //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
 
-                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name,Schedule_Status_old));
 
                             Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
                         }

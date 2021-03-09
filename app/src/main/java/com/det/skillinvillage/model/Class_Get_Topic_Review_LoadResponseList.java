@@ -27,7 +27,34 @@ public class Class_Get_Topic_Review_LoadResponseList {
     private String questionAnswer;
     @SerializedName("User_ID")
     @Expose
-    private String userID;
+    private Object userID;
+    @SerializedName("Document_Type")
+    @Expose
+    private Object documentType;
+    @SerializedName("Refer_Status")
+    @Expose
+    private String referStatus;
+    @SerializedName("Refer_Yes")
+    @Expose
+    private String referYes;
+    @SerializedName("Refer_No")
+    @Expose
+    private String referNo;
+    @SerializedName("Refer_Others")
+    @Expose
+    private String referOthers;
+    @SerializedName("Refer_No_Others")
+    @Expose
+    private String referNoOthers;
+    @SerializedName("Prepared")
+    @Expose
+    private String prepared;
+    @SerializedName("LP_NextWeek")
+    @Expose
+    private String lPNextWeek;
+    @SerializedName("TLM")
+    @Expose
+    private String tLM;
 
     public String getTopicID() {
         return topicID;
@@ -85,12 +112,84 @@ public class Class_Get_Topic_Review_LoadResponseList {
         this.questionAnswer = questionAnswer;
     }
 
-    public String getUserID() {
+    public Object getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(Object userID) {
         this.userID = userID;
+    }
+
+    public Object getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(Object documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getReferStatus() {
+        return referStatus;
+    }
+
+    public void setReferStatus(String referStatus) {
+        this.referStatus = referStatus;
+    }
+
+    public String getReferYes() {
+        return referYes;
+    }
+
+    public void setReferYes(String referYes) {
+        this.referYes = referYes;
+    }
+
+    public String getReferNo() {
+        return referNo;
+    }
+
+    public void setReferNo(String referNo) {
+        this.referNo = referNo;
+    }
+
+    public String getReferOthers() {
+        return referOthers;
+    }
+
+    public void setReferOthers(String referOthers) {
+        this.referOthers = referOthers;
+    }
+
+    public String getReferNoOthers() {
+        return referNoOthers;
+    }
+
+    public void setReferNoOthers(String referNoOthers) {
+        this.referNoOthers = referNoOthers;
+    }
+
+    public String getPrepared() {
+        return prepared;
+    }
+
+    public void setPrepared(String prepared) {
+        this.prepared = prepared;
+    }
+
+    public String getLPNextWeek() {
+        return lPNextWeek;
+    }
+
+    public void setLPNextWeek(String lPNextWeek) {
+        this.lPNextWeek = lPNextWeek;
+    }
+
+    public String getTLM() {
+        return tLM;
+    }
+
+    public void setTLM(String tLM) {
+        this.tLM = tLM;
     }
 
     @Override

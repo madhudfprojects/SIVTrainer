@@ -16,8 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
@@ -38,12 +38,11 @@
         android:roundIcon="@drawable/launch_icone"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity_LessonVerification"></activity>
+        <activity android:name=".Activity_QuestionVerification"></activity>
+        <activity android:name=".Activity_LessonVerification" />
         <activity android:name=".Activity_SchedulerLessonPlan" />
         <activity android:name=".Activity_ViewStudentList_new" />
-        <activity
-            android:name=".ContactUs_Activity"
-            />
+        <activity android:name=".ContactUs_Activity" />
         <activity
             android:name=".Onlineview_Navigation"
             android:label="@string/title_activity_onlineview__navigation"

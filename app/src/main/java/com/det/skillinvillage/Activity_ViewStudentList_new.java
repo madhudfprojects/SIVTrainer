@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -2435,20 +2436,39 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
             this.mDisplayedValues.clear();
 
             if (charText != null) {
+                 try{
                 if (projectList != null) {
                     if (charText.isEmpty() || charText.length() == 0) {
                         this.mDisplayedValues.addAll(projectList);
                     } else {
                         for (StudentList wp : projectList) {
-                            if (wp.getStudentName().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase()) || wp.getApplicationNo().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase()) ) {
+
+//                            if (wp.getStudentName().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase()) || wp.getApplicationNo().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase())) {
+//                                this.mDisplayedValues.add(wp);
+//                            }
+
+
+                          if(wp.getStudentStatus().equals("Applicant")){
+                              if (wp.getStudentName().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase())) {
+                                  this.mDisplayedValues.add(wp);
+                              }
+
+                          }else{
+                              if (wp.getStudentName().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase()) || wp.getApplicationNo().toLowerCase(Locale.getDefault()).contains(charText.toLowerCase())) {
                                 this.mDisplayedValues.add(wp);
                             }
+                          }
+
+
                         }
                     }
                     notifyDataSetChanged();
 
                     //FarmerListViewAdapter.updateList(mDisplayedValues);
                 }
+            }catch(Exception e){
+                     e.printStackTrace();
+                 }
             }
         }
 
@@ -2498,12 +2518,46 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
                 myprefs_Username.apply();
 
 
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_ViewStudentList_new.this);
+                dialog.setCancelable(false);
+                dialog.setTitle(R.string.alert);
+                dialog.setMessage("Are you sure want to Logout?");
+
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+
+                        //   SaveSharedPreference.setUserName(Activity_HomeScreen.this, "");
+                        Class_SaveSharedPreference.setUserName(getApplicationContext(),"");
+
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        i.putExtra("logout_key1", "yes");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
 
 
+                    }
+                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Action for "Cancel".
+                                dialog.dismiss();
+                            }
+                        });
+
+                final AlertDialog alert = dialog.create();
+                alert.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface arg0) {
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
+                    }
+                });
+                alert.show();
+                break;
             case R.id.addnewstudent_menu_id:
                 Intent intent = new Intent(Activity_ViewStudentList_new.this, Activity_Register_New.class);
                 startActivity(intent);

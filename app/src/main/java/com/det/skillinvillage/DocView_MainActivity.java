@@ -483,7 +483,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                                     Log.d("wordDocPath", wordDocPath);
                                     Log.d("downloadUrl", String.valueOf(downloadUrl));
                                     String[] docNameArray = wordDocPath.split("/");
-                                    docName = docNameArray[4];
+                                    docName = docNameArray[5];
                                     Log.d("doclengthisss", String.valueOf(docNameArray.length));
                                     Log.d("Docnameesssss", docName);
 

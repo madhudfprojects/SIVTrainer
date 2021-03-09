@@ -180,7 +180,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
     SharedPreferences sharedpref_flag_Obj;
 
 
-    String Schedule_Status, Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Subject_Name, Leason_Name = "", Lavel_Name, Cluster_Name, Institute_Name;
+    String Schedule_Status, Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session,Schedule_Status_old,Subject_Name, Leason_Name = "", Lavel_Name, Cluster_Name, Institute_Name;
     ArrayList<UserInfoListRest> arrayList = new ArrayList<UserInfoListRest>();
     UserInfoListRest[] userInfosarr;
     GetMobileMenuResponseList[] arrayObj_class_getpaymentpendingresp;
@@ -306,6 +306,14 @@ public class Activity_HomeScreen extends AppCompatActivity {
 // Toast.makeText(getApplicationContext(),"image not found",Toast.LENGTH_LONG).show();
             }
         }
+
+
+//        if(Employee_Role.equalsIgnoreCase("Cluster Head")) {
+//            onlineview_iv.setVisibility(View.VISIBLE);
+//        }else{
+//            onlineview_iv.setVisibility(View.GONE);
+//        }
+
         if (isInternetPresent) {
             AsyncCallWS2_Login task = new AsyncCallWS2_Login(Activity_HomeScreen.this);
             task.execute();
@@ -1120,7 +1128,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                         int int_usercount = usershedulelist.size();
 
                         for (int i = 0; i < int_usercount; i++) {
-                            Log.e("clus name", usershedulelist.get(i).getClusterName().toString());
+                            Log.e("prevstatus1", usershedulelist.get(i).getSchedule_Status_Old().toString());
 
                             Schedule_Status = usershedulelist.get(i).getScheduleStatus().toString();
 
@@ -1129,8 +1137,15 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Schedule_Date = usershedulelist.get(i).getScheduleDate().toString();
                             End_Time = usershedulelist.get(i).getEndTime().toString();
                             Start_Time = usershedulelist.get(i).getStartTime().toString();
-                            Subject_Name = usershedulelist.get(i).getSubjectName().toString();
+                            if (usershedulelist.get(i).getSubjectName() == null || usershedulelist.get(i).getSubjectName().equals("")) {
+                                Subject_Name = "";
+                            }else{
+                                Subject_Name = usershedulelist.get(i).getSubjectName().toString();
+                            }
+
                             Schedule_Session = usershedulelist.get(i).getScheduleSession().toString();
+                            Schedule_Status_old = usershedulelist.get(i).getSchedule_Status_Old().toString();
+
                             if (usershedulelist.get(i).getLeasonName() == null || usershedulelist.get(i).getLeasonName().equals("")) {
                                 Leason_Name = "";
                             } else {
@@ -1141,7 +1156,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Cluster_Name = usershedulelist.get(i).getClusterName().toString();
 
                             //   State cat = new State(c.getString("state_id"),c.getString("state_name"));
-                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name);
+                            UserInfoListRest userInfo = new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name,Schedule_Status_old);
                             arrayList.add(userInfo);
 
                         }
@@ -1163,6 +1178,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             Leason_Name = arrayList.get(i).leasonName;
                             Cluster_Name = arrayList.get(i).clusterName;
                             Institute_Name = arrayList.get(i).instituteName;
+                            Schedule_Status_old = arrayList.get(i).schedule_Status_Old;
 
                             obj.setScheduleID(Schedule_ID);
                             obj.setLavelID(Lavel_ID);
@@ -1176,11 +1192,12 @@ public class Activity_HomeScreen extends AppCompatActivity {
                             obj.setLeasonName(Leason_Name);
                             obj.setInstituteName(Institute_Name);
                             obj.setClusterName(Cluster_Name);
+                            obj.setSchedule_Status_Old(Schedule_Status_old);
 
                             userInfosarr[i] = obj;
                             //   UserInfo.user_info_arr =new ArrayList<UserInfo>() ;
 
-                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name));
+                            UserInfoListRest.user_info_arr.add(new UserInfoListRest(Schedule_ID, Lavel_ID, Schedule_Date, End_Time, Start_Time, Schedule_Session, Schedule_Status, Subject_Name, Lavel_Name, Leason_Name, Cluster_Name, Institute_Name,Schedule_Status_old));
 
                             Log.i("Tag", "items aa=" + arrayList.get(i).scheduleID);
                         }
@@ -3846,6 +3863,7 @@ public class Activity_HomeScreen extends AppCompatActivity {
         return true;
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -3878,11 +3896,46 @@ public class Activity_HomeScreen extends AppCompatActivity {
                 deleteLevelRestTable_B4insertion();
                 deleteClusterRestTable_B4insertion();
 
-                Intent i = new Intent(Activity_HomeScreen.this, MainActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(i);
-                finish();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Activity_HomeScreen.this);
+                dialog.setCancelable(false);
+                dialog.setTitle(R.string.alert);
+                dialog.setMessage("Are you sure want to Logout?");
 
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+
+                        //   SaveSharedPreference.setUserName(Activity_HomeScreen.this, "");
+                        Class_SaveSharedPreference.setUserName(getApplicationContext(),"");
+
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        i.putExtra("logout_key1", "yes");
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+
+
+                    }
+                })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Action for "Cancel".
+                                dialog.dismiss();
+                            }
+                        });
+
+                final AlertDialog alert = dialog.create();
+                alert.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface arg0) {
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED);
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#004D40"));
+                    }
+                });
+                alert.show();
+                break;
             case android.R.id.home:
                 Intent startMain = new Intent(Intent.ACTION_MAIN);
                 startMain.addCategory(Intent.CATEGORY_HOME);
