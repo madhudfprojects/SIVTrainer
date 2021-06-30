@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_LevelDetails {
 
     int id;
@@ -79,7 +81,7 @@ public class Class_LevelDetails {
     public void setLevel_admissionfee(String level_admissionfee) {
         this.level_admissionfee = level_admissionfee;
     }
-
+    @NonNull
     @Override
     public String toString() {
         return level_name;

@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_ClusterDetails {
     int id;
     String cluster_id;
@@ -57,6 +59,7 @@ public class Class_ClusterDetails {
         this.cluster_name = cluster_name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return cluster_name;

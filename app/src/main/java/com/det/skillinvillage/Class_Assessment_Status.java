@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_Assessment_Status {
     String Status;
     String assessment_instituteID;
@@ -30,6 +32,8 @@ public class Class_Assessment_Status {
     public void setAssessment_levelID(String assessment_levelID) {
         this.assessment_levelID = assessment_levelID;
     }
+
+    @NonNull
     @Override
     public String toString() {
         return Status;

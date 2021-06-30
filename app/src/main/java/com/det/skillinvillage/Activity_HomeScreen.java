@@ -34,11 +34,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,10 +72,6 @@ import com.det.skillinvillage.util.UserInfoRest;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,18 +84,15 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.Vector;
 
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.det.skillinvillage.MainActivity.KeyValue_employeeRoleName;
 import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.key_userimage;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_userimage;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
 import static com.det.skillinvillage.NormalLogin.key_flag;
@@ -3203,103 +3193,6 @@ public class Activity_HomeScreen extends AppCompatActivity {
     //////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public class OnlineView_Feedback extends AsyncTask<String, Void, Void> {
-        Context context;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            list_detaile();
-            //return HttpULRConnect.getData(url);
-            return null;
-        }
-
-        public OnlineView_Feedback(Context context1) {
-            context = context1;
-            //  dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void s) {
-            if (str_feedback.toString().equalsIgnoreCase("") || str_feedback.toString().equalsIgnoreCase("anyType{}") || str_feedback.toString().equalsIgnoreCase(null)) {
-                onlineview_iv.setVisibility(View.GONE);
-                Log.e("tag", "API-Gone");
-                SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                editor.putString(FeedBack, "Gone");
-                editor.commit();
-            } else {
-                onlineview_iv.setVisibility(View.VISIBLE);
-                Log.e("tag", "API-Visible");
-                SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                editor.putString(FeedBack, "Visible");
-                editor.commit();
-            }
-            //populateExpandableList();
-//            MyAdapter   adapter = new MyAdapter(mainmenulist, Onlineview_Navigation.this);
-//            expandableListView.setAdapter(adapter);
-
-        }
-
-    }
-
-    public void list_detaile() {
-        Vector<SoapObject> result1 = null;
-        String url = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadMobileMenu";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadMobileMenu";
-
-        try {
-            int userid = Integer.parseInt(str_loginuserID);
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", userid);//userid
-
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(url);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-
-                Log.i("value at response", response.toString());
-                if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-                    str_feedback = "";
-                }
-                /*if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-                    onlineview_iv.setVisibility(View.GONE);
-                    Log.e("tag","API-Gone");
-                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                    editor.putString(FeedBack, "Gone");
-                    editor.commit();
-                }else {
-                    onlineview_iv.setVisibility(View.VISIBLE);
-                    Log.e("tag","API-Visible");
-                    SharedPreferences.Editor editor = sharedpref_feedback.edit();
-                    editor.putString(FeedBack, "Visible");
-                    editor.commit();
-                }*/
-
-            } catch (Throwable t) {
-                Log.e("requestload fail", "> " + t.getMessage());
-            }
-
-        } catch (Throwable t) {
-            Log.e("UnRegisterload  Error", "> " + t.getMessage());
-
-        }
-
-
-    }//End of leaveDetail method
 
     public void GetStudentValuesResyncRestData() {
 

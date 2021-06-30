@@ -1,5 +1,7 @@
 package com.det.skillinvillage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -192,6 +194,7 @@ public class Class_Get_Topic_Review_LoadResponseList {
         this.tLM = tLM;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return questionName;

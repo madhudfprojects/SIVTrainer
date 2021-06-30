@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,24 +18,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.det.skillinvillage.adapter.LessonPlanAdapter;
 import com.det.skillinvillage.model.Class_Get_Topic_Review_LoadResponse;
 import com.det.skillinvillage.model.Class_Get_Topic_Review_LoadResponseList;
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
-import com.det.skillinvillage.model.GetScheduleLessonPlanResponse;
-import com.det.skillinvillage.model.GetScheduleLessonPlanResponseList;
-import com.det.skillinvillage.model.LessonQuestion;
-import com.det.skillinvillage.model.Level;
-import com.det.skillinvillage.model.PostScheduleLessonUpdateRequest;
-import com.det.skillinvillage.model.PostScheduleLessonUpdateResponse;
 import com.det.skillinvillage.model.PostTopicReviewUpdateRequest;
 import com.det.skillinvillage.model.PostTopicReviewUpdateResponse;
-import com.det.skillinvillage.model.Sandbox;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by User on 11/13/2017.
  */
@@ -82,6 +84,8 @@ public class Class_Taluk
 
 
     //set the string
+    @NonNull
+    @Override
     public String toString()
     {
         return( this.TalukName );

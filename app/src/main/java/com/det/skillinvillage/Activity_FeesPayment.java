@@ -3,8 +3,6 @@ package com.det.skillinvillage;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,11 +28,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.det.skillinvillage.model.AddStudentDetailsRequest;
 import com.det.skillinvillage.model.Class_GetStudentPaymentResponseList;
 import com.det.skillinvillage.model.Class_PostSavePaymentResponseList;
-import com.det.skillinvillage.model.Class_VillageLatLongList;
-import com.det.skillinvillage.model.Class_getVillageLatLong;
+
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.GetStudentPaymentResponse;
@@ -42,13 +38,6 @@ import com.det.skillinvillage.model.PostSavePaymentRequest;
 import com.det.skillinvillage.model.Post_Save_PaymentResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import org.ksoap2.SoapEnvelope;
@@ -68,12 +57,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.det.skillinvillage.Activity_Student_List.key_studentid_pay;
-import static com.det.skillinvillage.Activity_Student_List.sharedpreferenc_studentid_pay;
-import static com.det.skillinvillage.Activity_ViewStudentList_new.key_studentid;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_selectedspinner;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_FeesPayment extends AppCompatActivity {
@@ -344,54 +329,54 @@ String[] paymentTypeArray = {"Payment"};
 
     }
 
-    public static class DatePickerFragmentReceivedDate extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                    this, year, month, day);
-
-            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-            return dialog;
-
-
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-            setDate(cal);
-
-        }
-
-        public void setDate(final Calendar calendar) {
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-            receiveddate_tv.setText(dateFormat.format(calendar.getTime()));
-            str_receiveddate_display = dateFormat.format(calendar.getTime());
-            Log.e("receiveddate_tv...", dateFormat.format(calendar.getTime()));
-
-
-            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
-            //SimpleDateFormat mdyFormat = new SimpleDateFormat("dd-MM-yyyy");
-
-            str_receiveddate = mdyFormat.format(calendar.getTime());
-            Log.e("str_receiveddate..", str_receiveddate);
-            Calendar c = Calendar.getInstance();
-            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
-            Log.e("outputFormat..", String.valueOf(outputFormat));
-
-
-        }
-
-    }
+//    public static class DatePickerFragmentReceivedDate extends DialogFragment
+//            implements DatePickerDialog.OnDateSetListener {
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            final Calendar c = Calendar.getInstance();
+//            int year = c.get(Calendar.YEAR);
+//            int month = c.get(Calendar.MONTH);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+//
+//
+//            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+//                    this, year, month, day);
+//
+//            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+//            return dialog;
+//
+//
+//        }
+//
+//        @Override
+//        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
+//            setDate(cal);
+//
+//        }
+//
+//        public void setDate(final Calendar calendar) {
+//            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+//
+//            receiveddate_tv.setText(dateFormat.format(calendar.getTime()));
+//            str_receiveddate_display = dateFormat.format(calendar.getTime());
+//            Log.e("receiveddate_tv...", dateFormat.format(calendar.getTime()));
+//
+//
+//            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            //SimpleDateFormat mdyFormat = new SimpleDateFormat("dd-MM-yyyy");
+//
+//            str_receiveddate = mdyFormat.format(calendar.getTime());
+//            Log.e("str_receiveddate..", str_receiveddate);
+//            Calendar c = Calendar.getInstance();
+//            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+//            Log.e("outputFormat..", String.valueOf(outputFormat));
+//
+//
+//        }
+//
+//    }
 
 //    public void GetLoadStudentpayment() {
 //
@@ -919,117 +904,10 @@ String[] paymentTypeArray = {"Payment"};
 
     }
 
-    private class SaveStudentpaymentTask extends AsyncTask<String, Void, Void> {
-
-        ProgressDialog dialog;
-
-        Context context;
-
-        protected void onPreExecute() {
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            savepaymentdata();  // call of details
-            return null;
-        }
-
-        public SaveStudentpaymentTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-            if(save_receive_studentstatus.equals("Sucess")){
-                ClearData();
-                Toast.makeText(Activity_FeesPayment.this, "Successfully submitted", Toast.LENGTH_SHORT).show();
-                Intent i=new Intent(getApplicationContext(),Activity_Student_List.class);
-                startActivity(i);
-                finish();
-            }else  if(save_receive_studentstatus.equals("Error")){
-                Toast.makeText(Activity_FeesPayment.this, "Error", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-
-            Log.e("tag", "Reached the onPostExecute");
-
-        }//end of onPostExecute
-    }
 
     public void ClearData() {
         amount_et.getText().clear();
         remarks_et.getText().clear();
     }
 
-    public  void savepaymentdata(){
-        Vector<SoapObject> result1 = null;
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "SaveStudentPayment";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/SaveStudentPayment";
-
-        try {
-
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("Student_ID", str_studentID_myprefs);
-            request.addProperty("Payment_Type", selected_paymentType);
-            request.addProperty("Payment_Mode", selected_paymentMode);
-            request.addProperty("Payment_Amount", amount_et.getText().toString());
-            request.addProperty("Payment_Date", str_receiveddate);
-            request.addProperty("Payment_Remarks", remarks_et.getText().toString());
-            request.addProperty("Created_By", str_loginuserID);
-            request.addProperty("Receipt_Manual", receipt_feepayment_et.getText().toString());
-
-            Log.i("request", request.toString());
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.e("value at response", response.getProperty(0).toString());
-
-                SoapObject obj2 = (SoapObject) response.getProperty(0);
-                Log.e("obj2", obj2.toString());
-
-                SoapPrimitive receive_studentstatus_save = (SoapPrimitive) obj2.getProperty("Student_Status");
-                save_receive_studentstatus = receive_studentstatus_save.toString();
-
-            } catch (Throwable t) {
-                Log.e("request fail", "> " + t.getMessage());
-                //str_receive_studentstatus = "slow internet";
-
-            }
-        } catch (Throwable t) {
-            Log.e("UnRegister Receiver ", "> " + t.getMessage());
-
-        }
-
-    }
 }

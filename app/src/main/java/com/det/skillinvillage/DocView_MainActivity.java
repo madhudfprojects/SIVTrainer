@@ -511,7 +511,7 @@ public class DocView_MainActivity extends AppCompatActivity implements Connectiv
                                 }
                             }
                             //  }
-                            Log.e("tag", "list size==" + DocView_Module.listview_arr.size());
+                            Log.e("str_doc_TopicLevelID", "list size==" + str_doc_TopicLevelID);
 
 
                         }

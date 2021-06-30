@@ -1,5 +1,7 @@
 package com.det.skillinvillage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +30,7 @@ public class Education {
         this.education_Name = education_Name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return education_Name;

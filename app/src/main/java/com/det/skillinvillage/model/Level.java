@@ -1,5 +1,7 @@
 package com.det.skillinvillage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -71,6 +73,7 @@ public class Level {
         this.admissionFee = admissionFee;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return levelName;

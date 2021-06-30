@@ -1,12 +1,8 @@
 package com.det.skillinvillage;
 
-//import androidx.appcompat.app.AlertDialog;
-//import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,18 +16,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Base64;
 import android.util.Log;
@@ -62,7 +51,6 @@ import com.det.skillinvillage.model.District;
 import com.det.skillinvillage.model.Education;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.LearningMode;
-import com.det.skillinvillage.model.Level;
 import com.det.skillinvillage.model.School;
 import com.det.skillinvillage.model.State;
 import com.det.skillinvillage.model.StudentList;
@@ -81,12 +69,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.MarshalBase64;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 
 import java.io.ByteArrayOutputStream;
@@ -97,7 +79,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -105,14 +86,11 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.det.skillinvillage.Activity_Register_New.photo_iv;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.Key_sel_applnstatus;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.Key_sel_clustersp;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.Key_sel_institutesp;
@@ -123,7 +101,6 @@ import static com.det.skillinvillage.Activity_ViewStudentList_new.key_studentid;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_selectedspinner;
 import static com.det.skillinvillage.Activity_ViewStudentList_new.sharedpreferenc_studentid_new;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_EditRegistration extends AppCompatActivity {
@@ -269,7 +246,6 @@ public class Activity_EditRegistration extends AppCompatActivity {
     School Obj_Class_SchoolDetails;
     String sp_strschool_ID="",selected_schoolName="",sp_straca_ID="",sp_strClust_ID="",sp_strInst_ID="";
     int sel_school=0;
-    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -2785,100 +2761,100 @@ public class Activity_EditRegistration extends AppCompatActivity {
 
     ////////////////////////////////////////////////////////////////////////////
     //dob CLASS
-    public static class DatePickerFragmentDateOfBirth extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                    this, year, month, day);
-            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-
-
-            return dialog;
-
-
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-            setDate(cal);
-
-        }
-
-        public void setDate(final Calendar calendar) {
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-
-            // dateofbirth_edit_tv.setText(dateFormat.format(calendar.getTime()));
-            str_edit_birthdatedisp = dateFormat.format(calendar.getTime());
-            Log.e("str_birthdatedisp...", dateFormat.format(calendar.getTime()));
-
-
-            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
-            str_edit_birthdate = mdyFormat.format(calendar.getTime());
-            SimpleDateFormat mdyFormat1 = new SimpleDateFormat("dd-MM-yyyy");
-            String str_edit_birthdate1 = mdyFormat1.format(calendar.getTime());
-            dateofbirth_edit_tv.setText(str_edit_birthdate1);
-            Log.e("str_edit_birthdate..", str_edit_birthdate);
-
-
-        }
-
-    }
+//    public static class DatePickerFragmentDateOfBirth extends DialogFragment
+//            implements DatePickerDialog.OnDateSetListener {
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            final Calendar c = Calendar.getInstance();
+//            int year = c.get(Calendar.YEAR);
+//            int month = c.get(Calendar.MONTH);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+//
+//
+//            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+//                    this, year, month, day);
+//            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+//
+//
+//            return dialog;
+//
+//
+//        }
+//
+//        @Override
+//        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
+//            setDate(cal);
+//
+//        }
+//
+//        public void setDate(final Calendar calendar) {
+//            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+//
+//
+//            // dateofbirth_edit_tv.setText(dateFormat.format(calendar.getTime()));
+//            str_edit_birthdatedisp = dateFormat.format(calendar.getTime());
+//            Log.e("str_birthdatedisp...", dateFormat.format(calendar.getTime()));
+//
+//
+//            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            str_edit_birthdate = mdyFormat.format(calendar.getTime());
+//            SimpleDateFormat mdyFormat1 = new SimpleDateFormat("dd-MM-yyyy");
+//            String str_edit_birthdate1 = mdyFormat1.format(calendar.getTime());
+//            dateofbirth_edit_tv.setText(str_edit_birthdate1);
+//            Log.e("str_edit_birthdate..", str_edit_birthdate);
+//
+//
+//        }
+//
+//    }
 
     /////////////////////////////////////////////////////////////////////
     //payment date
-    public static class DatePickerFragmentPaymentDate extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                    this, year, month, day);
-
-            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-            return dialog;
-
-
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-            setDate(cal);
-
-        }
-
-        public void setDate(final Calendar calendar) {
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-            //paymentdate_edit_tv.setText(dateFormat.format(calendar.getTime()));
-            str_paymentDatedisp = dateFormat.format(calendar.getTime());
-            Log.e("paymentdate_tv...", dateFormat.format(calendar.getTime()));
-
-
-            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
-            str_paymentDate = mdyFormat.format(calendar.getTime());
-            Log.e("str_paymentDate..", str_paymentDate);
-            paymentdate_edit_tv.setText(str_paymentDate);
-
-        }
-
-    }
+//    public static class DatePickerFragmentPaymentDate extends DialogFragment
+//            implements DatePickerDialog.OnDateSetListener {
+//
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            final Calendar c = Calendar.getInstance();
+//            int year = c.get(Calendar.YEAR);
+//            int month = c.get(Calendar.MONTH);
+//            int day = c.get(Calendar.DAY_OF_MONTH);
+//
+//
+//            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+//                    this, year, month, day);
+//
+//            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+//            return dialog;
+//
+//
+//        }
+//
+//        @Override
+//        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
+//            setDate(cal);
+//
+//        }
+//
+//        public void setDate(final Calendar calendar) {
+//            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+//
+//            //paymentdate_edit_tv.setText(dateFormat.format(calendar.getTime()));
+//            str_paymentDatedisp = dateFormat.format(calendar.getTime());
+//            Log.e("paymentdate_tv...", dateFormat.format(calendar.getTime()));
+//
+//
+//            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
+//            str_paymentDate = mdyFormat.format(calendar.getTime());
+//            Log.e("str_paymentDate..", str_paymentDate);
+//            paymentdate_edit_tv.setText(str_paymentDate);
+//
+//        }
+//
+//    }
 /////////////////////////////////////////////////////////
 
 

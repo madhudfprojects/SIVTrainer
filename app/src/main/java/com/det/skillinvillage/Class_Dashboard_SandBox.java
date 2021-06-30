@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_Dashboard_SandBox {
     String dashboard_sand_id;
     String dashboard_sand_name;
@@ -25,7 +27,7 @@ public class Class_Dashboard_SandBox {
     public void setDashboard_sand_name(String dashboard_sand_name) {
         this.dashboard_sand_name = dashboard_sand_name;
     }
-
+    @NonNull
     @Override
     public String toString() {
         return dashboard_sand_name;

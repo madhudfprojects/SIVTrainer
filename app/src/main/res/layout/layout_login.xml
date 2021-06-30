@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="#2D67D8"
-            android:text="UAT Version  1.0"
+            android:text="Version  3.1"
             android:layout_gravity="center"
             android:gravity="center"
             android:layout_marginTop="@dimen/loginViewsMargin"

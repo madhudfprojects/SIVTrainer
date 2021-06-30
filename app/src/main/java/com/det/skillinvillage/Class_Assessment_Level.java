@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_Assessment_Level {
 
     String level_assessmentid;
@@ -32,6 +34,7 @@ public class Class_Assessment_Level {
         this.inst_assessmentid = inst_assessmentid;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return level_assessmentname;

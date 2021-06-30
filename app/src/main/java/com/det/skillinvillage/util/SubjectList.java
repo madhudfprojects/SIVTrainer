@@ -1,5 +1,7 @@
 package com.det.skillinvillage.util;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -27,6 +29,7 @@ public class SubjectList {
         this.subjectName = subjectName;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return subjectName;

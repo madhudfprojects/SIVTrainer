@@ -1,6 +1,5 @@
 package com.det.skillinvillage.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -32,7 +30,7 @@ import java.util.List;
  */
 
 public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
-    private Context context1;
+    private final Context context1;
     String schedule_id,datestr,stime,etime,cohortstr,classroomstr,modulestr,bookIdstr,fellowershipsrt,statusStr,previousDatestatus="";
     String scheduleid_holder,book_holder,startTime_holder,endTime_holder,date_holder,cohort_holder,fellowership_holder,module_holder,attandence_holder;
     private Date date;
@@ -61,7 +59,7 @@ public class CardsAdapter extends ArrayAdapter<ListviewEvents> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final ViewHolder holder;
 
         if (convertView == null) {

@@ -16,7 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -37,8 +38,10 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@drawable/launch_icone"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".Activity_QuestionVerification"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="AllowBackup">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity_QuestionVerification" />
         <activity android:name=".Activity_LessonVerification" />
         <activity android:name=".Activity_SchedulerLessonPlan" />
         <activity android:name=".Activity_ViewStudentList_new" />
@@ -82,7 +85,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity_FeesSubmit_New"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="fullSensor" />
         <activity
             android:name=".Activity_FeesPayment"
             android:screenOrientation="portrait"
@@ -94,21 +97,8 @@
             android:name=".NormalLogin"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DocViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionnBar" />
-        <activity
             android:name=".CDR_Openactivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionnBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".Activity_HomeScreen"
             android:screenOrientation="portrait"
@@ -135,9 +125,6 @@
         <activity android:name=".Doc_QunPaper_PdfActivity" />
         <activity android:name=".DocView_LessonPlanActivity" />
         <activity android:name=".Doc_LessonPlan_PdfActivity" />
-        <activity
-            android:name=".Activity_Student_List"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity2"
             android:screenOrientation="portrait" />

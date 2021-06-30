@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_ViewStudentData {
 
     int id;
@@ -123,7 +125,7 @@ public class Class_ViewStudentData {
     public void setStudentID(String studentID) {
         this.studentID = studentID;
     }
-
+    @NonNull
     @Override
     public String toString() {
         return name;

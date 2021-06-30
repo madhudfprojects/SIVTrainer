@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,25 +34,17 @@ import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.GetPaymentPendingSummaryResponse;
 import com.det.skillinvillage.model.GetPendingPaymentResponse;
-import com.det.skillinvillage.model.GetStudentPaymentResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.List;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_FeesSubmit_New extends AppCompatActivity {
@@ -232,161 +223,7 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
     }
 
 
-    private class PendingpaymentlistTask extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
 
-        Context context;
-
-        protected void onPreExecute() {
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getlist();  // call of details
-            return null;
-        }
-
-        public PendingpaymentlistTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-
-            if((str_paymentstatus.equals("No Result")) || (str_paymentstatus.equals("Error"))) {
-
-                 //Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
-                 alert();
-            }else {
-                if (ArrayObjclass_feesSubmissionList_new != null) {
-
-                    int x = ArrayObjclass_feesSubmissionList_new.length;
-                    Log.e("", "Inside the if list adapter" + x);
-                    uploadfromDB_PendingAmtStudentList();
-
-
-                    } else {
-                    Log.d("onPostExecute", "studentpaymentlist == null");
-                }
-            }
-            Log.e("tag", "Reached the onPostExecute");
-
-        }//end of onPostExecute
-    }// end Async task
-
-    private void getlist() {
-        Vector<SoapObject> result1 = null;
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadPendingPayment";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadPendingPayment";
-
-        try {
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", str_loginuserID);//str_loginuserID
-            Log.i("value at request", request.toString());
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                SoapObject obj2 = (SoapObject) response.getProperty(0);
-                Log.i("value at response", response.toString());
-                loadPendingPaymentCount = response.getPropertyCount();  // number of count in array in response 6,0-5,5
-
-                Log.i("number of rows", "" + loadPendingPaymentCount);
-                ArrayObjclass_feesSubmissionList_new = new Class_FeesSubmissionList_New[loadPendingPaymentCount];
-
-                for (int i = 0; i < loadPendingPaymentCount; i++) {
-                    SoapObject list = (SoapObject) response.getProperty(i);
-                    SoapPrimitive soap_studentname, soap_paymentamt, soap_aplication_no,
-                            soap_paymentstatus,soap_no_of_students_paid_fees,soap_fees_payment,soap_amt_received_by_accountant,soap_balance_not_submitted_to_accountant;
-
-                    str_paymentstatus = list.getProperty("Payment_Status").toString();
-                    if((str_paymentstatus.equals("No Result")) || (str_paymentstatus.equals("Error"))) {
-                        Log.e("str_paymentstatus", str_paymentstatus);
-
-                    }else{
-                        soap_studentname = (SoapPrimitive) obj2.getProperty("Student_Name");
-                        Log.e("str_stuID", String.valueOf(soap_studentname));
-                        soap_aplication_no = (SoapPrimitive) obj2.getProperty("Application_No");
-                        soap_paymentamt = (SoapPrimitive) obj2.getProperty("Payment_Amount");
-
-
-//                        soap_no_of_students_paid_fees = (SoapPrimitive) obj2.getProperty("Payment_Amount");
-//                        soap_fees_payment = (SoapPrimitive) obj2.getProperty("Payment_Amount");
-//                        soap_amt_received_by_accountant = (SoapPrimitive) obj2.getProperty("Payment_Amount");
-//                        soap_balance_not_submitted_to_accountant = (SoapPrimitive) obj2.getProperty("Payment_Amount");
-//
-//                         str_no_of_students_paid_fees = list.getProperty("Payment_Amount").toString();
-//                         str_fees_payment = list.getProperty("Payment_Amount").toString();
-//                         str_amt_received_by_accountant = list.getProperty("Payment_Amount").toString();
-//                         str_balance_not_submitted_to_accountant = list.getProperty("Payment_Amount").toString();
-//
-//                        setvalues();
-
-
-                        Class_FeesSubmissionList_New innerclass_feesSubmissionList_new = new Class_FeesSubmissionList_New();
-                        Log.i("value at name premitive", soap_studentname.toString());
-                        innerclass_feesSubmissionList_new.setStudentname_feesSubmit(soap_studentname.toString());
-                        innerclass_feesSubmissionList_new.setApplicationNo_feesSubmit(soap_aplication_no.toString());
-                        innerclass_feesSubmissionList_new.setPaymentamount(soap_paymentamt.toString());
-                        ArrayObjclass_feesSubmissionList_new[i] = innerclass_feesSubmissionList_new;
-                        String str_stuName = list.getProperty("Student_Name").toString();
-                        String str_ApplicationNo = list.getProperty("Application_No").toString();
-                        String str_paymentamt = list.getProperty("Payment_Amount").toString();
-
-                        DBCreate_pendinglist_insert_2SQLiteDB(str_stuName, str_ApplicationNo, str_paymentamt);
-
-
-
-//                        studentName_TV.setText(""+str_stuName);
-//                        applicationNumber_TV.setText(str_ApplicationNo);
-//                        paymentamount_TV.setText(str_paymentamt);
-//                        tableLayout.addView(tableRow);
-                    }
-
-
-                }// End of for loop
-
-            } catch (Throwable t) {
-
-                Log.e("request fail", "> " + t.getMessage());
-            }
-        } catch (Throwable t) {
-            Log.e("UnRegister  Error", "> " + t.getMessage());
-
-        }
-
-
-    }//end of getlist()
 
     public void alert() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(Activity_FeesSubmit_New.this);
@@ -414,19 +251,7 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
 
 
 
-//    public void getfeesSubmitSummary() {
-//
-//        if (isInternetPresent) {
-//         //   fees_summary_ll.setVisibility(View.VISIBLE);
-//            GetfeesSubmitSummaryTask task = new GetfeesSubmitSummaryTask(Activity_FeesSubmit_New.this);
-//            task.execute();
-//        } else {
-//          //  fees_summary_ll.setVisibility(View.GONE);
-//            Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_SHORT).show();
-//        }
-//
-//
-//    }
+
 
     public void getfeesSubmitSummary() {
 
@@ -535,128 +360,6 @@ public class Activity_FeesSubmit_New extends AppCompatActivity {
     }
 
 
-    private class GetfeesSubmitSummaryTask extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
-
-        Context context;
-
-        protected void onPreExecute() {
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getsummary();  // call of details
-            return null;
-        }
-
-        public GetfeesSubmitSummaryTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-
-            if((str_paymentstatus_feesSummary.equals("No Result")) || (str_paymentstatus_feesSummary.equals("Error"))) {
-
-                //Toast.makeText(getApplicationContext(),"No Result",Toast.LENGTH_SHORT).show();
-
-            }else {
-                setvalues();
-            }
-            Log.e("tag", "Reached the onPostExecute");
-
-        }//end of onPostExecute
-    }// end Async task
-
-    private void getsummary() {
-        Vector<SoapObject> result1 = null;
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadPendingPaymentSummary";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadPendingPaymentSummary";
-
-        try {
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", str_loginuserID);//str_loginuserID
-            Log.i("value at request", request.toString());
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                SoapObject obj2 = (SoapObject) response.getProperty(0);
-                Log.i("value at response", response.toString());
-
-
-                for (int i = 0; i < response.getPropertyCount(); i++) {
-                    SoapObject list = (SoapObject) response.getProperty(i);
-                    SoapPrimitive soap_no_of_students_paid_fees,soap_fees_payment,soap_amt_received_by_accountant,soap_balance_not_submitted_to_accountant;
-
-                    str_paymentstatus_feesSummary = list.getProperty("Payment_Status").toString();
-                    if((str_paymentstatus_feesSummary.equals("No Result")) || (str_paymentstatus_feesSummary.equals("Error"))) {
-                        Log.e("paymentstatusfeesSumm", str_paymentstatus_feesSummary);
-
-                    }else{
-
-
-                        soap_no_of_students_paid_fees = (SoapPrimitive) obj2.getProperty("Student_Count");
-                        soap_fees_payment = (SoapPrimitive) obj2.getProperty("Recevied_Fee");
-                        soap_amt_received_by_accountant = (SoapPrimitive) obj2.getProperty("Account_Recevied");
-                        soap_balance_not_submitted_to_accountant = (SoapPrimitive) obj2.getProperty("Trainer_Pending");
-
-                         str_no_of_students_paid_fees = list.getProperty("Student_Count").toString();
-                         str_fees_payment = list.getProperty("Recevied_Fee").toString();
-                         str_amt_received_by_accountant = list.getProperty("Account_Recevied").toString();
-                         str_balance_not_submitted_to_accountant = list.getProperty("Trainer_Pending").toString();
-                         Log.e("Student_Count", String.valueOf(soap_no_of_students_paid_fees));
-
-
-                    }
-
-
-                }// End of for loop
-
-
-
-
-            } catch (Throwable t) {
-
-                Log.e("request fail", "> " + t.getMessage());
-            }
-        } catch (Throwable t) {
-            Log.e("UnRegister  Error", "> " + t.getMessage());
-
-        }
-
-
-    }//end of getlist()
 
 
     public void setvalues(){

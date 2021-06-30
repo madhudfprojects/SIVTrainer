@@ -243,12 +243,15 @@ public class CameraPhotoCapture extends Activity {
         try {
 
             /*********** Which columns values want to get *******/
-            String [] proj={
-                    MediaStore.Images.Media.DATA,
-                    MediaStore.Images.Media._ID,
-                    MediaStore.Images.Thumbnails._ID,
-                    MediaStore.Images.ImageColumns.ORIENTATION
-            };
+            String [] proj= new String[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                proj = new String[]{
+                        MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media._ID,
+                        MediaStore.Images.Thumbnails._ID,
+                        MediaStore.Images.ImageColumns.ORIENTATION
+                };
+            }
 
 //                cursor = activity.managedQuery(
 //

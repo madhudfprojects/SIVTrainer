@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_Scorecards_CenterSelection {
 
     public String Scorecards_SandboxID;
@@ -77,6 +79,8 @@ public class Class_Scorecards_CenterSelection {
     public void setScorecards_SandboxName(String scorecards_SandboxName) {
         Scorecards_SandboxName = scorecards_SandboxName;
     }
+
+    @NonNull
     @Override
     public String toString() {
         return Scorecards_SandboxName;

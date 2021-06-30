@@ -8,10 +8,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,8 +22,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.det.skillinvillage.model.Class_Get_User_DocumentResponse;
-import com.det.skillinvillage.model.Class_ListVersion;
 import com.det.skillinvillage.model.Class_UserPaymentList;
 import com.det.skillinvillage.model.Class_dashboardList;
 import com.det.skillinvillage.model.Class_getUserDashboardResponse;
@@ -44,17 +40,9 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,7 +63,7 @@ public class Activity_Dashboard extends AppCompatActivity {
     //barChart barChart;
     BarChart barChart;
     Class_PiechartData[] arrayObj_Class_BarchartData;
-    SoapPrimitive response_soapobj_institute_id, response_soapobj_institute_name, response_soapobj_student_count, response_soapobj_receivable, response_soapobj_received, response_soapobj_balance,response_soapobj_sandbox_id,response_soapobj_sandbox_name;
+  //  SoapPrimitive response_soapobj_institute_id, response_soapobj_institute_name, response_soapobj_student_count, response_soapobj_receivable, response_soapobj_received, response_soapobj_balance,response_soapobj_sandbox_id,response_soapobj_sandbox_name;
     int barchart_count;
     ArrayList<Entry> yvalues2 = new ArrayList<Entry>();
     ArrayList<String> xVals2 = new ArrayList<String>();
@@ -787,191 +775,7 @@ public class Activity_Dashboard extends AppCompatActivity {
 
     }
 
-    private class GetBarChartInfoTask extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
 
-        Context context;
-
-        protected void onPreExecute() {
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getbarchartinfo();  // call of details
-            return null;
-        }
-
-        public GetBarChartInfoTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-
-            if (str_dashboard_status_barchart.equals("No Result")) {
-
-                Toast.makeText(getApplicationContext(), "No Result", Toast.LENGTH_SHORT).show();
-
-            }
-            if (str_dashboard_status_barchart.equals("Error")) {
-
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-
-            } else if (str_dashboard_status_barchart.equals("Active")) {
-
-
-                uploadCentersfromDB_list();
-                uploadFeesSummaryfromDB_list();
-            }
-
-            Log.e("tag", "Reached the onPostExecute");
-
-        }//end of onPostExecute
-    }// end Async task
-
-    public void getbarchartinfo() {
-
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadUserPaymentStatus";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadUserPaymentStatus";
-
-
-        try {
-
-            //  int userid = Integer.parseInt(str_loginuserID);
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-
-            request.addProperty("User_ID", str_loginuserID);//change static value later
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.e("resp academiclist", response.toString());
-                barchart_count = response.getPropertyCount();
-
-                Log.e("responsecount", String.valueOf(response.getPropertyCount()));
-
-                arrayObj_Class_BarchartData = new Class_PiechartData[response.getPropertyCount()];
-                arrayObjclass_dashboard_institute = new Class_Dashboard_Institute[response.getPropertyCount()];
-                arrayObjclass_dashboard_feessummary = new Class_Dashboard_FeesSummary[response.getPropertyCount()];
-
-                for (int i = 0; i < response.getPropertyCount(); i++) {
-
-                    SoapObject response_soapobj = (SoapObject) response.getProperty(i);
-
-                    response_soapobj_institute_id = (SoapPrimitive) response_soapobj.getProperty("Institute_ID");
-                    response_soapobj_institute_name = (SoapPrimitive) response_soapobj.getProperty("Institute_Name");
-                    response_soapobj_student_count = (SoapPrimitive) response_soapobj.getProperty("Student_Count");
-                    response_soapobj_receivable = (SoapPrimitive) response_soapobj.getProperty("Receivable");
-                    response_soapobj_received = (SoapPrimitive) response_soapobj.getProperty("Received");
-                    response_soapobj_balance = (SoapPrimitive) response_soapobj.getProperty("Balance");
-                    str_dashboard_status_barchart = response_soapobj.getProperty("Payment_Status").toString();
-
-
-
-                    Class_PiechartData innerObj_Class_barchart = new Class_PiechartData();
-                    innerObj_Class_barchart.setInstitute_name(response_soapobj_institute_name.toString());
-                    innerObj_Class_barchart.setStudent_count(response_soapobj_student_count.toString());
-                    innerObj_Class_barchart.setReceivable(response_soapobj_receivable.toString());
-                    innerObj_Class_barchart.setReceived(response_soapobj_received.toString());
-                    innerObj_Class_barchart.setBalance(response_soapobj_balance.toString());
-
-
-                    Class_Dashboard_Institute innerObj_Class_dashboard_inst = new Class_Dashboard_Institute();
-                    innerObj_Class_dashboard_inst.setDashboard_inst_id(response_soapobj_institute_id.toString());
-                    innerObj_Class_dashboard_inst.setDashboard_inst_name(response_soapobj_institute_name.toString());
-
-
-                    Class_Dashboard_FeesSummary innerObj_class_Dashboard_FeesSummary = new Class_Dashboard_FeesSummary();
-                    innerObj_class_Dashboard_FeesSummary.setInstitute_ID(response_soapobj_institute_id.toString());
-                    innerObj_class_Dashboard_FeesSummary.setInstitute_Name(response_soapobj_institute_name.toString());
-                    innerObj_class_Dashboard_FeesSummary.setReceivable(response_soapobj_receivable.toString());
-                    innerObj_class_Dashboard_FeesSummary.setReceived(response_soapobj_received.toString());
-                    innerObj_class_Dashboard_FeesSummary.setBalance(response_soapobj_balance.toString());
-
-
-                    arrayObjclass_dashboard_institute[i] = innerObj_Class_dashboard_inst;
-                    arrayObj_Class_BarchartData[i] = innerObj_Class_barchart;
-                    arrayObjclass_dashboard_feessummary[i] = innerObj_class_Dashboard_FeesSummary;
-
-                    Log.e("class", arrayObj_Class_BarchartData[i].getInstitute_name());
-                    int int_val_no_of_students = Integer.parseInt(arrayObj_Class_BarchartData[i].getStudent_count());
-                    Float students_float = Float.valueOf(int_val_no_of_students).floatValue();
-
-
-                    int_val_receivable = Integer.parseInt(arrayObj_Class_BarchartData[i].getReceivable());
-                    float_val_receivable = Float.valueOf(int_val_receivable).floatValue();
-
-
-                    int_val_received = Integer.parseInt(arrayObj_Class_BarchartData[i].getReceived());
-                    float_val_received = Float.valueOf(int_val_received).floatValue();
-
-                    int_val_balance = Integer.parseInt(arrayObj_Class_BarchartData[i].getBalance());
-                    float_val_balance = Float.valueOf(int_val_balance).floatValue();
-
-                    str_dashboard_instid = response_soapobj.getProperty("Institute_ID").toString();
-                    str_dashboard_instname = response_soapobj.getProperty("Institute_Name").toString();
-                    str_dashboard_receivable = response_soapobj.getProperty("Receivable").toString();
-                    str_dashboard_received = response_soapobj.getProperty("Received").toString();
-                    str_dashboard_balance = response_soapobj.getProperty("Balance").toString();
-
-
-
-                    runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            newbarchart();
-                        }
-                    });
-
-                    DBCreate_Instdetails_insert_2SQLiteDB(str_dashboard_instid, str_dashboard_instname);
-                    DBCreate_FeesSummaryDatadetails_insert_2SQLiteDB(str_dashboard_instid, str_dashboard_instname, str_dashboard_receivable, str_dashboard_received, str_dashboard_balance, selected_instituteID);
-                }//end for loop
-
-
-
-            } catch (Throwable t) {
-
-                Log.e("getCollege fail", "> " + t.getMessage());
-                //internet_issue = "slow internet";
-            }
-        } catch (Throwable t) {
-
-            Log.e("UnRegister Error", "> " + t.getMessage());
-        }
-
-    }//End of uploaddetails
 
 
     public void getbarchartinfo_new() {

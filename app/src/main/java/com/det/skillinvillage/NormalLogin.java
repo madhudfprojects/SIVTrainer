@@ -561,7 +561,7 @@ public class NormalLogin extends AppCompatActivity implements View.OnClickListen
         }
 
 
-        @SuppressLint("MissingPermission")
+        @SuppressLint({"MissingPermission", "HardwareIds"})
         @Override
         protected Void doInBackground(String... params) {
             Log.i("df", "doInBackground");

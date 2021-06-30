@@ -11,7 +11,6 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.det.skillinvillage.Activity_SchedulerLessonPlan;
 import com.det.skillinvillage.R;
 import com.det.skillinvillage.model.LessonQuestion;
 

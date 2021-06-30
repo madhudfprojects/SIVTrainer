@@ -1,5 +1,7 @@
 package com.det.skillinvillage.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,6 +33,7 @@ public class UserlistDetails
         this.user_name = user_name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return user_name;

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -33,18 +32,12 @@ import android.widget.Toast;
 
 
 import com.det.skillinvillage.model.Class_AssementList;
-import com.det.skillinvillage.model.Class_dashboardList;
-import com.det.skillinvillage.model.Class_getUserDashboardResponse;
 import com.det.skillinvillage.model.Class_getassessmentlistResponse;
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +49,6 @@ import retrofit2.Response;
 import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.key_userimage;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_userimage;
 import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
@@ -225,211 +217,7 @@ public class Activity_AssessmentList extends AppCompatActivity implements SwipeR
         swipeLayout.setRefreshing(false);
     }
 
-    private class AsyncCall_GetAssessmentList extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
-        Context context;
 
-        @Override
-        protected void onPreExecute() {
-            Log.i("tag", "onPreExecute---tab2");
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Log.i("tag", "onProgressUpdate---tab2");
-        }
-
-        public AsyncCall_GetAssessmentList(Activity_AssessmentList activity) {
-            context = activity;
-            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("tag", "doInBackground");
-            fetch_all_info();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            dialog.dismiss();
-            Log.i("tag", "onPostExecute");
-            if (str_Assesment_Status.equals("No Result")) {
-                Toast.makeText(getApplicationContext(), "Sorry..No scheduled assignments", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-
-                //lv_eventlist.setAdapter(adapter);
-                uploadfromDB_INstlist();
-                uploadfromDB_levellist();
-                uploadfromDB_statuslist();
-                Uploadfrom_ViewList_spinner();
-
-            }
-
-        }
-    }
-
-    public void fetch_all_info() {
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "GetUserAssesmentList";
-        String Namespace = "http://mis.detedu.org:8089/", SOAP_ACTION1 = "http://mis.detedu.org:8089/GetUserAssesmentList";
-
-        try {
-            //mis.leadcampus.org
-
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            if (!str_loginuserID.equals("")) {
-                Log.i("User_ID=", str_loginuserID);
-                request.addProperty("User_ID", str_loginuserID);//str_loginuserID
-                Log.d("request :", request.toString());
-            }
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            //SoapSerializationEnvelope evp = new SoapSoapEnvelope.XSD;
-
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            //envelope.encodingStyle = SoapSerializationEnvelope.XSD;
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-            //androidHttpTransport.setXmlVersionTag("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-
-            try {
-                androidHttpTransport.call(SOAP_ACTION1, envelope);
-                Log.d("soap responseyyyyyyy", envelope.getResponse().toString());
-                SoapObject response = (SoapObject) envelope.getResponse();
-                Log.d("soap responseyyyyyyy", response.toString());
-                //	for (SoapObject cs : result1)
-                if (response.getPropertyCount() > 0) {
-                    int Count = response.getPropertyCount();
-                    arrayobjClass_Assessment_institute = new Class_Assessment_Institute[Count];
-                    arrayobjClass_Assessment_level = new Class_Assessment_Level[Count];
-                    arrayobjClass_Assessment_status = new Class_Assessment_Status[Count];
-                    arrayobjclass_ViewAssessmentListview = new Class_ViewAssessmentListview[Count];
-
-                    for (int i = 0; i < Count; i++) {
-                        SoapObject list = (SoapObject) response.getProperty(i);
-                        str_Assesment_ID = list.getProperty("Assesment_ID").toString();
-                        str_Assesment_Name = list.getProperty("Assesment_Name").toString();
-                        str_Assesment_Date = list.getProperty("Assesment_Date").toString();
-                        str_Assesment_Status = list.getProperty("Assesment_Status").toString();
-                        str_Lavel_Name = list.getProperty("Lavel_Name").toString();
-                        str_Institute_Name = list.getProperty("Institute_Name").toString();
-                        str_Institute_ID = list.getProperty("Institute_ID").toString();
-                        str_level_ID = list.getProperty("Level_ID").toString();
-                        str_presentcount = list.getProperty("Present_Count").toString();
-                        str_totalcount = list.getProperty("Total_Count").toString();
-                        str_maxmarks = list.getProperty("Max_Marks").toString();
-
-                        str_save = list.getProperty("Save").toString();
-
-
-                        Class_Assessments_List userInfo = new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save);
-                        assessment_array_List.add(userInfo);
-
-                    }
-
-                    final String[] items = new String[Count];
-                    userInfosarr = new Class_Assessments_List[Count];
-                    Class_Assessments_List obj = new Class_Assessments_List();
-
-                    Class_Assessments_List.assesmentlistview_info_arr.clear();
-                    for (int i = 0; i < response.getPropertyCount(); i++) {
-                        str_Assesment_ID = assessment_array_List.get(i).getAssessmentID();
-                        str_Assesment_Name = assessment_array_List.get(i).getAssessmentName();
-                        str_Assesment_Date = assessment_array_List.get(i).getAssessmentDate();
-                        str_Assesment_Status = assessment_array_List.get(i).getAssessmentStatus();
-                        str_Lavel_Name = assessment_array_List.get(i).getAssessment_levelName();
-                        str_Institute_Name = assessment_array_List.get(i).getAssessment_instituteName();
-                        str_Institute_ID = assessment_array_List.get(i).getAssessment_instituteID();
-                        str_level_ID = assessment_array_List.get(i).getAssessment_levelID();
-                        str_presentcount = assessment_array_List.get(i).getAssessment_presentstudentcount();
-                        str_totalcount = assessment_array_List.get(i).getAssessment_totalstudentcount();
-                        str_maxmarks = assessment_array_List.get(i).getAssessment_maxmarks();
-                        str_save = assessment_array_List.get(i).getAssessment_save();
-
-                        Class_Assessment_Institute innerObj_Class_institute = new Class_Assessment_Institute();
-                        innerObj_Class_institute.setInstitute_id(str_Institute_ID);
-                        innerObj_Class_institute.setinstitute_assessment_name(str_Institute_Name);
-
-
-                        Class_Assessment_Level innerObj_Class_level = new Class_Assessment_Level();
-                        innerObj_Class_level.setInst_assessmentid(str_Institute_ID);
-                        innerObj_Class_level.setLevel_assessmentid(str_level_ID);
-                        innerObj_Class_level.setLevel_assessmentname(str_Lavel_Name);
-
-
-                        Class_Assessment_Status innerObj_Class_status = new Class_Assessment_Status();
-                        innerObj_Class_status.setAssessment_instituteID(str_Institute_ID);
-                        innerObj_Class_status.setAssessment_levelID(str_level_ID);
-                        innerObj_Class_status.setStatus(str_Assesment_Status);
-
-                        Class_ViewAssessmentListview innerObjClass_ViewAssessmentListview = new Class_ViewAssessmentListview();
-                        innerObjClass_ViewAssessmentListview.setAssessment_instituteID(str_Institute_ID);
-                        innerObjClass_ViewAssessmentListview.setAssessment_instituteName(str_Institute_Name);
-                        innerObjClass_ViewAssessmentListview.setAssessment_levelID(str_level_ID);
-                        innerObjClass_ViewAssessmentListview.setAssessment_levelName(str_Lavel_Name);
-                        innerObjClass_ViewAssessmentListview.setAssessment_presentstudentcount(str_presentcount);
-                        innerObjClass_ViewAssessmentListview.setAssessment_totalstudentcount(str_totalcount);
-                        innerObjClass_ViewAssessmentListview.setAssessment_maxmarks(str_maxmarks);
-                        innerObjClass_ViewAssessmentListview.setAssessmentDate(str_Assesment_Date);
-                        innerObjClass_ViewAssessmentListview.setAssessmentID(str_Assesment_ID);
-                        innerObjClass_ViewAssessmentListview.setAssessmentName(str_Assesment_Name);
-                        innerObjClass_ViewAssessmentListview.setAssessmentStatus(str_Assesment_Status);
-                        innerObjClass_ViewAssessmentListview.setAssessment_save(str_save);
-
-
-                        obj.setAssessmentID(str_Assesment_ID);
-                        obj.setAssessmentName(str_Assesment_Name);
-                        obj.setAssessmentDate(str_Assesment_Date);
-                        obj.setAssessmentStatus(str_Assesment_Status);
-                        obj.setAssessment_levelName(str_Lavel_Name);
-                        obj.setAssessment_instituteID(str_Institute_ID);
-                        obj.setAssessment_instituteName(str_Institute_Name);
-                        obj.setAssessment_levelID(str_level_ID);
-                        obj.setAssessment_presentstudentcount(str_presentcount);
-                        obj.setAssessment_totalstudentcount(str_totalcount);
-                        obj.setAssessment_maxmarks(str_maxmarks);
-                        obj.setAssessment_save(str_save);
-
-
-                        userInfosarr[i] = obj;
-                        arrayobjClass_Assessment_institute[i] = innerObj_Class_institute;
-                        arrayobjClass_Assessment_level[i] = innerObj_Class_level;
-                        arrayobjClass_Assessment_status[i] = innerObj_Class_status;
-                        arrayobjclass_ViewAssessmentListview[i] = innerObjClass_ViewAssessmentListview;
-
-
-                        Log.i("Tag", "items aa=" + assessment_array_List.get(i).getAssessment_levelName());
-                        Class_Assessments_List.assesmentlistview_info_arr.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name, str_Institute_ID, str_level_ID, str_presentcount, str_totalcount, str_maxmarks, str_save));
-                        // adapter.add(new Class_Assessments_List(str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_Assesment_Status, str_Lavel_Name, str_Institute_Name,str_Institute_ID,str_level_ID,str_presentcount,str_totalcount,str_maxmarks,str_save));
-
-
-                        DBCreate_INstdetails_insert_2SQLiteDB(str_Institute_ID, str_Institute_Name);
-                        DBCreate_Leveldetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Lavel_Name);
-                        DBCreate_Statusdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status);
-                        DBCreate_ViewListdetails_insert_2SQLiteDB(str_Institute_ID, str_level_ID, str_Assesment_Status, str_Assesment_ID, str_Assesment_Name, str_Assesment_Date, str_presentcount, str_totalcount, str_maxmarks, str_Lavel_Name, str_Institute_Name, str_save);
-                    }
-
-                    Log.i("Tag", "items=" + items.length);
-                }
-
-            } catch (Throwable t) {
-                Log.e("request fail 5", "> " + t.getMessage());
-            }
-        } catch (Throwable t) {
-            Log.e("Tag", "UnRegister Receiver Error 5" + " > " + t.getMessage());
-
-        }
-
-    }
 //=======================Added by shivaleela on Nov 9th 2020
 
     public void getassessmentlist() {

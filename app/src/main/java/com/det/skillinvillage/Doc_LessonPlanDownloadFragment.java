@@ -1,6 +1,5 @@
 package com.det.skillinvillage;
 
-import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -24,12 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.det.skillinvillage.adapter.LessonPlanAdapter;
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
-import com.det.skillinvillage.model.GetScheduleLessonPlanResponseList;
-import com.det.skillinvillage.model.PostScheduleLessonUpdateRequest;
-import com.det.skillinvillage.model.PostScheduleLessonUpdateResponse;
+
 import com.det.skillinvillage.model.PostTopicDownloadUpdateRequest;
 import com.det.skillinvillage.model.PostTopicDownloadUpdateResponseList;
 import com.det.skillinvillage.model.Post_Topic_Download_UpdateResponse;
@@ -45,8 +41,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import retrofit2.Call;

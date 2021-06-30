@@ -107,6 +107,8 @@ public interface Interface_userservice {
     Call<Class_getassessmentlistResponse>GetAssesmentList(@Query("User_ID") String User_ID);
 
 
+    //https://skilling.dfindia.org/api/Authentication/Get_Assessment_Data?Assessment_ID=23
+    //changed again on 17th May 2021
     @Headers("Content-Type: application/json;charset=utf-8")
     @GET("Authentication/Get_Assessment_Data")
     Call<Class_AssessmentData>GetAssesmentData(@Query("Assessment_ID") String Assessment_ID);

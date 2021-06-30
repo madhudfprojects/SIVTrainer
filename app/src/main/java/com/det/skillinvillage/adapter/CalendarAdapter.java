@@ -22,19 +22,17 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-//import com.det.skillinvillage.util.UserInfo;
 
 
 public class CalendarAdapter extends BaseAdapter {
-	private Context context;
+	private final Context context;
 
-	private java.util.Calendar month;
+	private final java.util.Calendar month;
 	public GregorianCalendar pmonth;
 	Intent intent;
 	/**

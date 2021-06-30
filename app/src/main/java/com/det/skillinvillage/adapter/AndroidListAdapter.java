@@ -1,6 +1,7 @@
 package com.det.skillinvillage.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ public class AndroidListAdapter extends ArrayAdapter<CalendarCollection> {
 	
 	private final Context context;
 	private final ArrayList<CalendarCollection> values;
-	private ViewHolder viewHolder;
 	private final int resourceId;
 
 	public AndroidListAdapter(Context context, int resourceId, ArrayList<CalendarCollection> values) {
@@ -31,9 +31,11 @@ public class AndroidListAdapter extends ArrayAdapter<CalendarCollection> {
 	}
 	
 	
+	@NonNull
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		
+	public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+
+		ViewHolder viewHolder;
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -59,7 +61,7 @@ public class AndroidListAdapter extends ArrayAdapter<CalendarCollection> {
 		return convertView;
 	}
 	
-	public class ViewHolder {
+	public static class ViewHolder {
 
 		 TextView tv_event;
 		 TextView tv_date;

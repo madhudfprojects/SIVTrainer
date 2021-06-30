@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -35,23 +33,16 @@ import com.det.skillinvillage.model.GetMobileSubMenuResponseList;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Onlineview_Navigation extends AppCompatActivity
@@ -158,29 +149,7 @@ public class Onlineview_Navigation extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.onlineview__navigation, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -206,47 +175,10 @@ public class Onlineview_Navigation extends AppCompatActivity
     }
 
     public void prepareMenuData() {
-//        BackTask task = new BackTask(Onlineview_Navigation.this);
-//        task.execute();
+
 
         GetMobileMenu();
-//        MenuModel menuModel = new MenuModel("Android WebView Tutorial", true, false, "https://www.journaldev.com/9333/android-webview-example-tutorial"); //Menu of Android Tutorial. No sub menus
-//        headerList.add(menuModel);
-//
-//        if (!menuModel.hasChildren) {
-//            childList.put(menuModel, null);
-//        }
-//
-//        menuModel = new MenuModel("Java Tutorials", true, true, ""); //Menu of Java Tutorials
-//        headerList.add(menuModel);
-//        List<MenuModel> childModelsList = new ArrayList<>();
-//        MenuModel childModel = new MenuModel("Core Java Tutorial", false, false, "https://www.journaldev.com/7153/core-java-tutorial");
-//        childModelsList.add(childModel);
-//
-//        childModel = new MenuModel("Java FileInputStream", false, false, "https://www.journaldev.com/19187/java-fileinputstream");
-//        childModelsList.add(childModel);
-//
-//        childModel = new MenuModel("Java FileReader", false, false, "https://www.journaldev.com/19115/java-filereader");
-//        childModelsList.add(childModel);
-//
-//
-//        if (menuModel.hasChildren) {
-//            Log.d("API123","here");
-//            childList.put(menuModel, childModelsList);
-//        }
-//
-//        childModelsList = new ArrayList<>();
-//        menuModel = new MenuModel("Python Tutorials", true, true, ""); //Menu of Python Tutorials
-//        headerList.add(menuModel);
-//        childModel = new MenuModel("Python AST – Abstract Syntax Tree", false, false, "https://www.journaldev.com/19243/python-ast-abstract-syntax-tree");
-//        childModelsList.add(childModel);
-//
-//        childModel = new MenuModel("Python Fractions", false, false, "https://www.journaldev.com/19226/python-fractions");
-//        childModelsList.add(childModel);
-//
-//        if (menuModel.hasChildren) {
-//            childList.put(menuModel, childModelsList);
-//        }
+
     }
 
     public void populateExpandableList() {
@@ -381,148 +313,7 @@ public class Onlineview_Navigation extends AppCompatActivity
         });
     }
 
-    public class BackTask extends AsyncTask<String, Void, Void> {
-        Context context;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
-        @Override
-        protected Void doInBackground(String... params) {
-//            GetMobileMenu();
-           // list_detaile();
-            //return HttpULRConnect.getData(url);
-            return null;
-        }
-
-        public BackTask(Context context1) {
-            context = context1;
-            //  dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void s) {
-            populateExpandableList();
-//            MyAdapter   adapter = new MyAdapter(mainmenulist, Onlineview_Navigation.this);
-//            expandableListView.setAdapter(adapter);
-
-        }
-
-    }
-
-    public void list_detaile() {
-        Vector<SoapObject> result1 = null;
-        String url ="http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "LoadMobileMenu";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadMobileMenu";
-
-        try {
-            int userid = Integer.parseInt(str_loginuserID);
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-            request.addProperty("User_ID", userid);//userid
-
-
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(url);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-
-                Log.i("value at response", response.toString());
-                if (response.toString().equalsIgnoreCase("anyType{}") || response.toString().equalsIgnoreCase("") || response.toString().equalsIgnoreCase(null)) {
-
-                    Toast.makeText(getApplicationContext(),"No data Found",Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(Onlineview_Navigation.this, Activity_HomeScreen.class);
-                    startActivity(i);
-                    finish();
-                } else {
-                    int count1 = response.getPropertyCount();  // number of count in array in response 6,0-5,5
-                    Log.i("number of rows", "" + count1);
-                    objclassarr_expandedlistgroup = new ExpandListGroup[count1];
-                    mainmenulist = new ArrayList<ExpandListGroup>();
-
-
-                    SoapPrimitive soap_Menu_Name_submenu = null;
-                    String str_soap_Menu_Link_submenu = "";
-                    for (int i = 0; i < objclassarr_expandedlistgroup.length; i++) {
-                        Log.e("entered 1st for loop", "abc");
-
-                        SoapPrimitive soap_menuname, soap_parentid, soap_Menu_ID, soap_Menu_SORT;
-                        SoapObject obj2 = (SoapObject) response.getProperty(i);
-                        soap_Menu_ID = (SoapPrimitive) obj2.getProperty("Menu_ID");
-                        soap_menuname = (SoapPrimitive) obj2.getProperty("Menu_Name");
-                        soap_Menu_SORT = (SoapPrimitive) obj2.getProperty("Menu_Sort");
-                        SoapObject soap_SubMenu = (SoapObject) obj2.getProperty("SubMenu");
-                        int count2 = soap_SubMenu.getPropertyCount();  // number of count in array in response 6,0-5,5
-
-                        objclassarr_Class_SubMenu = new Class_SubMenu[count2];
-                       // submenuList = new ArrayList<Class_SubMenu>();
-                        MenuModel menuModel = null;
-                        List<MenuModel> childModelsList = new ArrayList<>();
-
-                        Log.e("soap_SubMenulength()", String.valueOf(count2));
-
-
-                        for (int j = 0; j < objclassarr_Class_SubMenu.length; j++) {
-                            SoapObject obj3 = (SoapObject) soap_SubMenu.getProperty(j);
-                            SoapPrimitive soap_Menu_ID_submenu = (SoapPrimitive) obj3.getProperty("Menu_ID");
-                            soap_Menu_Name_submenu = (SoapPrimitive) obj3.getProperty("Menu_Name");
-                            SoapPrimitive soap_Menu_Link_submenu = (SoapPrimitive) obj3.getProperty("Menu_Link");
-                            SoapPrimitive soap_Parent_ID_submenu = (SoapPrimitive) obj3.getProperty("Parent_ID");
-                            str_soap_Menu_Link_submenu = soap_Menu_Link_submenu.toString() + "/" + userid;
-//                        menuModel = new MenuModel(soap_menuname.toString(), true, true, ""); //Menu of Java Tutorials
-//                        headerList.add(menuModel);
-////                        List<MenuModel> childModelsList = new ArrayList<>();
-                            if (soap_Parent_ID_submenu.toString().equals(soap_Menu_ID.toString())) {
-
-                                MenuModel childModel = new MenuModel(soap_Menu_Name_submenu.toString(), false, false, str_soap_Menu_Link_submenu);
-                                childModelsList.add(childModel);
-//                            if (menuModel.hasChildren) {
-//                                Log.d("API123", "here");
-//                                childList.put(menuModel, childModelsList);
-//                            }
-                            }
-
-
-                        }
-                        menuModel = new MenuModel(soap_menuname.toString(), true, true, ""); //Menu of Java Tutorials
-                        headerList.add(menuModel);
-//
-                        if (menuModel.hasChildren) {
-                            Log.d("API123", "here");
-                            childList.put(menuModel, childModelsList);
-                        }
-
-//                    childModel = new MenuModel("Java FileInputStream", false, false, "https://www.journaldev.com/19187/java-fileinputstream");
-//                    childModelsList.add(childModel);
-//
-//                    childModel = new MenuModel("Java FileReader", false, false, "https://www.journaldev.com/19115/java-filereader");
-//                    childModelsList.add(childModel);
-//
-
-
-                        ////////////////////////////////////////////////////
-                    }
-                }
-            }catch(Throwable t){
-                    Log.e("requestload fail", "> " + t.getMessage());
-                }
-
-            } catch (Throwable t) {
-                Log.e("UnRegisterload  Error", "> " + t.getMessage());
-
-            }
-
-
-    }//End of leaveDetail method
 
     public void GetMobileMenu() {
 

@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_UserList {
     String User_id;
     String User_EmailID;
@@ -19,6 +21,7 @@ public class Class_UserList {
     public void setUser_EmailID(String user_EmailID) {
         User_EmailID = user_EmailID;
     }
+    @NonNull
     @Override
     public String toString() {
         return User_EmailID;

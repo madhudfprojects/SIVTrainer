@@ -7,34 +7,25 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.det.skillinvillage.adapter.LessonPlanAdapter;
-import com.det.skillinvillage.model.Class_GetStudentPaymentResponseList;
-import com.det.skillinvillage.model.Class_PostSavePaymentResponseList;
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
 import com.det.skillinvillage.model.GetScheduleLessonPlanResponse;
 import com.det.skillinvillage.model.GetScheduleLessonPlanResponseList;
-import com.det.skillinvillage.model.GetStudentPaymentResponse;
 import com.det.skillinvillage.model.LessonQuestion;
-import com.det.skillinvillage.model.PostSavePaymentRequest;
 import com.det.skillinvillage.model.PostScheduleLessonUpdateRequest;
 import com.det.skillinvillage.model.PostScheduleLessonUpdateResponse;
-import com.det.skillinvillage.model.Post_Save_PaymentResponse;
 import com.det.skillinvillage.remote.Class_ApiUtils;
 import com.det.skillinvillage.remote.Interface_userservice;
 
@@ -48,10 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.det.skillinvillage.MainActivity.Key_username;
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.key_userimage;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_username;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_SchedulerLessonPlan extends AppCompatActivity {
@@ -571,119 +559,6 @@ public class Activity_SchedulerLessonPlan extends AppCompatActivity {
         finish();
     }
 
-//    private static class Holder {
-//        TextView LP_Question_TV;
-//        EditText LP_Answer_ET;
-//        TextView LP_Question_ID_TV;
-//    }
 
-//    public static class CustomAdapter extends BaseAdapter {
-//        private Context context;
-//        public static ArrayList<LessonQuestion> lessonQuestionArrayList;
-//
-//        public CustomAdapter() {
-//
-//            super();
-//            Log.d("Inside cfeessubmit()", "Inside CustomAdapter_feessubmit()");
-//        }
-//
-//        public CustomAdapter(Context context, ArrayList<LessonQuestion> lessonQuestionArrayList) {
-//
-//            this.context = context;
-//            lessonQuestionArrayList = lessonQuestionArrayList;
-//        }
-////        @Override
-////        public int getCount() {
-////
-////            String x = Integer.toString(lessonQuestionArrayList.size());
-////            Log.d("Arrayclass.length", x);
-////            return lessonQuestionArrayList.size();
-////
-////        }
-//
-//        @Override
-//        public int getCount() {
-//            return lessonQuestionArrayList.size();
-//        }
-//
-//        @Override
-//        public int getItemViewType(int position) {
-//
-//            return position;
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            String x = Integer.toString(position);
-//
-//            Log.d("getItem position", "x");
-//            return lessonQuestionArrayList.get(position);
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-////            String x = Integer.toString(position);
-////            Log.d("getItemId position", x);
-////            return position;
-//            return 0;
-//        }
-//
-//        @Override
-//        public View getView(final int position, View convertView, ViewGroup parent) {
-//
-//            final Holder holder;
-//
-//            Log.d("CustomAdapter", "position: " + position);
-//
-//            if (convertView == null) {
-//                holder = new Holder();
-//                convertView = LayoutInflater.from(context).inflate(R.layout.child_lessonplan_layout, parent, false);
-//
-//
-//                holder.LP_Question_TV = (TextView) convertView.findViewById(R.id.LP_Question_TV);
-//                holder.LP_Answer_ET = (EditText) convertView.findViewById(R.id.LP_Answer_ET);
-//                holder.LP_Question_ID_TV = (TextView) convertView.findViewById(R.id.LP_Question_ID_TV);
-//
-//                Log.d("Inside If convertView", "Inside If convertView");
-//
-//                convertView.setTag(holder);
-//            } else {
-//                holder = (Holder) convertView.getTag();
-//                Log.d("Inside else convertView", "Inside else convertView");
-//            }
-//
-//            Objclass_feesSubmissionList_new = (LessonQuestion) getItem(position);
-//
-//         //   if(isInternetPresent) {
-////                if (loadPendingPaymentCount == 0) {
-////                    PendingAmtstudentlist_LL.setVisibility(android.view.View.GONE);
-////                    NoRecords_studentlist_LL.setVisibility(android.view.View.VISIBLE);
-////                } else {
-//
-////                    PendingAmtstudentlist_LL.setVisibility(android.view.View.VISIBLE);
-////                    NoRecords_studentlist_LL.setVisibility(android.view.View.GONE);
-//
-//                    if (Objclass_feesSubmissionList_new != null) {
-//                         str_lp_answer=holder.LP_Answer_ET.getText().toString();
-////                        holder.LP_Question_TV.setText(Objclass_feesSubmissionList_new.getQuestionName());
-////                        holder.LP_Answer_ET.setText(holder.LP_Answer_ET.getText().toString());
-////                        holder.LP_Question_ID_TV.setText(Objclass_feesSubmissionList_new.getLessonQuestionID());
-//                        holder.LP_Question_TV.setText(lessonQuestionArrayList.get(position).getQuestionName());
-//                        holder.LP_Answer_ET.setText(holder.LP_Answer_ET.getText().toString());
-//                        holder.LP_Question_ID_TV.setText(lessonQuestionArrayList.get(position).getLessonQuestionID());
-//
-//
-//                    }// end of if
-////                }else{
-////                holder.LP_Question_TV.setVisibility(View.GONE);
-////                holder.LP_Answer_ET.setVisibility(View.GONE);
-////            }
-//
-//            return convertView;
-//        }
-//
-//
-//
-//    }
 
 }

@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_StudentStatus {
     int id;
     String student_status;
@@ -17,6 +19,8 @@ public class Class_StudentStatus {
     public void setStudent_status(String student_status) {
         this.student_status = student_status;
     }
+
+    @NonNull
     @Override
     public String toString() {
         return student_status;

@@ -2399,7 +2399,11 @@ public class Activity_ViewStudentList_new extends AppCompatActivity {
 
                 if (selected_studentstatus.equals("Applicant")) {
                     holder.fees_payment_IV.setVisibility(View.GONE);
-                } else if (selected_studentstatus.equals("Admission")) {
+                } else  if (selected_studentstatus.equals("Dropout")) {
+                    holder.fees_payment_IV.setVisibility(View.GONE);
+                }else  if (selected_studentstatus.equals("Rejected")) {
+                    holder.fees_payment_IV.setVisibility(View.GONE);
+                }else if (selected_studentstatus.equals("Admission")) {
                     if (Obj_Class_farmerlistdetails.getAdmissionFee().equals("0")) {
                         holder.fees_payment_IV.setVisibility(View.GONE);
                     } else {

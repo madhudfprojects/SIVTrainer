@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_Assessment_Institute {
 
 
@@ -28,6 +30,7 @@ public class Class_Assessment_Institute {
         this.institute_assessment_name = institute_assessment_name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return institute_assessment_name;

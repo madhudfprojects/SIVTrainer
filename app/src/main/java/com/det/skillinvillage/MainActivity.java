@@ -450,13 +450,13 @@ public class MainActivity extends AppCompatActivity
                                         textInputEmail.setVisibility(View.VISIBLE);
                                         textInputPassword.setVisibility(View.VISIBLE);
 
-                                        version_tv.setText("DF SIV Test Ver 1.0");
+                                        version_tv.setText("DF SIV Version 3.1");
                                         userlist_sp.setVisibility(View.GONE);
                                         techlogin_bt.setVisibility(View.GONE);
 
                                         editorversion_obj = sharedpreferencebook_techversion_Obj.edit();
                                         editorversion_obj.putString(KeyValue_techmode,"no");
-                                        editorversion_obj.commit();
+                                        editorversion_obj.apply();
                                         dialog.dismiss();
                                     }
 
@@ -1049,7 +1049,7 @@ public class MainActivity extends AppCompatActivity
 
 
                     google_signin_bt.setVisibility(View.GONE);
-                    version_tv.setText("DF SIV For Technology Team Ver 1.0");
+                    version_tv.setText("DF SIV For Technology Team Ver 3.1");
                     userlist_sp.setVisibility(View.VISIBLE);
                     techlogin_bt.setVisibility(View.VISIBLE);
                     normallogin_bt.setVisibility(View.GONE);

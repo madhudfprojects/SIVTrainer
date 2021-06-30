@@ -1,5 +1,7 @@
 package com.det.skillinvillage.adapter;
 
+import android.support.annotation.NonNull;
+
 public class Class_SandBoxDetails {
 
     int id;
@@ -34,6 +36,7 @@ public class Class_SandBoxDetails {
         this.sandbox_name = sandbox_name;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return sandbox_name;

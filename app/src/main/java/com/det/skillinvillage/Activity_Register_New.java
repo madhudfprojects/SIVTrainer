@@ -2,8 +2,6 @@ package com.det.skillinvillage;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,11 +20,9 @@ import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -53,7 +49,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.det.skillinvillage.adapter.Class_SandBoxDetails;
 import com.det.skillinvillage.model.AddStudentDetailsRequest;
 import com.det.skillinvillage.model.AddStudentDetailsResponse;
 import com.det.skillinvillage.model.Class_Response_AddStudentDetailsList;
@@ -68,7 +63,6 @@ import com.det.skillinvillage.model.Level;
 import com.det.skillinvillage.model.Sandbox;
 import com.det.skillinvillage.model.School;
 import com.det.skillinvillage.model.State;
-import com.det.skillinvillage.model.Student;
 import com.det.skillinvillage.model.StudentList;
 import com.det.skillinvillage.model.Taluka;
 import com.det.skillinvillage.model.Village;
@@ -104,7 +98,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 
@@ -129,30 +122,7 @@ public class Activity_Register_New extends AppCompatActivity {
 
     String selected_academicname = "", selected_clusterName;
 
-    //    Class_academicDetails[] arrayObj_Class_academicDetails, arrayObj_Class_academicDetails2;
-//    Class_academicDetails obj_Class_academicDetails;
-//
-//    Class_ClusterDetails[] arrayObj_Class_clusterDetails, arrayObj_Class_clusterDetails2;
-//    Class_ClusterDetails obj_Class_clusterDetails;
-//
-//    Class_InsituteDetails[] arrayObj_Class_InstituteDetails, arrayObj_Class_InstituteDetails2;
-//    Class_InsituteDetails obj_Class_instituteDetails;
-//    String selected_instituteName;
-//
-//    Class_LevelDetails[] arrayObj_Class_LevelDetails, arrayObj_Class_LevelDetails2;
-//    Class_LevelDetails obj_Class_levelDetails;
-//    String selected_levelName, selected_levelAdmissionFee;
-//
-//
-//    Class_SandBoxDetails[] arrayObj_Class_sandboxDetails, arrayObj_Class_sandboxDetails2;
-//    Class_SandBoxDetails obj_Class_sandboxDetails;
-//
-//    Class_LearningOption[] arrayObj_Class_learnOption, arrayObj_Class_learnOption2;
-//    Class_LearningOption obj_Class_LearningOption;
-//
-//
-//    Class_SchoolDetails[] arrayObj_Class_SchoolDetails, arrayObj_Class_SchoolDetails2;
-//    Class_SchoolDetails obj_Class_SchoolDetails;
+
     String selected_schoolName = "", selected_edu = "", sp_strEdu_ID = "";
     String selected_levelName = "", selected_levelAdmissionFee = "";
     String selected_instituteName = "";
@@ -510,38 +480,6 @@ public class Activity_Register_New extends AppCompatActivity {
                 }
 
 
-//                if(selected_levelAdmissionFee.equals("")){
-//                    Log.e("enter","selected_levelAdmissionFee");
-//
-//                    ArrayAdapter dataAdapter_status1 = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray_admission);
-//                    dataAdapter_status1.setDropDownViewResource(R.layout.spinnercenterstyle);
-//                    StudentStatus_sp.setAdapter(dataAdapter_status1);
-//                    admission_ll.setVisibility(View.GONE);
-//                    paymentdate_tv.setVisibility(View.GONE);
-//
-//                }else {
-//                    Log.e("fee_create..sand",selected_levelAdmissionFee);
-//
-//                    admissionfee_et.setFilters(new InputFilter[]{new InputFilterMinMax("1", selected_levelAdmissionFee)});
-//                    maxfees_tv.setText(getResources().getString(R.string.Rs) + "" + selected_levelAdmissionFee);
-//                    admissionfee_et.setText(selected_levelAdmissionFee);
-//
-//                    if (selected_levelAdmissionFee.equals("0")) {
-//                        ArrayAdapter dataAdapter_status1 = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray_admission);
-//                        dataAdapter_status1.setDropDownViewResource(R.layout.spinnercenterstyle);
-//                        StudentStatus_sp.setAdapter(dataAdapter_status1);
-//                        admission_ll.setVisibility(View.GONE);
-//                        paymentdate_tv.setVisibility(View.GONE);
-//
-//                    } else {
-//                        ArrayAdapter dataAdapter_status2 = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, studentstatusArray);
-//                        dataAdapter_status2.setDropDownViewResource(R.layout.spinnercenterstyle);
-//                        StudentStatus_sp.setAdapter(dataAdapter_status2);
-//                        admission_ll.setVisibility(View.VISIBLE);
-//                        paymentdate_tv.setVisibility(View.VISIBLE);
-//
-//                    }
-//                }
 
 
             }
@@ -2447,332 +2385,7 @@ public class Activity_Register_New extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    public void getacademiclist_Asynctask() {
-//        GetAcademiclist_Asynctask task = new GetAcademiclist_Asynctask(Activity_Register_New.this);
-//        task.execute();
-//        AsyncCallWS_learningMode task1 = new AsyncCallWS_learningMode(Activity_Register_New.this);
-//        task1.execute();
-//    }
-//
-//    private class GetAcademiclist_Asynctask extends AsyncTask<String, Void, Void> {
-//        ProgressDialog dialog;
-//        Context context;
-//
-//        protected void onPreExecute() {
-//            //  Log.i(TAG, "onPreExecute---tab2");
-//            dialog.setMessage("Please wait...");
-//            dialog.setCanceledOnTouchOutside(false);
-//            dialog.show();
-//
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Void... values) {
-//            //Log.i(TAG, "onProgressUpdate---tab2");
-//        }
-//
-//
-//        @RequiresApi(api = Build.VERSION_CODES.N)
-//        @Override
-//        protected Void doInBackground(String... params) {
-//            Log.i("df", "doInBackground");
-//
-//            GetAcademiclist();  // get the Year list
-//            return null;
-//        }
-//
-//        public GetAcademiclist_Asynctask(Activity_Register_New activity) {
-//            context = activity;
-//            dialog = new ProgressDialog(activity, R.style.AppCompatAlertDialogStyle);
-//        }
-//
-//
-//        @Override
-//        protected void onPostExecute(Void result) {
-//
-//
-//            dialog.dismiss();
-//
-//            // Update_Year_spinner_4rmDB();
-//
-//
-//            if (academiclistcount <= 0) {
-//                Toast.makeText(context, "No items", Toast.LENGTH_SHORT).show();
-//            } else {
-//
-//
-//                uploadfromDB_SandBoxlist();
-//                uploadfromDB_Academiclist();
-//                uploadfromDB_Clusterist();
-//                uploadfromDB_InstitutList();
-//                uploadfromDB_SchoolList();
-//                uploadfromDB_LevelList();
-//
-//            }
-//
-//
-//        }//end of onPostExecute
-//    }// end Async task
 
-
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void GetAcademiclist() {
-//
-//
-//        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-//        String METHOD_NAME = "LoadAcademicDetails";
-//        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/LoadAcademicDetails";
-//
-//
-//        try {
-//
-//            int userid = Integer.parseInt(str_loginuserID);//str_loginuserID
-//            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-//
-//            request.addProperty("User_ID", userid);//change static value later
-//
-//            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//            envelope.dotNet = true;
-//            //Set output SOAP object
-//            envelope.setOutputSoapObject(request);
-//            //Create HTTP call object
-//            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-//
-//            try {
-//
-//                androidHttpTransport.call(SOAPACTION, envelope);
-//
-//                SoapObject response = (SoapObject) envelope.getResponse();
-//                Log.e("resp academiclist", response.toString());
-//                academiclistcount = response.getPropertyCount();
-//
-//                Log.e("academiclistcount", String.valueOf(response.getPropertyCount()));
-//
-//
-//                // if(academiclistcount>0) {
-//                arrayObj_Class_academicDetails = new Class_academicDetails[academiclistcount];
-//                arrayObj_Class_clusterDetails = new Class_ClusterDetails[academiclistcount];
-//                arrayObj_Class_InstituteDetails = new Class_InsituteDetails[academiclistcount];
-//                arrayObj_Class_LevelDetails = new Class_LevelDetails[academiclistcount];
-//                arrayObj_Class_sandboxDetails = new Class_SandBoxDetails[academiclistcount];
-//                arrayObj_Class_SchoolDetails = new Class_SchoolDetails[academiclistcount];
-//
-//
-//                for (int i = 0; i < academiclistcount; i++) {
-//
-//                    SoapObject response_soapobj = (SoapObject) response.getProperty(i);
-//
-//                    SoapPrimitive response_soapobj_academicID, response_soapobj_academic_Name, response_soapobj_clusterid,
-//                            response_soapobj_clustername, response_soapobj_instituteID, response_soapobj_instituteName,
-//                            response_soapobj_levelID, response_soapobj_levelname, response_soapobj_sandboxid, response_soapobj_sandboxname, response_soapobj_admissionfee, response_soapobj_schoolid, response_soapobj_schoolname;
-//                    response_soapobj_academicID = (SoapPrimitive) response_soapobj.getProperty("Academic_ID");
-//                    response_soapobj_academic_Name = (SoapPrimitive) response_soapobj.getProperty("Academic_Name");
-//                    response_soapobj_clusterid = (SoapPrimitive) response_soapobj.getProperty("Cluster_ID");
-//                    response_soapobj_clustername = (SoapPrimitive) response_soapobj.getProperty("Cluster_Name");
-//                    response_soapobj_instituteID = (SoapPrimitive) response_soapobj.getProperty("Institute_ID");
-//                    response_soapobj_instituteName = (SoapPrimitive) response_soapobj.getProperty("Institute_Name");
-//                    response_soapobj_levelID = (SoapPrimitive) response_soapobj.getProperty("Lavel_ID");
-//                    response_soapobj_levelname = (SoapPrimitive) response_soapobj.getProperty("Lavel_Name");
-//                    response_soapobj_sandboxid = (SoapPrimitive) response_soapobj.getProperty("Sandbox_ID");
-//                    response_soapobj_sandboxname = (SoapPrimitive) response_soapobj.getProperty("Sandbox_Name");
-//                    response_soapobj_schoolid = (SoapPrimitive) response_soapobj.getProperty("School_ID");
-//                    response_soapobj_schoolname = (SoapPrimitive) response_soapobj.getProperty("School_Name");
-//                    response_soapobj_admissionfee = (SoapPrimitive) response_soapobj.getProperty("Admission_Fee");
-//
-//
-//                    Class_academicDetails innerObj_Class_academic = new Class_academicDetails();
-//                    innerObj_Class_academic.setAcademic_id(response_soapobj_academicID.toString());
-//                    innerObj_Class_academic.setAcademic_name(response_soapobj_academic_Name.toString());
-//
-//                    Class_ClusterDetails innerObj_Class_cluster = new Class_ClusterDetails();
-//                    innerObj_Class_cluster.setCluster_id(response_soapobj_clusterid.toString());
-//                    innerObj_Class_cluster.setCluster_name(response_soapobj_clustername.toString());
-//
-//                    Class_InsituteDetails innerObj_Class_institute = new Class_InsituteDetails();
-//                    innerObj_Class_institute.setInstitute_id(response_soapobj_instituteID.toString());
-//                    innerObj_Class_institute.setInstitute_name(response_soapobj_instituteName.toString());
-//
-//                    Class_LevelDetails innerObj_Class_level = new Class_LevelDetails();
-//                    innerObj_Class_level.setLevel_id(response_soapobj_levelID.toString());
-//                    innerObj_Class_level.setLevel_name(response_soapobj_levelname.toString());
-//
-//                    Class_SandBoxDetails innerObj_Class_sandbox = new Class_SandBoxDetails();
-//                    innerObj_Class_sandbox.setSandbox_id(response_soapobj_sandboxid.toString());
-//                    innerObj_Class_sandbox.setSandbox_name(response_soapobj_sandboxname.toString());
-//
-//                    Class_SchoolDetails innerObj_Class_school = new Class_SchoolDetails();
-//                    innerObj_Class_school.setSchool_id(response_soapobj_schoolid.toString());
-//                    innerObj_Class_school.setSchool_name(response_soapobj_schoolname.toString());
-//
-//
-//                    arrayObj_Class_academicDetails[i] = innerObj_Class_academic;
-//                    Log.e("class", arrayObj_Class_academicDetails[i].getAcademic_name());
-//                    arrayObj_Class_clusterDetails[i] = innerObj_Class_cluster;
-//                    arrayObj_Class_InstituteDetails[i] = innerObj_Class_institute;
-//                    arrayObj_Class_LevelDetails[i] = innerObj_Class_level;
-//                    arrayObj_Class_sandboxDetails[i] = innerObj_Class_sandbox;
-//                    arrayObj_Class_SchoolDetails[i] = innerObj_Class_school;
-//
-//                    String aca_id = response_soapobj.getProperty("Academic_ID").toString();
-//                    String aca_name = response_soapobj.getProperty("Academic_Name").toString();
-//
-//                    String clust_id = response_soapobj.getProperty("Cluster_ID").toString();
-//                    String clust_name = response_soapobj.getProperty("Cluster_Name").toString();
-//
-//
-//                    String inst_id = response_soapobj.getProperty("Institute_ID").toString();
-//                    String inst_name = response_soapobj.getProperty("Institute_Name").toString();
-//
-//                    String level_id = response_soapobj.getProperty("Lavel_ID").toString();
-//                    String level_name = response_soapobj.getProperty("Lavel_Name").toString();
-//
-//                    String sandbox_id = response_soapobj.getProperty("Sandbox_ID").toString();
-//                    String sandbox_name = response_soapobj.getProperty("Sandbox_Name").toString();
-//
-//                    String school_id = response_soapobj.getProperty("School_ID").toString();
-//                    String school_name = response_soapobj.getProperty("School_Name").toString();
-//
-//                    String admissionFee = response_soapobj.getProperty("Admission_Fee").toString();
-//                    Log.e("admissionFee", admissionFee);
-//
-//                    DBCreate_SandBoxdetails_insert_2SQLiteDB(sandbox_id, sandbox_name);
-//                    DBCreate_Academicdetails_insert_2SQLiteDB(aca_id, aca_name, sandbox_id);
-//                    DBCreate_Clusterdetails_insert_2SQLiteDB(clust_id, clust_name, sandbox_id, aca_id);
-//                    DBCreate_Institutedetails_insert_2SQLiteDB(inst_id, inst_name, sandbox_id, aca_id, clust_id);
-//                    DBCreate_Schooldetails_insert_2SQLiteDB(school_id, school_name, sandbox_id, aca_id, clust_id);
-//                    DBCreate_Leveldetails_insert_2SQLiteDB(level_id, level_name, sandbox_id, aca_id, clust_id, inst_id, admissionFee);
-//
-//
-//                }//end for loop
-//
-//
-//                // }//end of if
-//
-//
-//            } catch (Throwable t) {
-//
-//                Log.e("getCollege fail", "> " + t.getMessage());
-//                internet_issue = "slow internet";
-//            }
-//        } catch (Throwable t) {
-//
-//            Log.e("UnRegister Error", "> " + t.getMessage());
-//        }
-//
-//    }//End of uploaddetails
-
-//    private class AsyncCallWS_learningMode extends AsyncTask<String, Void, Void> {
-//        ProgressDialog dialog;
-//
-//        Context context;
-//
-//        protected void onPreExecute() {
-//
-//            dialog.setMessage("Please wait..");
-//            dialog.setCanceledOnTouchOutside(false);
-//            dialog.show();
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Void... values) {
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... params) {
-//            Log.i("list", "doInBackground");
-//
-//            list_detaile();  // call of details
-//            return null;
-//        }
-//
-//        public AsyncCallWS_learningMode(Context context1) {
-//            context = context1;
-//            dialog = new ProgressDialog(context1,R.style.AppCompatAlertDialogStyle);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void result) {
-//
-//            if ((dialog != null) && dialog.isShowing()) {
-//                dialog.dismiss();
-//
-//                /*ArrayAdapter dataAdapter_learnop = new ArrayAdapter(getApplicationContext(), R.layout.spinnercenterstyle, Arrayclass_learningOption);
-//                dataAdapter_learnop.setDropDownViewResource(R.layout.spinnercenterstyle);
-//                learnoption_Spinner.setAdapter(dataAdapter_learnop);*/
-//                uploadfromDB_LearningOptionlist();
-//            }
-//
-//        }//end of onPostExecute
-//    }// end Async task
-//
-//    public void list_detaile() {
-//        Vector<SoapObject> result1 = null;
-//
-//        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-//        String METHOD_NAME = "Learning_Mode_Options";
-//        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/Learning_Mode_Options";
-//
-//        try {
-//            //   int userid = Integer.parseInt(str_loginuserID);
-//            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-//            // request.addProperty("User_ID", userid);//userid
-//
-//            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-//            envelope.dotNet = true;
-//            //Set output SOAP object
-//            envelope.setOutputSoapObject(request);
-//            //Create HTTP call object
-//            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-//
-//            try {
-//
-//                androidHttpTransport.call(SOAPACTION, envelope);
-//
-//                SoapObject response = (SoapObject) envelope.getResponse();
-//                Log.i("value at response", response.toString());
-//                int count1 = response.getPropertyCount();  // number of count in array in response 6,0-5,5
-//
-//                Log.i("number of rows", "" + count1);
-//                Arrayclass_learningOption = new Class_LearningOption[count1];
-//
-//                for (int i = 0; i < count1; i++) {
-//                    SoapObject obj2 =(SoapObject) response.getProperty(i);
-//
-//                    SoapObject list = (SoapObject) response.getProperty(i);
-//                    SoapPrimitive response_soapobj_Option_ID,response_soapobj_Group_Name, response_soapobj_Option_Name,response_soapobj_Option_Status;
-//
-//
-//                    response_soapobj_Option_ID = (SoapPrimitive) obj2.getProperty("Option_ID");
-//                    response_soapobj_Group_Name = (SoapPrimitive) obj2.getProperty("Group_Name");
-//                    response_soapobj_Option_Name = (SoapPrimitive) obj2.getProperty("Option_Name");
-//                    response_soapobj_Option_Status = (SoapPrimitive) obj2.getProperty("Option_Status");
-//
-//
-//                    Class_LearningOption innerObj_Class_learning = new Class_LearningOption();
-//                    innerObj_Class_learning.setOption_ID(response_soapobj_Option_ID.toString());
-//                    innerObj_Class_learning.setGroup_Name(response_soapobj_Group_Name.toString());
-//                    innerObj_Class_learning.setOption_Name(response_soapobj_Option_Name.toString());
-//                    innerObj_Class_learning.setOption_Status(response_soapobj_Option_Status.toString());
-//
-//                    Arrayclass_learningOption[i] = innerObj_Class_learning;
-//
-//
-//                    Log.e("tag","Option_ID="+response_soapobj_Option_ID);
-//                    Log.e("tag","Arrayclass_learningOption="+Arrayclass_learningOption[i].getOption_Name().toString());
-//                    DBCreate_LearningOption_insert_2SQLiteDB(Arrayclass_learningOption[i].getOption_ID(),Arrayclass_learningOption[i].getGroup_Name(),Arrayclass_learningOption[i].getOption_Name(),Arrayclass_learningOption[i].getOption_Status());
-//                }// End of for loop
-//
-//
-//            } catch (Throwable t) {
-//
-//                Log.e("requestload fail", "> " + t.getMessage());
-//            }
-//        } catch (Throwable t) {
-//            Log.e("UnRegisterload  Error", "> " + t.getMessage());
-//
-//        }
-//
-//    }//End of leaveDetail method
 
 
 
@@ -2838,181 +2451,9 @@ public class Activity_Register_New extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please Enter all the Required data", Toast.LENGTH_LONG).show();
 
         }
-//        if (validation()) {
-//
-//            selected_sandboxID_int = Integer.parseInt(sp_strsand_ID);
-//            selected_academicID_int = Integer.parseInt(sp_straca_ID);
-//            selected_clusterID_int = Integer.parseInt(sp_strClust_ID);
-//            selected_instituteID_int = Integer.parseInt(sp_strInst_ID);
-//            selected_levelID_int = Integer.parseInt(sp_strLev_ID);
-//            selected_schoolID_int = Integer.parseInt(sp_strschool_ID);
-//            str_ForSavingData_studentname = studentname_et.getText().toString();
-//            str_ForSavingData_mobileno = mobileno_et.getText().toString();
-//            str_ForSavingData_fathername = fathername_et.getText().toString();
-//            str_ForSavingData_mothername = mothername_et.getText().toString();
-//            str_ForSavingData_aadar = aadar_et.getText().toString();
-//            selected_admissionfee = admissionfee_et.getText().toString();
-//            str_receipt_no = receipt_no_et.getText().toString();
-//            if (marks_et.getVisibility() == View.VISIBLE) {
-//
-//                str_marks = marks_et.getText().toString();
-//            }
-//            Date c = Calendar.getInstance().getTime();
-//
-//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//            createddate = df.format(c);
-//            createdby = str_loginuserID;
-//
-//
-//            internetDectector = new Class_InternetDectector(getApplicationContext());
-//            isInternetPresent = internetDectector.isConnectingToInternet();
-//
-//            if (isInternetPresent) {
-//                SubmitAsyncTask task = new SubmitAsyncTask(Activity_Register_New.this);
-//                task.execute();
-//            } else {
-//                //Toast.makeText(getApplicationContext(), "Data saved locally..", Toast.LENGTH_LONG).show();
-//                // Toast.makeText(getApplicationContext(), "No Internet", Toast.LENGTH_LONG).show();
-//
-//                createDatabase();
-//                insertIntoDBoffline();
-//                ClearEditTextAfterDoneTask();
-//                if ((path != null)) {
-//                    File fdelete = new File(path);
-//                    if (fdelete.exists()) {
-//                        if (fdelete.delete()) {
-//                            Log.v("log_tag", "file Deleted =" + path);
-//                            File dir = new File(Environment.getExternalStorageDirectory() + "GetSignature");
-//                            File dir1 = new File(Environment.getExternalStorageDirectory() + "DetSkillsSign/Images");
-//                            if (dir.isDirectory()) {
-//                                dir.delete();
-//                            }
-//                            if (dir1.isDirectory()) {
-//                                dir1.delete();
-//                            }
-//                        } else {
-//                        }
-//                    }
-//
-//                }
-//
-////                if (CameraPhotoCapture.imagepathforupload != null) {
-////                    File imagefilepath = new File(CameraPhotoCapture.imagepathforupload);
-////                    Log.v("log_tag", "imagefilepath=" + imagefilepath);
-////
-////                    if (imagefilepath.exists()) {
-////                        if (imagefilepath.delete()) {
-////                            Log.v("log_tag", "imagefilepath deleted=" + imagefilepath);
-////                        } else {
-////                            Log.v("log_tag", "imagefilepath not deleted=" + imagefilepath);
-////                        }
-////                    }
-////                }
-////
-//
-//            }
-//        }
+
     }
 
-    private class SubmitAsyncTask extends AsyncTask<String, Void, Void> {
-        ProgressDialog dialog;
-        Context context;
-
-        @SuppressLint("WrongThread")
-        @Override
-        protected Void doInBackground(String... params) {
-
-
-            RegisterResponse = WebserviceRegister.register_new(selected_sandboxID_int,
-                    selected_academicID_int, selected_clusterID_int, selected_instituteID_int,
-                    selected_levelID_int, selected_schoolID_int, str_img, str_ForSavingData_studentname, gender, yyyyMMdd_birthdate,
-                    selected_edu, str_marks, str_ForSavingData_mobileno, str_ForSavingData_fathername, str_ForSavingData_mothername, str_ForSavingData_aadar,
-                    selected_studentstatus, selected_admissionfee, createddate, createdby, str_receipt_no, selected_learnOption);
-
-            return null;
-        }// doInBackground Process
-
-        public SubmitAsyncTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        //Once WebService returns response
-        protected void onPostExecute(Void result) {
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-
-            //Make Progress Bar invisible
-            // progressbar.setVisibility(View.INVISIBLE);
-
-            if (!RegisterResponse) {
-
-
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
-
-            } else {
-                ClearEditTextAfterDoneTask();
-                Toast.makeText(getApplicationContext(), "Application Submitted", Toast.LENGTH_SHORT).show();
-
-
-                if ((path != null)) {
-                    File fdelete = new File(path);
-                    if (fdelete.exists()) {
-                        if (fdelete.delete()) {
-                            Log.v("log_tag", "file Deleted =" + path);
-                            File dir = new File(Environment.getExternalStorageDirectory() + "GetSignature");
-                            File dir1 = new File(Environment.getExternalStorageDirectory() + "DetSkillsSign/Images");
-                            if (dir.isDirectory()) {
-                                dir.delete();
-                            }
-                            if (dir1.isDirectory()) {
-                                dir1.delete();
-                            }
-                        } else {
-                        }
-                    }
-
-                }
-
-                if (CameraPhotoCapture.imagepathforupload != null) {
-                    File imagefilepath = new File(CameraPhotoCapture.imagepathforupload);
-                    Log.v("log_tag", "imagefilepath=" + imagefilepath);
-
-                    if (imagefilepath.exists()) {
-                        if (imagefilepath.delete()) {
-                            Log.v("log_tag", "imagefilepath deleted=" + imagefilepath);
-                        } else {
-                            Log.v("log_tag", "imagefilepath not deleted=" + imagefilepath);
-                        }
-                    }
-                }
-
-
-            }
-
-        }// End of onPostExecute
-
-        @Override
-        //Make Progress Bar visible
-        protected void onPreExecute() {
-
-
-            // progressbar.setVisibility(View.VISIBLE);
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }//End of onPreExecute
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }//End of onProgressUpdates
-    } // End of AsyncCallWS
 
     public void ClearEditTextAfterDoneTask() {
         studentname_et.getText().clear();
@@ -3062,99 +2503,7 @@ public class Activity_Register_New extends AppCompatActivity {
     }
 
 
-    //Birth DATE
 
-    @SuppressLint("ValidFragment")
-    public static class DatePickerFragmentBirthDate extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-                    this, year, month, day);
-            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-
-
-            return dialog;
-
-
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-            setDate(cal);
-
-        }
-
-        public void setDate(final Calendar calendar) {
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-
-            birthdate_TV.setText(dateFormat.format(calendar.getTime()));
-            str_birthdate = dateFormat.format(calendar.getTime());
-
-
-            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
-            yyyyMMdd_birthdate = mdyFormat.format(calendar.getTime());
-            Calendar c = Calendar.getInstance();
-            DateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
-
-
-        }
-
-    }
-
-    //Payment Date
-    //Birth DATE
-
-    @SuppressLint("ValidFragment")
-    public static class DatePickerFragmentPaymentDate extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, month, day, year);
-            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-            return dialog;
-
-
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            Calendar cal = new GregorianCalendar(year, month, dayOfMonth);
-            setDate(cal);
-
-        }
-
-        public void setDate(final Calendar calendar) {
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-            paymentdate_tv.setText(dateFormat.format(calendar.getTime()));
-            str_paymentdate = dateFormat.format(calendar.getTime());
-
-
-            SimpleDateFormat mdyFormat = new SimpleDateFormat("yyyy-MM-dd");
-            yyyyMMdd_paymentdate = mdyFormat.format(calendar.getTime());
-            Calendar c = Calendar.getInstance();
-            DateFormat outputFormat = new SimpleDateFormat("dd-MMM-yyyy");
-
-
-        }
-
-    }
 
     public boolean validation() {
 

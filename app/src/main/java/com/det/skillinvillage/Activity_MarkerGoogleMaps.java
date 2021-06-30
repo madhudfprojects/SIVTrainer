@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,9 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.det.skillinvillage.model.Class_UserPaymentList;
 import com.det.skillinvillage.model.Class_VillageLatLongList;
-import com.det.skillinvillage.model.Class_getUserPaymentResponse;
 import com.det.skillinvillage.model.Class_getVillageLatLong;
 import com.det.skillinvillage.model.DefaultResponse;
 import com.det.skillinvillage.model.ErrorUtils;
@@ -32,21 +29,14 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
 
 import java.util.List;
-import java.util.Vector;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.det.skillinvillage.MainActivity.key_loginuserid;
-import static com.det.skillinvillage.MainActivity.sharedpreferenc_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMapReadyCallback {
@@ -132,194 +122,6 @@ public class Activity_MarkerGoogleMaps extends AppCompatActivity implements OnMa
 
     }
 
-    class GetVillageLocationTask extends AsyncTask<String, Void, Void> implements OnMapReadyCallback {
-        ProgressDialog dialog;
-
-        Context context;
-
-        protected void onPreExecute() {
-
-            dialog.setMessage("Please wait..");
-            dialog.setCanceledOnTouchOutside(false);
-            dialog.show();
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-
-        }
-
-
-        @Override
-        protected Void doInBackground(String... params) {
-            Log.i("list", "doInBackground");
-
-            getvillagelocationinfo();
-
-            // call of details
-            return null;
-        }
-
-        public GetVillageLocationTask(Context context1) {
-            context = context1;
-            dialog = new ProgressDialog(context1, R.style.AppCompatAlertDialogStyle);
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-            if ((dialog != null) && dialog.isShowing()) {
-                dialog.dismiss();
-
-            }
-
-
-            if (str_latlong_status.equals("success")) {
-
-                mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(this);
-                mapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-                        int i=0;
-
-                        Log.e("latlongcount", String.valueOf(latlongcount));
-                        for(i=0;i<latlongcount;i++){
-                            Log.e("lat abc", arrayObj_class_GoogleLocations[i].getLatitude());
-
-                            Double lat=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLatitude());
-                            Double longi=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLongitude());
-                            Log.e("lat oncreate", String.valueOf(lat));
-                            Log.e("longi oncreate", String.valueOf(longi));
-
-                            googleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(lat, longi))
-                                    .title(arrayObj_class_GoogleLocations[i].getVillagename())
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-
-
-                        }
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(15.539836, 75.056725), 4));
-
-                    }
-                });
-
-            } else {
-
-            }
-            Log.e("tag", "Reached the onPostExecute");
-
-        }//end of onPostExecute
-
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            int i=0;
-
-
-            for(i=0;i<latlongcount;i++){
-                Double lat=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLatitude());
-                Double longi=Double.parseDouble(arrayObj_class_GoogleLocations[i].getLongitude());
-                Log.e("lat", String.valueOf(lat));
-                Log.e("longi", String.valueOf(longi));
-
-                googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(lat, longi))
-                        .title(arrayObj_class_GoogleLocations[i].getVillagename()));
-
-
-            }
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(15.539836, 75.056725), 4));
-
-        }
-    }// end Async task
-
-    private void getvillagelocationinfo() {
-        Vector<SoapObject> result1 = null;
-
-        String URL = "http://mis.detedu.org:8089/SIVService.asmx?WSDL";
-        String METHOD_NAME = "GetVillageLocations";
-        String Namespace = "http://mis.detedu.org:8089/", SOAPACTION = "http://mis.detedu.org:8089/GetVillageLocations";
-
-        try {
-            SoapObject request = new SoapObject(Namespace, METHOD_NAME);
-           // request.addProperty("User_ID", str_loginuserID);
-          //  Log.i("value at request", request.toString());
-            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-            envelope.dotNet = true;
-            //Set output SOAP object
-            envelope.setOutputSoapObject(request);
-            //Create HTTP call object
-            HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-            try {
-
-                androidHttpTransport.call(SOAPACTION, envelope);
-
-                SoapObject response = (SoapObject) envelope.getResponse();
-                //SoapObject obj2 = (SoapObject) response.getProperty(0);
-                Log.i("value at response", response.toString());
-                latlongcount=response.getPropertyCount();
-              //  arrayObj_class_GoogleLocations=null;
-                arrayObj_class_GoogleLocations = new Class_GoogleLocations[response.getPropertyCount()];
-
-                for (int i = 0; i < response.getPropertyCount(); i++) {
-                    SoapObject list = (SoapObject) response.getProperty(i);
-                    SoapPrimitive soap_latitude,soap_longitude,soap_villagename;
-                    str_latlong_status = list.getProperty("status").toString();
-                    if (str_latlong_status.equals("Error")) {
-                        Log.e("str_latlong_status", str_latlong_status);
-
-                    } else {
-
-                        soap_latitude = (SoapPrimitive) list.getProperty("Lattitude");
-                        soap_longitude = (SoapPrimitive) list.getProperty("Logitude");
-                        soap_villagename = (SoapPrimitive) list.getProperty("village_name");
-
-
-                        Class_GoogleLocations innerObj_Class_academic = new Class_GoogleLocations();
-                        innerObj_Class_academic.setLatitude(soap_latitude.toString());
-                        innerObj_Class_academic.setLongitude(soap_longitude.toString());
-                        innerObj_Class_academic.setVillagename(soap_villagename.toString());
-
-                        arrayObj_class_GoogleLocations[i] = innerObj_Class_academic;
-
-                        str_latitude = list.getProperty("Lattitude").toString();
-                        str_longitude= list.getProperty("Logitude").toString();
-
-                        Log.e("soap_latitude", String.valueOf(soap_latitude));
-
-                        runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-                                // Stuff that updates the UI
-
-                              //  setvalues();
-                            }
-                        });
-
-
-                    }
-
-
-                }// End of for loop
-
-            } catch (Throwable t) {
-
-                Log.e("request fail", "> " + t.getMessage());
-            }
-        } catch (Throwable t) {
-            Log.e("UnRegister  Error", "> " + t.getMessage());
-
-        }
-
-
-    }//end of getlist()
 
 
 

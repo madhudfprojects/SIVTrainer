@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_InsituteDetails {
 
     int id;
@@ -60,7 +62,7 @@ public class Class_InsituteDetails {
     public void setInstitute_name(String institute_name) {
         this.institute_name = institute_name;
     }
-
+    @NonNull
     @Override
     public String toString() {
         return institute_name;

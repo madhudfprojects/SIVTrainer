@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 public class Class_LearningOption {
     String Option_ID;
     String Group_Name;
@@ -48,7 +50,7 @@ public class Class_LearningOption {
     public void setOption_Status(String option_Status) {
         Option_Status = option_Status;
     }
-
+    @NonNull
     @Override
     public String toString() {
         return Option_Name;

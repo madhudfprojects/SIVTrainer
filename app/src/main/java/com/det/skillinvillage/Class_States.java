@@ -1,5 +1,7 @@
 package com.det.skillinvillage;
 
+import android.support.annotation.NonNull;
+
 /**
  * Created by User on 11/10/2017.
  */
@@ -65,7 +67,7 @@ public class Class_States {
         this.StateStatus = statestatus;
     }
 
-
+    @NonNull
     public String toString()
     {
         return( this.StateName );
