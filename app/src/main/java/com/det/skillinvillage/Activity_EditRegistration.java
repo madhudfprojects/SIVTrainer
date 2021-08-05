@@ -104,7 +104,7 @@ import static com.det.skillinvillage.MainActivity.key_loginuserid;
 import static com.det.skillinvillage.MainActivity.sharedpreferencebook_usercredential;
 
 public class Activity_EditRegistration extends AppCompatActivity {
-
+//
     TextView sandbox_edit_tv;
     TextView academic_edit_tv;
     TextView cluster_edit_tv;
